@@ -10,3 +10,6 @@
 
 ### JavaScript
 * [手动实现AJAX](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0AJAX.md)
+
+### Browser
+* [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
