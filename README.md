@@ -4,6 +4,7 @@
 
 ### HTML
 * [DOCTYPE](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/DOCTYPE.md)
+* [HTML语义化](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/HTML%E8%AF%AD%E4%B9%89%E5%8C%96.md)
 
 ### CSS
 * [布局垂直居中](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/%E5%B8%83%E5%B1%80%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD.md)
