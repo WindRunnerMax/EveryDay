@@ -16,3 +16,4 @@
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
+* [XSS跨站脚本攻击](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/XSS%E8%B7%A8%E7%AB%99%E8%84%9A%E6%9C%AC%E6%94%BB%E5%87%BB.md)
