@@ -14,6 +14,7 @@
 ### JavaScript
 * [手动实现AJAX](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0AJAX.md)
 * [ES6新特性](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md)
+* [原型与原型链](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.md)
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
