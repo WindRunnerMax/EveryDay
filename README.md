@@ -6,7 +6,7 @@
 * [DOCTYPE](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/DOCTYPE.md)
 * [HTML语义化](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/HTML%E8%AF%AD%E4%B9%89%E5%8C%96.md)
 * [Cookie与Session](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/Cookie%E4%B8%8ESession.md)
-* [localStorage与sessionStorage](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/LocalStorage%E4%B8%8ESessionStorage.md)
+* [LocalStorage与SessionStorage](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/LocalStorage%E4%B8%8ESessionStorage.md)
 
 ### CSS
 * [布局垂直居中](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/%E5%B8%83%E5%B1%80%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD.md)
@@ -18,6 +18,7 @@
 * [手动实现AJAX](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0AJAX.md)
 * [ES6新特性](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md)
 * [原型与原型链](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.md)
+* [JavaScript闭包](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JavaScript%E9%97%AD%E5%8C%85.md)
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)

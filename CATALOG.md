@@ -1,7 +1,12 @@
 # Catalog
 
+**2020-03-11**
+> 第16题：[JavaScript闭包](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JavaScript%E9%97%AD%E5%8C%85.md)
+
+<br>
+
 **2020-03-10**
-> 第15题：[localStorage与sessionStorage](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/LocalStorage%E4%B8%8ESessionStorage.md)
+> 第15题：[LocalStorage与SessionStorage](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/LocalStorage%E4%B8%8ESessionStorage.md)
 
 <br>
 
