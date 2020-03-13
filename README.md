@@ -19,6 +19,7 @@
 * [ES6新特性](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md)
 * [原型与原型链](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.md)
 * [JavaScript闭包](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JavaScript%E9%97%AD%E5%8C%85.md)
+* [JS变量提升](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JS%E5%8F%98%E9%87%8F%E6%8F%90%E5%8D%87.md)
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
