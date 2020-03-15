@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-03-14**
+> 第19题：[apply、call、bind](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/apply%E3%80%81call%E3%80%81bind.md)
+
+<br>
+
 **2020-03-13**
 > 第18题：[匿名函数与自执行函数](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E2%80%8B%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%E4%B8%8E%E8%87%AA%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0.md)
 
