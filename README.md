@@ -29,3 +29,4 @@
 * [CSRF跨站请求伪造](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/CSRF%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0.md)
 * [SQL注入](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/SQL%E6%B3%A8%E5%85%A5.md)
 * [浏览器渲染与内核](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E6%B5%8F%E8%A7%88%E5%99%A8%E6%B8%B2%E6%9F%93%E4%B8%8E%E5%86%85%E6%A0%B8.md)
+* [浏览器重绘与回流](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8D%E7%BB%98%E4%B8%8E%E5%9B%9E%E6%B5%81.md)
