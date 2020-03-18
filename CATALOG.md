@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-03-17**
+> 第22题：[事件冒泡及阻止](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1%E5%8F%8A%E9%98%BB%E6%AD%A2.md)
+
+<br>
+
 **2020-03-16**
 > 第21题：[浏览器重绘与回流](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8D%E7%BB%98%E4%B8%8E%E5%9B%9E%E6%B5%81.md)
 
