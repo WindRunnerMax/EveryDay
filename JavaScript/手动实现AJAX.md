@@ -1,6 +1,6 @@
-# AJAX
+# Ajax
 
-`AJAX`在浏览器是通过`XMLHttpRequest`对象来实现数据传输的
+`Ajax`在浏览器是通过`XMLHttpRequest`对象来实现数据传输的
 
 `XMLHttpRequest`对象进行HTTP请求前必须通过open初始化，open接受五个参数，分别为请求方法、请求链接、异步标识、账号和密码用以服务端验证
 
@@ -43,7 +43,7 @@ abort()
         XHR = new XMLHttpRequest()
         // 设置请求状态改变时执行的函数
         XHR.onreadystatechange = function() {
-            if (XHR.readyState == 4 ) console.log(`响应状态:${XHR.status}`,"FINISH") //XHR.responseText为响应体
+            if (XHR.readyState === 4 ) console.log(`响应状态:${XHR.status}`,"FINISH") //XHR.responseText为响应体
          }
          // 初始化请求参数
          XHR.open(method,url,async)
