@@ -34,14 +34,14 @@ https://stackoverflow.com/questions/31219420/are-variables-declared-with-let-or-
 ```
 
 ## 函数声明提升
-函数声明会将声明与赋值都会提前，也就是整个函数体都会被提升到作用域顶部
+函数声明会将声明与赋值都提前，也就是整个函数体都会被提升到作用域顶部
 ```javascript
 s(); // 1
 function s(){
     console.log(1);
 }
 ```
-函数表达式只会提升声明，本质上是变量提升，将一个匿名函数对象赋值给变量
+函数表达式只会提升变量的声明，本质上是变量提升并将一个匿名函数对象赋值给变量
 ```javascript
 console.log(s); // undefined
 var s = function s(){
