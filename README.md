@@ -27,6 +27,7 @@
 * [事件冒泡及阻止](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1%E5%8F%8A%E9%98%BB%E6%AD%A2.md)
 * [JS事件流模型](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JS%E4%BA%8B%E4%BB%B6%E6%B5%81%E6%A8%A1%E5%9E%8B.md)
 * [函数声明与函数表达式](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%87%BD%E6%95%B0%E5%A3%B0%E6%98%8E%E4%B8%8E%E5%87%BD%E6%95%B0%E8%A1%A8%E8%BE%BE%E5%BC%8F.md)
+* [JS中this的指向](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JS%E4%B8%ADthis%E7%9A%84%E6%8C%87%E5%90%91.md)
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
