@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-03-25**
+> 第30题：[new运算符](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/new%E8%BF%90%E7%AE%97%E7%AC%A6.md)
+
+<br>
+
 **2020-03-24**
 > 第29题：[CSS劫持攻击](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/CSS%E5%8A%AB%E6%8C%81%E6%94%BB%E5%87%BB.md)
 
