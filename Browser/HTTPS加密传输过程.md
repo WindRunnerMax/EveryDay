@@ -11,7 +11,7 @@
 ### SSL
 `SSL`安全套接层`Secure Sockets Layer`，位于`TCP/IP`协议与各种应用层协议之间，为数据通讯提供安全支持。`SSL`协议可分为两层：  
 `SSL`记录协议`SSL Record Protocol`：它建立在可靠的传输协议如`TCP`之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。  
-SSL握手协议`SSL Handshake Protocol`：它建立在`SSL`记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
+`SSL`握手协议`SSL Handshake Protocol`：它建立在`SSL`记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。
 
 ### TLS
 `TLS`传输层安全性协议`Transport Layer Security`用于在两个通信应用程序之间提供保密性和数据完整性，其由`TLS`记录协议和`TLS`握手协议组成。`TLS1.0`即为`SSL3.0`的标准化版本，`SSL`最初由网景`Netscape`提出研发，在`SSL3.0`时由国际互联网工程任务组`IETF`进行了标准化并添加了少量机制，并更名为`TLS1.0`。
