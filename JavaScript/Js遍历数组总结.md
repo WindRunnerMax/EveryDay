@@ -136,7 +136,7 @@ for (let value of arr) {
 ```javascript
 var arr = [1,2,3,4,5];
 
-// arr.everymap(callback(currentValue [, index [, array]])[, thisArg])
+// arr.every(callback(currentValue [, index [, array]])[, thisArg])
 // every() 方法测试一个数组内的所有元素是否都能通过某个指定函数的测试。它返回一个布尔值。
 console.log(arr.every( (currentValue ) => {
     return currentValue > 1;
