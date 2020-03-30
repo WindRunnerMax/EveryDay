@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-03-29**
+> 第34题：[对称加密与非对称加密](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E4%B8%8E%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.md)
+
+<br>
+
 **2020-03-28**
 > 第33题：[Js遍历数组总结](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.md)
 
