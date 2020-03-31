@@ -17,7 +17,7 @@ fulfilled: 意味着操作成功完成。
 rejected: 意味着操作失败。
 ```
 `Promise`对象只有从`pending`变为`fulfilled`和从`pending`变为`rejected`的状态改变。只要处于`fulfilled`和`rejected`，状态就不会再变了。  
-缺点：无法取消`Promise`，一旦新建它就会立即执行，无法中途取消；如果不设置回调函数，`Promise`内部抛出的错误，不会反应到外部；当处于`pending`状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
+缺点：无法取消`Promise`，一旦新建它就会立即执行，无法中途取消；如果不主动`catch`，`Promise`内部抛出的异常，不会反应到外部，在`FireFox`中异常不会抛出，在`Chrome`中的异常抛出但不会触发`winodw.onerror`事件；当处于`pending`状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
 
 ## 实例
 `Promise`可以进行链式调用，避免过多的异步操作造成的回调地狱，`then()`函数默认会返回一个和原来不同的新的`Promise`。
