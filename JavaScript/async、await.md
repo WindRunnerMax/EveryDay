@@ -1,5 +1,5 @@
 # async/await
-`async`是`ES7`的与异步操作有关的关键字，其返回一个`Promise`对象，`await`操作符用于等待一个`Promise`对象,它只能在异步函数`async function`内部使用。
+`async`是`ES7`的与异步操作有关的关键字，其返回一个`Promise`对象，`await`操作符用于等待一个`Promise`对象,它只能在异步函数`async function`内部使用。`async/await`的目的是简化使用多个`promise`时的同步行为，并对一组`Promises`执行某些操作。正如`Promises`类似于结构化回调，`async/await`更像结合了`generators`和`promises`。
 
 ## async
 

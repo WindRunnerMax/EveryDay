@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-03-31**
+> 第36题：[async/await](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/async%E3%80%81await.md)
+
+<br>
+
 **2020-03-30**
 > 第35题：[Promise对象](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Promise%E5%AF%B9%E8%B1%A1.md)
 

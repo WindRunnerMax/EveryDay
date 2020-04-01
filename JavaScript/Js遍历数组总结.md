@@ -121,7 +121,7 @@ for(item in obj){
 ```
 
 ## for of
-`for of`为`ES6`新增，其在可迭代对象包括`Array`，`Map`，`Set`，`String``TypedArray`，`arguments`对象等等上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句。
+`for of`为`ES6`新增，其在可迭代对象包括`Array`，`Map`，`Set`，`String`，`TypedArray`，`arguments`对象等等上创建一个迭代循环，调用自定义迭代钩子，并为每个不同属性的值执行语句。
 
 ```javascript
 var arr = [1,2,3,4,5];
