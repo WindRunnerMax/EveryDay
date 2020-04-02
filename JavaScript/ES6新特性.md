@@ -34,7 +34,7 @@ let { a, b } = { a: 'aaa', b: 'bbb' }; // 对象模型的解构 前后两个kay�
 
 ## Symbol
 `ES6`引入了一种新的原始数据类型`Symbol`，表示独一无二的值，最大的用法是用来定义对象的唯一属性名。
-`ES6`数据类型除了`Number`、`String`、`Boolea`、 `Object`、`null`和`undefined`，还新增了 `Symbol`。
+`ES6`数据类型除了`Number`、`String`、`Boolean`、 `Object`、`null`和`undefined`，还新增了 `Symbol`。
 
 ```javascript
 let s1 = Symbol("s");

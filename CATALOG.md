@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-01**
+> 第37题：[Generator函数](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Generator%E5%87%BD%E6%95%B0.md)
+
+<br>
+
 **2020-03-31**
 > 第36题：[async/await](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/async%E3%80%81await.md)
 
