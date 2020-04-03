@@ -1,5 +1,5 @@
 # Js中\==与===
-`JavaScript`中提供`==`相等运算符与`===`严格相等运算符，建议是只要变量的数据类型能够确定，一律使用`===`
+`JavaScript`中提供`==`相等运算符与`===`严格相等运算符，建议是只要变量的数据类型能够确定，一律使用`===`，各种类型的值的比较可以参考`Js`真值表
 
 ## ==相等运算符
 `==`在判断相等时会进行隐式的类型转换， 其比较遵循一些原则，即先转换类型再比较
@@ -70,5 +70,6 @@ if(NaN) console.log("exec");
 
 ```javascript
 https://www.zhihu.com/question/31442029
+https://thomas-yang.me/projects/oh-my-dear-js/
 https://dorey.github.io/JavaScript-Equality-Table/#three-equals
 ```

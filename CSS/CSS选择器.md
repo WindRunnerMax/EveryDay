@@ -55,7 +55,7 @@
 <div class="s6">相邻选择器</div>
 <div class="s6">相邻选择器</div>
 <div class="s6">相邻选择器</div>
-<!-- ~ 只选择兄弟以及兄弟的兄弟..... -->
+<!-- ~ 选择兄弟以及兄弟的兄弟..... -->
 
  <style type="text/css">
     #s4 + div{
@@ -173,7 +173,7 @@
     <div class="s6">相邻选择器</div>
     <div class="s6">相邻选择器</div>
     <div class="s6">相邻选择器</div>
-    <!-- ~ 只选择兄弟以及兄弟的兄弟..... -->
+    <!-- ~ 选择兄弟以及兄弟的兄弟..... -->
 
     <div class="s7">
         <div>子元素选择器</div>
