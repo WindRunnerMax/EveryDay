@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-03**
+> 第39题：[JavaScript选择器](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JavaScript%E9%80%89%E6%8B%A9%E5%99%A8.md)
+
+<br>
+
 **2020-04-02**
 > 第38题：[Js中==与===](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E4%B8%AD%3D%3D%E4%B8%8E%3D%3D%3D.md)
 

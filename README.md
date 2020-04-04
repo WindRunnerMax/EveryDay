@@ -35,6 +35,7 @@
 * [async/await](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/async%E3%80%81await.md)
 * [Generator函数](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Generator%E5%87%BD%E6%95%B0.md)
 * [Js中==与===](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E4%B8%AD%3D%3D%E4%B8%8E%3D%3D%3D.md)
+* [JavaScript选择器](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JavaScript%E9%80%89%E6%8B%A9%E5%99%A8.md)
 
 ### Browser
 * [跨域问题与解决方案](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98.md)
