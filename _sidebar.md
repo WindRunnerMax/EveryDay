@@ -48,6 +48,7 @@
     * [CSS劫持攻击](Browser/CSS劫持攻击)
     * [HTTPS加密传输过程](Browser/HTTPS加密传输过程)
     * [对称加密与非对称加密](Browser/对称加密与非对称加密)
+    * [分布式SESSION一致性](Browser/分布式SESSION一致性)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/跨域问题)
