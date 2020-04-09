@@ -85,7 +85,6 @@
     * [Recover刷机简介](Environment/Recover刷机简介)
     * [Ubuntu16.04安装QQ机器人](Environment/Ubuntu16.04安装QQ机器人)
     * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单)
-    * [SQL注入](Environment/SQL注入)
     * [手机抓包HTTPS (Fiddler & Packet Capture)](Environment/手机抓包HTTPS)
 
 * IMGProcess
