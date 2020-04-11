@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-10**
+> 第46题：[Js模块化导入导出](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA.md)
+
+<br>
+
 **2020-04-09**
 > 第45题：[分布式SESSION一致性](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/%E5%88%86%E5%B8%83%E5%BC%8FSESSION%E4%B8%80%E8%87%B4%E6%80%A7.md)
 
