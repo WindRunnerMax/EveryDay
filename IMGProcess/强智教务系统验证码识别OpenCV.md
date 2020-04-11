@@ -1,8 +1,8 @@
 # 强智教务系统验证码识别 OpenCV
 
-> 强智教务系统验证码验证码字符位置相对固定，比较好切割
-> 找准切割位置，将其分为四部分，匹配自建库即可，识别率近乎100%，如果觉得不错，点个star吧 😃
-> https://github.com/WindrunnerMax/SWVerifyCode 提供Java、PHP、Python、JavaScript版本
+> 强智教务系统验证码验证码字符位置相对固定，比较好切割  
+> 找准切割位置，将其分为四部分，匹配自建库即可，识别率近乎100% 
+> https://github.com/WindrunnerMax/SWVerifyCode 提供Java、PHP、Python、JavaScript版本  
 
 首先使用代码切割验证码，挑选出切割的比较好的验证码，制作比对库
 由于使用`matchTemplate`函数，要求待匹配图必须比库图小，于是需要放大库图边界

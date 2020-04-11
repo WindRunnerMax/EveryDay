@@ -1,7 +1,7 @@
 # 手机抓包HTTPS (Fiddler & Packet Capture)
 
-> 以前写了一个小游戏(消灭病毒)的刷金币小脚本，使用需要获取openid ，就需要抓微信的HTTPS包
-> 一直都是用Fiddler抓电脑的包，Packet Capture抓手机的包，突然想试一下用电脑抓手机的包
+> 以前写了一个小游戏(消灭病毒)的刷金币小脚本，使用需要获取openid ，就需要抓微信的HTTPS包  
+> 一直都是用Fiddler抓电脑的包，Packet Capture抓手机的包，突然想试一下用电脑抓手机的包  
 > https://github.com/WindrunnerMax/EliminVirus
 
 ## 1. Fiddler

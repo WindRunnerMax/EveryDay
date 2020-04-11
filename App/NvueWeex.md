@@ -1,8 +1,8 @@
 # Nvue/Weex
 
-> 使用Uniapp做了一个App，感觉性能不是很好，了解过Uniapp的Nvue，就想做一个纯Nvue项目，其实基本就是做一个Weex项目，不得不说坑是真的多，但是渲染性能真的是没得比
-> 本项目开发环境为 UNIAPP 的 纯NVUE 项目，与WEEX有不同之处
-> [https://github.com/WindrunnerMax/SW](https://github.com/WindrunnerMax/SW)
+> 使用Uniapp做了一个App，感觉性能不是很好，了解过Uniapp的Nvue，就想做一个纯Nvue项目，其实基本就是做一个Weex项目，不得不说坑是真的多，但是渲染性能真的是没得比  
+> 本项目开发环境为 UNIAPP 的 纯NVUE 项目，与WEEX有不同之处  
+> [https://github.com/WindrunnerMax/SW](https://github.com/WindrunnerMax/SW)  
 
 
 ## 一、 CSS选择器
@@ -58,12 +58,12 @@ a{
  - text标签中内联 margin、padding 样式失效，需使用class声明
 
 ### 3. page 页面
-> Weex不支持page选择器，也没有page样式，page.json中设置backgroundColor也无效
-> 只能弯道超车设置整体页面颜色，但是效果并不是特别好
-> 注意这是Uniapp的Nvue方式
-> 此外，直接在 .page 设置 flex:1 ， 并将 class="page" 赋予根节点，可以将页面扩充至满屏，但也会导致页面无法滚动
-> 官方机器人给予了更好的解决方案
-> 此外一个坑，Nvue不支持全局组件，每个页面需要的组件必须在页面单独引入
+> Weex不支持page选择器，也没有page样式，page.json中设置backgroundColor也无效  
+> 只能弯道超车设置整体页面颜色，但是效果并不是特别好  
+> 注意这是Uniapp的Nvue方式  
+> 此外，直接在 .page 设置 flex:1 ， 并将 class="page" 赋予根节点，可以将页面扩充至满屏，但也会导致页面无法滚动  
+> 官方机器人给予了更好的解决方案  
+> 此外一个坑，Nvue不支持全局组件，每个页面需要的组件必须在页面单独引入  
 
 ```css
 /** 首先声明 .page 类 **/

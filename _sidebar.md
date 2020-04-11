@@ -37,6 +37,7 @@
     * [Js中==与===](JavaScript/Js中==与===)
     * [JavaScript选择器](JavaScript/JavaScript选择器)
     * [Js模块化导入导出](JavaScript/Js模块化导入导出)
+    * [let与const](JavaScript/let与const)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题)
@@ -52,7 +53,7 @@
     * [分布式SESSION一致性](Browser/分布式SESSION一致性)
 
 * MiniProgram
-    * [山科小站小程序](MiniProgram/跨域问题)
+    * [山科小站小程序](MiniProgram/山科小站小程序)
     * [QQ小程序支付](MiniProgram/QQ小程序支付)
     * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id)
     * [微信小程序校历组件](MiniProgram/微信小程序校历组件)
