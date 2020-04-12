@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-11**
+> 第47题：[let与const](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/let%E4%B8%8Econst.md)
+
+<br>
+
 **2020-04-10**
 > 第46题：[Js模块化导入导出](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E6%A8%A1%E5%9D%97%E5%8C%96%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA.md)
 
