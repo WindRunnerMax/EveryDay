@@ -38,6 +38,7 @@
     * [JavaScript选择器](JavaScript/JavaScript选择器)
     * [Js模块化导入导出](JavaScript/Js模块化导入导出)
     * [let与const](JavaScript/let与const)
+    * [作用域与作用域链](JavaScript/作用域与作用域链)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题)
