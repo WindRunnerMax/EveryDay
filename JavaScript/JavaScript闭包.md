@@ -1,6 +1,6 @@
 # JavaScript闭包
 
-闭包就是能够读取其他函数内部变量的，函数也就是说，**闭包可以让你从内部函数访问外部函数作用域**。在`JavaScript`，函数在每次创建时生成闭包。在本质上，闭包是将函数内部和函数外部连接起来的桥梁。
+函数和对其词法环境`lexical environment`的引用捆绑在一起构成闭包，也就是说，**闭包可以让你从内部函数访问外部函数作用域**。在`JavaScript`，函数在每次创建时生成闭包。在本质上，闭包是将函数内部和函数外部连接起来的桥梁。
 
 ## 定义闭包
 为了定义一个闭包，首先需要一个函数来套一个匿名函数。闭包是需要使用局部变量的，定义使用全局变量就失去了使用闭包的意义，最外层定义的函数可实现局部作用域从而定义局部变量，函数外部无法直接访问内部定义的变量。
@@ -8,10 +8,11 @@
 ```JavaScript
 function student(){
     var name = "Ming";
-    var sayMyName = function(){
+    var sayMyName = function(){ // sayMyName作为内部函数，有权访问父级函数作用域student中的变量
         console.log(name);
     }
-    return sayMyName; // return是为了让外部能访问闭包，挂载到window对象也可以
+    console.dir(sayMyName); // ... [[Scopes]]: Scopes[2] 0: Closure (student) {name: "Ming"} 1: Global ...
+    return sayMyName; // return是为了让外部能访问闭包，挂载到window对象也可以 
 }
 var stu = student(); 
 stu(); // Ming
@@ -57,7 +58,22 @@ console.log(stu.addHP()); // 101
 console.log(stu.decHP()); // 100
 ```
 
-## 作用域链机制
+## 回调机制
+`Js`的闭包为回调机制提供了支持，无论函数是否立马被调用，这个闭包都不会被释放。而且在`Js`里，无论把`callback`函数作为参数传递给其他函数，或者作为返回值返回，以便于之后调用，都是合法的。
+```javascript
+function localContext(){
+    var localVal = 1;
+    var callback = function(){
+        console.log(localVal); // ... [[Scopes]]: Scopes[2] 0: Closure (localContext) {localVal: 1} 1: Global ...
+    }
+    console.dir(callback);
+    setTimeout(callback, 1000); // 1
+}
+localContext();
+```
+在本例中，`callback`函数与其词法环境构成了闭包，其词法环境中存在的变量`localVal = 1`在函数`callback`作为回调函数传递时并没有被立即释放，而可以在回调执行时继续使用，这就是闭包为回调机制提供了支持。
+
+## 循环创建闭包
 在`ECMAScript 2015`引入`let`关键字之前，只有函数作用域和全局作用域，函数作用域中又可以继续嵌套函数作用域，在`for`并未具备局部作用域，于是有一个常见的闭包创建问题。
 
 ```JavaScript
@@ -125,3 +141,10 @@ for(var i = 0 ; i < 3 ; ++i){
 ## 性能考量
 如果不是某些特定任务需要使用闭包，在其它函数中创建函数是不明智的，因为闭包在处理速度和内存消耗方面对脚本性能具有负面影响。  
 在创建新的对象或者类时，方法通常应该关联于对象的原型，而不是定义到对象的构造器中。原因是这将导致每次构造器被调用时，方法都会被重新赋值一次。
+
+## 参考
+```
+https://zhuanlan.zhihu.com/p/22486908
+https://www.cnblogs.com/Renyi-Fan/p/11590231.html
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Closures
+```
