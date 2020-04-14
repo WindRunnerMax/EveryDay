@@ -16,6 +16,7 @@
     * [Flex布局](CSS/FLEX布局)
     * [Grid布局](CSS/Grid布局)
     * [Table布局](CSS/Table布局)
+    * [SVG基础](CSS/SVG基础)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX)
