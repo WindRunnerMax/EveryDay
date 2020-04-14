@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-13**
+> 第49题：[作用域与作用域链](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE.md)
+
+<br>
+
 **2020-04-12**
 > 第48题：[TCP三次握手](https://github.com/WindrunnerMax/EveryDay/blob/master/Browser/TCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.md)
 
