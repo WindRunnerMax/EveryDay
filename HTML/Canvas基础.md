@@ -1,4 +1,4 @@
-# Canvas基本使用
+# Canvas基础
 `HTML5`中引入`<canvas>`标签，用于图形的绘制，`<canvas>`为图形的绘制提供了画布，是图形容器，具体的图形绘制由`JavaScript`来完成。
 
 ## 实例
@@ -111,6 +111,10 @@
 * 最合适图像密集型的游戏，其中许多的对象会被频繁的重绘
 * `Canvas`中一旦图形被绘制完成，他就不会继续得到浏览器的关注，如果他的位置发生变化，那么就需要重新来绘制图形，其中包括任何或已经被图形覆盖的对象
 
+## 参考
 
-
+```
+https://www.runoob.com/tags/ref-canvas.html
+https://www.runoob.com/w3cnote/html5-canvas-intro.html
+```
 
