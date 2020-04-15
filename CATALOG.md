@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-14**
+> 第50题：[SVG基础](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/SVG%E5%9F%BA%E7%A1%80.md)
+
+<br>
+
 **2020-04-13**
 > 第49题：[作用域与作用域链](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE.md)
 

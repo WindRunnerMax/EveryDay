@@ -20,6 +20,7 @@
 * [Flex布局](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/FLEX%E5%B8%83%E5%B1%80.md)
 * [Grid布局](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/GRID%E5%B8%83%E5%B1%80.md)
 * [Table布局](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Table%E5%B8%83%E5%B1%80.md)
+* [SVG基础](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/SVG%E5%9F%BA%E7%A1%80.md)
 
 ### JavaScript
 * [手动实现AJAX](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0AJAX.md)
