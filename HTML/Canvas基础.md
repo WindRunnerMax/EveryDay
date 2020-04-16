@@ -35,7 +35,7 @@
         }
 
         newCircle(){ // 新气泡
-            if(this.randomInt(0,80)) return 0; // 控制生成气泡的数量
+            if(this.randomInt(0,50)) return 0; // 控制生成气泡的数量
             var canvasHeight = this.ctx.canvas.height; // 获取画布高度
             var circle = {}; // 定义一个新的气泡对象
             circle.r = this.randomInt(10,50); // 随机半径
@@ -64,15 +64,18 @@
                 this.ctx.arc(v.x,v.y,v.r,0,Math.PI * 2); // 绘制圆 x坐标 y坐标 半径 起始角度 结束角度 顺/逆时针绘制
                 this.ctx.fill(); // 绘制填充
                 this.ctx.stroke(); // 绘制边线
-                v.y -= v.yMoveSpeed * 0.06; // Y轴移动
-                v.x += v.xMoveSpeed * 0.03; // X轴移动
+                v.y -= v.yMoveSpeed * 0.1; // Y轴移动
+                v.x += v.xMoveSpeed * 0.05; // X轴移动
             })
             this.ctx.restore(); // 恢复画布状态
             this.destroyCircle(); // 销毁气泡
+            requestAnimationFrame(() => {this.draw();}); // 递归调用
         }
 
         start(){
-            setInterval(() => {this.draw();},10); // 定时器绘制动画效果
+            // setInterval(() => {this.draw();},16.7); // 定时器绘制动画效果
+            requestAnimationFrame(() => {this.draw();}); // 使用请求动画帧来绘制图像，根据刷新率（60HZ则为每16.7ms刷新一次），需要递归调用
+            // requestAnimationFrame当页面处理未激活的状态下，该页面的屏幕刷新任务也会被系统暂停，因此跟着系统步伐走的requestAnimationFrame也会停止渲染，当页面被激活时，动画就从上次停留的地方继续执行，setInterval需要使用加入visibilitychange监听来清除与重设定时器
         }
 
     }

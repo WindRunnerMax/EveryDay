@@ -10,6 +10,7 @@
 * [Iframe框架及优缺点](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/Iframe%E6%A1%86%E6%9E%B6%E5%8F%8A%E4%BC%98%E7%BC%BA%E7%82%B9.md)
 * [HTML节点操作](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/HTML%E8%8A%82%E7%82%B9%E6%93%8D%E4%BD%9C.md)
 * [手动实现轮播图](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/%E6%89%8B%E5%8A%A8%E5%AE%9E%E7%8E%B0%E8%BD%AE%E6%92%AD%E5%9B%BE%E5%8A%9F%E8%83%BD.md)
+* [Canvas基础](https://github.com/WindrunnerMax/EveryDay/blob/master/HTML/Canvas%E5%9F%BA%E7%A1%80.md)
 
 ### CSS
 * [布局垂直居中](https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/%E5%B8%83%E5%B1%80%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD.md)
