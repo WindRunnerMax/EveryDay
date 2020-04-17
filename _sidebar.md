@@ -6,6 +6,7 @@
     * [Iframe框架及优缺点](HTML/Iframe框架及优缺点)
     * [HTML节点操作](HTML/HTML节点操作)
     * [手动实现轮播图](HTML/手动实现轮播图功能)
+    * [Canvas基础](HTML/Canvas基础)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中)
@@ -24,7 +25,7 @@
     * [原型与原型链](JavaScript/原型与原型链)
     * [JavaScript闭包](JavaScript/JavaScript闭包)
     * [JS变量提升](JavaScript/JS变量提升)
-    * [匿名函数与自执行函数](JavaScript/函数声明与函数表达式)
+    * [匿名函数与自执行函数](JavaScript/匿名函数与自执行函数)
     * [apply、call、bind](JavaScript/apply、call、bind)
     * [事件冒泡及阻止](JavaScript/事件冒泡及阻止)
     * [JS事件流模型](JavaScript/JS事件流模型)
@@ -37,6 +38,7 @@
     * [Generator函数](JavaScript/Generator函数)
     * [Js中==与===](JavaScript/Js中==与===)
     * [JavaScript选择器](JavaScript/JavaScript选择器)
+    * [Json Web Token](JavaScript/Json%20Web%20Token)
     * [Js模块化导入导出](JavaScript/Js模块化导入导出)
     * [let与const](JavaScript/let与const)
     * [作用域与作用域链](JavaScript/作用域与作用域链)
@@ -55,6 +57,7 @@
     * [对称加密与非对称加密](Browser/对称加密与非对称加密)
     * [分布式SESSION一致性](Browser/分布式SESSION一致性)
     * [TCP三次握手](Browser/TCP三次握手)
+    * [TCP与UDP异同](Browser/TCP与UDP异同)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序)
