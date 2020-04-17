@@ -19,7 +19,7 @@
 * [CSS选择器](CSS/CSS选择器.md)
 * [CSS样式优先级](CSS/CSS样式优先级.md)
 * [Flex布局](CSS/FLEX布局.md)
-* [Grid布局](CSS/Grid布局.md)
+* [Grid布局](CSS/GRID布局.md)
 * [Table布局](CSS/Table布局.md)
 * [SVG基础](CSS/SVG基础.md)
 
