@@ -43,6 +43,7 @@
     * [let与const](JavaScript/let与const)
     * [作用域与作用域链](JavaScript/作用域与作用域链)
     * [JavaScript异步机制](JavaScript/JavaScript异步机制)
+    * [Js数组操作](JavaScript/Js数组操作)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题)
