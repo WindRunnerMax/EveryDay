@@ -219,10 +219,10 @@ var child = new Child("child"); // 实例化子类
 child.say(); // child
 console.log(child.from); // child
 ```
-## 特点
+### 特点
 * 比较完善
 
-## 不足
+### 不足
 * 相对比较复杂
 
 ## 参考
