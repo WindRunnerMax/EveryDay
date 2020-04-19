@@ -42,11 +42,12 @@
 * [Generator函数](JavaScript/Generator函数.md)
 * [Js中==与===](JavaScript/Js中==与===.md)
 * [JavaScript选择器](JavaScript/JavaScript选择器.md)
-* [Json Web Token](JavaScript/Json%20Web%20Token.md)
+* [Json Web Token](JavaScript/JSON%20WEB%20TOKEN.md)
 * [Js模块化导入导出](JavaScript/Js模块化导入导出.md)
 * [let与const](JavaScript/let与const.md)
 * [作用域与作用域链](JavaScript/作用域与作用域链.md)
 * [Js异步机制](JavaScript/JavaScript异步机制.md)
+* [Js数组操作](JavaScript/Js数组操作.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
