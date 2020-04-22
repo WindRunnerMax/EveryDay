@@ -3,10 +3,10 @@
 > 那就k开始装酷Q机器人，资源占用也不是很大，大概占用180M内存吧
 
 ## 安装酷Q HTTP
-首先安装好`docker`
-![在这里插入图片描述](https://img-blog.csdnimg.cn/2020030222182724.png)
-酷Q官网提供了`docker` [COOLQ Docker 2.0](https://cqp.cc/t/34558)
-但是我是打算通过`HTTP`进行一些功能开发的，于是选择了大佬做的带`HTTP`插件的 [CQHTTP Docker](https://richardchien.gitee.io/coolq-http-api/docs/4.12/#/Docker)
+首先安装好`docker`  
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020030222182724.png)  
+酷Q官网提供了`docker` [COOLQ Docker 2.0](https://cqp.cc/t/34558)  
+但是我是打算通过`HTTP`进行一些功能开发的，于是选择了大佬做的带`HTTP`插件的 [CQHTTP Docker](https://richardchien.gitee.io/coolq-http-api/docs/4.12/#/Docker)  
 首先`pull`镜像，我觉得下载的比较慢，挂了一个`screen`慢慢下
 
 ```shell

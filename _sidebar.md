@@ -7,6 +7,7 @@
     * [HTML节点操作](HTML/HTML节点操作)
     * [手动实现轮播图](HTML/手动实现轮播图功能)
     * [Canvas基础](HTML/Canvas基础)
+    * [前端性能优化方案](HTML/前端性能优化方案)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中)
@@ -18,7 +19,7 @@
     * [Grid布局](CSS/Grid布局)
     * [Table布局](CSS/Table布局)
     * [SVG基础](CSS/SVG基础)
-    * [CSS引入的方式](CSS/CSS引入的方式)
+    * [CSS引入方式](CSS/CSS引入方式)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX)
