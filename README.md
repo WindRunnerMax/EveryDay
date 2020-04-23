@@ -11,6 +11,7 @@
 * [HTML节点操作](HTML/HTML节点操作.md)
 * [手动实现轮播图](HTML/手动实现轮播图功能.md)
 * [Canvas基础](HTML/Canvas基础.md)
+* [前端性能优化方案](HTML/前端性能优化方案.md)
 
 ### CSS
 * [布局垂直居中](CSS/布局垂直居中.md)
