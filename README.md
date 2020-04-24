@@ -51,6 +51,7 @@
 * [Js异步机制](JavaScript/JavaScript异步机制.md)
 * [Js数组操作](JavaScript/Js数组操作.md)
 * [Js继承的实现方式](JavaScript/Js继承的实现方式.md)
+* [Function与Object](JavaScript/Function与Object.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
