@@ -70,3 +70,8 @@ console.log(p); // ƒ (){console.log(this);}
 使用 apply、call、bind可以改变this的指向，可以参考
 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/apply%E3%80%81call%E3%80%81bind.md
 ```
+
+## 参考
+```
+http://www.ruanyifeng.com/blog/2018/06/javascript-this.html
+```
