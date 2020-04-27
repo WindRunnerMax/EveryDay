@@ -12,6 +12,7 @@
 * [手动实现轮播图](HTML/手动实现轮播图功能.md)
 * [Canvas基础](HTML/Canvas基础.md)
 * [前端性能优化方案](HTML/前端性能优化方案.md)
+* [HTML5新特性](HTML/HTML5新特性.md)
 
 ### CSS
 * [布局垂直居中](CSS/布局垂直居中.md)
@@ -19,8 +20,8 @@
 * [CSS盒子模型](CSS/CSS盒子模型.md)
 * [CSS选择器](CSS/CSS选择器.md)
 * [CSS样式优先级](CSS/CSS样式优先级.md)
-* [Flex布局](CSS/FLEX布局.md)
-* [Grid布局](CSS/GRID布局.md)
+* [Flex布局](CSS/Flex布局.md)
+* [Grid布局](CSS/Grid布局.md)
 * [Table布局](CSS/Table布局.md)
 * [SVG基础](CSS/SVG基础.md)
 * [CSS引入方式](CSS/CSS引入方式.md)
@@ -44,7 +45,7 @@
 * [Generator函数](JavaScript/Generator函数.md)
 * [Js中==与===](JavaScript/Js中==与===.md)
 * [JavaScript选择器](JavaScript/JavaScript选择器.md)
-* [Json Web Token](JavaScript/JSON%20WEB%20TOKEN.md)
+* [Json Web Token](JavaScript/Json%20Web%20Token.md)
 * [Js模块化导入导出](JavaScript/Js模块化导入导出.md)
 * [let与const](JavaScript/let与const.md)
 * [作用域与作用域链](JavaScript/作用域与作用域链.md)
