@@ -21,6 +21,7 @@
     * [Table布局](CSS/Table布局)
     * [SVG基础](CSS/SVG基础)
     * [CSS引入方式](CSS/CSS引入方式)
+    * [CSS3新特性](CSS/CSS3新特性)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX)
@@ -41,7 +42,7 @@
     * [Generator函数](JavaScript/Generator函数)
     * [Js中==与===](JavaScript/Js中==与===)
     * [JavaScript选择器](JavaScript/JavaScript选择器)
-    * [Json Web Token](JavaScript/Json20Web%20Token)
+    * [Json Web Token](JavaScript/Json%20Web%20Token)
     * [Js模块化导入导出](JavaScript/Js模块化导入导出)
     * [let与const](JavaScript/let与const)
     * [作用域与作用域链](JavaScript/作用域与作用域链)
