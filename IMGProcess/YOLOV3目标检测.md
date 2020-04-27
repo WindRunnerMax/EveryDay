@@ -400,3 +400,8 @@ if __name__ == '__main__':
 此后就需要不断开始优化参数并训练了，其实在目录中有很多文件是用不到的或者是使用一次后就一般不会再用到了，可以备份一下代码后适当精简目录结构。  
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200426175842705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+## 模型训练示例
+```
+https://github.com/WindrunnerMax/Yolov3-Train
+```
