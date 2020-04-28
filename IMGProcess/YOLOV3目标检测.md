@@ -1,5 +1,5 @@
 # YOLOV3目标检测
-实现目标为识别空教室人数以及教室占用状态，计算教室置空率。
+从零开始学习使用`keras-yolov3`进行图片的目标检测，比较详细地记录了准备以及训练过程，提供一个信号灯的目标检测模型训练实例，并提供相关代码与训练集。
 
 ## DEMO测试
 `YOLO`提供了模型以及源码，首先使用`YOLO`训练好的权重文件进行快速测试，首先下载权重文件
@@ -50,8 +50,11 @@ optional arguments:
 python yolo_video.py --image
 ```
 之后会出现`Input image filename:`我是放到`./img/3.jpg`下，于是就直接将路径输入
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200422223329833.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
 稍等一会就可以识别完成
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200422223553386.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
 
 ## 模型训练
@@ -150,6 +153,7 @@ for year, image_set in sets:
 接下来将`Train`目录下所有的文件复制到`git clone`后的目录下，此时的文件目录结构是这样的  
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200425231445509.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
 ### 修改参数
 此时需要修改`model_data/coco_classes.txt`与`voc_classes.txt`文件，这两个文件都是需要存放训练类别的，同样我只是训练`person`类别，此处只有一行`person`。  
 接下来修改`yolov3.cfg`，假如你不需要加载预训练的权重，那么此文件是没有必要修改的，此文件是为生成`yolo_weights.h5`作配置的，在此文件中搜索`yolo`，会有三处匹配，都是相同的更改方式，以第一次匹配举例，三处注释位置，也就是共需改动`9`行
@@ -401,7 +405,40 @@ if __name__ == '__main__':
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200426175842705.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
 
-## 模型训练示例
+## 模型训练实例
+从百度下载了`50`张信号灯的图片作训练集，实例仅为模型训练的`Demo`，数据集比较小，相关信息仅供参考。
+
+### 运行环境
+
 ```
+cuda 8.0
+python 3.6
+keras 2.1.5
+tensorflow-gpu 1.4.0
+```
+### 相关配置
+
+```python
+val_split = 0.1 # 训练集与测试集划分比例
+batch_size = 5 # 每次训练选择样本数
+epochs = 300 # 训练三百次
+```
+
+### 运行结果
+数据集中的红灯比较多，所以训练结果中红灯的置信度为`0.60`和`0.72`，绿灯样本较少，识别的绿灯的置信度为`0.38`，整体效果还算可以。
+```python
+loss: 25.8876 - val_loss: 38.1282
+```
+#### 原图
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200427184532963.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+#### 识别
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200427184545958.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+### 实例代码
+```
+如果觉得不错，点个star吧 😃
 https://github.com/WindrunnerMax/Yolov3-Train
 ```

@@ -68,6 +68,7 @@
     * [TCP与UDP异同](Browser/TCP与UDP异同)
     * [浏览器事件](Browser/浏览器事件)
     * [浏览器页面呈现过程](Browser/浏览器页面呈现过程)
+    * [RESTful架构与RPC架构](Browser/RESTful架构与RPC架构)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序)
@@ -110,4 +111,4 @@
 * IMGProcess
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV)
     * [Tensorflow强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别TensorflowCNN)
-    * [YOLOV3目标检测](IMGProcess/YOLOV3目标检测)
+    * [YOLOV3目标检测模型训练实例](IMGProcess/YOLOV3目标检测)
