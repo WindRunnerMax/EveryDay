@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-04-29**
+> 第65题：[Js箭头函数](JavaScript/Js箭头函数.md)
+
+<br>
+
 **2020-04-28**
 > 第64题：[RESTful架构与RPC架构](Browser/RESTful架构与RPC架构.md)
 
