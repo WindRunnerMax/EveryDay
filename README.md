@@ -56,6 +56,7 @@
 * [Function与Object](JavaScript/Function与Object.md)
 * [Js严格模式](JavaScript/Js严格模式.md)
 * [Js箭头函数](JavaScript/Js箭头函数.md)
+* [手动实现apply call bind](JavaScript/手动实现apply%20call%20bind.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
