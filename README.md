@@ -76,3 +76,4 @@
 * [浏览器页面呈现过程](Browser/浏览器页面呈现过程.md)
 * [RESTful架构与RPC架构](Browser/RESTful架构与RPC架构.md)
 * [HTTP协议发展历程](Browser/HTTP协议发展历程.md)
+* [微信小程序实现原理](Browser/微信小程序实现原理.md)
