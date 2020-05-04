@@ -78,7 +78,7 @@
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序)
-    * [QQ小程序支付](MiniProgram/QQ小程序支付)
+    * [QQ小程序支付](Java/QQ小程序支付)
     * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id)
     * [微信小程序校历组件](MiniProgram/微信小程序校历组件)
 
@@ -91,26 +91,27 @@
 
 * PHP
     * [ThinkPHP5.0 漏洞测试](PHP/ThinkPHP5.0漏洞测试)
+    * [PHP验证码识别实例](IMGProcess/PHP验证码识别实例)
 
 * Java
     * [QQ小程序支付](Java/QQ小程序支付)
 
 * Linux
-    * [简单安全防护](Linux/简单安全防护)
+    * [简单安全防护](Security/简单安全防护)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人)
 
 * Security
     * [简单安全防护](Security/简单安全防护)
-    * [XSS跨站脚本攻击](Security/XSS跨站脚本攻击)
-    * [CSRF跨站请求伪造](Security/CSRF跨站请求伪造)
-    * [SQL注入](Security/SQL注入)
-    * [XSS跨站脚本攻击](Security/XSS跨站脚本攻击)
-    * [ThinkPHP5.0 漏洞测试](Security/ThinkPHP5.0漏洞测试)
+    * [XSS跨站脚本攻击](Browser/XSS跨站脚本攻击)
+    * [CSRF跨站请求伪造](Browser/CSRF跨站请求伪造)
+    * [SQL注入](Browser/SQL注入)
+    * [CSS劫持攻击](Browser/CSS劫持攻击)
+    * [ThinkPHP5.0 漏洞测试](PHP/ThinkPHP5.0漏洞测试)
 
 * Environment
     * [VScode配置CMD本地运行环境(2.0)](Environment/VScode配置CMD本地运行环境(2.0))
     * [Recover刷机简介](Environment/Recover刷机简介)
-    * [Ubuntu16.04安装QQ机器人](Environment/Ubuntu16.04安装QQ机器人)
+    * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人)
     * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单)
     * [手机抓包HTTPS (Fiddler & Packet Capture)](Environment/手机抓包HTTPS)
 
@@ -118,3 +119,4 @@
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV)
     * [Tensorflow强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别TensorflowCNN)
     * [YOLOV3目标检测模型训练实例](IMGProcess/YOLOV3目标检测)
+    * [PHP验证码识别实例](IMGProcess/PHP验证码识别实例)
