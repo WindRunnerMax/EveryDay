@@ -13,6 +13,7 @@
 * [Canvas基础](HTML/Canvas基础.md)
 * [前端性能优化方案](HTML/前端性能优化方案.md)
 * [HTML5新特性](HTML/HTML5新特性.md)
+* [行内元素和块级元素](HTML/行内元素和块级元素.md)
 
 ### CSS
 * [布局垂直居中](CSS/布局垂直居中.md)
