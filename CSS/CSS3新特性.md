@@ -258,7 +258,7 @@ https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Grid布局.md
 ```html
 <div id="t11">多列布局示例</div>
 <style type="text/css">
-    #t10{
+    #t11{
         height: 100px;
         width: 100px;
         border: 1px solid #eee;
@@ -284,7 +284,7 @@ https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Grid布局.md
 ```html
 <div id="t12"></div>
 <style type="text/css">
-    #t11{
+    #t12{
         height: 100px;
         width: 100px;
         border: 1px solid #eee;
@@ -301,7 +301,7 @@ https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Grid布局.md
 ```html
 <div id="t13"></div>
 <style type="text/css">
-    #t12{
+    #t13{
         height: 100px;
         width: 100px;
         border: 1px solid #eee;
@@ -342,7 +342,7 @@ https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Grid布局.md
 <div id="t14"></div>
 <style type="text/css">
     @media screen and (min-width:600px){ 
-        #t13{
+        #t14{
             height: 100px;
             width: 100px;
             border: 1px solid #eee;
@@ -351,7 +351,7 @@ https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/Grid布局.md
         }
     }
     @media screen and (max-width:600px) { 
-        #t13{
+        #t14{
             height: 100px;
             width: 100px;
             border: 1px solid #eee;
