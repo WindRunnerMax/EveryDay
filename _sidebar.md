@@ -56,6 +56,7 @@
     * [Js箭头函数](JavaScript/Js箭头函数)
     * [手动实现apply call bind](JavaScript/手动实现apply%20call%20bind)
     * [Js遍历对象总结](JavaScript/Js遍历对象总结)
+    * [Js获取数据类型](JavaScript/Js获取数据类型)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题)
