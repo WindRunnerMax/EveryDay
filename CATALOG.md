@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-07**
+> 第73题：[Window对象](Browser/Window对象.md)
+
+<br>
+
 **2020-05-06**
 > 第72题：[Js获取数据类型](JavaScript/Js获取数据类型.md)
 
