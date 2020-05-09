@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-08**
+> 第74题：[手动实现Promise](JavaScript/手动实现Promise.md)
+
+<br>
+
 **2020-05-07**
 > 第73题：[Window对象](Browser/Window对象.md)
 

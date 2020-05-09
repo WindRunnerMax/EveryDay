@@ -61,6 +61,7 @@
 * [手动实现apply call bind](JavaScript/手动实现apply%20call%20bind.md)
 * [Js遍历对象总结](JavaScript/Js遍历对象总结.md)
 * [Js获取数据类型](JavaScript/Js获取数据类型.md)
+* [手动实现Promise](JavaScript/手动实现Promise.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
