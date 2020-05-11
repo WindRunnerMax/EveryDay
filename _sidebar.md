@@ -59,6 +59,7 @@
     * [Js遍历对象总结](JavaScript/Js遍历对象总结.md)
     * [Js获取数据类型](JavaScript/Js获取数据类型.md)
     * [手动实现Promise](JavaScript/手动实现Promise.md)
+    * [Js实现数组排序](JavaScript/Js实现数组排序.md)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题.md)
@@ -115,7 +116,7 @@
     * [ThinkPHP5.0 漏洞测试](PHP/ThinkPHP5.0漏洞测试.md)
 
 * Environment
-    * [VScode配置CMD本地运行环境(2.0.md)](Environment/VScode配置CMD本地运行环境(2.0.md).md)
+    * [VScode配置CMD本地运行环境(2.0.md)](Environment/VScode配置CMD本地运行环境(2.0).md)
     * [Recover刷机简介](Environment/Recover刷机简介.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
     * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单.md)
