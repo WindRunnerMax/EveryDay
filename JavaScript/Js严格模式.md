@@ -1,3 +1,4 @@
+
 # Js严格模式
 `JavaScript`严格模式`strict mode`，即在严格的条件下运行。严格模式消除了`Javascript`语法的一些不合理、不严谨之处，减少一些怪异行为；消除代码运行的一些不安全之处，保证代码运行的安全；提高了引擎的效率，增加运行速度；为未来新的`Js`版本做好铺垫。
 
@@ -33,7 +34,7 @@ var x = 1; // 可以使用var在全局作用域声明全局变量
 y = 1; // Uncaught ReferenceError: y is not defined
 ```
 
-### 不允许使用delete关键字
+### 不允许delete变量和函数
 ```javascript
 // 非严格模式
 var x = 1;
@@ -183,7 +184,7 @@ console.log(x); // 0
 ```javascript
 // 严格模式
 "use strict";
-eval("var x = 0");
+eval("var x = 0"); // eval作用域
 console.log(x); // Uncaught ReferenceError: x is not defined
 ```
 
