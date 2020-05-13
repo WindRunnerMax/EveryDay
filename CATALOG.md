@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-12**
+> 第78题：[defineProperty](JavaScript/defineProperty.md)
+
+<br>
+
 **2020-05-11**
 > 第77题：[Js实现数组排序](JavaScript/Js实现数组排序.md)
 
