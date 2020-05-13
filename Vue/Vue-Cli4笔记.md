@@ -1,6 +1,6 @@
 # Vue-Cli4与Vue-Cli2区别浅谈
 
-> 当时学习 Vue-Cli 的时候看的是 Vue-Cli2 的相关教程，当把 package.json 上传 github 的时候提醒有安全问题，于是准备使用最新版的 Vue-Cli ，我一直认为才更新到 Vue-Cli3，没想到都到Vue-Cli4了
+> 当时学习 Vue-Cli 的时候看的是 Vue-Cli2 的相关教程，当把 package.json 上传 github 的时候提醒有安全问题，于是准备使用最新版的 Vue-Cli ，我一直认为才更新到 Vue-Cli3，没想到都到Vue-Cli4了  
 > 可能有很多特性在 Vue-Cli3 时就有了，做个笔记记录一下
 
 ## 创建工程
