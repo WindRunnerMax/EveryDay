@@ -62,6 +62,7 @@
     * [Js实现数组排序](JavaScript/Js实现数组排序.md)
     * [defineProperty](JavaScript/defineProperty.md)
     * [Js实现链表操作](JavaScript/Js实现链表操作.md)
+    * [getter与setter](JavaScript/getter与setter.md)
 
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题.md)
