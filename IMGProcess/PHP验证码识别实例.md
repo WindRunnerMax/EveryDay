@@ -599,5 +599,5 @@ fclose($library);
 
 ```
 如果觉得不错，点个star吧 😃
-https://github.com/WindrunnerMax/SWVerifyCode/tree/master/PHP/Promote
+https://github.com/WindrunnerMax/Example
 ```

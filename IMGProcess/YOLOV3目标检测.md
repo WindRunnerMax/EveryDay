@@ -440,5 +440,5 @@ loss: 25.8876 - val_loss: 38.1282
 ### 实例代码
 ```
 如果觉得不错，点个star吧 😃
-https://github.com/WindrunnerMax/Yolov3-Train
+https://github.com/WindrunnerMax/Example
 ```
