@@ -70,6 +70,7 @@
 * [Js实现链表操作](JavaScript/Js实现链表操作.md)
 * [getter与setter](JavaScript/getter与setter.md)
 * [Js中的堆栈](JavaScript/Js中的堆栈.md)
+* [防抖与节流](JavaScript/防抖与节流.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
