@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-20**
+> 第86题：[Js的GC机制](JavaScript/Js的GC机制.md)
+
+<br>
+
 **2020-05-19**
 > 第85题：[防抖与节流](JavaScript/防抖与节流.md)
 
