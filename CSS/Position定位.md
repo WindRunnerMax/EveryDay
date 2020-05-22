@@ -1,4 +1,4 @@
-# position定位
+# Position定位
 `CSS`中`position`属性是比较常用的元素定位方案，`position`常用的取值有`static`、`relative`、`absolute`、`fixed`、`sticky`、`inherit`。
 
 ## static
