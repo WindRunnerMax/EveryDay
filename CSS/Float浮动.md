@@ -184,7 +184,7 @@
 </html>
 ```
 
-## 配合::after与clear属性
+### 配合::after与clear属性
 通过使用伪元素`::after`配合`clear`属性进行浮动清除。
 
 ```html
