@@ -1,5 +1,5 @@
 # Js遍历数组总结
-遍历数组的主要方法为`for`、`forEach`、`map`、`for in`、`for of`
+遍历数组的主要方法为`for`、`forEach`、`map`、`for in`、`for of`。
 
 ## for
 
