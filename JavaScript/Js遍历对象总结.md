@@ -1,5 +1,5 @@
 # Js遍历对象总结
-`Js`遍历对象的方法主要有`for in`、`Object.keys()`、`Object.getOwnPropertyNames()`、`Reflect.ownKeys()`、`Object.getOwnPropertySymbols()`
+`Js`遍历对象的方法主要有`for in`、`Object.keys()`、`Object.getOwnPropertyNames()`、`Reflect.ownKeys()`、`Object.getOwnPropertySymbols()`。
 
 ## for in
 `for in`语句以任意顺序迭代对象的可枚举属性，包括原型链上的可枚举属性，不包括`Symbol`属性。
@@ -26,9 +26,9 @@ for( let unit in obj ){
 */
 /*
  对于迭代时的顺序：
- 1. 如果属性名的类型是Number，那么Object.keys返回值是按照key从小到大排序
- 2. 如果属性名的类型是String，那么Object.keys返回值是按照属性被创建的时间升序排序。
- 3. 如果属性名的类型是Symbol，那么逻辑同String相同
+ 1. 如果属性名的类型是Number，那么属性的迭代顺序是按照key从小到大排序。
+ 2. 如果属性名的类型是String，那么属性的迭代顺序是按照属性被创建的时间升序排序。
+ 3. 如果属性名的类型是Symbol，那么逻辑同String相同。
 */
 ```
 
