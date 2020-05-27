@@ -1,5 +1,5 @@
 # Js选择器
-JS选择器常用的有`getElementById()`、`getElementsByClassName()`、`getElementsByName()`、`getElementsByTagName()`、`querySelector()`、`querySelectorAll()`
+JS选择器常用的有`getElementById()`、`getElementsByClassName()`、`getElementsByName()`、`getElementsByTagName()`、`querySelector()`、`querySelectorAll()`。
 
 ## getElementById
 通过`id`来定位，返回对指定`id`的第一个对象的引用，返回类型为`HTMLDivElement`。

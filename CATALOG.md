@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-26**
+> 第92题：[Map与WeakMap](JavaScript/Map与WeakMap.md)
+
+<br>
+
 **2020-05-25**
 > 第91题：[OAUTH开放授权](Browser/OAUTH开放授权.md)
 
