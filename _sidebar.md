@@ -13,6 +13,7 @@
     * [图片等比例缩放方案](HTML/图片等比例缩放方案.md)
     * [实现瀑布流布局](HTML/实现瀑布流布局.md)
     * [实现图片懒加载](HTML/实现图片懒加载.md)
+    * [Web Worker](HTML/Web%20Worker.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
