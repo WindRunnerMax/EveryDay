@@ -82,11 +82,13 @@ console.log(g.next()); // {value: undefined, done: true}
 ### 异步操作的同步化表达
 
 ```javascript
+var it = null;
+
 function f(){
-var rand = Math.random() * 2;
-     setTimeout(function(){
-         it.next(rand);
-     },1000)
+    var rand = Math.random() * 2;
+    setTimeout(function(){
+        if(it) it.next(rand);
+    },1000)
 }
 function success(r1,r2,r3){
     console.log(r1,r2,r3); // 0.11931234806372775 0.3525336021860719 0.39753321774160844
@@ -94,11 +96,15 @@ function success(r1,r2,r3){
 // 成为线性任务而解决嵌套
 function* g(){ 
     var r1 = yield f();
+    console.log(r1);
     var r2 = yield f();
+    console.log(r2);
     var r3 = yield f();
+    console.log(r3);
     success(r1,r2,r3);
 }
-var it = g();
+
+it = g();
 it.next();
 ```
 

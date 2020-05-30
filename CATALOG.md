@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-29**
+> 第95题：[SSO单点登录](Browser/SSO单点登录.md)
+
+<br>
+
 **2020-05-28**
 > 第94题：[Set与WeakSet](JavaScript/Set与WeakSet.md)
 

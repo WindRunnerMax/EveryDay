@@ -56,8 +56,8 @@ for( let unit of propertyArr ){
  b 1111
  a 111
 */
-console.log( Object.entries(obj)); // [["1", "1"],["2", "11"],["b", "1111"],["a", "111"]]
-console.log( Object.values(obj)); // ["1", "11", "1111", "111"]
+console.log(Object.entries(obj)); // [["1", "1"],["2", "11"],["b", "1111"],["a", "111"]]
+console.log(Object.values(obj)); // ["1", "11", "1111", "111"]
 ```
 
 ## Object.getOwnPropertyNames
