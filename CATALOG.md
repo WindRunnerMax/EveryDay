@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-30**
+> 第96题：[Object对象](JavaScript/Object对象.md)
+
+<br>
+
 **2020-05-29**
 > 第95题：[SSO单点登录](Browser/SSO单点登录.md)
 

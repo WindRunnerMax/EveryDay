@@ -354,7 +354,7 @@ console.log(Object.isExtensible(obj3)); // false
 ## Object.isFrozen
 `Object.isFrozen()`方法判断一个对象是否被冻结。
 
-## 示例
+### 示例
 `Object.isFrozen(obj)`  
 `obj`: 被检测的对象。  
 返回表示给定对象是否被冻结的`Boolean`。

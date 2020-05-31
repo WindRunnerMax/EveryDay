@@ -79,6 +79,7 @@
 * [实现浅拷贝与深拷贝](JavaScript/实现浅拷贝与深拷贝.md)
 * [Map与WeakMap](JavaScript/Map与WeakMap.md)
 * [Set与WeakSet](JavaScript/Set与WeakSet.md)
+* [Object对象](JavaScript/Object对象.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
