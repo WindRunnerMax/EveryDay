@@ -24,7 +24,7 @@
 ## 请求头
 * `Accept`: 指定客户端能够接收的内容类型
 * `Accept-Charset`: 浏览器可以接受的字符编码集。
-* `Accept-Encoding`: 指定浏览器可以支持的web服务器返回内容压缩编码类型。
+* `Accept-Encoding`: 指定浏览器可以支持的`web`服务器返回内容压缩编码类型。
 * `Accept-Language`: 浏览器可接受的语言
 * `Accept-Ranges`: 可以请求网页实体的一个或者多个子范围字段
 * `Authorization`: HTTP授权的授权证书

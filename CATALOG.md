@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-05-31**
+> 第97题：[Js捕获异常的方法](JavaScript/Js捕获异常的方法.md)
+
+<br>
+
 **2020-05-30**
 > 第96题：[Object对象](JavaScript/Object对象.md)
 
