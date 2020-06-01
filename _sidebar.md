@@ -77,6 +77,7 @@
     * [Set与WeakSet](JavaScript/Set与WeakSet.md)
     * [Object对象](JavaScript/Object对象.md)
     * [Js捕获异常的方法](JavaScript/Js捕获异常的方法.md)
+    * [Js中fetch方法](JavaScript/Js中fetch方法.md)
     
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题.md)
