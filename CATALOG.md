@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-01**
+> 第98题：[Js中fetch方法](JavaScript/Js中fetch方法.md)
+
+<br>
+
 **2020-05-31**
 > 第97题：[Js捕获异常的方法](JavaScript/Js捕获异常的方法.md)
 
