@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-02**
+> 第99题：[300ms点击延迟](HTML/300ms点击延迟.md)
+
+<br>
+
 **2020-06-01**
 > 第98题：[Js中fetch方法](JavaScript/Js中fetch方法.md)
 
