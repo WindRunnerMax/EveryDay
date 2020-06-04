@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-03**
+> 第100题：[XML和JSON的比较](JavaScript/XML和JSON的比较.md)
+
+<br>
+
 **2020-06-02**
 > 第99题：[300ms点击延迟](HTML/300ms点击延迟.md)
 
