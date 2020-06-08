@@ -108,6 +108,7 @@
     * [浏览器窗口间通信](Browser/浏览器窗口间通信.md)
     * [OAUTH开放授权](Browser/OAUTH开放授权.md)
     * [SSO单点登录](Browser/SSO单点登录.md)
+    * [DNS解析过程](Browser/DNS解析过程.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
