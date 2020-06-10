@@ -16,6 +16,7 @@
     * [Web Worker](HTML/Web%20Worker.md)
     * [300ms点击延迟](HTML/300ms点击延迟.md)
     * [默认行为及阻止](HTML/默认行为及阻止.md)
+    * [可替换元素和非替换元素](HTML/可替换元素和非替换元素.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
