@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-09**
+> 第106题：[Vue中key的作用](Vue/Vue中key的作用.md)
+
+<br>
+
 **2020-06-08**
 > 第105题：[DNS解析过程](Browser/DNS解析过程.md)
 
