@@ -127,6 +127,7 @@
     * [Vue-Cli4笔记](Vue/Vue-Cli4笔记.md)
     * [Vue生命周期](Vue/Vue生命周期.md)
     * [Vue中key的作用](Vue/Vue中key的作用.md)
+    * [Vue数据双向绑定](Vue/Vue数据双向绑定.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
