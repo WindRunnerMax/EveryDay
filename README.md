@@ -42,6 +42,7 @@
 * [文本溢出截断省略](CSS/文本溢出截断省略.md)
 * [CSS隐藏元素的方法](CSS/CSS隐藏元素的方法.md)
 * [如何避免FOUC](CSS/如何避免FOUC.md)
+* [display的值及作用](CSS/display的值及作用.md)
 
 ### JavaScript
 * [手动实现AJAX](JavaScript/手动实现AJAX.md)
