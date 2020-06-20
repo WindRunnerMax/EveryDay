@@ -94,6 +94,7 @@
 * [Js文件异步加载](JavaScript/Js文件异步加载.md)
 * [深入理解Js数组](JavaScript/深入理解Js数组.md)
 * [模板语法的简单实现](JavaScript/模板语法的简单实现.md)
+* [Thunk函数的使用](JavaScript/Thunk函数的使用.md)
 
 ### Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)

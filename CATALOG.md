@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-19**
+> 第116题：[Thunk函数的使用](JavaScript/Thunk函数的使用.md)
+
+<br>
+
 **2020-06-18**
 > 第115题：[display的值及作用](CSS/display的值及作用.md)
 
