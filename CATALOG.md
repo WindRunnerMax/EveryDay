@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-20**
+> 第117题：[async/await剖析](JavaScript/async、await剖析.md)
+
+<br>
+
 **2020-06-19**
 > 第116题：[Thunk函数的使用](JavaScript/Thunk函数的使用.md)
 
