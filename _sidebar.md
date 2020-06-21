@@ -167,3 +167,7 @@
     * [Tensorflow强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别TensorflowCNN.md)
     * [YOLOV3目标检测模型训练实例](IMGProcess/YOLOV3目标检测.md)
     * [PHP验证码识别实例](IMGProcess/PHP验证码识别实例.md)
+
+* Leetcode
+    * [全排列](LeetCode/全排列.md)
+    
