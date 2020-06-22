@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-06-21**
+> 第118题：[全排列](LeetCode/全排列.md)
+
+<br>
+
 **2020-06-20**
 > 第117题：[async/await剖析](JavaScript/async、await剖析.md)
 
