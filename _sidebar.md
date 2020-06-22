@@ -168,6 +168,7 @@
     * [YOLOV3目标检测模型训练实例](IMGProcess/YOLOV3目标检测.md)
     * [PHP验证码识别实例](IMGProcess/PHP验证码识别实例.md)
 
-* Leetcode
+* LeetCode
     * [全排列](LeetCode/全排列.md)
+    * [括号生成](LeetCode/括号生成.md)
     
