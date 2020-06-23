@@ -131,3 +131,4 @@
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
+* [括号生成](LeetCode/括号生成.md)
