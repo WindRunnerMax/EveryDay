@@ -132,6 +132,7 @@
     * [Vue生命周期](Vue/Vue生命周期.md)
     * [Vue中key的作用](Vue/Vue中key的作用.md)
     * [Vue数据双向绑定](Vue/Vue数据双向绑定.md)
+    * [data为何以函数形式返回](Vue/data为何以函数形式返回.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
