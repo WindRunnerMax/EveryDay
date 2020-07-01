@@ -123,12 +123,6 @@
     * [DNS解析过程](Browser/DNS解析过程.md)
     * [强缓存与协商缓存](Browser/强缓存与协商缓存.md)
 
-* MiniProgram
-    * [山科小站小程序](MiniProgram/山科小站小程序.md)
-    * [QQ小程序支付](Java/QQ小程序支付.md)
-    * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
-    * [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
-
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
     * [Vue-Cli4笔记](Vue/Vue-Cli4笔记.md)
@@ -136,6 +130,12 @@
     * [Vue中key的作用](Vue/Vue中key的作用.md)
     * [Vue数据双向绑定](Vue/Vue数据双向绑定.md)
     * [data为何以函数形式返回](Vue/data为何以函数形式返回.md)
+
+* MiniProgram
+    * [山科小站小程序](MiniProgram/山科小站小程序.md)
+    * [QQ小程序支付](Java/QQ小程序支付.md)
+    * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
+    * [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
