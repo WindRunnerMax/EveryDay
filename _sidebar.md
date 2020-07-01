@@ -166,6 +166,7 @@
     * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单.md)
     * [手机抓包HTTPS (Fiddler & Packet Capture.md)](Environment/手机抓包HTTPS.md)
     * [文本选中复制](Environment/文本选中复制.md)
+    * [发布Npm包到GitHub Packages](Environment/发布Npm包到GitHub%20Packages.md)
 
 * IMGProcess
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV.md)
