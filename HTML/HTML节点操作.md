@@ -102,7 +102,9 @@
 
     <script type="text/javascript">
         console.log(document.getElementById("t7").previousSibling); // 注意也会匹配#text
+        console.log(document.getElementById("t7").previousElementSibling); // 不匹配文本节点、注释节点
         console.log(document.getElementById("t7").nextSibling); // 注意也会匹配#text
+        console.log(document.getElementById("t7").nextElementSibling); // 不匹配文本节点、注释节点
     </script>
 ```
 
@@ -201,7 +203,9 @@
 
     <script type="text/javascript">
         console.log(document.getElementById("t7").previousSibling); // 注意也会匹配#text
+        console.log(document.getElementById("t7").previousElementSibling); // 不匹配文本节点、注释节点
         console.log(document.getElementById("t7").nextSibling); // 注意也会匹配#text
+        console.log(document.getElementById("t7").nextElementSibling); // 不匹配文本节点、注释节点
     </script>
 </body>
 </html>
