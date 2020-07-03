@@ -131,6 +131,7 @@
     * [Vue中key的作用](Vue/Vue中key的作用.md)
     * [Vue数据双向绑定](Vue/Vue数据双向绑定.md)
     * [data为何以函数形式返回](Vue/data为何以函数形式返回.md)
+    * [Vue中$nextTick的理解](Vue/Vue中$nextTick的理解.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
