@@ -126,6 +126,7 @@
 * [SSO单点登录](Browser/SSO单点登录.md)
 * [DNS解析过程](Browser/DNS解析过程.md)
 * [强缓存与协商缓存](Browser/强缓存与协商缓存.md)
+* [GET和POST的区别](JavaScript/GET和POST的区别.md)
 
 ## Vue
 * [Vue生命周期](Vue/Vue生命周期.md)

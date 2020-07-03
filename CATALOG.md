@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-07-02**
+> 第129题：[GET和POST的区别](JavaScript/GET和POST的区别.md)
+
+<br>
+
 **2020-07-01**
 > 第128题：[null和undefined的区别](JavaScript/null和undefined的区别.md)
 
