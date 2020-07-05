@@ -19,6 +19,7 @@
     * [可替换元素和非替换元素](HTML/可替换元素和非替换元素.md)
     * [HTML与XHTML区别](HTML/HTML与XHTML区别.md)
     * [常见的兼容性问题](HTML/常见的兼容性问题.md)
+    * [Attribute和Property的区别](HTML/Attribute和Property的区别.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
