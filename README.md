@@ -1,6 +1,6 @@
 # EveryDay
 
-> 每日一题 与君共勉
+> https://blog.touchczy.top/
 
 ## HTML
 * [DOCTYPE](HTML/DOCTYPE.md)
@@ -23,6 +23,7 @@
 * [可替换元素和非替换元素](HTML/可替换元素和非替换元素.md)
 * [HTML与XHTML区别](HTML/HTML与XHTML区别.md)
 * [常见的兼容性问题](HTML/常见的兼容性问题.md)
+* [Attribute和Property的区别](HTML/Attribute和Property的区别.md)
 
 ## CSS
 * [布局垂直居中](CSS/布局垂直居中.md)
