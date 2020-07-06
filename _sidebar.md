@@ -12,7 +12,7 @@
     * [行内元素和块级元素](HTML/行内元素和块级元素.md)
     * [图片等比例缩放方案](HTML/图片等比例缩放方案.md)
     * [实现瀑布流布局](HTML/实现瀑布流布局.md)
-    * [实现图片懒加载](HTML/实现图片懒加载.md)
+    * [实现图片懒加载](HTML/实现图片懒加载.md) 
     * [Web Worker](HTML/Web%20Worker.md)
     * [300ms点击延迟](HTML/300ms点击延迟.md)
     * [默认行为及阻止](HTML/默认行为及阻止.md)
@@ -42,6 +42,7 @@
     * [如何避免FOUC](CSS/如何避免FOUC.md)
     * [display的值及作用](CSS/display的值及作用.md)
     * [CSS常用单位](CSS/CSS常用单位.md)
+    * [实现毛玻璃效果](CSS/实现毛玻璃效果.md)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX.md)
