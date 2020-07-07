@@ -46,6 +46,7 @@
 * [如何避免FOUC](CSS/如何避免FOUC.md)
 * [display的值及作用](CSS/display的值及作用.md)
 * [CSS常用单位](CSS/CSS常用单位.md)
+* [实现毛玻璃效果](CSS/实现毛玻璃效果.md)
 
 ## JavaScript
 * [手动实现AJAX](JavaScript/手动实现AJAX.md)
