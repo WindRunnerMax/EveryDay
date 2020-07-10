@@ -138,6 +138,9 @@
 * [data为何以函数形式返回](Vue/data为何以函数形式返回.md)
 * [Vue中$nextTick的理解](Vue/Vue中$nextTick的理解.md)
 
+## Linux
+* [cat命令](Linux/cat命令.md)
+
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
 * [括号生成](LeetCode/括号生成.md)
