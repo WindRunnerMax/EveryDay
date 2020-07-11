@@ -146,6 +146,7 @@
     * [简单安全防护](Security/简单安全防护.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
     * [cat命令](Linux/cat命令.md)
+    * [chmod命令](Linux/chmod命令.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
