@@ -150,6 +150,7 @@
     * [chmod命令](Linux/chmod命令.md)
     * [chown命令](Linux/chown命令.md)
     * [cmp命令](Linux/cmp命令.md)
+    * [diff命令](Linux/diff命令.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
