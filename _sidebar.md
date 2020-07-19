@@ -136,6 +136,7 @@
     * [data为何以函数形式返回](Vue/data为何以函数形式返回.md)
     * [Vue中$nextTick的理解](Vue/Vue中$nextTick的理解.md)
     * [MVVM模式的理解](Vue/MVVM模式的理解.md)
+    * [v-if与v-show的区别](Vue/v-if与v-show的区别.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
