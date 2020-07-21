@@ -146,6 +146,7 @@
 * [chown命令](Linux/chown命令.md)
 * [cmp命令](Linux/cmp命令.md)
 * [diff命令](Linux/diff命令.md)
+* [diffstat命令](Linux/diffstat命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
