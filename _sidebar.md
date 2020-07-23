@@ -154,6 +154,7 @@
     * [diff命令](Linux/diff命令.md)
     * [diffstat命令](Linux/diffstat命令.md)
     * [file命令](Linux/file命令.md)
+    * [find命令](Linux/find命令.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
@@ -174,7 +175,7 @@
     * [ThinkPHP5.0 漏洞测试](PHP/ThinkPHP5.0漏洞测试.md)
 
 * Environment
-    * [VScode配置CMD本地运行环境(2.0.md)](Environment/VScode配置CMD本地运行环境(2.0).md)
+    * [VScode配置CMD本地运行环境(2.0)](Environment/VScode配置CMD本地运行环境(2.0).md)
     * [Recover刷机简介](Environment/Recover刷机简介.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
     * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单.md)
