@@ -138,12 +138,6 @@
     * [MVVM模式的理解](Vue/MVVM模式的理解.md)
     * [v-if与v-show的区别](Vue/v-if与v-show的区别.md)
 
-* MiniProgram
-    * [山科小站小程序](MiniProgram/山科小站小程序.md)
-    * [QQ小程序支付](Java/QQ小程序支付.md)
-    * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
-    * [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
-
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
@@ -155,6 +149,12 @@
     * [diffstat命令](Linux/diffstat命令.md)
     * [file命令](Linux/file命令.md)
     * [find命令](Linux/find命令.md)
+
+* MiniProgram
+    * [山科小站小程序](MiniProgram/山科小站小程序.md)
+    * [QQ小程序支付](Java/QQ小程序支付.md)
+    * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
+    * [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
@@ -204,4 +204,5 @@
     * [全排列II](LeetCode/全排列II.md)
     * [插入、删除和获取元素](LeetCode/插入、删除和获取元素.md)
     * [最长公共前缀](LeetCode/最长公共前缀.md)
+    * [除数博弈](LeetCode/除数博弈.md)
     
