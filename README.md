@@ -148,6 +148,7 @@
 * [diff命令](Linux/diff命令.md)
 * [diffstat命令](Linux/diffstat命令.md)
 * [file命令](Linux/file命令.md)
+* [find命令](Linux/find命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
