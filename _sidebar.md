@@ -149,6 +149,7 @@
     * [diffstat命令](Linux/diffstat命令.md)
     * [file命令](Linux/file命令.md)
     * [find命令](Linux/find命令.md)
+    * [cut命令](Linux/cut命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
