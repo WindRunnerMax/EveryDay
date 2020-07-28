@@ -152,6 +152,7 @@
     * [find命令](Linux/find命令.md)
     * [cut命令](Linux/cut命令.md)
     * [ln命令](Linux/ln命令.md)
+    * [less命令](Linux/less命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
