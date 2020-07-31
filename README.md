@@ -153,6 +153,7 @@
 * [cut命令](Linux/cut命令.md)
 * [ln命令](Linux/ln命令.md)
 * [less命令](Linux/less命令.md)
+* [locate命令](Linux/locate命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
