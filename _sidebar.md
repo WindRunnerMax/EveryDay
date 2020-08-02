@@ -138,6 +138,7 @@
     * [MVVM模式的理解](Vue/MVVM模式的理解.md)
     * [v-if与v-show的区别](Vue/v-if与v-show的区别.md)
     * [Vue中$refs的理解](Vue/Vue中$refs的理解.md)
+    * [Vue中虚拟DOM的理解](Vue/Vue中虚拟DOM的理解.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
