@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-08-02**
+> 第160题：[Vue中虚拟DOM的理解](Vue/Vue中虚拟DOM的理解.md)
+
+<br>
+
 **2020-08-01**
 > 第159题：[chattr命令](Linux/chattr命令.md)
 
