@@ -157,6 +157,7 @@
 * [locate命令](Linux/locate命令.md)
 * [lsattr命令](Linux/lsattr命令.md)
 * [chattr命令](Linux/chattr命令.md)
+* [mc命令](Linux/mc命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
