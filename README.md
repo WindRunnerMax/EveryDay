@@ -159,6 +159,7 @@
 * [chattr命令](Linux/chattr命令.md)
 * [mc命令](Linux/mc命令.md)
 * [mktemp命令](Linux/mktemp命令.md)
+* [more命令](Linux/more命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
