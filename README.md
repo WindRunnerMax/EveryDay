@@ -162,6 +162,7 @@
 * [mktemp命令](Linux/mktemp命令.md)
 * [more命令](Linux/more命令.md)
 * [mv命令](Linux/mv命令.md)
+* [od命令](Linux/od命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
