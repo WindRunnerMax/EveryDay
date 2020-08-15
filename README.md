@@ -163,6 +163,7 @@
 * [more命令](Linux/more命令.md)
 * [mv命令](Linux/mv命令.md)
 * [od命令](Linux/od命令.md)
+* [paste命令](Linux/paste命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
