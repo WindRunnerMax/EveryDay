@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-08-16**
+> 第174题：[$router和$route的区别](Vue/$router和$route的区别.md)
+
+<br>
+
 **2020-08-15**
 > 第173题：[提莫攻击](LeetCode/提莫攻击.md)
 
