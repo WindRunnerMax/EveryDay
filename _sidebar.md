@@ -165,6 +165,7 @@
     * [mv命令](Linux/mv命令.md)
     * [od命令](Linux/od命令.md)
     * [paste命令](Linux/paste命令.md)
+    * [patch命令](Linux/patch命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
