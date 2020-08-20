@@ -167,6 +167,7 @@
     * [paste命令](Linux/paste命令.md)
     * [patch命令](Linux/patch命令.md)
     * [rcp命令](Linux/rcp命令.md)
+    * [rm命令](Linux/rm命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
