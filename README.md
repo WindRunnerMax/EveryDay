@@ -197,3 +197,4 @@
 * [提莫攻击](LeetCode/提莫攻击.md)
 * [叶子相似的树](LeetCode/叶子相似的树.md)
 * [二叉树的最小深度](LeetCode/二叉树的最小深度.md)
+* [平衡二叉树](LeetCode/平衡二叉树.md)
