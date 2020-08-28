@@ -171,6 +171,7 @@
     * [rm命令](Linux/rm命令.md)
     * [split命令](Linux/split命令.md)
     * [tee命令](Linux/tee命令.md)
+    * [tmpwatch命令](Linux/tmpwatch命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
