@@ -20,6 +20,7 @@
     * [HTML与XHTML区别](HTML/HTML与XHTML区别.md)
     * [常见的兼容性问题](HTML/常见的兼容性问题.md)
     * [Attribute和Property的区别](HTML/Attribute和Property的区别.md)
+    * [实现拼图滑动验证码](HTML/实现拼图滑动验证码.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
