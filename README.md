@@ -172,6 +172,7 @@
 * [split命令](Linux/split命令.md)
 * [tee命令](Linux/tee命令.md)
 * [tmpwatch命令](Linux/tmpwatch命令.md)
+* [touch命令](Linux/touch命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
