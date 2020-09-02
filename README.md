@@ -146,6 +146,7 @@
 * [Vue中diff算法的理解](Vue/Vue中diff算法的理解.md)
 * [$router和$route的区别](Vue/$router和$route的区别.md)
 * [对keep-alive组件的理解](Vue/对keep-alive组件的理解.md)
+* [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
