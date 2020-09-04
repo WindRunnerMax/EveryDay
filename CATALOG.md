@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-09-03**
+> 第192题：[CDN缓存的理解](Browser/CDN缓存的理解.md)
+
+<br>
+
 **2020-09-02**
 > 第191题：[Js中RegExp对象](JavaScript/Js中RegExp对象.md)
 
@@ -311,7 +316,7 @@
 <br>
 
 **2020-07-02**
-> 第129题：[GET和POST的区别](JavaScript/GET和POST的区别.md)
+> 第129题：[GET和POST的区别](Browser/GET和POST的区别.md)
 
 <br>
 
