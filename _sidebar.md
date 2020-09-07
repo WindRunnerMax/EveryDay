@@ -147,6 +147,7 @@
     * [$router和$route的区别](Vue/$router和$route的区别.md)
     * [对keep-alive组件的理解](Vue/对keep-alive组件的理解.md)
     * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
+    * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)

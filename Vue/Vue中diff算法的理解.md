@@ -127,7 +127,7 @@ function patchVnode (oldVnode, vnode, insertedVnodeQueue, removeOnly) {
     //...
 }
 ```
-`cbs.update`主要是用来更新`attributes`的，这里的`cbs`其实是从`hooks`中来的，`hooks`在`33`行有如下定义，`const hooks = ['create', 'activate', 'update', 'remove', 'destroy']`，其是在`VNode`更新的各个阶段进行相应的操作，这里`cbs.update`包含如下几个回调：`updateAttributes`、`updateClass`、`updateDOMListeners`、`updateDOMProps`、`updateStyle`、`update`、`updateDirectives`，其主要都是更新当前结点的一些相关`attributes`。  
+`cbs.update`主要是用来更新`attributes`的，这里的`cbs`其实是从`hooks`中来的，`hooks`在`33`行有如下定义，`const hooks = ['create', 'activate', 'update', 'remove', 'destroy']`，其是在`VNode`更新的各个阶段进行相应的操作，这里`cbs.update`包含如下几个回调：`updateAttrs`、`updateClass`、`updateDOMListeners`、`updateDOMProps`、`updateStyle`、`update`、`updateDirectives`，其主要都是更新当前结点的一些相关`attributes`。  
 之后需要更新孩子节点，这时候分两种情况：
 * 如果孩子不是`textNode`，那么需要再分三种情况处理。
 * 如果当前孩子是`textNode`那么直接更新`text`即可。
