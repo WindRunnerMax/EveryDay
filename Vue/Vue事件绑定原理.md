@@ -59,7 +59,7 @@
 <button v-on="{ mousedown: doThis, mouseup: doThat }"></button>
 ```
 
-## 组件元素
+### 组件元素
 
 ```html
 <!-- 自定义事件 -->
