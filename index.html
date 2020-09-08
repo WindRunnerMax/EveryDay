@@ -31,9 +31,10 @@
             alias: {
                 '/.*/_sidebar.md': '/_sidebar.md'
             },
-            plugins: [
-
-            ]
+            plugins: [],
+            requestHeaders: {
+                "cache-control": "max-age=86000",
+            },
         }
     </script>
     <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
