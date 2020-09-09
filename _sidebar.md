@@ -149,6 +149,9 @@
     * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
     * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
 
+* Design Patterns
+    * [简单工厂模式](Patterns/简单工厂模式.md)
+
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
