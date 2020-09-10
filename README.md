@@ -151,6 +151,9 @@
 * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
 * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
 
+## Patterns
+* [简单工厂模式](Patterns/简单工厂模式.md)
+
 ## Linux
 * [cat命令](Linux/cat命令.md)
 * [chmod命令](Linux/chmod命令.md)
