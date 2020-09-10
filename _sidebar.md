@@ -149,8 +149,9 @@
     * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
     * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
 
-* Design Patterns
+* Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
+    * [工厂方法模式](Patterns/工厂方法模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
