@@ -148,6 +148,7 @@
     * [对keep-alive组件的理解](Vue/对keep-alive组件的理解.md)
     * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
     * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
+    * [Vue中数组变动监听](Vue/Vue中数组变动监听.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
