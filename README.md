@@ -154,6 +154,7 @@
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
 * [工厂方法模式](Patterns/工厂方法模式.md)
+* [抽象工厂模式](Patterns/抽象工厂模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
