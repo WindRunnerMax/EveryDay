@@ -186,6 +186,7 @@
     * [tmpwatch命令](Linux/tmpwatch命令.md)
     * [touch命令](Linux/touch命令.md)
     * [umask命令](Linux/umask命令.md)
+    * [which命令](Linux/which命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
