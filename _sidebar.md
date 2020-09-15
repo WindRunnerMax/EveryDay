@@ -155,6 +155,7 @@
     * [工厂方法模式](Patterns/工厂方法模式.md)
     * [抽象工厂模式](Patterns/抽象工厂模式.md)
     * [建造者模式](Patterns/建造者模式.md)
+    * [原型模式](Patterns/原型模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
