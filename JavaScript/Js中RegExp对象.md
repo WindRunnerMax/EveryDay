@@ -71,6 +71,7 @@ console.log("s123".search(regex)); // 1
 ```
 
 ### String.prototype.match()
+`str.match(regexp)`  
 `match()`方法检索返回一个字符串匹配正则表达式的结果，如果传入一个非正则表达式对象，则会隐式地使用`new RegExp(obj)`将其转换为一个`RegExp`，如果没有给出任何参数并直接使用`match()`方法 ，将会得到一个包含空字符串的`Array`即`[""]`，如果使用`g`标志，则将返回与完整正则表达式匹配的所有结果，但不会返回捕获组，如果未使用`g`标志，则仅返回第一个完整匹配及其相关的捕获组`Array`。
 
 ```javascript
