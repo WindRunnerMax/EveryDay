@@ -105,6 +105,7 @@
 * [null和undefined的区别](JavaScript/null和undefined的区别.md)
 * [Js创建对象的方式](JavaScript/Js创建对象的方式.md)
 * [Js中RegExp对象](JavaScript/Js中RegExp对象.md)
+* [Js中String对象](JavaScript/Js中String对象.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
