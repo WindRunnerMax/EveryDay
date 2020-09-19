@@ -150,6 +150,7 @@
     * [SPA单页应用的优缺点](Vue/SPA单页应用的优缺点.md)
     * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
     * [Vue中数组变动监听](Vue/Vue中数组变动监听.md)
+    * [Vue父子组件生命周期](Vue/Vue父子组件生命周期.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
