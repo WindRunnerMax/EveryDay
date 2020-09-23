@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-09-22**
+> 第211题：[外观模式](Patterns/外观模式.md)
+
+<br>
+
 **2020-09-21**
 > 第210题：[domReady的理解](Browser/domReady的理解.md)
 

@@ -162,6 +162,7 @@
 * [建造者模式](Patterns/建造者模式.md)
 * [原型模式](Patterns/原型模式.md)
 * [单例模式](Patterns/单例模式.md)
+* [外观模式](Patterns/外观模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
