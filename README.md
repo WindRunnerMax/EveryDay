@@ -154,6 +154,7 @@
 * [Vue事件绑定原理](Vue/Vue事件绑定原理.md)
 * [Vue中数组变动监听](Vue/Vue中数组变动监听.md)
 * [Vue父子组件生命周期](Vue/Vue父子组件生命周期.md)
+* [Vue中computed分析](Vue/Vue中computed分析.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
