@@ -165,6 +165,7 @@
 * [单例模式](Patterns/单例模式.md)
 * [外观模式](Patterns/外观模式.md)
 * [适配器模式](Patterns/适配器模式.md)
+* [代理模式](Patterns/代理模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
