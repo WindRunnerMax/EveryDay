@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-09-29**
+> 第218题：[whereis命令](Linux/whereis命令.md)
+
+<br>
+
 **2020-09-28**
 > 第217题：[Js中Number对象](JavaScript/Js中Number对象.md)
 

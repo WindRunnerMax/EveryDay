@@ -199,6 +199,7 @@
 * [umask命令](Linux/umask命令.md)
 * [which命令](Linux/which命令.md)
 * [cp命令](Linux/cp命令.md)
+* [whereis命令](Linux/whereis命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
