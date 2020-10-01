@@ -113,6 +113,60 @@ console.log(Number.parseInt("11", 16)); // 17
 console.log(Number.parseInt(Infinity)); // NaN 
 ```
 
+### Number.prototype.toExponential()
+`numObj.toExponential(fractionDigits)`  
+`toExponential()`方法以指数表示法返回该数值字符串表示形式。参数`fractionDigits`可选，其为一个整数用来指定小数点后有几位数字，默认情况下用尽可能多的位数来显示数字。返回一个用幂的形式 (科学记数法) 来表示`Number`对象的字符串，小数点后以`fractionDigits`提供的值来四舍五入，如果`fractionDigits`参数被忽略了，小数点后的将尽可能用最多的位数来表示该数值，对数值字面量使用`toExponential()`方法，且该数值没有小数点和指数时，应该在该数值与该方法之间隔开一个空格，以避免点号被解释为一个小数点，也可以使用两个点号调用该方法。如果一个数值的小数位数多余`fractionDigits`参数所提供的，则该数值将会在`fractionDigits`指定的小数位数处四舍五入。
+
+```javascript
+var num = new Number(100.1);
+console.log(num.toExponential()); // 1.001e+2
+```
+
+### Number.prototype.toFixed()
+`numObj.toFixed(digits)`  
+`toFixed()`方法使用定点表示法来格式化一个数值，该数值在必要时进行四舍五入，另外在必要时会用`0`来填充小数部分。参数`digits`是小数点后数字的个数，介于`0`到`20`(包括)之间，实现环境可能支持更大范围，如果忽略该参数，则默认为`0`。
+
+```javascript
+var num = new Number(1.1);
+console.log(num.toFixed(6)); // 1.100000
+```
+
+### Number.prototype.toLocaleString()
+`numObj.toLocaleString([locales [, options]])`  
+`toLocaleString()`方法返回这个数字在特定语言环境下的表示字符串。新的`locales`和`options`参数让应用程序可以指定要进行格式转换的语言，并且定制函数的行为。在旧的实现中，会忽略`locales`和`options`参数，使用的语言环境和返回的字符串的形式完全取决于实现方式。
+
+```javascript
+var num = new Number(1.1);
+console.log(num.toLocaleString()); // 1.1
+```
+
+### Number.prototype.toPrecision()
+`numObj.toPrecision(precision)`  
+`toPrecision()`方法以指定的精度返回该数值对象的字符串表示。参数`precision`可选，一个用来指定有效数个数的整数。
+
+```javascript
+var num = new Number(1.1);
+console.log(num.toPrecision(6)); // 1.100000
+```
+
+### Number.prototype.toString()
+`numObj.toString([radix])`  
+`toString()`方法返回指定`Number`对象的字符串表示形式。参数`radix`指定要用于数字到字符串的转换的基数(从`2`到`36`)，如果未指定`radix`参数，则默认值为`10`。
+
+```javascript
+var num = new Number(10);
+console.log(num.toString(2)); // 1010
+```
+
+### Number.prototype.valueOf()
+`numObj.valueOf()`  
+`valueOf()`方法返回一个被`Number`对象包装的原始值。
+
+```javascript
+var num = new Number(10);
+console.log(num.valueOf()); // 10
+```
+
 
 ## 每日一题
 
