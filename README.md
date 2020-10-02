@@ -107,6 +107,7 @@
 * [Js中RegExp对象](JavaScript/Js中RegExp对象.md)
 * [Js中String对象](JavaScript/Js中String对象.md)
 * [Js中Number对象](JavaScript/Js中Number对象.md)
+* [Js中Math对象](JavaScript/Js中Math对象.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)

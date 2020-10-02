@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-01**
+> 第220题：[Js中Math对象](JavaScript/Js中Math对象.md)
+
+<br>
+
 **2020-09-30**
 > 第219题：[装饰器模式](Patterns/装饰器模式.md)
 
