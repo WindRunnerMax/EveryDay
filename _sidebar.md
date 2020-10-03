@@ -202,6 +202,7 @@
     * [which命令](Linux/which命令.md)
     * [cp命令](Linux/cp命令.md)
     * [whereis命令](Linux/whereis命令.md)
+    * [scp命令](Linux/scp命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
