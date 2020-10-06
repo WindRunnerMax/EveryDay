@@ -169,6 +169,7 @@
     * [代理模式](Patterns/代理模式.md)
     * [装饰器模式](Patterns/装饰器模式.md)
     * [桥接模式](Patterns/桥接模式.md)
+    * [组合模式](Patterns/组合模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
