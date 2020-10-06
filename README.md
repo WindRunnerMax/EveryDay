@@ -170,6 +170,7 @@
 * [适配器模式](Patterns/适配器模式.md)
 * [代理模式](Patterns/代理模式.md)
 * [装饰器模式](Patterns/装饰器模式.md)
+* [桥接模式](Patterns/桥接模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
