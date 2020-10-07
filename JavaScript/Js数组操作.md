@@ -47,7 +47,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 `callback` 为数组中每个元素执行的函数，该函数接收一至三个参数。  
 `currentValue` 数组中正在处理的当前元素。  
 `index` 可选 数组中正在处理的当前元素的索引。  
-`array` 可选 正在操作的数组。
+`array` 可选 正在操作的数组。  
 `thisArg` 可选 当执行回调函数`callback`时，用作`this`的值，注意如果使用箭头函数表达式来传入`callback`，`thisArg`参数会被忽略，因为箭头函数在词法上绑定了`this`值。    
 `map()`方法创建一个新数组，其结果是该数组中的每个元素都调用一次提供的函数后的返回值。
 ```javascript
@@ -99,7 +99,7 @@ console.log(arr); // [1, 2, 3, 4] // 改变原数组
 
 ### unshift
 `arr.unshift(element1[, ..., elementN])`  
-`elementN` 要添加到数组开头的元素或多个元素。
+`elementN` 要添加到数组开头的元素或多个元素。  
 `unshift()`方法将一个或多个元素添加到数组的开头，并返回该数组的新长度，该方法修改原有数组。
 ```javascript
 var arr = [1, 2, 3, 4, 5];
@@ -206,7 +206,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 `callback` 为数组中每个元素执行的函数，该函数接收一至三个参数。  
 `currentValue` 数组中正在处理的当前元素。  
 `index` 可选 数组中正在处理的当前元素的索引。  
-`array` 可选 正在操作的数组。
+`array` 可选 正在操作的数组。  
 `thisArg` 可选 当执行回调函数`callback`时，用作`this`的值，注意如果使用箭头函数表达式来传入`callback`，`thisArg`参数会被忽略，因为箭头函数在词法上绑定了`this`值。   
 `some()`方法测试数组中是不是至少有`1`个元素通过了被提供的函数测试，它返回的是一个`Boolean`类型的值。
 ```javascript
@@ -220,7 +220,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 `callback` 为数组中每个元素执行的函数，该函数接收一至三个参数。  
 `currentValue` 数组中正在处理的当前元素。  
 `index` 可选 数组中正在处理的当前元素的索引。  
-`array` 可选 正在操作的数组。
+`array` 可选 正在操作的数组。  
 `thisArg` 可选 当执行回调函数`callback`时，用作`this`的值，注意如果使用箭头函数表达式来传入`callback`，`thisArg`参数会被忽略，因为箭头函数在词法上绑定了`this`值。   
 `filter()`方法创建一个新数组, 其包含通过所提供函数实现的测试的所有元素。 
 ```javascript
@@ -234,7 +234,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 `callback` 为数组中每个元素执行的函数，该函数接收一至三个参数。  
 `currentValue` 数组中正在处理的当前元素。  
 `index` 可选 数组中正在处理的当前元素的索引。  
-`array` 可选 正在操作的数组。
+`array` 可选 正在操作的数组。  
 `thisArg` 可选 当执行回调函数`callback`时，用作`this`的值，注意如果使用箭头函数表达式来传入`callback`，`thisArg`参数会被忽略，因为箭头函数在词法上绑定了`this`值。  
 `find()`方法返回数组中满足提供的测试函数的第一个元素的值，否则返回`undefined`。
 ```javascript
@@ -248,7 +248,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 `callback` 为数组中每个元素执行的函数，该函数接收一至三个参数。  
 `currentValue` 数组中正在处理的当前元素。  
 `index` 可选 数组中正在处理的当前元素的索引。  
-`array` 可选 正在操作的数组。
+`array` 可选 正在操作的数组。  
 `thisArg` 可选 当执行回调函数`callback`时，用作`this`的值，注意如果使用箭头函数表达式来传入`callback`，`thisArg`参数会被忽略，因为箭头函数在词法上绑定了`this`值。  
 `findIndex()`方法返回数组中满足提供的测试函数的第一个元素的索引，否则返回`-1`。
 ```javascript
@@ -281,7 +281,7 @@ console.log(arr); // [1, 2, 3, 4, 5] // 不改变原数组
 
 ### lastIndexOf
 `arr.lastIndexOf(searchElement[, fromIndex])`  
-`searchElement` 被查找的元素。
+`searchElement` 被查找的元素。  
 `fromIndex` 可选 从此位置开始逆向查找，默认为数组的长度减`1`即`arr.length - 1`，整个数组都被查找。如果该值大于或等于数组的长度，则整个数组会被查找。如果为负值，将其视为从数组末尾向前的偏移。即使该值为负，数组仍然会被从后向前查找。如果该值为负时，其绝对值大于数组长度，则方法返回`-1`，即数组不会被查找。  
 `lastIndexOf()`方法返回指定元素在数组中的最后一个的索引，如果不存在则返回 `-1`。从数组的后面向前查找，从`fromIndex`处开始。  
 
