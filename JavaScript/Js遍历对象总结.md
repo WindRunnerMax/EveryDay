@@ -3,6 +3,7 @@
 
 ## for in
 `for in`语句以任意顺序迭代对象的可枚举属性，包括原型链上的可枚举属性，不包括`Symbol`属性。
+
 ```javascript
 var obj = {
     2: "11",
@@ -34,6 +35,7 @@ for( let unit in obj ){
 
 ## Object.keys
 `Object.keys()`方法会返回一个由一个指定对象的自身可枚举属性组成的数组，数组中属性名的排列顺序和使用`for...in`循环遍历该对象时返回的顺序一致。类似的，`Object.entries()`方法返回一个指定对象自身可枚举属性的键值对数组，`Object.values()`方法返回一个指定对象自身的所有可枚举属性值的数组。
+
 ```javascript
 var obj = {
     2: "11",
@@ -62,6 +64,7 @@ console.log(Object.values(obj)); // ["1", "11", "1111", "111"]
 
 ## Object.getOwnPropertyNames
 `Object.getOwnPropertyNames()`方法返回一个由指定对象的所有自身属性的属性名，包括不可枚举属性但不包括`Symbol`值作为名称的属性组成的数组。
+
 ```javascript
 var obj = {
     2: "11",
@@ -89,6 +92,7 @@ for( let unit of propertyArr ){
 
 ## Object.getOwnPropertySymbols
 `Object.getOwnPropertySymbols()`方法返回一个指定对象自身的所有`Symbol`属性的数组。
+
 ```javascript
 var obj = {
     2: "11",
@@ -112,6 +116,7 @@ for( let unit of propertyArr ){
 
 ## Reflect.ownKeys
 `Reflect.ownKeys`方法返回一个由指定对象自身的属性键组成的数组，包括不可枚举属性与`Symbol`属性，它的返回值等同于`Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target))`。
+
 ```javascript
 var obj = {
     2: "11",
