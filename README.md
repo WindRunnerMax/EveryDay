@@ -207,6 +207,7 @@
 * [cp命令](Linux/cp命令.md)
 * [whereis命令](Linux/whereis命令.md)
 * [scp命令](Linux/scp命令.md)
+* [awk命令](Linux/awk命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
