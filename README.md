@@ -159,6 +159,7 @@
 * [Vue父子组件生命周期](Vue/Vue父子组件生命周期.md)
 * [Vue中computed分析](Vue/Vue中computed分析.md)
 * [Vue路由Hash模式分析](Vue/Vue路由Hash模式分析.md)
+* [Vue路由History模式分析](Vue/Vue路由History模式分析.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)

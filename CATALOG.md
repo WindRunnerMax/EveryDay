@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-10**
+> 第229题：[Vue路由History模式分析](Vue/Vue路由History模式分析.md)
+
+<br>
+
 **2020-10-09**
 > 第228题：[awk命令](Linux/awk命令.md)
 
