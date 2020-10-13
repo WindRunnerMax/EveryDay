@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-12**
+> 第231题：[享元模式](Patterns/享元模式.md)
+
+<br>
+
 **2020-10-11**
 > 第230题：[Js中Array对象](JavaScript/Js中Array对象.md)
 
