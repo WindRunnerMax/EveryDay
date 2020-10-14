@@ -174,6 +174,7 @@
     * [桥接模式](Patterns/桥接模式.md)
     * [组合模式](Patterns/组合模式.md)
     * [享元模式](Patterns/享元模式.md)
+    * [模板方法模式](Patterns/模板方法模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
