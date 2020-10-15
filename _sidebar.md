@@ -212,6 +212,7 @@
     * [whereis命令](Linux/whereis命令.md)
     * [scp命令](Linux/scp命令.md)
     * [awk命令](Linux/awk命令.md)
+    * [read命令](Linux/read命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
