@@ -110,6 +110,7 @@
 * [Js中Math对象](JavaScript/Js中Math对象.md)
 * [Js中数组空位问题](JavaScript/Js中数组空位问题.md)
 * [Js中Array对象](JavaScript/Js中Array对象.md)
+* [Js中Currying的应用](JavaScript/Js中Currying的应用.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
@@ -161,7 +162,6 @@
 * [Vue中computed分析](Vue/Vue中computed分析.md)
 * [Vue路由Hash模式分析](Vue/Vue路由Hash模式分析.md)
 * [Vue路由History模式分析](Vue/Vue路由History模式分析.md)
-* [Js中Currying的应用](Vue/Js中Currying的应用.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)

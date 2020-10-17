@@ -1,7 +1,7 @@
 # Catalog
 
 **2020-10-16**
-> 第235题：[Js中Currying的应用](Vue/Js中Currying的应用.md)
+> 第235题：[Js中Currying的应用](JavaScript/Js中Currying的应用.md)
 
 <br>
 
