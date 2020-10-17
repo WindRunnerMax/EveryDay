@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-16**
+> 第235题：[Js中Currying的应用](Vue/Js中Currying的应用.md)
+
+<br>
+
 **2020-10-15**
 > 第234题：[read命令](Linux/read命令.md)
 

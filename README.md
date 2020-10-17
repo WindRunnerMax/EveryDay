@@ -161,6 +161,7 @@
 * [Vue中computed分析](Vue/Vue中computed分析.md)
 * [Vue路由Hash模式分析](Vue/Vue路由Hash模式分析.md)
 * [Vue路由History模式分析](Vue/Vue路由History模式分析.md)
+* [Js中Currying的应用](Vue/Js中Currying的应用.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
