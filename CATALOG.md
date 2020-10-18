@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-17**
+> 第236题：[v-model数据绑定分析](Vue/v-model数据绑定分析.md)
+
+<br>
+
 **2020-10-16**
 > 第235题：[Js中Currying的应用](JavaScript/Js中Currying的应用.md)
 
