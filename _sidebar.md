@@ -107,6 +107,7 @@
     * [Js中数组空位问题](JavaScript/Js中数组空位问题.md)
     * [Js中Array对象](JavaScript/Js中Array对象.md)
     * [Js中Currying的应用](JavaScript/Js中Currying的应用.md)
+    * [Js中Date对象](JavaScript/Js中Date对象.md)
     
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题.md)
