@@ -180,6 +180,7 @@
 * [组合模式](Patterns/组合模式.md)
 * [享元模式](Patterns/享元模式.md)
 * [模板方法模式](Patterns/模板方法模式.md)
+* [观察者模式](Patterns/观察者模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
