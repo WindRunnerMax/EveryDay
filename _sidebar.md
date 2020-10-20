@@ -179,6 +179,7 @@
     * [享元模式](Patterns/享元模式.md)
     * [模板方法模式](Patterns/模板方法模式.md)
     * [观察者模式](Patterns/观察者模式.md)
+    * [状态模式](Patterns/状态模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
