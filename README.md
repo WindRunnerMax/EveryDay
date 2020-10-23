@@ -182,6 +182,7 @@
 * [模板方法模式](Patterns/模板方法模式.md)
 * [观察者模式](Patterns/观察者模式.md)
 * [状态模式](Patterns/状态模式.md)
+* [策略模式](Patterns/策略模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
