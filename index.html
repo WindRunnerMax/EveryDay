@@ -9,27 +9,35 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
     <meta name="referrer" content="no-referrer">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-57PHBXT1C5");
+    </script>
 </head>
 
 <body>
     <div id="app">Please wait...</div>
     <script>
         window.$docsify = {
-            name: 'WindrunnerMax',
-            repo: 'https://github.com/WindrunnerMax',
+            name: "WindrunnerMax",
+            repo: "https://github.com/WindrunnerMax",
             loadSidebar: true,
             auto2top: true,
-            themeColor: '#4C98F7',
+            themeColor: "#4C98F7",
             // subMaxLevel: 3,
             search: {
                 paths: "auto",
-                placeholder: 'Type to search',
-                noData: 'No Results',
+                placeholder: "Type to search",
+                noData: "No Results",
                 depth: 1,
             },
             basePath:"https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@gh-pages/",
             alias: {
-                '/.*/_sidebar.md': '/_sidebar.md'
+                "/.*/_sidebar.md": "/_sidebar.md"
             },
             plugins: [],
             requestHeaders: {

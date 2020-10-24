@@ -162,6 +162,7 @@
     * [Vue路由Hash模式分析](Vue/Vue路由Hash模式分析.md)
     * [Vue路由History模式分析](Vue/Vue路由History模式分析.md)
     * [v-model数据绑定分析](Vue/v-model数据绑定分析.md)
+    * [Vue路由懒加载](Vue/Vue路由懒加载.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
