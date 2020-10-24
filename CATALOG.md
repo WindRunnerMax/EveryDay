@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-23**
+> 第242题：[updatedb命令](Linux/updatedb命令.md)
+
+<br>
+
 **2020-10-22**
 > 第241题：[策略模式](Patterns/策略模式.md)
 

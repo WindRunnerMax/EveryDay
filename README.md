@@ -219,6 +219,7 @@
 * [scp命令](Linux/scp命令.md)
 * [awk命令](Linux/awk命令.md)
 * [read命令](Linux/read命令.md)
+* [updatedb命令](Linux/updatedb命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
