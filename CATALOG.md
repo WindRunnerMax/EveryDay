@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-24**
+> 第243题：[Vue路由懒加载](Vue/Vue路由懒加载.md)
+
+<br>
+
 **2020-10-23**
 > 第242题：[updatedb命令](Linux/updatedb命令.md)
 
