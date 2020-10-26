@@ -112,6 +112,7 @@
 * [Js中Array对象](JavaScript/Js中Array对象.md)
 * [Js中Currying的应用](JavaScript/Js中Currying的应用.md)
 * [Js中Date对象](JavaScript/Js中Date对象.md)
+* [Js中Symbol对象](JavaScript/Js中Symbol对象.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
