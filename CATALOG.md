@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-26**
+> 第245题：[责任链模式](Patterns/责任链模式.md)
+
+<br>
+
 **2020-10-25**
 > 第244题：[Js中Symbol对象](JavaScript/Js中Symbol对象.md)
 
