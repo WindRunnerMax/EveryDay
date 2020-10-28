@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-27**
+> 第246题：[valueOf与toString](JavaScript/valueOf与toString.md)
+
+<br>
+
 **2020-10-26**
 > 第245题：[责任链模式](Patterns/责任链模式.md)
 
