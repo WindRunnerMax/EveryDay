@@ -187,6 +187,7 @@
 * [状态模式](Patterns/状态模式.md)
 * [策略模式](Patterns/策略模式.md)
 * [责任链模式](Patterns/责任链模式.md)
+* [命令模式](Patterns/命令模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
