@@ -226,6 +226,7 @@
     * [read命令](Linux/read命令.md)
     * [updatedb命令](Linux/updatedb命令.md)
     * [col命令](Linux/col命令.md)
+    * [colrm命令](Linux/colrm命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
