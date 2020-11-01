@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-10-31**
+> 第250题：[colrm命令](Linux/colrm命令.md)
+
+<br>
+
 **2020-10-30**
 > 第249题：[col命令](Linux/col命令.md)
 
