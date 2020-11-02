@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-11-01**
+> 第251题：[VueRouter导航守卫](Vue/VueRouter导航守卫.md)
+
+<br>
+
 **2020-10-31**
 > 第250题：[colrm命令](Linux/colrm命令.md)
 
