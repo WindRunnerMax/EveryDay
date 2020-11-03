@@ -187,6 +187,7 @@
     * [策略模式](Patterns/策略模式.md)
     * [责任链模式](Patterns/责任链模式.md)
     * [命令模式](Patterns/命令模式.md)
+    * [访问者模式](Patterns/访问者模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)

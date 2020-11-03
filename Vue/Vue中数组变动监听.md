@@ -152,9 +152,22 @@ Object.defineProperty(obj, "x", {
     set: function(x){ console.log("watch"); this.__x = x; },
     get: function(){ return this.__x; }
 });
+
 obj.x[0] = 11;
 obj.x = obj.x; // watch
 console.log(obj.x); // [11, 2, 3]
+
+obj.x[0] = 111;
+obj.x = [].concat(obj.x); // watch
+console.log(obj.x); // [111, 2, 3]
+
+obj.x[0] = 1111;
+obj.x = obj.x.slice(); // watch
+console.log(obj.x); // [1111, 2, 3]
+
+obj.x[0] = 11111;
+obj.x = obj.x.splice(0, obj.x.length); // watch
+console.log(obj.x); // [11111, 2, 3]
 ```
 
 ### Proxy
