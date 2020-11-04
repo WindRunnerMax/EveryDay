@@ -110,6 +110,7 @@
     * [Js中Date对象](JavaScript/Js中Date对象.md)
     * [Js中Symbol对象](JavaScript/Js中Symbol对象.md)
     * [valueOf与toString](JavaScript/valueOf与toString.md)
+    * [Js模块化开发的理解](JavaScript/Js模块化开发的理解.md)
     
 * Browser
     * [跨域问题与解决方案](Browser/跨域问题.md)
