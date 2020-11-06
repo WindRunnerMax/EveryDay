@@ -34,10 +34,10 @@
 ```
 
 ### flex-wrap
-`flex-wrap`属性决定当轴线方向放不下成员时，是否换行，取值为`nowrap | wrap | wrap-reverse`
-* `nowrap`默认：不换行，当空间不足时，会按轴线方向成员大小比例缩小的成员
-* `wrap`：距离不够时换行，新起一行排列
-* `wrap-reverse`：距离不够时换行，新起的一行在上方
+`flex-wrap`属性决定当轴线方向放不下成员时，是否换行，取值为`nowrap | wrap | wrap-reverse`。
+* `nowrap`默认：不换行，当空间不足时，会按轴线方向成员大小比例缩小的成员。
+* `wrap`：距离不够时换行，新起一行排列。
+* `wrap-reverse`：距离不够时换行，新起的一行在上方。
 
 ```html
 <div id="t2" style="width: 20px;">
@@ -59,7 +59,7 @@
 ```
 
 ### flex-flow
-`flex-flow`属性是`flex-direction`属性和`flex-wrap`属性的简写形式，默认`row nowrap`
+`flex-flow`属性是`flex-direction`属性和`flex-wrap`属性的简写形式，默认`row nowrap`。
 ```html
 <div id="t3" style="width: 20px;">
     <div>7</div>
@@ -80,10 +80,10 @@
 ```
 
 ### justify-content
-`justify-content`属性定义了成员在主轴上的对齐方式，可以很容易地实现多种布局，取值为`flex-start | flex-end | center | space-between | space-around`
-* `flex-start`默认值：左对齐
-* `flex-end`：右对齐
-* `center`： 居中对齐
+`justify-content`属性定义了成员在主轴上的对齐方式，可以很容易地实现多种布局，取值为`flex-start | flex-end | center | space-between | space-around`。
+* `flex-start`默认值：左对齐。
+* `flex-end`：右对齐。
+* `center`： 居中对齐。
 * `space-between`：两端对齐，成员之间的间隔都相等。
 * `space-around`：每个成员两侧的间隔相等，成员之间的间隔比成员与边框的间隔大一倍。
 
@@ -104,7 +104,7 @@
 ```
 
 ### align-items
-`align-items`属性定义成员在交叉轴上如何对齐，取值为`flex-start | flex-end | center | baseline | stretch`
+`align-items`属性定义成员在交叉轴上如何对齐，取值为`flex-start | flex-end | center | baseline | stretch`。
 * `stretch`默认值：如果成员未设置高度或设为`auto`，将占满整个容器的高度。
 * `flex-start`：交叉轴的起点对齐。
 * `flex-end`：交叉轴的终点对齐。
@@ -128,7 +128,7 @@
 ```
 
 ### align-content
-`align-content`属性定义了多根轴线的对齐方式。如果成员只有一根轴线，该属性不起作用，取值为`flex-start | flex-end | center | space-between | space-around | stretch`
+`align-content`属性定义了多根轴线的对齐方式。如果成员只有一根轴线，该属性不起作用，取值为`flex-start | flex-end | center | space-between | space-around | stretch`。
 * `stretch`默认值：轴线占满整个交叉轴。
 * `flex-start`：与交叉轴的起点对齐。
 * `flex-end`：与交叉轴的终点对齐。
@@ -159,7 +159,7 @@
 
 ## 成员属性
 ### order
-`order`属性定义成员的排列顺序，数值越小，排列越靠前，默认为`0`
+`order`属性定义成员的排列顺序，数值越小，排列越靠前，默认为`0`。
 
 ```html
 <div class="flexBox">
@@ -177,7 +177,7 @@
 ```
 
 ### flex-grow
-`flex-grow`属性定义成员的放大比例，默认为`0`
+`flex-grow`属性定义成员的放大比例，默认为`0`。
 
 ```html
 <div class="flexBox">
