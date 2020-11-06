@@ -1,8 +1,8 @@
 # CSS盒子模型
 
-所有的`HTML`元素都可以看作是一个盒子  
-将盒子模型拆分，则包括 外边距+边框+填充+内容  
-显得专业一些，`box model` = `margin`+`border`+`padding`+`content`  
+所有的`HTML`元素都可以看作是一个盒子。  
+将盒子模型拆分，则包括 外边距+边框+填充+内容。  
+显得专业一些，`box model` = `margin`+`border`+`padding`+`content`。  
 
 
 ```

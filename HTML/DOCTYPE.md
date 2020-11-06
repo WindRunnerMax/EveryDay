@@ -1,8 +1,8 @@
 # DOCTYPE
-`DOCTYPE`是`document type`(文档类型)的简写，在`web`设计中用来说明使用的`XHTML`或者`HTML`是什么版本  
-`HTML5` 不基于 `SGML`，所以不需要引用 `DTD` 
+`DOCTYPE`是`document type`(文档类型)的简写，在`web`设计中用来说明使用的`XHTML`或者`HTML`是什么版本。  
+`HTML5` 不基于 `SGML`，所以不需要引用 `DTD`。 
 
-`<!DOCTYPE html>`声明必须是 HTML 文档的第一行，位于 `<html>` 标签之前   
+`<!DOCTYPE html>`声明必须是 HTML 文档的第一行，位于 `<html>` 标签之前。   
 
 ```xml
 <!DOCTYPE html>
@@ -23,9 +23,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
 ```
 
-其中的`DTD`叫文档类型定义，里面包含了文档的规则，浏览器就根据定义的`DTD`来解释你页面的标识，并展现出来  
+其中的`DTD`叫文档类型定义，里面包含了文档的规则，浏览器就根据定义的`DTD`来解释你页面的标识，并展现出来。  
 
-要建立符合标准的网页，`DOCTYPE`声明是必不可少的关键组成部分；除非你的`XHTML`确定了一个正确的`DOCTYPE`，否则标识和`CSS`都不会生效  
+要建立符合标准的网页，`DOCTYPE`声明是必不可少的关键组成部分；除非你的`XHTML`确定了一个正确的`DOCTYPE`，否则标识和`CSS`都不会生效。  
 
 ## XHTML 1.0 提供了三种DTD声明可供选择  
 1. 过渡的`Transitional`：要求非常宽松的`DTD`，它允许继续使用`HTML4.01`的标识(但是要符合`xhtml`的写法)，完整代码如下：

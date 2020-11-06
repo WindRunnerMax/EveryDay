@@ -1,11 +1,11 @@
 # localStorage与sessionStorage
-`localStorage`和`sessionStorage`是`HTML5`提供的对于`Web`存储的解决方案
+`localStorage`和`sessionStorage`是`HTML5`提供的对于`Web`存储的解决方案。
 
 ## 相同点
-* 都与`HTTP`无关，是`HTML5`提供的标准，当发起`HTTP`请求时不会与`Cookie`一样自动携带
-* 都是以键值对的形式存在，即`Key-Value`形式，常用的`Api`也相同
-* 存储类型都是`String`类型，当进行存储时，会调用`toString()`方法转为`String`类型
-* 对于每个域容量是有限的，不同浏览器不一样，大部分存储为`5M`左右
+* 都与`HTTP`无关，是`HTML5`提供的标准，当发起`HTTP`请求时不会与`Cookie`一样自动携带。
+* 都是以键值对的形式存在，即`Key-Value`形式，常用的`Api`也相同。
+* 存储类型都是`String`类型，当进行存储时，会调用`toString()`方法转为`String`类型。
+* 对于每个域容量是有限的，不同浏览器不一样，大部分存储为`5M`左右。
 
 ## 不同点
 * `localStorage`用于持久化的本地存储，除非主动删除数据，否则数据是永远不会过期的。

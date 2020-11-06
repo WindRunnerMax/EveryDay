@@ -7,7 +7,7 @@
 ## 容器属性
 
 ### grid-template-rows grid-template-columns
-`grid-template-rows`属性定义每一行的行高，设定为多少行就设置多少个值，取值可以为固定像素，也可以为百分比，`grid-template-columns`属性定义每一列的列宽，设定为多少列就设置多少个值，取值可以为固定像素，也可以为百分比
+`grid-template-rows`属性定义每一行的行高，设定为多少行就设置多少个值，取值可以为固定像素，也可以为百分比，`grid-template-columns`属性定义每一列的列宽，设定为多少列就设置多少个值，取值可以为固定像素，也可以为百分比。
 ```html
 <div id="t1">
     <div>0</div>
@@ -36,7 +36,7 @@
 ```
 
 #### repeat
-`repeat()`函数可以简化重复的值，其可以自动重复设定的规则
+`repeat()`函数可以简化重复的值，其可以自动重复设定的规则。
 ```html
 <div id="t2">
     <div>9</div>
@@ -99,7 +99,7 @@
 
 #### minmax
 `minmax()`函数产生一个长度范围，表示长度就在这个范围之中。它接受两个参数，分别为最小值和最大值，当距离不够时会从最大值自动减少长度或宽度到设定最小值为止。  
-`minmax( [ <length> | <percentage> | min-content | max-content | auto ] , [ <length> | <percentage> | <flex> | min-content | max-content | auto ] )`
+`minmax( [ <length> | <percentage> | min-content | max-content | auto ] , [ <length> | <percentage> | <flex> | min-content | max-content | auto ] )`。
 ```html
 <div id="t5">
     <div>l</div>
@@ -139,7 +139,7 @@
 ```
 
 ### grid-row-gap
-grid-row-gap属性设置行与行的间隔，即行间距
+grid-row-gap属性设置行与行的间隔，即行间距。
 ```html
 <div id="t7">
     <div>r</div>
@@ -164,7 +164,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### grid-column-gap
-`grid-column-gap`属性设置列与列的间隔，即列间距
+`grid-column-gap`属性设置列与列的间隔，即列间距。
 ```html
 <div id="t8">
     <div>u</div>
@@ -185,7 +185,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### grid-gap
-`grid-gap`属性是`grid-column-gap`和`grid-row-gap`的合并简写形式，如果`grid-gap`省略了第二个值，浏览器认为第二个值等于第一个值
+`grid-gap`属性是`grid-column-gap`和`grid-row-gap`的合并简写形式，如果`grid-gap`省略了第二个值，浏览器认为第二个值等于第一个值。
 ```html
 <div id="t9">
     <div>x</div>
@@ -210,7 +210,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### grid-template-areas
-网格布局允许指定区域`area`，一个区域由单个或多个单元格组成，`grid-template-areas`属性用于定义区域。区域的命名会影响到网格线。每个区域的起始网格线，会自动命名为`{areaName}-start`，终止网格线自动命名为`{areaName-end`
+网格布局允许指定区域`area`，一个区域由单个或多个单元格组成，`grid-template-areas`属性用于定义区域。区域的命名会影响到网格线。每个区域的起始网格线，会自动命名为`{areaName}-start`，终止网格线自动命名为`{areaName}-end`。
 ```html
 <div id="t10">
     <div>B</div>
@@ -260,7 +260,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### justify-items 
-`justify-items`属性设置成员中内容的水平位置，取值为`start | end | center | stretch`
+`justify-items`属性设置成员中内容的水平位置，取值为`start | end | center | stretch`。
 * `stretch`默认值：拉伸，占满单元格的整个宽度。
 * `start`：对齐单元格的起始边缘。
 * `end`：对齐单元格的结束边缘。
@@ -283,7 +283,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### align-items
-`align-items`属性设置成员中内容的垂直位置，取值为`start | end | center | stretch`
+`align-items`属性设置成员中内容的垂直位置，取值为`start | end | center | stretch`。
 * `stretch`默认值：拉伸，占满单元格的整个宽度。
 * `start`：对齐单元格的起始边缘。
 * `end`：对齐单元格的结束边缘。
@@ -325,7 +325,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### justify-content
-`justify-content`属性是整个内容区域在容器里面的水平位置，也就是成员的水平分布，取值为`start | end | center | stretch | space-around | space-between | space-evenly`
+`justify-content`属性是整个内容区域在容器里面的水平位置，也就是成员的水平分布，取值为`start | end | center | stretch | space-around | space-between | space-evenly`。
 ```html
 <div id="t15">
     <div>M</div>
@@ -345,7 +345,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### align-content
-`align-content`属性是整个内容区域在容器里面的垂直位置，也就是成员的垂直分布，取值为`start | end | center | stretch | space-around | space-between | space-evenly`
+`align-content`属性是整个内容区域在容器里面的垂直位置，也就是成员的垂直分布，取值为`start | end | center | stretch | space-around | space-between | space-evenly`。
 ```html
 <div id="t16" style="height: 50px;">
     <div>O</div>
@@ -410,7 +410,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ## 项目属性
 
 ### grid-column-start grid-column-end
-`grid-column-start`属性指定左边框所在的垂直网格线，`grid-column-end`属性指定右边框所在的垂直网格线
+`grid-column-start`属性指定左边框所在的垂直网格线，`grid-column-end`属性指定右边框所在的垂直网格线。
 
 ```html
 <div class="gridBox">
@@ -431,7 +431,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
 ```
 
 ### grid-row-start grid-row-end
-`grid-row-start`属性指定上边框所在的水平网格线，`grid-row-end`属性指定下边框所在的水平网格线
+`grid-row-start`属性指定上边框所在的水平网格线，`grid-row-end`属性指定下边框所在的水平网格线。
 ```html
 <div class="gridBox">
     <div style="grid-row-start: 2;">U</div>
@@ -449,7 +449,7 @@ grid-row-gap属性设置行与行的间隔，即行间距
     }
 </style>
 ```
-还可以给轴线命名来指定位置
+还可以给轴线命名来指定位置。
 ```html
 <div class="gridBox" style="">
     <div style="grid-column-start: c2;grid-row-start: r2;">V</div>
