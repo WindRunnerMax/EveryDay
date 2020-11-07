@@ -230,6 +230,7 @@
 * [updatedb命令](Linux/updatedb命令.md)
 * [col命令](Linux/col命令.md)
 * [colrm命令](Linux/colrm命令.md)
+* [comm命令](Linux/comm命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
