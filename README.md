@@ -169,6 +169,7 @@
 * [v-model数据绑定分析](Vue/v-model数据绑定分析.md)
 * [Vue路由懒加载](Vue/Vue路由懒加载.md)
 * [VueRouter导航守卫](Vue/VueRouter导航守卫.md)
+* [服务端渲染SSR的理解](Vue/服务端渲染SSR的理解.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
