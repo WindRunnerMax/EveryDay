@@ -193,6 +193,9 @@
     * [访问者模式](Patterns/访问者模式.md)
     * [中介者模式](Patterns/中介者模式.md)
 
+* Plugin
+    * [Git常用命令](Plugin/Git常用命令.md)
+
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
     * [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
