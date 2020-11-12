@@ -172,6 +172,9 @@
 * [VueRouter导航守卫](Vue/VueRouter导航守卫.md)
 * [服务端渲染SSR的理解](Vue/服务端渲染SSR的理解.md)
 
+## Plugin
+* [Git常用命令](Plugin/Git常用命令.md)
+
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
 * [工厂方法模式](Patterns/工厂方法模式.md)
