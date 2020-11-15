@@ -171,6 +171,7 @@
 * [Vue路由懒加载](Vue/Vue路由懒加载.md)
 * [VueRouter导航守卫](Vue/VueRouter导航守卫.md)
 * [服务端渲染SSR的理解](Vue/服务端渲染SSR的理解.md)
+* [Vue常用性能优化](Vue/Vue常用性能优化.md)
 
 ## Plugin
 * [Git常用命令](Plugin/Git常用命令.md)
