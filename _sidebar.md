@@ -193,6 +193,7 @@
     * [命令模式](Patterns/命令模式.md)
     * [访问者模式](Patterns/访问者模式.md)
     * [中介者模式](Patterns/中介者模式.md)
+    * [备忘录模式](Patterns/备忘录模式.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
