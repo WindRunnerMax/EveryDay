@@ -198,6 +198,7 @@
 * [命令模式](Patterns/命令模式.md)
 * [访问者模式](Patterns/访问者模式.md)
 * [中介者模式](Patterns/中介者模式.md)
+* [备忘录模式](Patterns/备忘录模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
