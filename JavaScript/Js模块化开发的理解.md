@@ -155,6 +155,36 @@ define(function(require,exports,module){
 * `export`能直接导出变量表达式，`export default`不行。
 * `export`方式导出，在导入时要加`{}`，`export default`则不需要。
 
+```javascript
+// 导出单个特性
+export let name1, name2, …, nameN; // also var, const
+export let name1 = …, name2 = …, …, nameN; // also var, const
+export function FunctionName(){...}
+export class ClassName {...}
+
+// 导出列表
+export { name1, name2, …, nameN };
+
+// 重命名导出
+export { variable1 as name1, variable2 as name2, …, nameN };
+
+// 解构导出并重命名
+export const { name1, name2: bar } = o;
+
+// 默认导出
+export default expression;
+export default function (…) { … } // also class, function*
+export default function name1(…) { … } // also class, function*
+export { name1 as default, … };
+
+// 导出模块合集
+export * from …; // does not set the default export
+export * as name1 from …; // Draft ECMAScript® 2O21
+export { name1, name2, …, nameN } from …;
+export { import1 as name1, import2 as name2, …, nameN } from …;
+export { default } from …;
+```
+
 
 ```javascript
 // name－从将要导入模块中收到的导出值的名称

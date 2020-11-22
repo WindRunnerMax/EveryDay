@@ -101,6 +101,56 @@ define(function(require,exports,module){
 * `export`能直接导出变量表达式，`export default`不行。
 * `export`方式导出，在导入时要加`{}`，`export default`则不需要。
 
+
+```javascript
+// 导出单个特性
+export let name1, name2, …, nameN; // also var, const
+export let name1 = …, name2 = …, …, nameN; // also var, const
+export function FunctionName(){...}
+export class ClassName {...}
+
+// 导出列表
+export { name1, name2, …, nameN };
+
+// 重命名导出
+export { variable1 as name1, variable2 as name2, …, nameN };
+
+// 解构导出并重命名
+export const { name1, name2: bar } = o;
+
+// 默认导出
+export default expression;
+export default function (…) { … } // also class, function*
+export default function name1(…) { … } // also class, function*
+export { name1 as default, … };
+
+// 导出模块合集
+export * from …; // does not set the default export
+export * as name1 from …; // Draft ECMAScript® 2O21
+export { name1, name2, …, nameN } from …;
+export { import1 as name1, import2 as name2, …, nameN } from …;
+export { default } from …;
+```
+
+```javascript
+// name－从将要导入模块中收到的导出值的名称
+// member, memberN－从导出模块，导入指定名称的多个成员
+// defaultMember－从导出模块，导入默认导出成员
+// alias, aliasN－别名，对指定导入成员进行的重命名
+// module-name－要导入的模块。是一个文件名
+// as－重命名导入成员名称（“标识符”）
+// from－从已经存在的模块、脚本文件等导入
+import defaultMember from "module-name";
+import * as name from "module-name";
+import { member } from "module-name";
+import { member as alias } from "module-name";
+import { member1 , member2 } from "module-name";
+import { member1 , member2 as alias2 , [...] } from "module-name";
+import defaultMember, { member [ , [...] ] } from "module-name";
+import defaultMember, * as name from "module-name";
+import "module-name"; // 将运行模块中的全局代码, 但实际上不导入任何值。
+```
+
 ```javascript
 // 1.js
 var a  = 1;
