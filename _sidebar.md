@@ -171,6 +171,7 @@
     * [VueRouter导航守卫](Vue/VueRouter导航守卫.md)
     * [服务端渲染SSR的理解](Vue/服务端渲染SSR的理解.md)
     * [Vue常用性能优化](Vue/Vue常用性能优化.md)
+    * [Vuex和普通全局对象](Vue/Vuex和普通全局对象.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
