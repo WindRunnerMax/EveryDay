@@ -202,6 +202,7 @@
 * [中介者模式](Patterns/中介者模式.md)
 * [备忘录模式](Patterns/备忘录模式.md)
 * [迭代器模式](Patterns/迭代器模式.md)
+* [解释器模式](Patterns/解释器模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
