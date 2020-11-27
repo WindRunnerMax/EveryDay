@@ -248,6 +248,7 @@
     * [csplit命令](Linux/csplit命令.md)
     * [ed命令](Linux/ed命令.md)
     * [egrep命令](Linux/egrep命令.md)
+    * [ex命令](Linux/ex命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
