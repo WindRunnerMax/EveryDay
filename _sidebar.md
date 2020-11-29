@@ -144,6 +144,7 @@
     * [GET和POST的区别](Browser/GET和POST的区别.md)
     * [CDN缓存的理解](Browser/CDN缓存的理解.md)
     * [domReady的理解](Browser/domReady的理解.md)
+    * [Document对象](Browser/Document对象.md)
 
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
@@ -283,6 +284,7 @@
     * [手机抓包HTTPS (Fiddler & Packet Capture.md)](Environment/手机抓包HTTPS.md)
     * [文本选中复制](Environment/文本选中复制.md)
     * [发布Npm包到GitHub Packages](Environment/发布Npm包到GitHub%20Packages.md)
+    * [斐讯K3C路由器改散热](Environment/斐讯K3C改散热.md)
 
 * IMGProcess
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV.md)

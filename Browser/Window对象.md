@@ -53,11 +53,11 @@
 * `moveBy()`: 根据指定的值，移动`open`创建的窗口。
 * `moveTo()`: 把`open`创建的窗口的左上角移动到一个指定的坐标。
 * `open()`: 打开一个新的浏览器窗口或查找一个已命名的窗口。
-* `postMessage`: 可以安全地实现跨源通信。
+* `postMessage()`: 可以安全地实现跨源通信。
 * `print()`: 打印当前窗口的内容。
 * `prompt()`: 显示可提示用户输入的对话框。
-* `requestAnimationFrame`: 提供匹配屏幕刷新率的动画帧绘制方法。
-* `queueMicrotask`: 提供加入微任务队列的回调接口。
+* `requestAnimationFrame()`: 提供匹配屏幕刷新率的动画帧绘制方法。
+* `queueMicrotask()`: 提供加入微任务队列的回调接口。
 * `resizeBy()`: 按照指定的像素调整`open`创建的窗口的大小。
 * `resizeTo()`: 把`open`创建的窗口的大小调整到指定的宽度和高度。
 * `scroll()`: 滚动窗口至文档中的特定位置。
