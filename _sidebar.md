@@ -203,6 +203,7 @@
     * [迭代器模式](Patterns/迭代器模式.md)
     * [解释器模式](Patterns/解释器模式.md)
     * [链模式](Patterns/链模式.md)
+    * [委托模式](Patterns/委托模式.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
