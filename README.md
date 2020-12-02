@@ -208,6 +208,7 @@
 * [迭代器模式](Patterns/迭代器模式.md)
 * [解释器模式](Patterns/解释器模式.md)
 * [链模式](Patterns/链模式.md)
+* [委托模式](Patterns/委托模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
