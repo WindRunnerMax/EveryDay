@@ -177,6 +177,10 @@
     * [Vuex和普通全局对象](Vue/Vuex和普通全局对象.md)
     * [Vuex中的核心方法](Vue/Vuex中的核心方法.md)
 
+* React
+    * [React生命周期](React/React生命周期.md)
+
+
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
     * [工厂方法模式](Patterns/工厂方法模式.md)
