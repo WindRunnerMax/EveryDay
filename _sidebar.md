@@ -180,6 +180,8 @@
 * React
     * [React生命周期](React/React生命周期.md)
 
+* Plugin
+    * [Git常用命令](Plugin/Git常用命令.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
@@ -209,9 +211,6 @@
     * [链模式](Patterns/链模式.md)
     * [委托模式](Patterns/委托模式.md)
     * [数据访问对象模式](Patterns/数据访问对象模式.md)
-
-* Plugin
-    * [Git常用命令](Plugin/Git常用命令.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
