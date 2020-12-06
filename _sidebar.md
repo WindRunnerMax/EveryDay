@@ -146,6 +146,7 @@
     * [CDN缓存的理解](Browser/CDN缓存的理解.md)
     * [domReady的理解](Browser/domReady的理解.md)
     * [Document对象](Browser/Document对象.md)
+    * [Location对象](Browser/Location对象.md)
 
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
