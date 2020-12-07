@@ -1,5 +1,10 @@
 # Catalog
 
+**2020-12-06**
+> 第286题：[Location对象](Browser/Location对象.md)
+
+<br>
+
 **2020-12-05**
 > 第285题：[React生命周期](React/React生命周期.md)
 
