@@ -261,6 +261,7 @@
     * [egrep命令](Linux/egrep命令.md)
     * [ex命令](Linux/ex命令.md)
     * [fgrep命令](Linux/fgrep命令.md)
+    * [fmt命令](Linux/fmt命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
