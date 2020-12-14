@@ -215,6 +215,7 @@
     * [委托模式](Patterns/委托模式.md)
     * [数据访问对象模式](Patterns/数据访问对象模式.md)
     * [防抖节流模式](Patterns/防抖节流模式.md)
+    * [简单模板模式](Patterns/简单模板模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
