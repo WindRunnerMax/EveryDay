@@ -1,10 +1,10 @@
-# egrep命令
-`egrep`命令用于模式搜索，属于`grep`函数族，工作原理和`grep -E`一样，其将模式视为扩展正则表达式，并打印出与模式匹配的行，如果有多个文件具有匹配的模式，其还能显示每行的文件名。
+# grep命令
+ `grep`命令用于查找文件里符合条件的字符串，如果发现某文件的内容符合所指定的模式，`grep`命令会把含有模式的那一行显示出来。若不指定任何文件名称，或是所给予的文件名为`-`，则`grep`指令会从标准输入设备读取数据。
 
 ## 语法
 
 ```shell
-egrep [options] PATTERN [FILE...]
+grep [OPTION]... PATTERN [FILE]...
 ```
 
 ## 参数
@@ -18,6 +18,7 @@ egrep [options] PATTERN [FILE...]
 * `-c, --count`: 禁止正常输出，而是为每个输入文件打印匹配行的计数，使用`-v，--invert match`选项，计算不匹配的行数。
 * `-D ACTION, --devices=ACTION`: 如果输入文件是设备、`FIFO`或套接字，使用`ACTION `来处理它。默认情况下，`ACTION`是`read`，这意味着设备的读取就像它们是普通文件一样，如果`ACTION`为`skip`，则设备将自动跳过。
 * `-d ACTION, --directories=ACTION`: 如果输入文件是目录，使用`ACTION`来处理它。默认情况下，`ACTION`是`read`，这意味着目录的读取就像它们是普通文件一样，如果`ACTION`是`skip`，则目录将被自动跳过，如果`ACTION`是递归的，`grep`将递归地读取每个目录下的所有文件，这相当于`-r`选项。
+* ` -E, --extended-regexp`: 将模式解释为扩展的正则表达式。
 * `-e PATTERN, --regexp=PATTERN`: 使用`PATTERN`作为模式，用于保护以`-`开头的模式。
 * `-F, --fixed-strings`: 将`PATTERN`解释为固定字符串的列表，用换行符分隔，这些字符串可以匹配。
 * `-P, --perl-regexp`: 将`PATTERN`解释为`Perl`正则表达式。
@@ -49,7 +50,6 @@ egrep [options] PATTERN [FILE...]
 
 
 ## 示例
-
 `hello.c`文件内容如下:
 
 ```c
@@ -67,7 +67,7 @@ int main() {
 匹配带有`Hello`的行。
 
 ```shell
-egrep Hello hello.c
+grep Hello hello.c
 #    printf("Hello World\n");
 #    printf("Hello World\n");
 #    printf("Hello World\n");
@@ -76,14 +76,14 @@ egrep Hello hello.c
 匹配带有`Hello`行的数量。
 
 ```shell
-egrep -c Hello hello.c
+grep -c Hello hello.c
 # 3
 ```
 
 反转匹配的意义，选择不匹配`Hello`的行。
 
 ```shell
-egrep -v Hello hello.c
+grep -v Hello hello.c
 # #include <stdio.h>
 # #include <stdlib.h>
 #
@@ -95,7 +95,7 @@ egrep -v Hello hello.c
 匹配带有`i`的行并忽略大小写。
 
 ```shell
-egrep -i I hello.c
+grep -i I hello.c
 # #include <stdio.h>
 # #include <stdlib.h>
 # int main() {
@@ -107,14 +107,14 @@ egrep -i I hello.c
 仅输出与文件整行匹配的行。
 
 ```shell
-egrep -x "   return 0;" hello.c
+grep -x "   return 0;" hello.c
 #    return 0;
 ```
 
 匹配带有`Hello`的行并输出行号。
 
 ```shell
-egrep -n Hello hello.c
+grep -n Hello hello.c
 # 5:   printf("Hello World\n");
 # 6:   printf("Hello World\n");
 # 7:   printf("Hello World\n");
@@ -123,7 +123,7 @@ egrep -n Hello hello.c
 递归匹配当前目录下所有文件中能够匹配`h*`的文件，输出行号并忽略大小写，注意实际在终端中匹配成功的位置会使用红色字体标注。
 
 ```shell
-egrep -rni "h*" ./
+grep -rni "h*" ./
 # ./hello.c:1:#include <stdio.h>
 # ./hello.c:2:#include <stdlib.h>
 # ./hello.c:3:
@@ -145,8 +145,8 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
-https://www.computerhope.com/unix/uegrep.htm
-https://www.runoob.com/linux/linux-comm-egrep.html
-https://www.geeksforgeeks.org/egrep-command-in-linux-with-examples/
+https://www.runoob.com/linux/linux-comm-grep.html
+https://www.tutorialspoint.com/unix_commands/grep.htm
+https://www.geeksforgeeks.org/fold-command-in-linux-with-examples/
 ```
 
