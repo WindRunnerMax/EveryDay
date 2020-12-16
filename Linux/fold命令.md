@@ -60,5 +60,7 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
-https://leetcode-cn.com/problems/dota2-senate/
+https://www.computerhope.com/unix/ufold.htm
+https://www.runoob.com/linux/linux-comm-fold.html
+https://www.geeksforgeeks.org/fold-command-in-linux-with-examples/
 ```
