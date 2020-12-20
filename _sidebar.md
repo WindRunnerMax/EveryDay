@@ -148,6 +148,7 @@
     * [domReady的理解](Browser/domReady的理解.md)
     * [Document对象](Browser/Document对象.md)
     * [Location对象](Browser/Location对象.md)
+    * [SSRF服务器端请求伪造](Browser/SSRF服务器端请求伪造.md)
 
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
@@ -292,6 +293,7 @@
     * [SQL注入](Browser/SQL注入.md)
     * [CSS劫持攻击](Browser/CSS劫持攻击.md)
     * [ThinkPHP5.0 漏洞测试](PHP/ThinkPHP5.0漏洞测试.md)
+    * [SSRF服务器端请求伪造](Browser/SSRF服务器端请求伪造.md)
 
 * Environment
     * [VScode配置CMD本地运行环境(2.0)](Environment/VScode配置CMD本地运行环境(2.0).md)
