@@ -152,6 +152,7 @@
 * [domReady的理解](Browser/domReady的理解.md)
 * [Document对象](Browser/Document对象.md)
 * [Location对象](Browser/Location对象.md)
+* [SSRF服务器端请求伪造](Browser/SSRF服务器端请求伪造.md)
 
 ## Vue
 * [Vue生命周期](Vue/Vue生命周期.md)
