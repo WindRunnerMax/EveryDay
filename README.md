@@ -220,6 +220,7 @@
 * [数据访问对象模式](Patterns/数据访问对象模式.md)
 * [防抖节流模式](Patterns/防抖节流模式.md)
 * [简单模板模式](Patterns/简单模板模式.md)
+* [惰性模式](Patterns/惰性模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
