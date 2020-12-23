@@ -364,6 +364,7 @@
     * [Dota2参议院](LeetCode/Dota2参议院.md)
     * [单调递增的数字](LeetCode/单调递增的数字.md)
     * [买卖股票的最佳时机含手续费](LeetCode/买卖股票的最佳时机含手续费.md)
+    * [字符串中的第一个唯一字符](LeetCode/字符串中的第一个唯一字符.md)
     
 * Interview
     * [百度实习生前端面试](Interview/百度实习生前端面试.md)
