@@ -220,6 +220,7 @@
     * [防抖节流模式](Patterns/防抖节流模式.md)
     * [简单模板模式](Patterns/简单模板模式.md)
     * [惰性模式](Patterns/惰性模式.md)
+    * [参与者模式](Patterns/参与者模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
