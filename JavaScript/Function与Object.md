@@ -50,8 +50,8 @@ console.log(Function instanceof Function); // true
 ```
 
 ## 总结
-* 一切对象都继承于`Object`，都是从`Object.prototype`继承方法和属性
-* 一切构造函数包括`Object`与`Function`，都继承于`Function`，最终继承于`Object`
+* 一切对象都继承于`Object`，都是从`Object.prototype`继承方法和属性。
+* 一切构造函数包括`Object`与`Function`，都继承于`Function`，最终继承于`Object`。
 
 
 ## 参考
