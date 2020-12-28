@@ -191,6 +191,7 @@
 ## Plugin
 * [Git常用命令](Plugin/Git常用命令.md)
 * [Git与SVN对比](Plugin/Git与SVN对比.md)
+* [Nginx常用配置](Plugin/Nginx常用配置.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)

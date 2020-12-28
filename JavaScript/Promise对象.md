@@ -1,5 +1,5 @@
 # Promise对象
-`JavaScript`是单线程的语言，通过维护执行栈与任务队列而实现了异步操作，`setTimeout`与`Ajax`就是典型的异步操作，`Promise`就是异步操作的一个解决方案，用于表示一个异步操作的最终完成或失败, 及其结果值，`Promise`有各种开源实现，在`ES6`中被统一规范，由浏览器直接支持。
+`JavaScript`是单线程的语言，通过维护执行栈与任务队列而实现了异步操作，`setTimeout`与`Ajax`就是典型的异步操作，`Promise`就是异步操作的一个解决方案，用于表示一个异步操作的最终完成或失败及其结果值，`Promise`有各种开源实现，在`ES6`中被统一规范，由浏览器直接支持。
 
 ## 语法
 
@@ -21,6 +21,7 @@ rejected: 意味着操作失败。
 
 ## 实例
 `Promise`可以进行链式调用，避免过多的异步操作造成的回调地狱，`then()`函数默认会返回一个和原来不同的新的`Promise`。
+
 ```javascript
 var promise = new Promise(function(resolve,reject){
      var rand = Math.random() * 2;
@@ -95,31 +96,32 @@ promise.then(function(rand){
 ## 方法
 
 ### Promise.all(iterable)
+
 这个方法返回一个新的`promise`对象，该`promise`对象在`iterable`参数对象里所有的`promise`对象都成功的时候才会触发成功，一旦有任何一个`iterable`里面的`promise`对象失败则立即触发该`promise`对象的失败。这个新的`promise`对象在触发成功状态以后，会把一个包含`iterable`里所有`promise`返回值的数组作为成功回调的返回值，顺序跟`iterable`的顺序保持一致；如果这个新的`promise`对象触发了失败状态，它会把`iterable`里第一个触发失败的`promise`对象的错误信息作为它的失败错误信息。`Promise.all`方法常被用于处理多个`promise`对象的状态集合。
 
 ```javascript
 var p1 = new Promise((resolve, reject) => {
-  resolve('success1')
+  resolve("success1");
 })
 
 var p2 = new Promise((resolve, reject) => {
-  resolve('success2')
+  resolve("success2");
 })
 
 var p3 = new Promise((resolve, reject) => {
-  reject('fail')
+  reject("fail");
 })
 
 Promise.all([p1, p2]).then((result) => {
-  console.log(result)      // 成功状态 //['success1', 'success2']
+  console.log(result);      // 成功状态 //["success1", "success2"]
 }).catch((error) => {
-  console.log(error)
+  console.log(error);
 })
 
 Promise.all([p1,p3,p2]).then((result) => {
-  console.log(result)
+  console.log(result);
 }).catch((error) => {
-  console.log(error)      // 失败状态 // fail
+  console.log(error);      // 失败状态 // fail
 })
 ```
 
@@ -129,20 +131,20 @@ Promise.all([p1,p3,p2]).then((result) => {
 ```javascript
 var p1 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    resolve('success')
-  },1000)
+    resolve("success");
+  },1000);
 })
 
 var p2 = new Promise((resolve, reject) => {
   setTimeout(() => {
-    reject('failed')
-  }, 2000)
+    reject("failed");
+  }, 2000);
 })
 
 Promise.race([p1, p2]).then((result) => {
-  console.log(result) // p1先获得结果，那么就执行p1的回调
+  console.log(result); // p1先获得结果，那么就执行p1的回调
 }).catch((error) => {
-  console.log(error)
+  console.log(error);
 })
 ```
 
