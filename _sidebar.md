@@ -279,6 +279,7 @@
     * [aspell命令](Linux/aspell命令.md)
     * [join命令](Linux/join命令.md)
     * [look命令](Linux/look命令.md)
+    * [pico命令](Linux/pico命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
