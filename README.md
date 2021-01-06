@@ -283,6 +283,7 @@
 * [join命令](Linux/join命令.md)
 * [look命令](Linux/look命令.md)
 * [pico命令](Linux/pico命令.md)
+* [sed命令](Linux/sed命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
