@@ -226,6 +226,7 @@
     * [惰性模式](Patterns/惰性模式.md)
     * [参与者模式](Patterns/参与者模式.md)
     * [等待者模式](Patterns/等待者模式.md)
+    * [同步模块模式](Patterns/同步模块模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
