@@ -382,6 +382,7 @@
     * [最后一块石头的重量](LeetCode/最后一块石头的重量.md)
     * [种花问题](LeetCode/种花问题.md)
     * [滑动窗口最大值](LeetCode/滑动窗口最大值.md)
+    * [汇总区间](LeetCode/汇总区间.md)
     
 * Interview
     * [百度实习生前端面试](Interview/百度实习生前端面试.md)
