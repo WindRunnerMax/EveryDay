@@ -233,6 +233,7 @@
 * [参与者模式](Patterns/参与者模式.md)
 * [等待者模式](Patterns/等待者模式.md)
 * [同步模块模式](Patterns/同步模块模式.md)
+* [异步模块模式](Patterns/异步模块模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)
