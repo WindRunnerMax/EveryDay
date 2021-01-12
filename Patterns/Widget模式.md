@@ -19,7 +19,6 @@ F.module("./dom", function() {
         }
     }
 });
-
 ```
 
 ```javascript
