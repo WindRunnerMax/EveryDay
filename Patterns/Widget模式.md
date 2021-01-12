@@ -22,13 +22,89 @@ F.module("./dom", function() {
 ```
 
 ```javascript
-// event.js
-F.module("./event", ["./dom"], function(dom) {
-    return {
-        on: function(id, type, fn) {
-            dom.g(id)["on" + type] = fn;
+// template.js
+F.module("./template", function() {
+
+/***
+ *   模板引擎，处理数据的编译模板入口
+ *   @param  str     模块容器id或者模板字符串
+ *   @param  data    渲染数据
+ **/
+var _TplEngine = function(str, data) {
+    // 如果数据是数组
+    if (data instanceof Array) {
+        // 缓存渲染模板结果
+        var html = "";
+        // 数据索引
+        var i = 0;
+        // 数据长度
+        var len = data.length;
+        // 遍历数据
+        for (; i < len; i++) {
+            // 缓存模板渲染结果，也可以写成
+            // html += arguments.callee(str, data[i]) ;
+            html += _getTpl(str)(data[i]);
         }
+        // 返回模板渲染最终结果
+        return html;
+    } else {
+        // 返回模板渲染结果
+        return _getTpl(str)(data);
     }
+};
+/***
+ *   获取模板
+ *   @param  str 模板容器id，或者模板字符串
+ **/
+var _getTpl = function(str) {
+    // 获取元素
+    var ele = document.getElementById(str);
+    // 如果元素存在
+    if (ele) {
+        // 如果是input或者textarea表单元素，则获取该元素的value值，否则获取元素的内容
+        var html = /^(textarea | input)$/i.test(ele.nodeName) ? ele.value : ele.innerHTML;
+        // 编译模板
+        return _compileTpl(html);
+    } else {
+        // 编译模板
+        return _compileTpl(str);
+    }
+};
+// 处理模板
+var _dealTpl = function(str) {
+    // 左分隔符
+    var _left = "{%";
+    // 右分隔符
+    var _right = "%}";
+    // 显示转化为字符串
+    return String(str)
+        // 转义标签内的<如：<div>{%if(a&lt;b)%}</div> -> <div>{%if(a<b)%}</div>
+        .replace(/&lt;/g, "<")
+        // 转义标签内的>
+        .replace(/&gt;/g, ">")
+        // 过滤回车符，制表符，回车符
+        .replace(/[\r\t\n]/g, "")
+        // 替换内容
+        .replace(new RegExp(_left + "=(.*?)" + _right, "g"), "',typeof($1) === 'undefined' ? '' : $1, '")
+        // 替换左分隔符
+        .replace(new RegExp(_left, "g"), "');")
+        // 替换右分隔符
+        .replace(new RegExp(_right, "g"), "template_array.push('");
+
+};
+/***
+ *   编译执行
+ *   @param  str 模板数据
+ **/
+var _compileTpl = function(str) {
+    // 编译函数体
+    var fnBody = "var template_array=[];\nvar fn=(function(data){\nvar template_key='';\nfor(key in data){\ntemplate_key +=(''+key+'=data[\"'+key+'\"];');\n}\neval(template_key);\ntemplate_array.push('" + _dealTpl(str) + "');\ntemplate_key=null;\n})(templateData);\nfn=null;\nreturn template_array.join('') ;";
+    // 编译函数
+    return new Function("templateData", fnBody);
+};
+
+// 返回
+return _TplEngine;
 });
 ```
 
@@ -38,11 +114,11 @@ F.module("./event", ["./dom"], function(dom) {
 <html>
 
 <head>
-    <title>异步模块</title>
+    <title>Widget模式</title>
 </head>
 
 <body>
-    <div id="demo">Click Me</div>
+    <div id="app"></div>
 </body>
 <script type="text/javascript">
 (function(F) {
@@ -62,8 +138,9 @@ F.module("./event", ["./dom"], function(dom) {
     }
 
     function setModule(moduleName, params, callback) {
-        let _module = null, fn = null;
-        if(moduleCache[moduleName]) {
+        let _module = null,
+            fn = null;
+        if (moduleCache[moduleName]) {
             _module = moduleCache[moduleName];
             _module.status = "loaded";
             _module.exports = callback ? callback.apply(_module, params) : null;
@@ -110,8 +187,8 @@ F.module("./event", ["./dom"], function(dom) {
         // 未加载的依赖模块数量统计
         let depsCount = 0;
 
-        if(deps.length) {
-            deps.forEach((v ,i) => {
+        if (deps.length) {
+            deps.forEach((v, i) => {
                 // 增加未加载依赖模块数量统计
                 depsCount++;
                 // 异步加载依赖模块
@@ -120,12 +197,12 @@ F.module("./event", ["./dom"], function(dom) {
                     depsCount--;
                     params[i] = mod;
                     // 如果依赖模块全部加载
-                    if(depsCount === 0) {
+                    if (depsCount === 0) {
                         // 在模块缓存器中矫正该模块，并执行构造函数
                         setModule(url, params, callback);
                     }
                 });
-            })     
+            })
         } else { // 无依赖模块，直接执行回调函数
             // 在模块缓存器中矫正该模块，并执行构造函数
             setModule(url, [], callback);
@@ -133,16 +210,42 @@ F.module("./event", ["./dom"], function(dom) {
     }
 
 })((() => window.F = ({}))());
+</script>
+<!-- srcpt模板内容 -->
+<script type="text/template" id="tpl">
+    <div id="tag_cloud">
+        {% for(var i = 0; i < tagCloud.length; i++){ 
+            var ctx = tagCloud[i] ; %}
+        <a href="#" class="tag_item 
+            {% if(ctx["is_selected"]){ %}
+            selected
+            {% } %}" title="{%=ctx["title"]%}">{%=ctx["text"]%}
+        </a>
+        {% } %}
+    </div>
+</script>
+<!-- 自定义模板 -->
+<!--===============模板种类结束===========-->
+<script type="text/javascript">
+// 模拟数据
+var data = {
+    tagCloud: [
+        { is_selected: true, title: "Pattern", text: "设计模式" },
+        { is_selected: false, title: "HTML", text: "HTML" },
+        { is_selected: null, title: "CSS", text: "CSS" },
+        { is_selected: "", title: "JavaScript", text: "JavaScript" },
+    ]
+}
 
 
-F.module(["./event", "./dom"], function(events, dom) {
-    console.log(events, dom)
-    events.on("demo", "click", function() {
-        dom.html("demo", "success");
-    })
+F.module(["./template", "./dom"], function(template, dom) {
+    // 服务器端获取到data数据逻辑
+    // 创建组件视图逻辑
+    var str = template("tpl", data);
+    dom.html("app", str);
+    // 组件其他交互逻辑
 });
 </script>
-
 </html>
 ```
 
