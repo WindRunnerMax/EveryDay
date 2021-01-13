@@ -234,6 +234,7 @@
 * [等待者模式](Patterns/等待者模式.md)
 * [同步模块模式](Patterns/同步模块模式.md)
 * [异步模块模式](Patterns/异步模块模式.md)
+* [Widget模式](Patterns/Widget模式.md)
 
 ## Linux
 * [cat命令](Linux/cat命令.md)

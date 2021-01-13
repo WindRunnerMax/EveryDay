@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-01-12**
+> 第323题：[Widget模式](Patterns/Widget模式.md)
+
+<br>
+
 **2021-01-11**
 > 第322题：[异步模块模式](Patterns/异步模块模式.md)
 
