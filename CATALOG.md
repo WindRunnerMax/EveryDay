@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-01-13**
+> 第324题：[React中的纯组件](React/React中的纯组件.md)
+
+<br>
+
 **2021-01-12**
 > 第323题：[Widget模式](Patterns/Widget模式.md)
 
