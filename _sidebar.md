@@ -190,6 +190,7 @@
     * [有状态和无状态组件](React/有状态和无状态组件.md)
     * [受控组件和非受控组件](React/受控组件和非受控组件.md)
     * [React中的纯组件](React/React中的纯组件.md)
+    * [React中的高阶组件](React/React中的高阶组件.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
