@@ -80,6 +80,7 @@ console.log(Number("0xF"));       // 15
 位运算是直接对二进制位进行计算，它直接处理每一个比特位，是非常底层的运算，好处是速度极快，缺点是很不直观。位运算只对整数起作用，如果一个运算数不是整数，会自动转为整数后再运行。在`JavaScript`内部，很多时候数值都是以`64`位浮点数的形式储存，但是做位运算的时候，是以`32`位带符号的整数进行运算的，并且返回值也是一个`32`位带符号的整数。
 
 ```javascript
+// ~~
 console.log(~~(true));        // 1
 console.log(~~(false));       // 0
 console.log(~~(null));        // 0
@@ -90,6 +91,28 @@ console.log(~~("123"));       // 123
 console.log(~~("  123"));     // 123
 console.log(~~("123.12"));    // 123
 console.log(~~("0xF"));       // 15
+// <<
+console.log(true << 0);        // 1
+console.log(false << 0);       // 0
+console.log(null << 0);        // 0
+console.log(undefined << 0);   // 0
+console.log(NaN << 0);         // 0
+console.log("" << 0);          // 0
+console.log("123" << 0);       // 123
+console.log("  123" << 0);     // 123
+console.log("123.12" << 0);    // 123
+console.log("0xF" << 0);       // 15
+// >>
+console.log(true >> 0);        // 1
+console.log(false >> 0);       // 0
+console.log(null >> 0);        // 0
+console.log(undefined >> 0);   // 0
+console.log(NaN >> 0);         // 0
+console.log("" >> 0);          // 0
+console.log("123" >> 0);       // 123
+console.log("  123" >> 0);     // 123
+console.log("123.12" >> 0);    // 123
+console.log("0xF" >> 0);       // 15
 ```
 
 ## 一元运算符
