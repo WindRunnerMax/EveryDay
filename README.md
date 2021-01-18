@@ -125,6 +125,7 @@
 * [Js中的逻辑运算符](JavaScript/Js中的逻辑运算符.md)
 * [Js将字符串转数字的方式](JavaScript/Js将字符串转数字的方式.md)
 * [函数式编程的理解](JavaScript/函数式编程的理解.md)
+* [Js实用小技巧](JavaScript/Js实用小技巧.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
