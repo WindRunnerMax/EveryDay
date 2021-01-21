@@ -46,6 +46,7 @@
     * [CSS常用单位](CSS/CSS常用单位.md)
     * [实现毛玻璃效果](CSS/实现毛玻璃效果.md)
     * [CSS实现图形效果](CSS/CSS实现图形效果.md)
+    * [实现文字滚动播放](CSS/实现文字滚动播放.md)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX.md)
