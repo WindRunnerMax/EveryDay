@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-01-20**
+> 第331题：[React中的合成事件](React/React中的合成事件.md)
+
+<br>
+
 **2021-01-19**
 > 第330题：[Node对象](Browser/Node对象.md)
 
