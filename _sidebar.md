@@ -22,6 +22,7 @@
     * [Attribute和Property的区别](HTML/Attribute和Property的区别.md)
     * [实现拼图滑动验证码](HTML/实现拼图滑动验证码.md)
     * [实现加载提示组件](HTML/实现加载提示组件.md)
+    * [实现消息提示组件](HTML/实现消息提示组件.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
