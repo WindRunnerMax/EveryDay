@@ -1,7 +1,12 @@
 # Catalog
 
+**2021-01-23**
+> 第334题：[History对象](Browser/History对象.md)
+
+<br>
+
 **2021-01-22**
-> 第333题：[History对象](Browser/History对象.md)
+> 第333题：[实现消息提示组件](HTML/实现消息提示组件.md)
 
 <br>
 
