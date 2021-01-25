@@ -299,6 +299,7 @@
     * [sed命令](Linux/sed命令.md)
     * [sort命令](Linux/sort命令.md)
     * [tr命令](Linux/tr命令.md)
+    * [expr命令](Linux/expr命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
