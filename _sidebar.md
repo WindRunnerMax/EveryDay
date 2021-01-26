@@ -157,6 +157,7 @@
     * [浏览器本地存储方案](Browser/浏览器本地存储方案.md)
     * [Node对象](Browser/Node对象.md)
     * [History对象](Browser/History对象.md)
+    * [Navigator对象](Browser/Navigator对象.md)
 
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
