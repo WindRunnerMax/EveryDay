@@ -189,6 +189,7 @@
     * [Vue常用性能优化](Vue/Vue常用性能优化.md)
     * [Vuex和普通全局对象](Vue/Vuex和普通全局对象.md)
     * [Vuex中的核心方法](Vue/Vuex中的核心方法.md)
+    * [Vue中组件间通信的方式](Vue/Vue中组件间通信的方式.md)
 
 * React
     * [React生命周期](React/React生命周期.md)
