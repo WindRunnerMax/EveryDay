@@ -495,6 +495,71 @@
 </style>
 ```
 
+## $refs
+`ref`被用来给元素或子组件注册引用信息，引用信息将会注册在父组件的`$refs`对象上，如果在普通的`DOM`元素上使用，引用指向的就是`DOM`元素，如果用在子组件上，引用就指向组件实例。要注意的是因为`ref`本身是作为渲染结果被创建的，在初始渲染的时候是不能访问它们的，此时它们还不存在，另外`$refs`也不是响应式的，因此也不应该试图用它在模板中做数据绑定。
+
+```html
+<!-- 子组件 -->
+<template>
+    <div>
+        
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "child",
+        data: () => ({
+            
+        }),
+        beforeCreate: function() {},
+        created: function() {},
+        filters: {},
+        computed: {},
+        methods: {}
+    }
+</script>
+
+<style scoped>
+ 
+</style>
+```
+
+```html
+<!-- 父组件 -->
+<template>
+    <div>
+
+        <child ref="child"></child>
+
+    </div>
+</template>
+
+<script>
+    import child from "./child";
+    export default {
+        components: { child },
+        data: () => ({
+
+        }),
+        beforeCreate: function() {},
+        created: function() {},
+        mounted: function(){
+            console.log(this.$refs.child); // VueComponent {_uid: 3, ...}
+        },
+        filters: {},
+        computed: {},
+        methods: {}
+    }
+</script>
+
+<style scoped>
+    
+</style>
+```
+
+
+
 ## EventBus
 在项目规模不大的情况下，完全可以使用中央事件总线`EventBus` 的方式，`EventBus`可以比较完美地解决包括父子组件、兄弟组件、隔代组件之间通信，实际上就是一个观察者模式，观察者模式建立了一种对象与对象之间的依赖关系，一个对象发生改变时将自动通知其他对象，其他对象将相应做出反应。所以发生改变的对象称为观察目标，而被通知的对象称为观察者，一个观察目标可以对应多个观察者，而且这些观察者之间没有相互联系，可以根据需要增加和删除观察者，使得系统更易于扩展。首先我们需要实现一个订阅发布类，并作为全局对象挂载到`Vue.prototype`，作为`Vue`实例中可调用的全局对象使用，此外务必注意在组件销毁的时候卸载订阅的事件调用，否则会造成内存泄漏。
 
@@ -685,8 +750,6 @@ new Vue({
     }
 })
 ```
-
-
 
 ## 每日一题
 
