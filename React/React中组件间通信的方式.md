@@ -302,13 +302,10 @@ import { createStore } from "redux";
  * 根据不同的约定（如方法映射）来判断，只要适用你的项目即可。
  */
 function counter(state = 0, action) {
-  switch (action.type) {
-  case "INCREMENT":
-    return state + 1;
-  case "DECREMENT":
-    return state - 1;
-  default:
-    return state;
+    switch (action.type) {
+        case "INCREMENT": return state + 1;
+        case "DECREMENT": return state - 1;
+        default: return state;
   }
 }
 
@@ -317,8 +314,7 @@ function counter(state = 0, action) {
 let store = createStore(counter);
 
 // 可以手动订阅更新，也可以事件绑定到视图层。
-store.subscribe(() => console.log(store.getState())
-);
+store.subscribe(() => console.log(store.getState()));
 
 // 改变内部 state 惟一方法是 dispatch 一个 action。
 // action 可以被序列化，用日记记录和储存下来，后期还可以以回放的方式执行
