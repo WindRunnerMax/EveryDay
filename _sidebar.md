@@ -51,6 +51,7 @@
     * [CSS实现图形效果](CSS/CSS实现图形效果.md)
     * [实现文字滚动播放](CSS/实现文字滚动播放.md)
     * [CSS实现展开动画](CSS/CSS实现展开动画.md)
+    * [CSS实现渐隐渐现效果](CSS/CSS实现渐隐渐现效果.md)
 
 * JavaScript
     * [手动实现AJAX](JavaScript/手动实现AJAX.md)
