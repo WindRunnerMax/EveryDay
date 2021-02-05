@@ -78,6 +78,7 @@ console.log(s(1)); // {a: 2}
 
 ## 没有单独的this
 箭头函数没有单独的`this`，在箭头函数的函数体中使用`this`时，会取得其上下文`context`环境中的`this`。箭头函数调用时并不会生成自身作用域下的`this`，它只会从自己的作用域链的上一层继承`this`。由于箭头函数没有自己的`this`指针，使用`apply`、`call`、`bind`仅能传递参数而不能动态改变箭头函数的`this`指向。
+
 ```javascript
 var obj = {
     s1: () => {
@@ -96,6 +97,7 @@ obj.s2(); // {s1: ƒ, s2: ƒ}
  s2为普通函数，可以改变this指向，所以this指向了调用者
 */
 ```
+
 ```javascript
 var contextObj = {
     e: function() {
@@ -118,7 +120,9 @@ contextObj.e();
  s2为普通函数，可以改变this指向，所以this指向了调用者
 */
 ```
+
 利用箭头函数的`this`指向特点可以解决一些问题，例如常见的回调函数中`this`指向问题。
+
 ```javascript
 // 常见的回调函数this指向问题
 var a = 1;
@@ -133,7 +137,9 @@ var obj = {
 }
 obj.run();
 ```
+
 对于这个问题可以将`this`值分配给封闭的变量来解决。
+
 ```javascript
 var a = 1;
 var obj = {
@@ -148,7 +154,9 @@ var obj = {
 }
 obj.run();
 ```
+
 也可以使用`bind`来事先将函数执行时的`this`绑定。
+
 ```javascript
 var a = 1;
 var obj = {
@@ -162,7 +170,9 @@ var obj = {
 }
 obj.run();
 ```
+
 使用箭头函数可以直接编写回调函数而不改变`this`指向，箭头函数不会创建自己的`this`，它只会从自己的作用域链的上一层继承`this`。
+
 ```javascript
 var a = 1;
 var obj = {
@@ -197,6 +207,7 @@ s(1, 2);
 
 ## 不能用作构造器
 箭头函数不能用作构造器，使用`new`实例化时会抛出异常。
+
 ```javascript
 var s = () => {};
 new s(); // Uncaught TypeError: s is not a constructor
@@ -204,6 +215,7 @@ new s(); // Uncaught TypeError: s is not a constructor
 
 ## 没有原型属性
 箭头函数没有`prototype`属性。
+
 ```javascript
 var s = () => {};
 console.log(s.prototype); // undefined
