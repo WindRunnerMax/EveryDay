@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-02-06**
+> 第348题：[Js中的位操作符](JavaScript/Js中的位操作符.md)
+
+<br>
+
 **2021-02-05**
 > 第347题：[深入理解Js中的this](JavaScript/深入理解Js中的this.md)
 

@@ -133,6 +133,7 @@
 * [函数式编程的理解](JavaScript/函数式编程的理解.md)
 * [Js实用小技巧](JavaScript/Js实用小技巧.md)
 * [深入理解Js中的this](JavaScript/深入理解Js中的this.md)
+* [Js中的位操作符](JavaScript/Js中的位操作符.md)
 
 ## Browser
 * [跨域问题与解决方案](Browser/跨域问题.md)
