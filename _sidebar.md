@@ -25,6 +25,7 @@
     * [实现消息提示组件](HTML/实现消息提示组件.md)
     * [DOM和BOM的区别](HTML/DOM和BOM的区别.md)
     * [实现三栏布局](HTML/实现三栏布局.md)
+    * [Shadow DOM的理解](HTML/Shadow%20DOM的理解.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
@@ -347,6 +348,7 @@
     * [文本选中复制](Environment/文本选中复制.md)
     * [发布Npm包到GitHub Packages](Environment/发布Npm包到GitHub%20Packages.md)
     * [斐讯K3C路由器改散热](Environment/斐讯K3C改散热.md)
+    * [解决ufw下pptp客户端连接问题](Environment/解决ufw下pptp客户端连接问题.md)
 
 * IMGProcess
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV.md)
