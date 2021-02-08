@@ -173,6 +173,7 @@
 * [Navigator对象](Browser/Navigator对象.md)
 * [Element对象](Browser/Element对象.md)
 * [HTMLElement对象](Browser/HTMLElement对象.md)
+* [Event对象](Browser/Event对象.md)
 
 ## Vue
 * [Vue生命周期](Vue/Vue生命周期.md)
