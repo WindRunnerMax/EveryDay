@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-02-09**
+> 第351题：[Vue3.0新特性](Vue/Vue3.0新特性.md)
+
+<br>
+
 **2021-02-08**
 > 第350题：[Shadow DOM的理解](HTML/Shadow%20DOM的理解.md)
 
