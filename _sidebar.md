@@ -316,6 +316,7 @@
     * [expr命令](Linux/expr命令.md)
     * [ps命令](Linux/ps命令.md)
     * [netstat命令](Linux/netstat命令.md)
+    * [ifconfig命令](Linux/ifconfig命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
