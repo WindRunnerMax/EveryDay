@@ -320,6 +320,7 @@
 * [ps命令](Linux/ps命令.md)
 * [netstat命令](Linux/netstat命令.md)
 * [ifconfig命令](Linux/ifconfig命令.md)
+* [traceroute命令](Linux/traceroute命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
