@@ -319,6 +319,7 @@
     * [ifconfig命令](Linux/ifconfig命令.md)
     * [traceroute命令](Linux/traceroute命令.md)
     * [route命令](Linux/route命令.md)
+    * [kill命令](Linux/kill命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
