@@ -322,6 +322,7 @@
 * [ifconfig命令](Linux/ifconfig命令.md)
 * [traceroute命令](Linux/traceroute命令.md)
 * [route命令](Linux/route命令.md)
+* [kill命令](Linux/kill命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
