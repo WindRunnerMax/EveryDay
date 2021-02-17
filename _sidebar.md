@@ -321,6 +321,7 @@
     * [route命令](Linux/route命令.md)
     * [kill命令](Linux/kill命令.md)
     * [systemctl命令](Linux/systemctl命令.md)
+    * [journalctl命令](Linux/journalctl命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
