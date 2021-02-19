@@ -323,6 +323,7 @@
     * [systemctl命令](Linux/systemctl命令.md)
     * [journalctl命令](Linux/journalctl命令.md)
     * [ip命令](Linux/ip命令.md)
+    * [curl命令](Linux/curl命令.md)
 
 * MiniProgram
     * [山科小站小程序](MiniProgram/山科小站小程序.md)
