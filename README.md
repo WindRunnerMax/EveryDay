@@ -325,6 +325,7 @@
 * [kill命令](Linux/kill命令.md)
 * [systemctl命令](Linux/systemctl命令.md)
 * [journalctl命令](Linux/journalctl命令.md)
+* [ip命令](Linux/ip命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
