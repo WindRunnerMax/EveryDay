@@ -328,6 +328,7 @@
 * [journalctl命令](Linux/journalctl命令.md)
 * [ip命令](Linux/ip命令.md)
 * [curl命令](Linux/curl命令.md)
+* [top命令](Linux/top命令.md)
 
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
