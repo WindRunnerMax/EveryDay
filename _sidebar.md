@@ -215,6 +215,7 @@
     * [React中的合成事件](React/React中的合成事件.md)
     * [ReactRouter的实现](React/ReactRouter的实现.md)
     * [React中组件间通信的方式](React/React中组件间通信的方式.md)
+    * [React组件复用的方式](React/React组件复用的方式.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
