@@ -205,6 +205,7 @@
 * [Vuex中的核心方法](Vue/Vuex中的核心方法.md)
 * [Vue中组件间通信的方式](Vue/Vue中组件间通信的方式.md)
 * [Vue3.0新特性](Vue/Vue3.0新特性.md)
+* [Vue为何采用异步渲染](Vue/Vue为何采用异步渲染.md)
 
 ## React
 * [React生命周期](React/React生命周期.md)
