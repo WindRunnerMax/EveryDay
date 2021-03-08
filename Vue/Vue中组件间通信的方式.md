@@ -219,7 +219,7 @@
 
         <child 
             :msg="msg1"
-            @update:msg="msg1 = $event"
+            @update:msg="value => msg1 = value"
         ></child>
         
         <child
