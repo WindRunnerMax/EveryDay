@@ -61,7 +61,7 @@
         document.getElementById("t4").addEventListener('click',(e) => {
             alert("点击事件");
         })   
-    </script
+    </script>
 
 <!-- 事件流模型见 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/JS%E4%BA%8B%E4%BB%B6%E6%B5%81%E6%A8%A1%E5%9E%8B.md#dom0%E7%BA%A7%E6%A8%A1%E5%9E%8B -->
 ```
