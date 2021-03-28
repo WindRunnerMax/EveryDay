@@ -46,7 +46,7 @@ s1.t3.tt1(); // s1.t3对象
 s1.t4.tt1(); // Window
 s1.t5().tt1(); // s1对象
 ```
-比较特殊的例子，我们调用同一个方法，但是得到的`this`是不同的，要注意实际上`this`的最终指向的是那个调用它的对象
+比较特殊的例子，我们调用同一个方法，但是得到的`this`是不同的，要注意实际上`this`的最终指向的是那个调用它的对象。
 
 ```javascript
 var s1 = {
@@ -69,6 +69,12 @@ console.log(p); // ƒ (){console.log(this);}
 ```
 使用 apply、call、bind可以改变this的指向，可以参考
 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/apply%E3%80%81call%E3%80%81bind.md
+```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
 ```
 
 ## 参考

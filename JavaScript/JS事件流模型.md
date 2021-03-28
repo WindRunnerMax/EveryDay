@@ -151,3 +151,8 @@ window --- document --- html --- body --- i1 --- i2 --- i3 --- i2 --- i1 --- bod
     }) // 执行
 ```
     
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

@@ -228,6 +228,12 @@ sessionStorage.clear();
 * 没有同源限制，客户端可以与任意服务器通信。
 * 协议头标识符是`ws`，如果加密传输则为`wss`。
 
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
 ## 参考
 
 ```

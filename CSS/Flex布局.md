@@ -7,7 +7,7 @@
 ## 容器属性
 
 ### flex-direction
-`flex-direction`属性决定主轴的方向，取值为`row | row-reverse | column | column-reverse`  
+`flex-direction`属性决定主轴的方向，取值为`row | row-reverse | column | column-reverse`。
 * `row`默认值：主轴为水平方向，起点在左端。
 * `row-reverse`：主轴为水平方向，起点在右端，容器成员顺序与`row`顺序相反。
 * `column`：主轴为垂直方向，起点在上沿。
@@ -407,3 +407,8 @@ http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html
 </html>
 ```
 
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

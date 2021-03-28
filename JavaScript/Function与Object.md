@@ -53,6 +53,11 @@ console.log(Function instanceof Function); // true
 * 一切对象都继承于`Object`，都是从`Object.prototype`继承方法和属性。
 * 一切构造函数包括`Object`与`Function`，都继承于`Function`，最终继承于`Object`。
 
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
 
 ## 参考
 

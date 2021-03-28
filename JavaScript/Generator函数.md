@@ -117,6 +117,14 @@ it.next();
 迭代器 https://zhuanlan.zhihu.com/p/24729321?utm_source=tuicool&utm_medium=referral
 线性方式 https://blog.csdn.net/astonishqft/article/details/82782422?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task
 ```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+
 ## 参考
 
 ```

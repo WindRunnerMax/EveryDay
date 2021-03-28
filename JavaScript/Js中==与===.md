@@ -66,9 +66,15 @@ if([0]) console.log("exec"); //exec
 if(NaN) console.log("exec");
 ```
 
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
 ## 参考
 
-```javascript
+```
 https://www.zhihu.com/question/31442029
 https://thomas-yang.me/projects/oh-my-dear-js/
 https://dorey.github.io/JavaScript-Equality-Table/#three-equals

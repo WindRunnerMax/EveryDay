@@ -1,8 +1,10 @@
 # Ajax
 
+## 描述
+
 `Ajax`在浏览器是通过`XMLHttpRequest`对象来实现数据传输的。
 
-`XMLHttpRequest`对象进行HTTP请求前必须通过open初始化，open接受五个参数，分别为请求方法、请求链接、异步标识、账号和密码用以服务端验证。
+`XMLHttpRequest`对象进行`HTTP`请求前必须通过open初始化，`open`接受五个参数，分别为请求方法、请求链接、异步标识、账号和密码用以服务端验证。
 
 ```javascript
 open(Method, URL, Asynchronous, UserName, Password)
@@ -13,7 +15,7 @@ open(Method, URL, Asynchronous, UserName, Password)
 setRequestHeader(key,value)
 ```
 
-调用`open()`方法后，就可以通过调用`send()`方法按照open方法设定的参数将请求进行发送。  
+调用`open()`方法后，就可以通过调用`send()`方法按照`open`方法设定的参数将请求进行发送。  
 ```javascript
 send(Data)
 ```
@@ -27,13 +29,14 @@ switch(readyState){
     case 4: break; //HTTP响应内容结束加载，readyState属性被置为4
 }
 ```
-如果XMLHttpRequest对象的readyState属性还没有变成4，`abort`可以终止请求。这个方法可以确保异步请求中的回调不被执行。
+如果`XMLHttpRequest`对象的`readyState`属性还没有变成`4`，`abort`可以终止请求。这个方法可以确保异步请求中的回调不被执行。
+
 ```javascript
 abort()
 ```
 
 ##### ajax的简单实现
-由于浏览器的同源策略(协议 url 端口号 任一不同都算为跨域请求)，于是此代码需要打开百度的首页，在开发者工具的`Console`直接执行，在`Network`查看效果。
+由于浏览器的同源策略(协议、`url`、端口号任一不同都算为跨域请求)，于是此代码需要打开百度的首页，在开发者工具的`Console`直接执行，在`Network`查看效果。
 
 ```javascript
     function ajax(url,method="GET",data=null,async=true) {
@@ -53,4 +56,10 @@ abort()
 
     ajax("https://www.baidu.com");
     ajax("https://www.baidu.com","POST","A=1&B=2");
+```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
 ```

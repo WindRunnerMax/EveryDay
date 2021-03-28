@@ -181,7 +181,13 @@ a.s = function(){}
 console.log(a); // {s: ƒ}
 ```
 
-## 相关
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+## 参考
 
 ```
 ES6新特性 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md
