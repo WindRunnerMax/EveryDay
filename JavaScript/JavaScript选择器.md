@@ -98,15 +98,6 @@ JS选择器常用的有`getElementById()`、`getElementsByClassName()`、`getEle
 </script>
 ```
 
-## 知识相关
-
-```
-数组的遍历 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.md
-ES6箭头函数 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md
-原型与原型链 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.md
-CSS选择器 https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/CSS%E9%80%89%E6%8B%A9%E5%99%A8.md
-```
-
 ## 代码示例
 
 ```html
@@ -182,4 +173,19 @@ CSS选择器 https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/CSS%E9%80
     console.log("");
 </script>
 </html>
+```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+## 参考
+
+```
+数组的遍历 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84%E6%80%BB%E7%BB%93.md
+ES6箭头函数 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/ES6%E6%96%B0%E7%89%B9%E6%80%A7.md
+原型与原型链 https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/%E5%8E%9F%E5%9E%8B%E4%B8%8E%E5%8E%9F%E5%9E%8B%E9%93%BE.md
+CSS选择器 https://github.com/WindrunnerMax/EveryDay/blob/master/CSS/CSS%E9%80%89%E6%8B%A9%E5%99%A8.md
 ```

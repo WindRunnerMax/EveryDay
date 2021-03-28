@@ -72,3 +72,9 @@ function notPromise(){
     console.log(result);
 })();
 ```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

@@ -46,3 +46,9 @@ sessionStorage.removeItem('key');
 localStorage.clear();
 sessionStorage.clear();
 ```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

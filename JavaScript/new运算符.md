@@ -66,7 +66,13 @@ for(let i=0;i<10;++i){
 console.log(stuGroup);
 ```
 
-## 相关
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+## 参考
 
 ```
 原型与原型链

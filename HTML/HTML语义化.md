@@ -68,4 +68,11 @@
 > 这些是旧的HTML元素，已弃用，不应继续使用。  
 > 不要在新项目中使用它们，应尽快在旧项目替换它们，即使它们现在依然可以使用。  
 
-`<acronym>`、`<applet>`、`<basefont>`、`<bgsound>`、`<big>`、`<blink>`、`<center>`、`<command>`、`<content>`、`<dir>`、`<element>`、`<font>`、`<frame>`、`<frameset>`、`<image>`、`<isindex>`、`<keygen>`、`<listing>`、`<marquee>`、`<menuitem>`、`<multicol>`、`<nextid>`、`<nobr>`、`<noembed>`、`<noframes>`、`<plaintext>`、`<shadow>`、`<spacer>`、`<strike>`、`<tt>`、`<xmp>`
+`<acronym>`、`<applet>`、`<basefont>`、`<bgsound>`、`<big>`、`<blink>`、`<center>`、`<command>`、`<content>`、`<dir>`、`<element>`、`<font>`、`<frame>`、`<frameset>`、`<image>`、`<isindex>`、`<keygen>`、`<listing>`、`<marquee>`、`<menuitem>`、`<multicol>`、`<nextid>`、`<nobr>`、`<noembed>`、`<noframes>`、`<plaintext>`、`<shadow>`、`<spacer>`、`<strike>`、`<tt>`、`<xmp>`。
+
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

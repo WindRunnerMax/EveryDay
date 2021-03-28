@@ -61,3 +61,9 @@ graph LR
 * 避免不可信的数据拼接到字符串中传递给这些`API`，如`DOM`中的内联事件监听器，`location`、`onclick`、`onerror`、`onload`、`onmouseover`等，`<a>`标签的`href`属性，`JavaScript`的`eval()`、`setTimeout()`、`setInterval()`等，都能把字符串作为代码运行。
 * 对于不受信任的输入，都应该限定一个合理的长度。
 * 严格的`CSP`,禁止加载外域代码，禁止外域提交，禁止内联脚本执行等较为严格的方式。
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```

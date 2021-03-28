@@ -1,15 +1,15 @@
-
 # Js严格模式
 `JavaScript`严格模式`strict mode`，即在严格的条件下运行。严格模式消除了`Javascript`语法的一些不合理、不严谨之处，减少一些怪异行为；消除代码运行的一些不安全之处，保证代码运行的安全；提高了引擎的效率，增加运行速度；为未来新的`Js`版本做好铺垫。
 
 ## 实例
-针对整个脚本文件启用严格模式
+针对整个脚本文件启用严格模式。
 
 ```javascript
 "use strict";
 x = 1; // Uncaught ReferenceError: x is not defined
 ```
-针对函数作用域启用严格模式
+针对函数作用域启用严格模式。
+
 ```javascript
 x = 1;
 function s(){
@@ -20,6 +20,7 @@ s();
 ```
 
 ## 严格模式的限制
+
 ### 不允许直接声明全局变量
 ```javascript
 // 非严格模式
@@ -253,6 +254,13 @@ function s(){
 }
 s();
 ```
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
 
 ## 参考
 

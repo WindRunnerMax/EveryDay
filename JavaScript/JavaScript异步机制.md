@@ -180,6 +180,13 @@ console.log(3); // 3
 console.log(6); // 6
 ```
 
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+
 ## 参考
 
 ```

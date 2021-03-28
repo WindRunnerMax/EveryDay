@@ -80,3 +80,9 @@ SELECT count(*) FROM user_info WHERE account = '';DROP TABLE qweqwe#' AND passwo
 
 ### 定期检查
 定期测试与数据库交互的`Web`应用程序，且将数据库更新为最新的可用修补程序，防止旧版本的漏洞利用。
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
