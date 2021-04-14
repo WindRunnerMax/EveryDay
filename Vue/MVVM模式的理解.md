@@ -30,7 +30,7 @@
 * 数据绑定使得`Bug`较难被调试，当界面异常，可能是`View`的代码有问题，也可能是`Model `的代码有问题，数据绑定使得一个位置的`Bug`可能被快速传递到别的位置，要定位原始出问题的地方就变得不那么容易了。
 
 ## 实例
-下面是参照`Vue`实现的简单的数据绑定实例。
+下面是参照`Vue`实现的简单的数据绑定实例，当然对于`Vue`来说，文档中也提到了`Vue`没有完全遵循`MVVM`模型，但是`Vue`的设计也受到了其启发，`https://cn.vuejs.org/v2/guide/instance.html`，关于为什么尤大说`Vue`没有完全遵循`MVVM`，可以参考这个`https://www.zhihu.com/question/327050991`。
 
 ```html
 <!DOCTYPE html>
