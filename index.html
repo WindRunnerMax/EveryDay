@@ -9,20 +9,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@095d135/static/vue.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
     <meta name="referrer" content="no-referrer">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag("js", new Date());
-        gtag("config", "G-57PHBXT1C5");
-    </script>
 </head>
 
 <body>
     <div id="app">Please wait...</div>
     <script>
         window.$docsify = {
+            ga: "G-57PHBXT1C5",
             name: "WindrunnerMax",
             repo: "https://github.com/WindrunnerMax",
             loadSidebar: true,
@@ -49,6 +42,7 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@095d135/static/docsify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/ga.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify-catalog/dist/catalog.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docsify-sidebar-fold/dist/sidebar.js"></script>
@@ -58,7 +52,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5"></script>
     <script>
-        $docsify.plugins = [].concat(function(hook, vm) {
+        window.$docsify.plugins = [].concat(function(hook, vm) {
             const dom = Docsify.dom;
             hook.mounted(function() {
                 const div = dom.create("div");
