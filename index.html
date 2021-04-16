@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@095d135/static/vue.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.css">
     <meta name="referrer" content="no-referrer">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag("js", new Date());
+        gtag("config", "G-57PHBXT1C5");
+    </script>
 </head>
 
 <body>
@@ -75,23 +83,6 @@
                     id: md5("blog" + title),
                     distractionFreeMode: false
                 }).render("gitalk-container");
-            });
-        }, $docsify.plugins);
-    </script>
-    <script type="text/javascript">
-        window.$docsify.plugins = [].concat(function(hook, vm) {
-            const dom = Docsify.dom;
-            hook.mounted(function() {
-                (function(i,s,o,g,r,a,m){i["GoogleAnalyticsObject"]=r;i[r]=i[r]||function(){
-                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-                })(window,document,"script","https://www.google-analytics.com/analytics.js","ga");
-                window.ga("create", "G-57PHBXT1C5", "auto");
-                window.ga("send", "pageview");
-            });
-            hook.doneEach(function() {
-                window.ga("set", "page", location.hash);
-                window.ga("send", "pageview");
             });
         }, $docsify.plugins);
     </script>
