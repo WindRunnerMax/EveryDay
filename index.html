@@ -17,11 +17,6 @@
         gtag("js", new Date());
         gtag("config", "G-57PHBXT1C5");
     </script>
-    <style type="text/css">
-        #gitalk-container{
-            padding-bottom: 50px;
-        }
-    </style>
 </head>
 
 <body>
@@ -71,13 +66,25 @@
                 repo: "GitTalks",
                 owner: "touchczy",
                 body: decodeURIComponent(location.href),
-                admin: ["WindrunnerMax", "touchczy"],
+                admin: ["touchczy"],
                 id: md5("blog" + document.title),
                 distractionFreeMode: false
             }); 
         }
-        let gitalk = createGitTalk();
-        window.onhashchange = () => gitalk = createGitTalk();
+        $docsify.plugins = [].concat(function(i) {
+            let dom = Docsify.dom;
+            i.mounted(function(i) {
+                let div = dom.create("div");
+                div.id = "gitalk-container";
+                let main = dom.getNode("#main");
+                div.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;padding-bottom: 50px;",
+                dom.appendTo(dom.find(".content"), div)
+            }),
+            i.doneEach(function(i) {
+                for(let n = document.getElementById("gitalk-container"); n.hasChildNodes();) n.removeChild(n.firstChild);
+                createGitTalk().render("gitalk-container");
+            })
+        }, $docsify.plugins);
     </script>
 </body>
 
