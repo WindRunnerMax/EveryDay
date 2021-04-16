@@ -54,15 +54,20 @@
     <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5"></script>
     <script>
-        const gitalk = new Gitalk({
-            clientID: "09c0f64ed0786ea33509",
-            clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
-            repo: "GitTalks",
-            owner: "touchczy",
-            admin: ["WindrunnerMax", "touchczy"],
-            id: md5(location.href.split("?")[0]),
-            distractionFreeMode: false
-        })
+        const createGitTalk = () => {
+            return new Gitalk({
+                clientID: "09c0f64ed0786ea33509",
+                clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
+                repo: "GitTalks",
+                owner: "touchczy",
+                body: decodeURIComponent(location.href),
+                admin: ["WindrunnerMax", "touchczy"],
+                id: md5(location.href.split("?")[0]),
+                distractionFreeMode: false
+            }); 
+        }
+        let gitalk = createGitTalk();
+        window.onhashchange = () => gitalk = createGitTalk();
     </script>
 </body>
 
