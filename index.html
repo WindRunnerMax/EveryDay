@@ -58,18 +58,6 @@
     <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5"></script>
     <script>
-        const createGitTalk = () => {
-            return new Gitalk({
-                clientID: "09c0f64ed0786ea33509",
-                clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
-                repo: "GitTalks",
-                owner: "touchczy",
-                body: decodeURIComponent(location.href),
-                admin: ["touchczy"],
-                id: md5("blog" + document.title),
-                distractionFreeMode: false
-            }); 
-        }
         $docsify.plugins = [].concat(function(i) {
             let dom = Docsify.dom;
             i.mounted(function(i) {
@@ -81,7 +69,16 @@
             }),
             i.doneEach(function(i) {
                 for(let n = document.getElementById("gitalk-container"); n.hasChildNodes();) n.removeChild(n.firstChild);
-                createGitTalk().render("gitalk-container");
+                new Gitalk({
+                    clientID: "09c0f64ed0786ea33509",
+                    clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
+                    repo: "GitTalks",
+                    owner: "touchczy",
+                    body: decodeURIComponent(location.href),
+                    admin: ["touchczy"],
+                    id: md5("blog" + document.title),
+                    distractionFreeMode: false
+                }).render("gitalk-container");
             })
         }, $docsify.plugins);
     </script>
