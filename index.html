@@ -58,28 +58,32 @@
     <script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/blueimp-md5"></script>
     <script>
-        $docsify.plugins = [].concat(function(i) {
-            let dom = Docsify.dom;
-            i.mounted(function(i) {
-                let div = dom.create("div");
+        $docsify.plugins = [].concat(function(hook, vm) {
+            const dom = Docsify.dom;
+            hook.mounted(function() {
+                const div = dom.create("div");
                 div.id = "gitalk-container";
-                let main = dom.getNode("#main");
+                const main = dom.getNode("#main");
                 div.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;padding-bottom: 50px;";
                 dom.appendTo(dom.find(".content"), div);
-            }),
-            i.doneEach(function(i) {
+            });
+            hook.doneEach(function() {
+                let title = decodeURIComponent(vm.route.path.split("/").slice(-1).pop());
+                if(!title) title = window.$docsify.name;
+                document.title = title;
                 for(let n = document.getElementById("gitalk-container"); n.hasChildNodes();) n.removeChild(n.firstChild);
                 new Gitalk({
                     clientID: "09c0f64ed0786ea33509",
                     clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
                     repo: "GitTalks",
                     owner: "touchczy",
-                    body: decodeURIComponent(location.href),
+                    title: title,
+                    body: `[${title}](${location.href})`,
                     admin: ["touchczy"],
-                    id: md5("blog" + document.title),
+                    id: md5("blog" + title),
                     distractionFreeMode: false
                 }).render("gitalk-container");
-            })
+            });
         }, $docsify.plugins);
     </script>
 </body>
