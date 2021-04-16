@@ -76,8 +76,8 @@
                 let div = dom.create("div");
                 div.id = "gitalk-container";
                 let main = dom.getNode("#main");
-                div.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;padding-bottom: 50px;",
-                dom.appendTo(dom.find(".content"), div)
+                div.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;padding-bottom: 50px;";
+                dom.appendTo(dom.find(".content"), div);
             }),
             i.doneEach(function(i) {
                 for(let n = document.getElementById("gitalk-container"); n.hasChildNodes();) n.removeChild(n.firstChild);
