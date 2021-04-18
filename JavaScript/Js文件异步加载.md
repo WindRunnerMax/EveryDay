@@ -5,7 +5,7 @@
 `defer`是早期`IE`支持的属性，目前主流浏览器都已经支持，该属性会使浏览器开启一个线程去加载`Js`并且会在`DOM`结构解析完成之后再执行。
 * `defer`只适用于外联脚本。
 * 如果有多个声明了`defer`的脚本，则会按顺序下载和执行。
-* `defer`脚本会在`onDOMContentLoaded`之后和`onload`事件之前执行。
+* `defer`脚本会在`onDOMContentLoaded`之前执行，当然同样也就在`onload`事件之前执行。
 
 ```html
 <!-- 兼容性 https://caniuse.com/#feat=script-defer -->
@@ -47,5 +47,6 @@ https://github.com/WindrunnerMax/EveryDay
 ```
 https://segmentfault.com/a/1190000006778717
 https://www.cnblogs.com/jiasm/p/7683930.html
+https://blog.csdn.net/zyj0209/article/details/79698430
 https://blog.csdn.net/qq_41245969/article/details/82428464
 ```
