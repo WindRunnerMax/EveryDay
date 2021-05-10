@@ -261,6 +261,7 @@
     * [Widget模式](Patterns/Widget模式.md)
     * [MVC模式](Patterns/MVC模式.md)
     * [MVP模式](Patterns/MVP模式.md)
+    * [MVVM模式](Patterns/MVVM模式.md)
 
 * Linux
     * [简单安全防护](Security/简单安全防护.md)
