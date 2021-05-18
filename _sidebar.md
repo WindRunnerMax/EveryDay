@@ -216,6 +216,7 @@
     * [ReactRouter的实现](React/ReactRouter的实现.md)
     * [React中组件间通信的方式](React/React中组件间通信的方式.md)
     * [React组件复用的方式](React/React组件复用的方式.md)
+    * [React中diff算法的理解](React/React中diff算法的理解.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
