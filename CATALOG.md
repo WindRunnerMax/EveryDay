@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-05-18**
+> 第369题：[React中diff算法的理解](React/React中diff算法的理解.md)
+
+<br>
+
 **2021-05-10**
 > 第368题：[MVVM模式](Patterns/MVVM模式.md)
 
