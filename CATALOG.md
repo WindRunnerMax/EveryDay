@@ -1,5 +1,10 @@
 # Catalog
 
+**2021-06-08**
+> 第370题：[Vue中的三种Watcher](Vue/Vue中的三种Watcher.md)
+
+<br>
+
 **2021-05-18**
 > 第369题：[React中diff算法的理解](React/React中diff算法的理解.md)
 
