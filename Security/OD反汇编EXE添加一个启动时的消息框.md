@@ -1,8 +1,8 @@
-# 反汇编EXE添加一个启动时的消息框
+# OD反汇编EXE添加一个启动时的消息框
 最近有一个要修改`PE`文件的需求，就先从`EXE`文件下手吧，我也是初学一个小时而已，不过之前接触过一点汇编罢了，这篇文章算是个`DEMO`，主要的思路是将其反汇编得到汇编代码后，然后手动修改他的逻辑首先跳转到弹框区域再跳转回来去执行原来的代码，相关的工具有`ollydbg`，以及要修改的一个`xp`系统自带的扫雷软件，还有参考的文章，都会在文末给出。
 
 ## 描述
-首先准备好要用到的`OD`工具和扫雷这个软件。
+首先准备好要用到的`OD`工具也就是`ollydbg`和扫雷这个软件。
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2021061109594920.png)
 
@@ -144,6 +144,11 @@
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210611162755134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
 
+## Blog
+
+```
+https://blog.touchczy.top/#/
+```
 
 ## 参考
 
