@@ -200,6 +200,7 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://zhuanlan.zhihu.com/p/50547367
+https://github.com/vuejs/vue/issues/8562
 https://juejin.im/post/6844903699425263629
 https://juejin.im/post/6844903597591773198
 https://segmentfault.com/a/1190000015783546
