@@ -230,6 +230,7 @@
 * [Git与SVN对比](Plugin/Git与SVN对比.md)
 * [Nginx常用配置](Plugin/Nginx常用配置.md)
 * [Rollup的基本使用](Plugin/Rollup的基本使用.md)
+* [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
