@@ -341,6 +341,7 @@
     * [QQ小程序支付](Java/QQ小程序支付.md)
     * [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
     * [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
+    * [uniapp小程序迁移到TS](MiniProgram/uniapp小程序迁移到TS.md)
 
 * App
     * [Nvue/Weex](App/NvueWeex.md)
