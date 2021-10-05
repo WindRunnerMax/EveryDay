@@ -147,7 +147,7 @@ $ npm install -g @vue/cli
 
 ## 迁移到TS
 其实本来是想写一些遇到的坑，然后发现之前迁移的过程中没跟着写这个文章，导致都忘了，现在光记着这是个比较枯燥的体力活。  
-对于`js`文件，迁移还是相对比较简单的，主要是把类型搞清楚，对于`api`调用，参数的类型`uniapp`都已经给搞好了，可以看看`@dcloudio/types`下定义的类型，类型搞不好的可以考虑`Parameters<T>`以及`as`，这个可以简单看看`src/modules/toast.ts`，如果参数数量不定，可以尝试一下泛型，对于这个可以简单看看`src/modules/datetime.ts`。迁移的过程中还是要首先关注最底层的`js`文件，例如`A.js`引用了`B.js`，那么肯定是要先更改`B.js`，然后再去处理`A.js`，要注意的是现在的`tsconfig.json`配置是严格模式，所以也会要求引入的文件为带类型声明的或者本身就是`ts`的，当然在`d.ts`中声明一下`declare module A.js`也不是不行。迁移的话首先可以将后缀直接改成`.ts`，然后用`eslint`的自动修正功能，先修正一个地方是一个地方，然后自己去修改类型，尽量别写`any`吧，虽然`TypeScript`又称`AnyScript`，但是还是尽量搞清楚类型，尤其是抽出`model`层后，带字段提示去写代码还是挺爽的，另外有一些关于类型的扩充以及全局`Mixin`等可以参考`sfc.d.ts`和`mixins.ts`。
+对于`js`文件，迁移还是相对比较简单的，主要是把类型搞清楚，对于`api`调用，参数的类型`uniapp`都已经给搞好了，可以看看`@dcloudio/types`下定义的类型，类型搞不好的可以考虑`Parameters<T>`以及`as`，这个可以简单看看`src/modules/toast.ts`，如果参数数量不定，可以尝试一下泛型或元组的方式，对于这个可以简单看看`src/modules/datetime.ts`。迁移的过程中还是要首先关注最底层的`js`文件，例如`A.js`引用了`B.js`，那么肯定是要先更改`B.js`，然后再去处理`A.js`，要注意的是现在的`tsconfig.json`配置是严格模式，所以也会要求引入的文件为带类型声明的或者本身就是`ts`的，当然在`d.ts`中声明一下`declare module A.js`也不是不行。迁移的话首先可以将后缀直接改成`.ts`，然后用`eslint`的自动修正功能，先修正一个地方是一个地方，然后自己去修改类型，尽量别写`any`吧，虽然`TypeScript`又称`AnyScript`，但是还是尽量搞清楚类型，尤其是抽出`model`层后，带字段提示去写代码还是挺爽的，另外有一些关于类型的扩充以及全局`Mixin`等可以参考`sfc.d.ts`和`mixins.ts`。
 
 ```typescript
 // src/modules/toast.ts
@@ -201,6 +201,19 @@ export function safeDate(
     }
     throw new Error("No suitable parameters");
 }
+
+// or
+
+type DateParams =
+    | []
+    | [string]
+    | [number, number?, number?, number?, number?, number?, number?]
+    | [Date];
+const safeDate = <T extends DateParams>(...args: T): Date => {
+    const copyParams = args.slice(0);
+    if (typeof copyParams[0] === "string") copyParams[0] = copyParams[0].replace(/-/g, "/");
+    return new Date(...(args as ConstructorParameters<typeof Date>));
+};
 ```
 
 在`Vue`文件中编写`TS`就比较要命了，实际上有两种编写方式，一种是`Vue.extend`的方式，另一种就是装饰器的方式，这里就是主要参考的`https://www.jianshu.com/p/39261c02c6db`，我个人还是比较倾向于装饰器的方式的，但是在小程序写组件时使用装饰器经常会出现一个`prop`类型不匹配的`warning`，不影响使用，另外无论是哪种方式都还是会有断层的问题，这个算是`Vue2`当时的设计缺陷，毕竟那时候`TS`并不怎么流行。
