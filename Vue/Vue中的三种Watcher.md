@@ -258,7 +258,7 @@ function __watcher(fn){
 </html>
 ```
  
-### whtcher api
+### watcher api
 在`watch api`中可以定义`deep`与`immediate`属性，分别为深度监听`watch`和最初绑定即执行回调的定义，在`render watch`中定义数组的每一项由于性能与效果的折衷是不会直接被监听的，但是使用`deep`就可以对其进行监听，当然在`Vue3`中使用`Proxy`就不存在这个问题了，这原本是`Js`引擎的内部能力，拦截行为使用了一个能够响应特定操作的函数，即通过`Proxy`去对一个对象进行代理之后，我们将得到一个和被代理对象几乎完全一样的对象，并且可以从底层实现对这个对象进行完全的监控。  
 对于`watch api`，类型`{ [key: string]: string | Function | Object | Array }`，是一个对象，键是需要观察的表达式，值是对应回调函数，值也可以是方法名，或者包含选项的对象，`Vue`实例将会在实例化时调用`$watch()`，遍历`watch`对象的每一个`property`。  
 不应该使用箭头函数来定义`watcher`函数，例如`searchQuery: newValue => this.updateAutocomplete(newValue)`，理由是箭头函数绑定了父级作用域的上下文，所以`this`将不会按照期望指向`Vue`实例，`this.updateAutocomplete`将是`undefined`。
