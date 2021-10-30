@@ -93,6 +93,7 @@
 * `git reset --keep [commit]`: 重置当前`HEAD`为指定`commit`，但保持暂存区和工作区不变
 * `git revert [commit]`: 新建一个`commit`，用来撤销指定`commit`，后者的所有变化都将被前者抵消，并且应用到当前分支。
 * `git stash`、`git stash pop`: 暂时将未提交的变化移除，稍后再移入。
+* `git reset --soft HEAD^`: 撤回`commit`操作，保留之前`commit`的代码。
 
 ## 远程同步
 * `git fetch [remote]`: 下载远程仓库的所有变动。
