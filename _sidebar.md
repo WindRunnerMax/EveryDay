@@ -203,7 +203,8 @@
     * [Vue为何采用异步渲染](Vue/Vue为何采用异步渲染.md)
     * [Vue中的三种Watcher](Vue/Vue中的三种Watcher.md)
     * [v-html可能导致的问题](Vue/v-html可能导致的问题.md)
-    * [从零搭建Vue2开发环境](Vue/初探webpack之搭建Vue开发环境.md)
+    * [从零搭建Vue2开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
+    * [Vue首屏性能优化组件](Plugin/Vue首屏性能优化组件.md)
 
 * React
     * [React生命周期](React/React生命周期.md)
