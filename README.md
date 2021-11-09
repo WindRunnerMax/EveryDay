@@ -208,6 +208,7 @@
 * [Vue为何采用异步渲染](Vue/Vue为何采用异步渲染.md)
 * [Vue中的三种Watcher](Vue/Vue中的三种Watcher.md)
 * [v-html可能导致的问题](Vue/v-html可能导致的问题.md)
+* [Vue首屏性能优化组件](Vue/Vue首屏性能优化组件.md)
 
 ## React
 * [React生命周期](React/React生命周期.md)
