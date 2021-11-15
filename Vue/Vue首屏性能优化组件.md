@@ -76,7 +76,7 @@ const handle = window.requestIdleCallback(callback[, options]);
     * `timeout`: 如果指定了`timeout`，并且有一个正值，而回调在`timeout`毫秒过后还没有被调用，那么回调任务将放入事件循环中排队，即使这样做有可能对性能产生负面影响。
 
 ## 实现
-实际上编写组件主要是搞清楚如何使用这两个主要的`API`就好，首先关注`IntersectionObserver`，因为考虑需要使用动态组件`<component />`，那么我们向其传值的时候就需要使用异步加载组件`() => import("component")`的形式。监听的时候，可以考虑加载完成之后即销毁监听器，或者离开视觉区域后就将其销毁等，这方面主要是策略问题。在页面销毁的时候就必须将`Intersection Observer`进行`disconnect`，防止内存泄漏。使用`requestIdleCallback`就比较简单了，只需要将回调函数执行即可，同样也类似于`Promise.resolve().then`这种异步处理的情况。  
+实际上编写组件主要是搞清楚如何使用这两个主要的`API`就好，首先关注`IntersectionObserver`，因为考虑需要使用动态组件`<component />`，那么我们向其传值的时候就需要使用异步加载组件`() => import("component")`的形式。监听的时候，可以考虑加载完成之后即销毁监听器，或者离开视觉区域后就将其销毁等，这方面主要是策略问题。在页面销毁的时候就必须将`Intersection Observer`进行`disconnect`，防止内存泄漏。另外我们为了使用`IntersectionObserver`则必须需要一个可以观察的目标，如果什么不都渲染，我们就无从观察，所以我们需要引入一个骨架屏，我们可以为真实的组件做一个在尺寸上非常接近真实组件的组件，在这里为了演示只是简单的渲染了`<section />`作为骨架屏。使用`requestIdleCallback`就比较简单了，只需要将回调函数执行即可，同样也类似于`Promise.resolve().then`这种异步处理的情况。  
 这里是简单的实现逻辑，通常`observer`的使用方案是先使用一个`div`等先进行占位，然后在`observer`监控其占位的容器，当容器在视区时加载相关的组件，相关的代码在`https://github.com/WindrunnerMax/webpack-simple-environment`的`vue--first-screen-optimization`分支，请尽量使用`yarn`进行安装，可以使用`yarn.lock`文件锁住版本，避免依赖问题。使用`npm run dev`运行之后可以在`Console`中看到这四个懒加载组件`created`创建的顺序，其中`A`的`observer`懒加载是需要等其加载页面渲染完成之后，判断在可视区，才进行加载，首屏使能够直接看到的，而`D`的懒加载则是需要将滚动条滑动到`D`的外部容器出现在视图之后才会出现，也就是说只要不滚动到底部是不会加载`D`组件的，另外还可以通过`component-params`和`component-events`将`attrs`和`listeners`传递到懒加载的组件，类似于`$attrs`和`$listeners`，至此懒加载组件已简单实现。
 
 ```html
