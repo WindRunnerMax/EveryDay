@@ -1,5 +1,9 @@
 # Catalog
 
+**2021-11-22**
+> 第376题：[IntersectionObserver对象](Browser/IntersectionObserver对象.md)
+
+<br>
 
 **2021-11-09**
 > 第375题：[Vue首屏性能优化组件](Vue/Vue首屏性能优化组件.md)
