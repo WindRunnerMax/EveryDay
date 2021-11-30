@@ -672,8 +672,8 @@ const user: Module<UserState, any> = {
   namespaced: true,
   state: {
     userInfo: {
-      uId: ",
-      name: ",
+      uId: "",
+      name: "",
       age: 0
     }
   },
@@ -1282,5 +1282,6 @@ https://uniapp.dcloud.net.cn/quickstart-cli
 https://webpack.docschina.org/api/parser/#import
 https://v4.webpack.docschina.org/concepts/plugins/
 https://cloud.tencent.com/developer/article/1839658
+https://ts.xcatliu.com/basics/declaration-files.html
 https://jkchao.github.io/typescript-book-chinese/typings/migrating.html
 ```
