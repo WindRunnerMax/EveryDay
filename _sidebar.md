@@ -26,6 +26,7 @@
     * [DOM和BOM的区别](HTML/DOM和BOM的区别.md)
     * [实现三栏布局](HTML/实现三栏布局.md)
     * [Shadow DOM的理解](HTML/Shadow%20DOM的理解.md)
+    * [Service Worker的应用](HTML/Service%20Worker的应用.md)
 
 * CSS
     * [垂直居中布局](CSS/布局垂直居中.md)
