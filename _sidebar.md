@@ -382,6 +382,7 @@
     * [发布Npm包到GitHub Packages](Environment/发布Npm包到GitHub%20Packages.md)
     * [斐讯K3C路由器改散热](Environment/斐讯K3C改散热.md)
     * [解决ufw下pptp客户端连接问题](Environment/解决ufw下pptp客户端连接问题.md)
+    * [建立DNS隧道绕过校园网认证](Environment/建立DNS隧道绕过校园网认证.md)
 
 * IMGProcess
     * [OpenCV强智教务系统验证码识别](IMGProcess/强智教务系统验证码识别OpenCV.md)
