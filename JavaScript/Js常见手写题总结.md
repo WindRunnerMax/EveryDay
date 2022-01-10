@@ -362,3 +362,104 @@ arr = mergeSort(arr, 0, arr.length - 1, []);
 console.log(arr); // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 // 平均时间复杂度 O(nlogn) 最好情况 O(nlogn) 最坏情况 O(nlogn) 空间复杂度 O(n) 稳定排序
 ```
+
+## 最大的第K个数
+
+```javascript
+const adjust = (index, arr) => {
+    let changeIndex = -1;
+    const n = arr.length;
+    if(index < n && arr[index] < arr[index * 2 + 1]){
+        changeIndex = index * 2 + 1;
+        [arr[index], arr[index * 2 + 1]] = [arr[index * 2 + 1], arr[index]];
+    } 
+    if(index < n && arr[index] < arr[index * 2 + 2]){
+        changeIndex = index * 2 + 2;
+        [arr[index], arr[index * 2 + 2]] = [arr[index * 2 + 2], arr[index]];
+    } 
+    if(changeIndex !== -1) adjust(changeIndex, arr);
+}
+
+const find = (arr, k) => {
+    for(let n = arr.length, i = n-1; i>=0; --i) adjust(i, arr);
+    for(let i=0; i<k-1; ++i){
+        arr.shift();
+        [arr[0], arr[arr.length - 1]] = [arr[arr.length - 1], arr[0]];
+        adjust(0, arr);
+    }
+    console.log(arr.shift());
+}
+
+const k = 3;
+const arr = [4, 3, 5, 1, 6, 2, 7, 8];
+find(arr, k);
+```
+
+## 防抖和节流
+
+```javascript
+// 防抖
+const d = function(time, funct, ...args){
+    let timer = null;
+    return () => {
+        clearTimeout(timer);
+        timer = null;
+        timer = setTimeout(() => funct(...args), time);
+    }
+}
+window.onscroll = d(1000, (a) => console.log(a), 1);
+```
+```javascript
+// 节流
+const t = function(time, funct, ...args){
+    let timer = null;
+    return () => {
+        if(!timer){
+            funct(...args);
+            timer = setTimeout(() => {
+                clearTimeout(timer);
+                timer = null;
+            }, time);
+        }
+    }
+}
+window.onscroll = t(1000, (a) => console.log(a), 1);
+
+```
+
+## 继承
+```javascript
+// 寄生组合继承
+function Parent(from){
+    this.name = "parent";
+    this.say = function(){
+        console.log(this.name);
+    }
+    this.from = from;
+}
+function Child(from){
+    Parent.call(this, from);
+    this.name = "child";
+}
+let f = function(){};
+f.prototype = Parent.prototype;
+Child.prototype = new f();
+Child.prototype.construce = Child;
+
+let child = new Child("child");
+child.say(); // child
+console.log(child.from); // child
+```
+
+## 十进制转二进制
+```javascript
+(function(num){
+    num = num >> 0;
+    const target = [];
+    while(num){
+        target.unshift(num % 2);
+        num = (num / 2) >> 0;
+    }
+    console.log(target.join(""));
+})(10);
+```
