@@ -53,7 +53,7 @@ export default function App() {
 }
 ```
 
-在文档中还指出请确保数组中包含了所有外部作用域中会随时间变化并且在`effect`中使用的变量，否则你的代码会引用到先前渲染中的旧变量。如果你传入了一个空数组`[]`，`effect`内部的`props`和`state`就会一直拥有其初始值。下面这个例子就会出现一个`bug`，在依赖数组中没有传递`count`，那么就会导致当`effect`执行时，创建的`effect`闭包会将`count`的值被保存在该闭包当中，且初值为`0`，每隔一秒回调就会执行`setCount(0 + 1)`，因此`count`永远不会超过`1`，此时如果我们将`count`加入到依赖数组中便可解决这个问题。对于这个问题，`React`提供了一个`exhaustive-deps`的`ESLint`规则作为`eslint-plugin-react-hooks`包的一部分，它会帮助你找出无法一致地处理更新的组件。
+在文档中还指出请确保数组中包含了所有外部作用域中会随时间变化并且在`effect`中使用的变量，否则你的代码会引用到先前渲染中的旧变量。如果你传入了一个空数组`[]`，`effect`内部的`props`和`state`就会一直拥有其初始值。下面这个例子就会出现一个`bug`，在依赖数组中没有传递`count`，那么就会导致当`effect`执行时，创建的`effect`闭包会将`count`的值保存在该闭包当中，且初值为`0`，每隔一秒回调就会执行`setCount(0 + 1)`，因此`count`永远不会超过`1`，此时如果我们将`count`加入到依赖数组中便可解决这个问题。对于这个问题，`React`提供了一个`exhaustive-deps`的`ESLint`规则作为`eslint-plugin-react-hooks`包的一部分，它会帮助你找出无法一致地处理更新的组件。
 
 ```
 import { useEffect, useState } from "react";
