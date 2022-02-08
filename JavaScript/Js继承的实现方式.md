@@ -145,7 +145,7 @@ function Child(from){
 }
 
 Child.prototype = Parent.prototype; // 共享原型
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
@@ -177,7 +177,7 @@ function Child(from){
 }
 
 Child.prototype = new Parent();
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
@@ -213,7 +213,7 @@ function Child(from){
 var f = function(){}; // 创建一个没有实例方法的类
 f.prototype = Parent.prototype; // 浅拷贝父类原型 
 Child.prototype = new f(); // 实例化f，此时没有实例化方法调用，同时将原型链建立
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
