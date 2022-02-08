@@ -18,7 +18,7 @@ function Child(){
     this.name = "child";
 }
 Child.prototype = new Parent(); // 将子类的原型对象指向父类的实例
-Child.prototype.construce = Child; // 修复constructor使符合原型链规定
+Child.prototype.constructor = Child; // 修复constructor使符合原型链规定
 var child = new Child(); // 实例化子类
 child.say(); // child // 此时子类能够访问父类的say方法，在查找name属性的时候首先在自身属性中查找成功所以不再向上查找，若子类没有name成员，则会打印parent
 console.log(child instanceof Parent); // true // 判断child的构造函数Child的prototype对象是否在Parent的原型链上
@@ -145,7 +145,7 @@ function Child(from){
 }
 
 Child.prototype = Parent.prototype; // 共享原型
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
@@ -177,7 +177,7 @@ function Child(from){
 }
 
 Child.prototype = new Parent();
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
@@ -213,7 +213,7 @@ function Child(from){
 var f = function(){}; // 创建一个没有实例方法的类
 f.prototype = Parent.prototype; // 浅拷贝父类原型 
 Child.prototype = new f(); // 实例化f，此时没有实例化方法调用，同时将原型链建立
-Child.prototype.construce = Child;
+Child.prototype.constructor = Child;
 
 var child = new Child("child"); // 实例化子类
 child.say(); // child
