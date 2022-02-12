@@ -226,6 +226,7 @@
     * [React中diff算法的理解](React/React中diff算法的理解.md)
     * [Hooks中的useState](React/Hooks中的useState.md)
     * [useEffect与useLayoutEffect](React/useEffect与useLayoutEffect.md)
+    * [useMemo与useCallback](React/useMemo与useCallback.md)
 
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
