@@ -463,3 +463,118 @@ console.log(child.from); // child
     console.log(target.join(""));
 })(10);
 ```
+
+## 带并发限制的异步调度器
+`Js`实现一个带并发限制的异步调度器`Scheduler`，保证同时运行的任务最多有两个。
+
+```javascript
+// Start
+class Scheduler {
+    constructor() {
+        this.max = 2;
+        this.task = [];
+        this.pending = [];
+    }
+    add(fn){
+        const dispatch = () => {
+            for(let i=0; i<this.max; ++i){
+                if(!this.task[i] && this.pending.length){
+                    const runFn = this.pending.shift();
+                    this.task[i] = true;
+                    runFn().then(() => {
+                        this.task[i] = false;
+                        runFn.resolve();
+                        dispatch();
+                    })
+                }
+            }
+        }
+        const pr = new Promise(resolve => {
+            fn.resolve = resolve;
+            this.pending.push(fn);
+        });
+        dispatch();
+        return pr;
+    }
+}
+// End
+
+const timeout = (time) => new Promise(resolve => {
+    setTimeout(resolve, time);
+})
+
+
+const scheduler = new Scheduler();
+const addTask = (time, order) => {
+    scheduler
+    .add(() => timeout(time))
+    .then(() => console.log(order));
+}
+
+
+addTask(2000, "1");
+addTask(1000, "2");
+addTask(3000, "3");
+addTask(2000, "4");
+
+// 2  第一秒
+// 1  第二秒
+// 3  第四秒
+// 4  第四秒
+```
+
+```javascript
+// Start
+class Scheduler {
+    constructor() {
+        this.max = 2;
+        this.task = [];
+        this.pending = [];
+    }
+    add(fn){
+        return new Promise(resolve => {
+            fn.resolve = resolve;
+            if(this.task.length < this.max) { 
+                this.dispatch(fn);
+            } else {
+                this.pending.push(fn);
+            }
+        })
+    }
+    dispatch(pr){
+        this.task.push(pr);
+        pr().then(() => {
+            pr.resolve();
+            this.task.splice(this.task.indexOf(pr), 1);
+            if(this.pending.length) {
+                this.dispatch(this.pending.shift());
+            }
+        })
+    }
+}
+// End
+
+const timeout = (time) => new Promise(resolve => {
+    setTimeout(resolve, time);
+})
+
+
+const scheduler = new Scheduler();
+const addTask = (time, order) => {
+    scheduler
+    .add(() => timeout(time))
+    .then(() => console.log(order));
+}
+
+
+addTask(2000, "1");
+addTask(1000, "2");
+addTask(3000, "3");
+addTask(2000, "4");
+
+// 2  第一秒
+// 1  第二秒
+// 3  第四秒
+// 4  第四秒
+```
+
