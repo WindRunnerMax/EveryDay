@@ -578,3 +578,79 @@ addTask(2000, "4");
 // 4  第四秒
 ```
 
+## 拍平数组
+
+### 迭代式
+```javascript
+const arr = [1, [2, 3], [[[4, 5, 6]], [7, 8, 9]]];
+
+const flat = (arr) => {
+    let i = 0;
+    const newArray = [...arr];
+    while(i < newArray.length){
+        if(Array.isArray(newArray[i])){
+            const tmp = newArray[i];
+            newArray.splice(i, 1, ...tmp);
+        }else{
+            ++i;
+        }
+    }
+    return newArray;
+}
+
+console.log(flat(arr));
+```
+
+### 递归式
+
+```javascript
+const arr = [1, [2, 3], [[[4, 5, 6]], [7, 8, 9]]];
+
+const flat = (arr) => {
+    const newArray = [];
+    arr.forEach(item => {
+        if(Array.isArray(item)) newArray.push(...flat(item));
+        else newArray.push(item);
+    })       
+    return newArray;
+}
+
+console.log(flat(arr));
+```
+
+## 手写apply、call、bind
+
+```javascript
+Function.prototype._apply = function(base, args){
+    base.fn = this;
+    const result = base.fn(...args);
+    delete base.fn;
+    return result;
+}
+
+Function.prototype._call = function(base, ...args){
+    return this._apply(base, args);
+}
+
+Function.prototype._bind = function(base, ...args){
+    const functionArgsLength = this.length;
+    const curArgsLength = args.length;
+    if(curArgsLength >= functionArgsLength){
+        return this._apply(base, args);
+    }else{
+        return (...newArgs) => {
+            return this._bind(base, ...args, ...newArgs);
+        }
+    }
+}
+
+function fn(num1, num2){
+    console.log(this.num, num1, num2);
+}
+
+const obj = { num: 1 }
+
+fn._apply(obj, [2, 3]);
+fn._call(obj, 4, 5);
+fn._bind(obj)(6)(7);
+```
