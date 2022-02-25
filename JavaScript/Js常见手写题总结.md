@@ -654,3 +654,25 @@ fn._apply(obj, [2, 3]);
 fn._call(obj, 4, 5);
 fn._bind(obj)(6)(7);
 ```
+
+## new操作符
+
+```javascript
+function Student(name){
+    this.name = name;
+}
+
+Student.prototype.say = function(){
+    console.log("I'm", this.name);
+}
+
+const _new = (fn, ...args) => {
+    const obj = Object.create(fn.prototype);
+    fn.apply(obj, args);
+    return obj;
+}
+
+const student = _new(Student, "A");
+console.log(student);
+student.say();
+```
