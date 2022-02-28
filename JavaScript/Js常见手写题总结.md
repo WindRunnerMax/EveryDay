@@ -668,7 +668,12 @@ Student.prototype.say = function(){
 
 const _new = (fn, ...args) => {
     const obj = Object.create(fn.prototype);
-    fn.apply(obj, args);
+    const res = fn.apply(obj, args);
+
+    if ((typeof res === "object" && res !== null) || typeof res === "function") {
+        return res;
+    }
+
     return obj;
 }
 
