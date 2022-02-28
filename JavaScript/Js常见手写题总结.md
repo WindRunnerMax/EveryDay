@@ -681,3 +681,35 @@ const student = _new(Student, "A");
 console.log(student);
 student.say();
 ```
+
+## 数组去重
+
+
+### Set
+```javascript
+const arr = [1, 2, 3, 1, 1, 1, 3, 5, 3];
+const newArr = Array.from(new Set(arr)); // [...(new Set(arr))]
+console.log(newArr); // [1, 2, 3, 5]
+```
+### indexOf
+
+```javascript
+// 使用find、findIndex、includes思路相同
+const arr = [1, 2, 3, 1, 1, 1, 3, 5, 3];
+const newArr = [];
+arr.forEach((v) => {
+    if(newArr.indexOf(v) === -1)  newArr.push(v);
+})
+console.log(newArr); // [1, 2, 3, 5]
+```
+
+### 利用对象
+
+```javascript
+const arr = [1, 2, 3, 1, 1, 1, 3, 5, 3];
+const obj = {};
+arr.forEach((v) => {
+    if(!obj[v]) obj[v] = 1;
+})
+console.log(Object.keys(obj).map(item => Number(item))); // [1, 2, 3, 5]
+```
