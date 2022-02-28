@@ -668,7 +668,12 @@ Student.prototype.say = function(){
 
 const _new = (fn, ...args) => {
     const obj = Object.create(fn.prototype);
-    fn.apply(obj, args);
+    const res = fn.apply(obj, args);
+
+    // 如果返回的结果是引用类型，将返回该结果 而不是实例
+    if ((typeof res === 'obj' && res !== null) || typeof res === 'function') {
+        return res;
+    }
     return obj;
 }
 
