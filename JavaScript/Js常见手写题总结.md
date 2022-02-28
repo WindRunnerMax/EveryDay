@@ -670,7 +670,7 @@ const _new = (fn, ...args) => {
     const obj = Object.create(fn.prototype);
     const res = fn.apply(obj, args);
 
-    if ((typeof res === "obj" && res !== null) || typeof res === "function") {
+    if ((typeof res === "object" && res !== null) || typeof res === "function") {
         return res;
     }
 
