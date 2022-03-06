@@ -952,6 +952,58 @@ module.exports = {
 };
 */
 ```
+近来事情不多所以重写了之前提到的`loader`，如果使用按需加载的方式上边都可以忽略，只需要安装好依赖并且在`vue.config.js`中配置好就可以了，详细配置可以查看`https://github.com/SHST-SDUST/SHST-PLUS/blob/master/vue.config.js`。
+
+```shell
+$ yarn add -D uniapp-import-loader
+```
+
+```javascript
+// vue.config.js
+const path = require("path");
+
+module.exports = {
+    configureWebpack: {
+        // ...
+        module: {
+            rules: [
+                {
+                    test: /\.vue$/,
+                    loader: "uniapp-import-loader", 
+                    // import { CCard } from "shst-campus"; 
+                    // => import CCard from "shst-campus/lib/c-card/c-card";
+                    options: {
+                        name: "shst-campus",
+                        path: "lib",
+                    },
+                },
+            ],
+        },
+        // ..
+    },
+};
+```
+
+近日又研究了一下相关的代码以及`uniapp`框架`babel`的处理方案，实现了按需引用`babel-plugin`的解决方案，与`webpack-loader`解决方案二选一，需要配置`babel.config.js`，详细配置可以查看`https://github.com/SHST-SDUST/SHST-PLUS/blob/master/babel.config.js`。
+
+```shell
+$ yarn add -D uniapp-import-loader
+```
+
+```javascript
+// ...
+process.UNI_LIBRARIES = ["shst-campus"];
+plugins.push([
+    require("uniapp-import-loader/dist/babel-plugin-dynamic-import"),
+    {
+        libraryName: "shst-campus",
+        libraryPath: "lib",
+    },
+    // import { CCard } from "shst-campus";
+    // => import CCard from "shst-campus/lib/c-card/c-card";
+]);
+// ...
+```
 
 
 ### 构建新目录并发布
