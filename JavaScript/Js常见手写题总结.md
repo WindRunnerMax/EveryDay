@@ -713,3 +713,45 @@ arr.forEach((v) => {
 })
 console.log(Object.keys(obj).map(item => Number(item))); // [1, 2, 3, 5]
 ```
+
+## 串行执行Promise
+
+
+### reduce
+```javascript
+const arr = [
+    () => Promise.resolve(1),
+    res => Promise.resolve(res * 2),
+    res => Promise.resolve(res * 2),
+    res => Promise.resolve(res * 3),
+    res => new Promise(r => setTimeout(() => r(res), 1000))
+];
+
+
+arr.reduce((pre, cur) => {
+    return pre.then(res => cur(res));
+}, Promise.resolve()).then(res => {
+    console.log(res);
+});
+```
+
+### async/await
+
+```javascript
+const arr = [
+    () => Promise.resolve(1),
+    res => Promise.resolve(res * 2),
+    res => Promise.resolve(res * 2),
+    res => Promise.resolve(res * 3),
+    res => new Promise(r => setTimeout(() => r(res), 1000))
+];
+
+(async () => {
+    let preResult = null;
+    for (let i = 0; i < arr.length; i++) {
+        const fn = arr[i];
+        preResult = await fn(preResult);
+        console.log(preResult);
+    }
+})();
+```
