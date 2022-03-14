@@ -755,3 +755,33 @@ const arr = [
     }
 })();
 ```
+
+
+## 远程相加
+假如现在本地无法实现加法功能，现有其他团队提供的远程`Api`可以实现两个数相加的功能，现需要改进`Api`使其能够实现多个数相加。
+
+```javascript
+const addRemote = (a, b) => {
+    return new Promise(r => setTimeout(r, 1000, a + b));
+}
+
+const add = (...args) => {
+    const cur = [].concat(args);
+    return new Promise(r => {
+        if(cur.length % 2 === 1) cur.push(0);
+        const batchAdd = [];
+        for(let i=0; i<cur.length; i += 2){
+            batchAdd.push(addRemote(cur[i], cur[i+1]));
+        }
+        Promise.all(batchAdd).then(res => {
+            if(res.length === 1){
+                r(res.pop());
+            }else{
+                add(...res).then(r);
+            }
+        })
+    })
+}
+
+add(1, 2, 4, 5, 6).then(res => console.log(res));
+```
