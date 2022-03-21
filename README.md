@@ -231,6 +231,7 @@
 * [Hooks中的useState](React/Hooks中的useState.md)
 * [useEffect与useLayoutEffect](React/useEffect与useLayoutEffect.md)
 * [useMemo与useCallback](React/useMemo与useCallback.md)
+* [setState同步异步场景](React/setState同步异步场景.md)
 
 ## Plugin
 * [Git常用命令](Plugin/Git常用命令.md)

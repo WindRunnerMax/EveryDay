@@ -452,6 +452,8 @@ console.log(child.from); // child
 ```
 
 ## 十进制转二进制
+
+### 计算
 ```javascript
 (function(num){
     num = num >> 0;
@@ -463,6 +465,12 @@ console.log(child.from); // child
     console.log(target.join(""));
 })(10);
 ```
+
+### API
+```javascript
+console.log(Number(10).toString(2));
+```
+
 
 ## 带并发限制的异步调度器
 `Js`实现一个带并发限制的异步调度器`Scheduler`，保证同时运行的任务最多有两个。
