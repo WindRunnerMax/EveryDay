@@ -229,7 +229,6 @@
     * [useMemo与useCallback](React/useMemo与useCallback.md)
     * [setState同步异步场景](React/setState同步异步场景.md)
 
-
 * Plugin
     * [Git常用命令](Plugin/Git常用命令.md)
     * [Git与SVN对比](Plugin/Git与SVN对比.md)
@@ -238,6 +237,7 @@
     * [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md)
     * [初探webpack之编写plugin](Plugin/初探webpack之编写plugin.md)
     * [初探webpack之从零搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
+    * [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
