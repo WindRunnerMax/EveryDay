@@ -241,6 +241,7 @@
 * [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md)
 * [初探webpack之编写plugin](Plugin/初探webpack之编写plugin.md)
 * [初探webpack之从零搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
+* [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
