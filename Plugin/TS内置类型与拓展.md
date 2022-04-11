@@ -871,45 +871,37 @@ foo({});
 ```
 
 ### 协变与逆变
-子类型在编程理论上是一个复杂的话题，而他的复杂之处来自于一对经常会被混淆的现象，我们称之为协变与逆变，在这里引用两篇文章以及实例。  
-首先是 [这篇文章](https://zhuanlan.zhihu.com/p/353156044) 对于协变与逆变的描述。协变即类型收敛，逆变即类型发散。
+子类型在编程理论上是一个复杂的话题，而他的复杂之处来自于一对经常会被混淆的现象。简单来说，协变即类型收敛，逆变即类型发散。在这里由下面的例子引起关于这个问题的讨论，在这里我们定义了一个父类型以及一个子类型，而且我们验证了这个子类型在`TS`中是`OK`的。
 
 ```
-type Color = {}
+type SuperType = (value: number|string) => number|string; // 父类型
+type SubType = (value: number|string|boolean) => number; // 子类型 参数逆变 返回值协变
 
-type Red = {
-  red: any;
-}
-
-let c: Color = {};
-let r: Red = {red: 1};
-
-// 变量类型是协变的
-c = r; // Red类型收敛为Color类型
-r = c; // 报错
-
-// 函数参数类型是逆变的
-let useC: (c: Color) => number;
-let useR: (r: Red) => number;
-
-useC = useR; // 协变，类型收敛。开启strictFunctionTypes:true后将报错，变为逆变。
-// useC执行传入Color类型，执行的是useR，Color发散为Red类型，发生错误。
-
-useR = useC; // 逆变，类型发散。
-// useR执行传入Red类型，执行的是useC，Red类型收敛为Color类型。
-
-// 函数返回值类型是协变的
-let useC2: () => Color = () => ({});
-let useR2: () => Red = () => ({red: 1});
-
-useC2 = useR2;
-useR2 = useC2; // 报错
+const subFn: SubType = (value: number|string|boolean) => 1;
+const superFn: SuperType = subFn; // ok
 ```
 
-除了函数参数类型是逆变，都是协变。 将一个函数赋给另一个函数变量时，要保证参数类型发散，即比目标类型范围小。 目标函数执行时是执行的原函数，传入的参数类型会收敛为原函数参数类型。协变表示类型收敛，即类型范围缩小或不变。逆变反之。本质是执行时类型收敛是安全的。
+首先我们可以探讨一下子类型，明显`number`是`number|string`的子类型，那么下面这个例子是完全`OK`的，这同样也是一个协变的过程，由此看来在上边例子的`SubType`确实是`SuperType`的子类型。
 
-还有 [这篇文章](https://jkchao.github.io/typescript-book-chinese/tips/covarianceAndContravariance.html) 对于协变与逆变的描述。  
-开始文章之前我们先约定如下的标记，`A≼B`意味着`A`是`B`的子类型;`A → B`指的是以`A`为参数类型，以`B`为返回值类型的函数类型;`x : A`意味着`x`的类型为`A`。  
+```
+type SuperType = number|string; // 父类型
+type SubType = number; // 子类型
+
+const subValue: SubType = 1;
+const superValue: SuperType = subValue; // ok
+```
+
+那么此时就回到最上边的例子，这个函数参数`value`的类型就很奇怪，明明是子类型，反而类型的种类更多了，这个其实就是所谓的逆变，其实这就是为了保证类型的收敛是安全的。此时我们的`subFn`实际代表的函数是`SuperType`类型的，当我们实际调用的时候，传递的参数由于是`SuperType`类型的即`number|string`，所以必定是`SubType`类型的子类即`number|string|boolean`，这样也就保证了函数参数的收敛安全，之后当函数执行完成进行返回值时，由于函数实际定义时的返回类型是`number`，那么在返回出去的时候也必定是`number|string`的子类，这样也就保证了函数返回值的收敛安全。我们可以通过这个图示去理解这个函数子类型的问题，类似于以下的调用过程，由此做到类型收敛的安全。
+
+```
+父类型参数 -> 子类型参数 -> 执行 -> 子类型返回值 -> 父类型返回值
+number|string -> number|string|boolean -> ... -> number -> number|string
+```
+
+我们可以进行一个总结: 除了函数参数类型是逆变，都是协变。将一个函数赋给另一个函数变量时，要保证参数类型发散，即比目标类型范围小。目标函数执行时是执行的原函数，传入的参数类型会收敛为原函数参数类型。协变表示类型收敛，即类型范围缩小或不变，逆变反之。本质是为了保证执行时类型收敛是安全的。
+
+另外可以看一下 [这篇文章](https://jkchao.github.io/typescript-book-chinese/tips/covarianceAndContravariance.html) 对于协变与逆变的描述。  
+开始文章之前我们先约定如下的标记，`A ≼ B`意味着`A`是`B`的子类型;`A → B`指的是以`A`为参数类型，以`B`为返回值类型的函数类型;`x : A`意味着`x`的类型为`A`。  
 假设我有如下三种类型：`Greyhound ≼ Dog ≼ Animal`。
 `Greyhound`灰狗是`Dog`狗的子类型，而`Dog`则是`Animal`动物的子类型，由于子类型通常是可传递的，因此我们也称`Greyhound`是`Animal`的子类型，问题: 以下哪种类型是`Dog → Dog`的子类型呢。
 
