@@ -37,7 +37,7 @@ export default function App() {
   );
 }
 ```
-当页面在首次渲染时会`render`渲染`<App />`函数组件，其实际上是调用`App()`方法，得到虚拟`DOM`元素，并将其渲染到浏览器页面上，当用户点击`button`按钮时会调用`addCount`方法，然后再进行一次`render`渲染`<App />`函数组件，其实际上还是调用了`App()`方法，得到一个新的虚拟`DOM`元素，然后`React`会执行`DOM diff`算法，将改变的部分更新到浏览器的页面上。也就是说，实际上每次`setCount`都会重新执行这个`App()`函数，这个可以通过`console.log("refresh")`那一行看到效果，每次点击按钮控制台都会打印`refresh`。  
+当页面在首次渲染时会`render`渲染`<App />`函数组件，其实际上是调用`App()`方法，得到虚拟`DOM`元素，并将其渲染到浏览器页面上，当用户点击`button`按钮时会调用`addCount`方法，然后再进行一次`render`渲染`<App />`函数组件，其实际上还是调用了`App()`方法并传递了`props`参数，得到一个新的虚拟`DOM`元素，然后`React`会执行`DOM diff`算法，将改变的部分更新到浏览器的页面上。也就是说，实际上每次`setCount`都会重新执行这个`App()`函数，这个可以通过`console.log("refresh")`那一行看到效果，每次点击按钮控制台都会打印`refresh`。  
 那么问题来了，页面首次渲染和进行`+1`操作，都会调用`App()`函数去执行`const [count, setCount] = useState(0);`这行代码，那它是怎么做到在`+ +`操作后，第二次渲染时执行同样的代码，却不对变量`n`进行初始化也就是一直为`0`，而是拿到`n`的最新值。  
 考虑到上边这个问题，我们可以简单实现一个`useMyState`函数，上边在`Hooks`为什么称为`Hooks`这个问题上提到了可以勾过来一个函数作用域的问题，那么我们也完全可以实现一个`Hooks`去勾过来一个作用域，简单来说就是在`useMyState`里边保存一个变量，也就是一个闭包里边保存了这个变量，然后这个变量保存了上次的值，再次调用的时候直接取出这个之前保存的值即可，`https://codesandbox.io/s/fancy-dust-kbd1i?file=/src/use-my-state-version-1.ts`。
 
@@ -93,7 +93,7 @@ export default function App() {
 }
 ```
 
-可以在`codesandbox`中看到现在已经可以实现点击按钮进行`++`操作了，而不是无论怎么点击都是`0`，但是上边的情况太过于简单，因为只有一个`state`，如果使用多个变量，那就需要调用两次`useState`，我们就需要对其进行一下改进了，不然会造成多个变量存在一个`saveState`中，这样会产生冲突覆盖的问题，改进思路有两种:`1`把做成一个对象，比如`saveState = { n:0, m:0 }`，这种方式不太符合需求，因为在使用`useStatek`的时候只会传递一个初始值参数，不会传递名称; `2`把`saveState`做成一个数组，比如`saveState:[0, 0]`。实际上`React`中是通过类似单链表的形式来代替数组的，通过`next`按顺序串联所有的`hook`，使用数组也是一种类似的操作，因为两者都依赖于定义`Hooks`的顺序，`https://codesandbox.io/s/fancy-dust-kbd1i?file=/src/use-my-state-version-2.ts`。
+可以在`code sandbox`中看到现在已经可以实现点击按钮进行`++`操作了，而不是无论怎么点击都是`0`，但是上边的情况太过于简单，因为只有一个`state`，如果使用多个变量，那就需要调用两次`useState`，我们就需要对其进行一下改进了，不然会造成多个变量存在一个`saveState`中，这样会产生冲突覆盖的问题，改进思路有两种:`1`把做成一个对象，比如`saveState = { n:0, m:0 }`，这种方式不太符合需求，因为在使用`useState`的时候只会传递一个初始值参数，不会传递名称; `2`把`saveState`做成一个数组，比如`saveState:[0, 0]`。实际上`React`中是通过类似单链表的形式来代替数组的，通过`next`按顺序串联所有的`hook`，使用数组也是一种类似的操作，因为两者都依赖于定义`Hooks`的顺序，`https://codesandbox.io/s/fancy-dust-kbd1i?file=/src/use-my-state-version-2.ts`。
 
 ```
 // index.tsx
