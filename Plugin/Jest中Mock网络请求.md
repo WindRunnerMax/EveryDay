@@ -376,7 +376,7 @@ describe("Simple mock", () => {
 });
 ```
 
-## BLOG
+## 每日一题
 ```
 https://github.com/WindrunnerMax/EveryDay/
 ```
