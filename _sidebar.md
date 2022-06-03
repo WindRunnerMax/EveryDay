@@ -241,6 +241,7 @@
     * [初探webpack之从零搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
     * [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
     * [初探webpack之编写loader](Plugin/初探webpack之编写loader.md)
+    * [竞态问题与RxJs](Plugin/竞态问题与RxJs.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
