@@ -243,6 +243,7 @@
     * [初探webpack之编写loader](Plugin/初探webpack之编写loader.md)
     * [竞态问题与RxJs](Plugin/竞态问题与RxJs.md)
     * [基于slate构建文档编辑器](Plugin/基于slate构建文档编辑器.md)
+    * [基于NoCode构建简历编辑器](Plugin/基于NoCode构建简历编辑器.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
