@@ -171,6 +171,7 @@
     * [HTMLElement对象](Browser/HTMLElement对象.md)
     * [Event对象](Browser/Event对象.md)
     * [IntersectionObserver对象](Browser/IntersectionObserver对象.md)
+    * [MutationObserver对象](Browser/MutationObserver对象.md)
 
 * Vue
     * [Vue学习笔记](Vue/Vue学习笔记.md)
