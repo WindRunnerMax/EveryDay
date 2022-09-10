@@ -1,5 +1,5 @@
 # Vue中的三种Watcher
-`Vue`可以说存在三种`watcher`，第一种是在定义`data`函数时定义数据的`render watcher`；第二种是`computed watcher`，是`computed`函数在自身内部维护的一个`watcher`，配合其内部的属性`dirty`开关来决定`computed`的值是需要重新计算还是直接复用之前的值；第三种就是`whtcher api`了，就是用户自定义的`export`导出对象的`watch`属性；当然实际上他们都是通过`class Watcher`类来实现的。
+`Vue`可以说存在三种`watcher`，第一种是在定义`data`函数时定义数据的`render watcher`；第二种是`computed watcher`，是`computed`函数在自身内部维护的一个`watcher`，配合其内部的属性`dirty`开关来决定`computed`的值是需要重新计算还是直接复用之前的值；第三种就是`watcher api`了，就是用户自定义的`export`导出对象的`watch`属性；当然实际上他们都是通过`class Watcher`类来实现的。
 
 ## 描述
 `Vue.js`的数据响应式，通常有以下的的场景：

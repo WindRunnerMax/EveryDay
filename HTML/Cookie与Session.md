@@ -8,7 +8,7 @@
 
 ## Session
 `Session`是服务器端使用的一种记录客户端状态的机制，相应的也增加了服务器的存储压力。  
-对于客户端的每个会话，都有一个唯一的`SESSIONID`与其对应，服务端将用户数据存储进`SESSIONID`对应的文件或者是内存中，只要客户端每次请求将`SESSIONID`交予服务端，服务端就能区别用户进行会话跟踪。  
+对于客户端的每个会话，都有一个唯一的`SESSION ID`与其对应，服务端将用户数据存储进`SESSION ID`对应的文件或者是内存中，只要客户端每次请求将`SESSION ID`交予服务端，服务端就能区别用户进行会话跟踪。  
 
 
 ## 实例
@@ -16,11 +16,11 @@
 ### 仅使用Cookie
 仅使用`cookie`而不使用`session`进行用户身份跟踪，服务端将所有的用户数据信息告知浏览器，浏览器进行存储，每次请求将数据发送到服务端。此种方式理论上可行，但是相对并不安全，尤其是在用户数据信息未加密的情况下，若是被中间人攻击则用户的数据信息将全部被泄露，或者用户自身将浏览器数据进行修改进行请求伪造，伪造他人身份访问服务器等，此外不同浏览器对于同一域`Cookie`的大小(一般为`4KB`左右)与数量都有限制，将用户数据都存储于`Cookie`可能会有空间或数量不够的情况。
 
-### 仅使用Seesion
-仅使用`session`而不使用`Cookie`进行用户身份跟踪，由于使用`Session`在客户端仅需要一个`SESSIONID`传输到服务端就能进行会话跟踪，所以实现比较简单，可以通过对所有的`URL`后拼接一个`SESSIONID`或者对于每个表单设置一个隐藏的`input`用以存储`SESSIONID`进行提交，服务器就可以进行会话跟踪，由于数据是存储在服务端，相对比较安全，且存储量大小完全取决于服务端，可以较好控制。
+### 仅使用Session
+仅使用`session`而不使用`Cookie`进行用户身份跟踪，由于使用`Session`在客户端仅需要一个`SESSION ID`传输到服务端就能进行会话跟踪，所以实现比较简单，可以通过对所有的`URL`后拼接一个`SESSION ID`或者对于每个表单设置一个隐藏的`input`用以存储`SESSION ID`进行提交，服务器就可以进行会话跟踪，由于数据是存储在服务端，相对比较安全，且存储量大小完全取决于服务端，可以较好控制。
 
 ### 结合使用
-现在普遍使用的方式就是将`COOKIE`与`SESSION`结合使用，直接将`SESSIONID`存储于`COOKIE`中，浏览器自动将同源的`COOKIE`携带在请求头中，进行会话跟踪，这样既不需要在`COOKIE`中存储大量信息，也不需要对每次请求都需要操作附带`SESSIONID`。浏览请求头中`Cookie`字段的`JSESSIONID=XXXXXXXXXXXXXXXXXXX`就是`Java`默认的`SESSIONID`，`PHPSESSID=XXXXXXXXXXXXXXXXXXXXXXXXXX`就是`PHP`默认的`SESSIONID`。
+现在普遍使用的方式就是将`COOKIE`与`SESSION`结合使用，直接将`SESSION ID`存储于`COOKIE`中，浏览器自动将同源的`COOKIE`携带在请求头中，进行会话跟踪，这样既不需要在`COOKIE`中存储大量信息，也不需要对每次请求都需要操作附带`SESSION ID`。浏览请求头中`Cookie`字段的`JSESSION ID=XXXXXXXXXXXXXXXXXXX`就是`Java`默认的`SESSION ID`，`PHPSESSID=XXXXXXXXXXXXXXXXXXXXXXXXXX`就是`PHP`默认的`SESSION ID`。
 
 
 ## 差异
