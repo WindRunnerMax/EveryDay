@@ -235,6 +235,7 @@
 * [setState同步异步场景](React/setState同步异步场景.md)
 * [手写useState与useEffect](React/手写useState与useEffect.md)
 * [Mobx与Redux的异同](React/Mobx与Redux的异同.md)
+* [Context与Reducer](React/Context与Reducer.md)
 ## Plugin
 * [Git常用命令](Plugin/Git常用命令.md)
 * [Git与SVN对比](Plugin/Git与SVN对比.md)
