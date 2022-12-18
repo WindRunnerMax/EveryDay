@@ -251,6 +251,7 @@
 * [基于slate构建文档编辑器](Plugin/基于slate构建文档编辑器.md)
 * [基于NoCode构建简历编辑器](Plugin/基于NoCode构建简历编辑器.md)
 * [初探富文本之富文本概述](Plugin/初探富文本之富文本概述.md)
+* [初探富文本之编辑器引擎](Plugin/初探富文本之编辑器引擎.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
