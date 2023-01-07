@@ -35,8 +35,95 @@
 * `CRDT`更适合分布式系统，可以不需要中央服务器。
 * `CRDT`通过数据结构保证了编辑的无冲突，增加了空间复杂度。
 
+### 基本原理
+
+说回`OT`协同，我们从两者`A`、`B`同时编辑同一段文本的基本操作开始，探讨一下`OT`协同为了保持一致性究竟做了什么。描述一篇文档的方式有很多，最经典的`Operation`有`quill`的`delta`模型，通过`retain`、`insert`、`delete`三个操作完成整篇文档的描述，还有`slate`的`JSON`模型，通过`insert_text`、`split_node`、`remove_text`等等操作来完成整篇文档的描述。首先我们假设有一个加粗的操作`Bold(start, end)`，一个插入的操作`insert(position, content)`。
+
+那么此时，我们假设原始文本为`12`，用户`A`、`B`分别进行了一个加粗操作一个插入操作。
+* 用户`A`进行了一个`Bold(1, 2)`操作，`A`本地需要首先应用这个操作，由此`A`本地的文本是`(12)`，为了简单起见，加粗用`()`表示。
+* 用户`B`同时也进行了一个`insert(2, "B")`操作，`B`本地需要首先应用这个操作，由此`B`本地的文本是`12B`。
+* 此时需要同步`Operation`，用户`A`收到了用户`B`的`insert(2, "B")`操作，`A`从本地的`(12)`应用之后，得到了`(12)B`。
+* 用户`B`收到了用户`A`的`Bold(1, 2)`操作，`B`从本地的`12B`应用之后，得到了`(12)B`。
 
 
+看起来并没有发生任何冲突，`A`、`B`最终都获得了一致的文档内容`(12)B`，当然事情并没有那么简单，我们继续往下看看其他的情况。为了简单起见，我们假设目前的只有`insert(position, content)`这个操作，从定义也能够明显的看出来，这个函数的意思是在`position`处插入`content`文本。
+
+那么此时，我们假设原始文本为`123`，用户`A`、`B`分别进行了一个插入操作。
+* 用户`A`进行了一个`insert(2, "A")`操作，`A`本地需要首先应用这个操作，由此`A`本地的文本是`12A3`。
+* 用户`B`同时也进行了一个`insert(3, "B")`操作，`B`本地需要首先应用这个操作，由此`B`本地的文本是`123B`。
+* 此时需要同步`Operation`，用户`A`收到了用户`B`的`insert(3, "B")`操作，`A`从本地的`12A3`应用之后，得到了`12AB3`。
+* 用户`B`收到了用户`A`的`insert(2, "A")`操作，`B`从本地的`123B`应用之后，得到了`12A3B`。
+
+经过上述协同结果是，用户`A`看到的内容是`12AB3`，用户`B`看到的内容是`12A3B`，内容不一致，没有成功地保证最终一致性。那么根据`OT`的`Operational Transformation`这个名字，我们来看上边的协同，发现我们只是做了`Operation`的同步，并没有做`Transformation`去转换，所以我们这是一个不完整的协同，当然也就不能完整地覆盖各种`Case`。
+
+我们再来看看上边的协同方法有什么问题，实际上我们只是对我们自己本地的内容应用了从其他位置同步过来的操作，而这个操作是失去了上下文`Context`的，具体来说，我们以`A`为例，当我们接受到`B`的`insert(3, "B")`操作时，这个`Op`实际上是在原始文本为`123`这个文本为上下文的基础上进行的`Op`，而此时我们本地的文本内容是`12A3`，而此时去执行`B`的`Op`就由于缺失了上下文而导致出现了问题，所以此时我们就需要`OT`的`Transformation`来将其进行转换，当协作者变更到来时，我们需要变换操作以适应当前上下文，才能直接应用，而调整的过程，则基于当前文档已经发生的变更来完成。
+
+```
+Ob' = OT(Oa, Ob)
+Oa' = OT(Ob, Oa)
+```
+
+而由上边上下文的基本想法我们可以得到`OT`协同的基本思路是，将每个用户的操作都转换成相对于原始文本的操作，这样就可以保证最终一致性。具体来说，假设文档的初始状态为`S`，以同步时的`A`用户为例我们此时应用了`Oa`也就是`insert(2, "A")`这个操作，而此时恰好我们又收到了`B`的`Ob`也就是`insert(3, "B")`操作，那么我们此时要应用`Ob`的时候，就需要进行转换，也就是`Ob' = OT(Oa, Ob)`，注意此时我们是将`Oa`也作为参数传入了进去，也就是说此时我们是通过`Oa`与`Ob`来作为参数算出来`Ob'`的，那么也就是说我们此时的上下文为`S`，同理对于`B`来说我们进行`Oa' = OT(Ob, Oa)`计算要应用的`Oa'`时，所处的上下文同样也是`S`，那么这样就将操作转换成了相对于原始文本的操作了，从而得到一致性。换句话说，也可以这么理解，`Ob' = OT(Oa, Ob)`就相当于我们将原本已经执行的`Oa`撤销掉，然后结合`Oa + Ob`从来得到`Ob'`，将两者的`Op`结合起来再应用到`S`上，对于`Oa' = OT(Ob, Oa)`同理，那么此时无论`A`还是`B`执行的上下文都是`S`，从而得到一致性。
+
+落实到具体实现上，我们需要定义一套算法来完成这个`Transformation`，下面我们就简单实现一下，在这里的实现很简单，因为我们定义的操作只有`insert`，假如是上文提到的`retain`、`insert`、`delete`三种操作来描述文档的话，就需要实现`3x3 = 9`种变换操作，在这里我们对于两个`insert`的位置进行变换，如果此时新来的`cur op`插入的位置是在先前的`pre op`之后的，那么说明在原来的内容上已经添加了内容，那么我们就需要将插入的位置后移`pre op`插入文本的长度。
+
+```js
+function transform(pre, cur) {
+  // 在`pre`之后插入，需要向后移动`cur`作用的`position`
+  if (pre.insert && cur.insert && pre.insert.position <= cur.insert.position) {
+    return { 
+        insert: { 
+            position: cur.insert.position + pre.insert.content.length, 
+            content: cur.insert.content 
+        }
+    };
+  }
+  // ...
+  return cur;
+}
+```
+
+此外还记得之前说的`OT`的最终目的是保持最终的一致性，那么落实到这里，假设我们的两个`insert`操作都是同时在`2`位置插入一个不同的字符，那么在变换的时候我们需要决定究竟是谁在前，因为这两个操作的时序是一样的，也就是说可以认为是同时发生的，那么就必须制定一个策略来决定谁的字符在前，那么我们就通过第一个字符的`ASCII`来决定究竟是谁在前，这只是一个简单的策略，也就是所谓的尽可能保持用户意图的情况下，保持文档的最终一致性。
+
+```js
+// 如果两个`insert`的位置相同，那么我们需要通过第一个字符的`ASCII`来决定谁在前
+if(pre.insert.position === cur.insert.position) {
+    if(pre.insert.text.charCodeAt(0) < cur.insert.text.charCodeAt(0)) {
+        return { 
+            insert: { 
+                position: cur.insert.position + pre.insert.content.length, 
+                content: cur.insert.content 
+            }
+        };
+    }
+    return cur;
+}
+// A: 12  insert(2, A) 12A   oa
+// B: 12  insert(2, B) 12B   ob
+// A: 12A insert(3, B) 12AB  ob'
+// B: 12B insert(2, A) 12AB  oa'
+```
+
+应用上边的`transform`函数，我们可以再来看一下上边的例子。那么此时，我们假设原始文本为`123`，用户`A`、`B`分别进行了一个插入操作。
+* 用户`A`进行了一个`insert(2, "A")`操作，`A`本地需要首先应用这个操作，由此`A`本地的文本是`12A3`，可以看作是`2`后边插入了`A`。
+* 用户`B`同时也进行了一个`insert(3, "B")`操作，`B`本地需要首先应用这个操作，由此`B`本地的文本是`123B`，可以看作是`3`后边插入了`B`。
+* 此时需要同步`Operation`，用户`A`收到了用户`B`的`insert(3, "B")`操作，经由变换`transform(insert(2, "A"), insert(3, "B")) = insert(4, "B")`，`A`从本地的`12A3`应用之后，得到了`12A3B`。
+* 用户`B`收到了用户`A`的`insert(2, "A")`操作，经由变换`transform(insert(3, "B"), insert(2, "A")) = insert(2, "A")`，`B`从本地的`123B`应用之后，得到了`12A3B`。
+
+我们最终`A`与`B`都得到了`12A3B`，完成了最终一致性的操作，这就是`OT`的基本原理，那么接下来这个典型的菱形示意图也就好理解了，
+
+```
+      S  
+ oa  / \  ob
+    /   \
+    \   /
+ ob' \ / oa'
+      T
+```
+
+时序、多个`Op`
+
+### 中央服务器
 
 
 需要关注的问题:
@@ -54,11 +141,13 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://zhuanlan.zhihu.com/p/50990721
+https://zhuanlan.zhihu.com/p/426184831
+https://zhuanlan.zhihu.com/p/559699843
 https://zhuanlan.zhihu.com/p/425265438
 http://www.alloyteam.com/2020/01/14221/
 http://www.alloyteam.com/2019/07/13659/
 https://www.51cto.com/article/717595.html
-https://juejin.cn/post/7137846657474887711
+http://operational-transformation.github.io/index.html
 https://xie.infoq.cn/article/a6fad791493bf4f698781d98e
 https://github.com/yoyoyohamapi/book-slate-editor-design
 ```
