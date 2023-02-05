@@ -59,12 +59,18 @@
 * `OT`通常必须要有中央服务器进行协同调度。
 * `OT`通过算法处理编辑冲突的问题，增加了时间复杂度。
 
-
 ### 基本原理
+
+#### Op-based CRDT
+
+#### State-based CRDT
 
 ### 数据结构
 
+#### Op-based Counter
+
 ### 最后
+当前在线文档的主流方案依旧是`OT`，`ShareDB`作者在`2020`年`9`月的文章`CRDTs are the future`中，说明了`CRDT`和`OT`的取舍问题，`OT`最大的问题就是必须依赖中央服务器，那在所有设备之间无缝共享数据就必须依赖于服务器调度数据，而通过`CRDT`来实现就能够做到无需中央服务器来实现数据同步，可能`CRDT`是未来解决一致性问题的一个有力手段。
 
 ## 每日一题
 
@@ -76,6 +82,7 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://zhuanlan.zhihu.com/p/50990721
+https://zhuanlan.zhihu.com/p/452980520
 https://zhuanlan.zhihu.com/p/510797688
 https://zhuanlan.zhihu.com/p/425265438
 http://www.alloyteam.com/2020/01/14221/
@@ -83,7 +90,7 @@ https://www.jdon.com/artichect/crdt.html
 https://www.zhihu.com/question/507425610
 https://juejin.cn/post/6844903672032264199
 https://juejin.cn/post/7049939780477386759
+https://josephg.com/blog/crdts-are-the-future/
 https://www.zxch3n.com/crdt-intro/design-crdt/
 https://hal.inria.fr/file/index/docid/555588/filename/techreport.pdf
-https://github.com/Rock-liyi/p2pdb/blob/master/docs/zh-cn/clock/CRDT.md
 ```
