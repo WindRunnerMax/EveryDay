@@ -6,6 +6,8 @@
 
 上边这个数据转换听起来是不是有点耳熟，在前边初探富文本之`OT`协同实例中，我们介绍了`json0`，我们也提到了一个可行的操作，我们让变换`Transformation`这部分让`json0`去做，我们需要关注的是从我们自己定义的数据结构转换到`json0`，在`json0`进行变换操作之后我们同样地将`Op`转换后应用到我们本地的数据就好。虽然原理是完全不同的，但是我们在已有成熟框架的情况下似乎并不需要关注这点，我们更侧重于使用，实际上在使用起来是很像的，此时假设我们有一个自研的思维导图功能需要实现协同，而保存的数据结构都是自定义的，没有直接可以调用的实现方案，我们就需要进行转换适配，那么如果使用`OT`的话，并且借助`json0`做变换，那么我们需要做的是把`Op`转换为`json0`的`Op`，发送的数据也将会是这个`json0`的`Op`，那么如果直接使用`CRDT`的话，我们更像是通过框架定义的数据结构将`Op`应用到数据结构上，发送的数据是框架定义的数据，类似于将`Op`应用到数据结构上了，其他的操作都由框架给予完整的支持了。实际上通过框架提供的例子后，接入`CRDT`协同就主要是理解并且实现的问题了，这样就有一个大体的实现方向了，而不是毫无头绪不知道应该从哪里开始做协同。另外还是那个宗旨，合适的才是最好的，要考虑到实现的成本问题，没有必要硬套数据结构的实现，`OT`有`OT`的优点，`CRDT`有`CRDT`的优点，`CRDT`这类方法相比`OT`还比较年轻，还是在不断发展过程中的，实际上有些问题例如内存占用、速度等问题最近几年才被比较好的解决，`ShareDB`作者在关注`CRDT`不断发展的过程中也说了`CRDTs are the future`。此外从技术上讲，`CRDT`类型是`OT`类型的子集，也就是说，`CRDT`实际上是不需要转换函数的`OT`类型，因此任何可以处理这些`OT`类型的东西也应该能够使用`CRDT`。
 
+或许上边的一些概念可能一时间让人难以理解，所以下面的`Counter`与`Quill`两个实例就是介绍了如何使用`yjs`实现协同，究竟如何通过数据结构完成协同的接入工作，当然具体的`API`调用还是还是需要看`yjs`的文档，本文只涉及到最基本的协同操作，所有的代码都在`https://github.com/WindrunnerMax/Collab`中，注意这是个`pnpm`的`workspace monorepo`项目，要注意使用`pnpm`安装依赖。
+
 
 
 ## 每日一题
@@ -17,9 +19,13 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+https://docs.yjs.dev/
+https://github.com/yjs/yjs
+https://github.com/automerge/automerge
 https://zhuanlan.zhihu.com/p/425265438
 https://zhuanlan.zhihu.com/p/452980520
 https://josephg.com/blog/crdts-go-brrr/
+https://www.npmjs.com/package/quill-delta
 https://josephg.com/blog/crdts-are-the-future/
 ```
 
