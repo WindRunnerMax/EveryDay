@@ -61,7 +61,6 @@ Counter: Object.values({"id": 2}).reduce((a, b) => a + b) = N
 
 在这里我们使用的是`Y.Map`的方案，毕竟如果是`Y.Array`的话占用资源会是比较大的，当然因为实例中并没有身份信息，每次进入的时候都是会随机分配`id`的，当然这不会影响到我们的`Counter`。此外还有比较重要的一点是，因为我们是直接进行`P2P`通信的，当所有的设备都离线的时候，由于没有设计实际的数据存储机制，所以数据会丢失，这点也是需要注意的。
 
-
 接下来我们看看代码的实现，首先我们来看看服务端，这里主要实现是调用了一下`y-webrtc-signaling`来启动一个信令服务器，这是`y-webrtc`给予的开箱即用的功能，也可以基于这些内容进行改写，不过因为是信令服务器，除非有着很高的稳定性、定制化等要求，否则直接当作开箱即用的信令服务器就好。后边主要是使用了`express`启动了一个静态资源服务器，因为直接在浏览器打开文件的`file`协议有很多的安全限制，所以需要一个`HTTP Server`。
 
 ```js
@@ -82,6 +81,9 @@ console.log("Listening on http://localhost:3000");
 在客户端方面主要是定义了一个定义了一个共用的链接，通过`id`来加入我们的`P2P`组，并且还有密码的保护，这里需要链接的信令服务器也就是上边启动的`y-webrtc`的`3001`端口的信令服务。之后我们通过`observe`定义的`Y.Map`数据结构的变化来执行回调，在这里实际上就是将回调过后的整个`Map`数据传回回调函数，然后在视图层进行`Counter`的计算，这里还有一个`transaction.origin`判断是为了防止我们本地的调用触发回调。最后我们定义了一个`increase`函数，在这里我们通过`transact`作为事务来执行`set`操作，因为我们之前的设计只会处理我们当前客户端对应的`id`的那个值，本地的值是可信的，直接自增即可，`transact`最后一个参数也就是上边提到了的`transaction.origin`，可以用来判断事件的来源。
 
 ```js
+import { Doc, Map as YMap } from "yjs";
+import { WebrtcProvider } from "y-webrtc";
+
 const getRandomId = () => Math.floor(Math.random() * 10000).toString();
 export type ClientCallback = (record: Record<string, number>) => void;
 
@@ -120,6 +122,8 @@ class Connection {
     }, this); // 来源
   }
 }
+
+export default new Connection();
 ```
 
 ## Quill
@@ -136,11 +140,250 @@ class Connection {
 * 每次发生本地事件时，`clock = clocl + 1`。
 * 每次接收到远程事件时，`clock = max(clock, remoteClock) + 1`。
 
-看起来依旧会有发生冲突的可能，那么我们可以再引入一个客户端的唯一`id`，也就是`clientID`。这种机制看似简单，但实际上使我们获得了数学上性质良好的全序结构，这意味着我们可以在任意两个`Item`之间对比获得逻辑上的先后关系，这对保证`CRDT`算法的正确性相当重要。此外，通过这种方式我们也可以保证因果一致性，假如此时我们有两个操作`a`、`b`如果有因果关系，那么`a.clock`一定大于`b.clock`，这样的得到的顺序一定是满足因果关系的，当然如果没有因果关系，就可以取任意的顺序执行了。举个例子，我们有三个客户端`A`、`B`、`C`以及字符串`SE`，`A`在`SE`中间添加了`a`字符，此时这个操作同步到了`B`，`B`将`a`字符给删除了，假设此时`C`先收到了`B`的删除操作，因为这个操作依赖于`A`的操作，需要进行因果依赖关系的检查，这个操作的逻辑时钟和位移大于`C`本地文档中已经应用的操作的逻辑时钟和位移，需要等待先前的操作被应用后再应用这个操作，当然这并不是在`yjs`中的实现，因为`yjs`不会存在真正的删除操作，并且在删除操作的时候实际上并不会导致时钟的增加，只是增加一个标记，上边这个例子其实可以换个说法，两个相同的插入操作，因为我们是相对位置，所以后一个插入操作是依赖前一个插入操作的，因此就需要因果检查。
+看起来依旧会有发生冲突的可能，那么我们可以再引入一个客户端的唯一`id`，也就是`clientID`。这种机制看似简单，但实际上使我们获得了数学上性质良好的全序结构，这意味着我们可以在任意两个`Item`之间对比获得逻辑上的先后关系，这对保证`CRDT`算法的正确性相当重要。此外，通过这种方式我们也可以保证因果一致性，假如此时我们有两个操作`a`、`b`如果有因果关系，那么`a.clock`一定大于`b.clock`，这样的得到的顺序一定是满足因果关系的，当然如果没有因果关系，就可以取任意的顺序执行了。举个例子，我们有三个客户端`A`、`B`、`C`以及字符串`SE`，`A`在`SE`中间添加了`a`字符，此时这个操作同步到了`B`，`B`将`a`字符给删除了，假设此时`C`先收到了`B`的删除操作，因为这个操作依赖于`A`的操作，需要进行因果依赖关系的检查，这个操作的逻辑时钟和位移大于`C`本地文档中已经应用的操作的逻辑时钟和位移，需要等待先前的操作被应用后再应用这个操作，当然这并不是在`yjs`中的实现，因为`yjs`不会存在真正的删除操作，并且在删除操作的时候实际上并不会导致时钟的增加，只是增加一个标记，上边这个例子其实可以换个说法，两个相同的插入操作，因为我们是相对位置，所以后一个插入操作是依赖前一个插入操作的，因此就需要因果检查，其实这也是件有意思的事情，当收到在同一个位置编辑的不同客户端操作时候，如果时钟相同就是冲突操作，不相同就是因果关系。
 
 那么由此我们通过`CRDT`数据结构与算法设计解决了最终一致性和因果一致性，对于意图一致性的问题，当不存在冲突的时候我们是能够保证意图的，即插入文档的`Item`的顺序，在冲突的时候我们实际上会比较`clientID`决定究竟谁在前在后，其实实际上无论谁在前还是在后都可以认为是一种乌龙，我们在冲突的时候只保证最终一致性，对于意图一致性则需要做额外的设计才可以实现，在这里就不做过多探讨了。实际上`yjs`还有大量的设计与优化操作，以及基于`YATA`的冲突解决算法等，比如通过双向链表来保存文档结构顺序，通过`Map`为每个客户端保存的扁平的 `Item`数组，优化本地插入的速度而设计的缓存机制(链表的查找`O(N)`与跟随光标的位置缓存)，倾向于`State-based`的删除，`Undo/Redo`，光标同步，压缩数据网络传输等等，还是很值得研究的。
 
+我们再回到富文本的实例`Quill`中，实现的主要功能是在`quill`富文本编辑器中接入协同，并支持编辑光标的同步，该实例的地址是`https://github.com/WindrunnerMax/Collab/tree/master/packages/crdt-quill`，首先简单看一下目录结构(`tree --dirsfirst -I node_modules`):
 
+```
+crdt-quill
+├── public
+│   └── favicon.ico
+├── server
+│   └── index.ts
+├── src
+│   ├── client.ts
+│   ├── index.css
+│   ├── index.ts
+│   └── quill.ts
+├── package.json
+├── rollup.config.js
+├── rollup.server.js
+└── tsconfig.json
+```
+
+依旧简略说明下各个文件夹和文件的作用，`public`存储了静态资源文件，在客户端打包时将会把内容移动到`build`文件夹，`server`文件夹中存储了`CRDT`服务端的实现，在运行时同样会编译为`js`文件放置于`build`文件夹下，`src`文件夹是客户端的代码，主要是视图与`CRDT`客户端的实现，`rollup.config.js`是打包客户端的配置文件，`rollup.server.js`是打包服务端的配置文件，`package.json`与`tsconfig.json`大家都懂，就不赘述了。
+
+`quill`的数据结构并不是`JSON`而是`Delta`，`Delta`是通过`retain`、`insert`、`delete`三个操作完成整篇文档的描述与操作，我们试想一下描述一段字符串的操作需要什么，是不是通过这三种操作就能够完全覆盖了，所以通过`Delta`来描述文本增删改是完全可行的，而且`12`年`quill`的开源可以说是富文本发展的一个里程碑，于是`yjs`是直接原生支持`Delta`数据结构的。
+
+接下来我们看看来看看服务端，这里主要实现是调用了一下`y-websocket`来启动一个`websocket`服务器，这是`y-websocket`给予的开箱即用的功能，也可以基于这些内容进行改写，`yjs`还提供了`y-mongodb-provider`等服务端服务可以使用。后边主要是使用了`express`启动了一个静态资源服务器，因为直接在浏览器打开文件的`file`协议有很多的安全限制，所以需要一个`HTTP Server`。
+
+```js
+import { exec } from "child_process";
+import express from "express";
+
+// https://github.com/yjs/y-websocket/blob/master/bin/server.js
+exec("PORT=3001 npx y-websocket", (err, stdout, stderr) => { // 调用`y-websocket`
+  console.log(stdout, stderr);
+});
+
+const app = express(); // 实例化`express`
+app.use(express.static("build")); // 客户端打包过后的静态资源路径
+app.use(express.static("node_modules/quill/dist")); // `quill`静态资源路径
+app.listen(3000);
+console.log("Listening on http://localhost:3000");
+```
+
+在客户端方面主要是定义了一个定义了一个共用的链接，通过`crdt-quill`作为`RoomName`进入组，这里需要链接的`websocket`服务器也就是上边启动的`y-websocket`的`3001`端口的服务。之后我们定义了顶层的数据结构为`YText`数据结构的变化来执行回调，并且将一些信息暴露了出去，`doc`就是这需要使用的`yjs`实例，`type`是我们定义的顶层数据结构，`awareness`意为感知，只要是用来完成实时数据同步，在这里是用来同步光标选区。
+
+```js
+import { Doc, Text as YText } from "yjs";
+import { WebsocketProvider } from "y-websocket";
+
+class Connection {
+  public doc: Doc; // `yjs`实例
+  public type: YText; // 顶层数据结构
+  private connection: WebsocketProvider; // `WebSocket`链接
+  public awareness: WebsocketProvider["awareness"]; // 数据实时同步
+
+  constructor() {
+    const doc = new Doc(); // 实例化
+    const provider = new WebsocketProvider("ws://localhost:3001", "crdt-quill", doc); // 链接`WebSocket`服务器
+    provider.on("status", (e: { status: string }) => {
+      console.log("WebSocket", e.status); // 链接状态
+    });
+    this.doc = doc; // `yjs`实例
+    this.type = doc.getText("quill"); // 获取顶层数据结构
+    this.connection = provider; // 链接
+    this.awareness = provider.awareness; // 数据实时同步
+  }
+
+  reconnect() {
+    this.connection.connect(); // 重连
+  }
+
+  disconnect() {
+    this.connection.disconnect(); // 断线
+  }
+}
+
+export default new Connection();
+```
+
+在客户端主要分为了两部分，分别是实例化`quill`的实例，以及`quill`与`yjs`客户端通信的实现。在`quill`的实现中主要是将`quill`实例化，注册光标的插件，随机生成`id`的方法，通过`id`获取随机颜色的方法，以及光标同步的位置转换。在`quill`与`yjs`客户端通信的实现中，主要是完成了对于`quill`与`doc`的事件监听，主要是远程数据变更的回调，本地数据变化的回调，光标同步事件感知的回调。
+
+```js
+import Quill from "quill";
+import QuillCursors from "quill-cursors";
+import tinyColor from "tinycolor2";
+import { Awareness } from "y-protocols/awareness.js";
+import {
+  Doc,
+  Text as YText,
+  createAbsolutePositionFromRelativePosition,
+  createRelativePositionFromJSON,
+} from "yjs";
+export type { Sources } from "quill";
+
+Quill.register("modules/cursors", QuillCursors); // 注册光标插件
+
+export default new Quill("#editor", { // 实例化`quill`
+  theme: "snow",
+  modules: { cursors: true },
+});
+
+const COLOR_MAP: Record<string, string> = {}; // `id => color`
+
+export const getRandomId = () => Math.floor(Math.random() * 10000).toString(); // 随机生成用户`id`
+
+export const getCursorColor = (id: string) => { // 根据`id`获取颜色
+  COLOR_MAP[id] = COLOR_MAP[id] || tinyColor.random().toHexString();
+  return COLOR_MAP[id];
+};
+
+export const updateCursor = (
+  cursor: QuillCursors,
+  state: Awareness["states"] extends Map<number, infer I> ? I : never,
+  clientId: number,
+  doc: Doc,
+  type: YText
+) => {
+  try {
+    // 从`Awareness`中取得状态
+    if (state && state.cursor && clientId !== doc.clientID) {
+      const user = state.user || {};
+      const color = user.color || "#aaa";
+      const name = user.name || `User: ${clientId}`;
+      // 根据`clientId`创建光标
+      cursor.createCursor(clientId.toString(), name, color);
+      // 相对位置转换为绝对位置 // 选区为`focus --- anchor`
+      const focus = createAbsolutePositionFromRelativePosition(
+        createRelativePositionFromJSON(state.cursor.focus),
+        doc
+      );
+      const anchor = createAbsolutePositionFromRelativePosition(
+        createRelativePositionFromJSON(state.cursor.anchor),
+        doc
+      );
+      if (focus && anchor && focus.type === type) {
+        // 移动光标位置
+        cursor.moveCursor(clientId.toString(), {
+          index: focus.index,
+          length: anchor.index - focus.index,
+        });
+      }
+    } else {
+      // 根据`clientId`移除光标
+      cursor.removeCursor(clientId.toString());
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+```
+
+```js
+import "./index.css";
+import quill, { getRandomId, updateCursor, Sources, getCursorColor } from "./quill";
+import client from "./client";
+import Delta from "quill-delta";
+import QuillCursors from "quill-cursors";
+import { compareRelativePositions, createRelativePositionFromTypeIndex } from "yjs";
+
+const userId = getRandomId(); // 本地客户端的`id` 或者使用`awareness.clientID`
+const doc = client.doc; // `yjs`实例
+const type = client.type; // 顶层类型
+const cursors = quill.getModule("cursors") as QuillCursors; // `quill`光标模块
+const awareness = client.awareness; // 实时通信感知模块
+
+// 设置当前客户端的信息 `State`的数据结构类似于`Record<string, unknown>`
+awareness.setLocalStateField("user", {
+  name: "User: " + userId,
+  color: getCursorColor(userId),
+});
+
+// 页面显示的用户信息
+const userNode = document.getElementById("user") as HTMLInputElement;
+userNode && (userNode.value = "User: " + userId);
+
+type.observe(event => {
+  // 来源信息 // 本地`UpdateContents`不应该再触发`ApplyDelta'
+  if (event.transaction.origin !== userId) {
+    const delta = event.delta;
+    quill.updateContents(new Delta(delta), "api"); // 应用远程数据, 来源
+  }
+});
+
+quill.on("editor-change", (_: string, delta: Delta, state: Delta, origin: Sources) => {
+  if (delta && delta.ops) {
+    // 来源信息 // 本地`ApplyDelta`不应该再触发`UpdateContents`
+    if (origin !== "api") {
+      doc.transact(() => {
+        type.applyDelta(delta.ops); // 应用`Ops`到`yjs`
+      }, userId); // 来源
+    }
+  }
+
+  const sel = quill.getSelection(); // 选区
+  const aw = awareness.getLocalState(); // 实时通信状态数据
+  if (sel === null) { // 失去焦点
+    if (awareness.getLocalState() !== null) {
+      awareness.setLocalStateField("cursor", null); // 清除选区状态
+    }
+  } else {
+    // 卷对位置转换为相对位置 // 选区为`focus --- anchor`
+    const focus = createRelativePositionFromTypeIndex(type, sel.index);
+    const anchor = createRelativePositionFromTypeIndex(type, sel.index + sel.length);
+    if (
+      !aw ||
+      !aw.cursor ||
+      !compareRelativePositions(focus, aw.cursor.focus) ||
+      !compareRelativePositions(anchor, aw.cursor.anchor)
+    ) {
+      // 选区位置发生变化 设置位置信息
+      awareness.setLocalStateField("cursor", { focus, anchor });
+    }
+  }
+  // 更新所有光标状态到本地
+  awareness.getStates().forEach((aw, clientId) => {
+    updateCursor(cursors, aw, clientId, doc, type);
+  });
+});
+
+// 初始化更新所有远程光标状态到本地
+awareness.getStates().forEach((state, clientId) => {
+  updateCursor(cursors, state, clientId, doc, type);
+});
+// 监听远程状态变化的回调
+awareness.on(
+  "change",
+  ({ added, removed, updated }: { added: number[]; removed: number[]; updated: number[] }) => {
+    const states = awareness.getStates();
+    added.forEach(id => {
+      const state = states.get(id);
+      state && updateCursor(cursors, state, id, doc, type);
+    });
+    updated.forEach(id => {
+      const state = states.get(id);
+      state && updateCursor(cursors, state, id, doc, type);
+    });
+    removed.forEach(id => {
+      cursors.removeCursor(id.toString());
+    });
+  }
+);
+```
 
 ## 每日一题
 
