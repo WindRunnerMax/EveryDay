@@ -252,6 +252,7 @@
     * [初探富文本之OT协同算法](Plugin/初探富文本之OT协同算法.md)
     * [初探富文本之OT协同实例](Plugin/初探富文本之OT协同实例.md)
     * [初探富文本之CRDT协同算法](Plugin/初探富文本之CRDT协同算法.md)
+    * [初探富文本之CRDT协同实例](Plugin/初探富文本之CRDT协同实例.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
