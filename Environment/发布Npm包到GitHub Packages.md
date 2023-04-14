@@ -3,7 +3,9 @@
 
 ## 发布
 首先需要制作一个`package.json`文件，可以通过`npm init`命令根据提示生成一个`package.json`文件。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200701113612880.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-18-51-16.png)
+
 这是已经发布好的`package.json`文件，作为示例，需要注意的是`name`字段、`publishConfig`字段与`repository`字段的配置，在`GitHub Packages`发布的包属于作用域包，需要使用`@username/package-name`的形式作为`name`字段，`publishConfig`是发布到`GitHub Packages`的必填且值固定的字段，`repository`字段是必须要指定的仓库`url`，可以发布多个包到一个仓库，可以参考`https://github.com/WindrunnerMax/Asse/packages/292805`。
 
 ```javascript
@@ -29,7 +31,9 @@
 }
 ```
 下面需要授权，首先在`Github`申请一个`Token`，`user - setting -  Developer settings - Personal access tokens - Generate new token`，生成一个用以发布`Npm`包的`Token`，需要选择权限，以下权限必选：
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200701114539977.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-18-52-25.png)
+
 接下来将`Token`添加至`~/.npmrc`，`win`用户是路径`C://users/current-user`。
 
 ```yaml

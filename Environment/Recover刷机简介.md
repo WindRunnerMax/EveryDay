@@ -11,13 +11,16 @@ Recovery是一种可以对安卓手机内部的数据文件进行修改的模式
 官方recovery（新买的手机官方自带的recovery），只能用它进行官方OTA系统升级以及恢复出厂设置。
 第三方recovery目前主要有CWM和TWRP。CWM目前已经很少见了，主要是TWRP。
 
-CWM:
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200113130246310.jpg)
+## CWM:
+
+![](screenshots/2023-04-14-20-28-42.png)
+
 1.CWM常用的只有刷入刷机包以及清除数据，并且无法采用触控的方式，只能利用音量键等进行操作，相对twrp recovery来说功能较少。
 
 
-TWRP 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200113130645412.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+## TWRP 
+
+![](screenshots/2023-04-14-20-28-55.png)
 
 1. install
 第三方rom、补丁的安装，也可以选install下的storage那里，切换至另一个存储器
