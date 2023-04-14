@@ -8,11 +8,17 @@
 [支付宝小程序开发文档](https://opendocs.alipay.com/mini/006kyi)  
 [RSA 密钥生成工具下载地址](https://docs.open.alipay.com/291/105971/)  
 2. 注册完成后将上边提供的软件都下载好，在开发中心—小程序应用—选择小程序—开发管理–功能列表(在底部)中添加 [ 获取会员基础信息 ] 功能。
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200114200552813.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-50-13.png)
+
 3. 使用RSA生成工具生成密钥，并且这个工具以后可以用来验签使用
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200114200917755.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-50-19.png)
+
 生成应用私钥和应用公钥后，复制应用公钥，在 [ 开发中心—小程序应用—选择小程序-设置–开发设置–设置接口加密方式 ] 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200114201145428.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-50-27.png)
+
 4. 前端部分，我是使用的静默获取，不会弹出授权框，我只需user_id即可
 
 ```javascript

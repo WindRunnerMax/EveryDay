@@ -6,7 +6,9 @@
 > 代码与模型 https://github.com/WindrunnerMax/SWVerifyCode 
 
 ##### 目录结构
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200216114314340.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-32-27.png)
+
 ##### 准备工作
 首先需要手打码，自动获取验证码，并在powershell手动输入验证码，注意目录中的文件夹需要手动建立
 引入`Convert`是为了处理图片，二值化并降噪

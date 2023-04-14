@@ -48,7 +48,7 @@ conda activate python2
 source ./python2-conda.sh
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607104439839.png)
+![](screenshots/2023-04-14-20-29-24.png)
 
 ## 安装Cuckoo
 
@@ -83,7 +83,7 @@ sudo apt-get install virtualbox
 
 如果像我一样是使用的服务器而没有实体机，而且我的服务器在实体机上是使用`VMware Workstation`管理的，那么这个状态就相当于在虚拟机中安装虚拟机，那么就需要在主体实体机的`VMware Workstation`中修改虚拟机配置在，`Processors`中启用`VT-X`或`AMD-V`，也就是启动虚拟化才可以。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607204557586.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-29-31.png)
 
 
 ### 安装tcpdump
@@ -153,26 +153,28 @@ sudo pip install m2crypto==0.24.0
 首先我们需要准备好一个`XP`镜像，镜像需要自行下载，可以去`MSDN`下载，之后还要准备一个密钥，这个可以自行百度，多试试总有能用的。  
 点击新建，这边的`name`填`cuckoo1`，因为我有一个重名的了所以写了个`2`，这边一定要写好是`cuckoo1`，选择好`windows XP 32-bit`系统。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607112214968.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-29-41.png)
+
 之后便是分配内存和硬盘存储等，可以一路`next`，接下来要启动安装镜像。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607112344625.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-29-47.png)
 
 在此处选择下载好的`xp`系统镜像，接下来就跟随着系统进行安装，安装完成后将虚拟机关机，在`Setting`中的`Storage`中将光盘形状的这个位置的启动位置移除即可，否则每次开机都会提示你按任意键从光盘启动，那么便又会启动一次安装程序。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607112748263.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-29-55.png)
+
 接下来需要配置网络环境，在启动的`virtualbox`中新建一个虚拟网卡，配置的`ip`地址等如下所示。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607170913896.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-30-02.png)
 
 之后在我们新建的`cuckoo1`的虚拟机设置网络，如下所示，`Host-only`是代表只允许与宿主机通信，如果需要访问外网的话，请继续看下边的网络配置。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607171018171.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-30-10.png)
 
 之后我们要配置一下虚拟机的外网网络环境，刚才我们新建了这个虚拟网卡，之后为了通信我们还需要将虚拟机里设置一个固定的`ip`地址，也就是刚才我们设置的虚拟网卡网关的子网，但是我们如果我们直接在`xp`系统里设置虚拟机的`ip`地址之后是无法上网的，所以我们需要在`ubuntu`中配置一个`NAT`网络转发，在这里我们直接使用`iptables `进行网络转发，这里每次开机都会重置，如果想要开机自动可以使用`systemctl`进行开机自启动管理，需要编写`UNIT`，在这里就不赘述了，在这里我们还是写到一个`sh`文件中需要的时候再执行即可。  
 注意在下边这个`ens160`是我的网卡，可以使用`ifconfig`查看网卡名称，之后的`192.168.56.0/24`就是主机以及网络号划分的子网，如果上边的`ip`配置都是根据文章来的话，那就只需要修改这个网卡名称即可。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607172721482.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-30-17.png)
 
 
 ```bash
@@ -191,14 +193,14 @@ sudo iptables -A FORWARD -j LOG
 sudo ./network-transform.sh
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607182339190.png)
+![](screenshots/2023-04-14-20-30-42.png)
 
 
 接下来启动这个虚拟机，我们需要在这里关闭防火墙与自动更新，并且配置好`ip`地址。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607183105206.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-30-50.png)
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607183140981.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-30-58.png)
 
 另外还需要在虚拟机中进行网络配置以及启动一个`agent.py`，这个文件在`~/.cuckoo/agent/agent.py`，也就是说在虚拟机中也必须安装`python 2.7`环境，如果需要截图的话，还需要`PIL`包，在这里就不赘述安装过程了，无论是使用虚拟机共享磁盘还是搭建文件服务器环境等方式，或者是直接在`xp`虚拟机中下载`python`安装包并安装即可，使用`python3`启动简单的文件服务器命令如下。
 
@@ -206,17 +208,18 @@ sudo ./network-transform.sh
 python3 -m http.server --bind 0.0.0.0 8088
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210702164405351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-31-04.png)
 
 
-  之后我们可以直接双击启动`agent.py`，另外也可以在`C:\Document and Settings\Administrator\start menu\program\start`设置让其开机自启，当然这个也没要必要，因为我们只需要创建快照即可，在运行`agent.py`之后，我们可以使用`netstat`命令查看`8000`端口是否被占用，如果已经占用就说明`agent.py`成功启动。
+之后我们可以直接双击启动`agent.py`，另外也可以在`C:\Document and Settings\Administrator\start menu\program\start`设置让其开机自启，当然这个也没要必要，因为我们只需要创建快照即可，在运行`agent.py`之后，我们可以使用`netstat`命令查看`8000`端口是否被占用，如果已经占用就说明`agent.py`成功启动。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607185737997.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-31-15.png)
 
 
 等环境全部搭建完成之后，我们需要创建快照，务必注意名字要命名为`snapshot1`，默认的为`Snapshot 1`，注意是首字母大写以及`1`之前有个空格的，所以我们要命名为`snapshot1`。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607185813867.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-31-22.png)
+
 之后我们就关闭虚拟机即可，在运行`cuckoo`过程中不需要手动启动虚拟机。
 
 ### 创建数据库
@@ -389,14 +392,17 @@ cuckoo
 cuckoo web runserver 0.0.0.0:8000
 ```
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607192243446.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607192322183.png)
+![](screenshots/2023-04-14-20-31-43.png)
+
+![](screenshots/2023-04-14-20-32-18.png)
+
 之后打开该`web`服务，在我的服务器的地址为`http://192.168.109.206:8000/`。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607192551847.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-31-53.png)
+
 在右上角的`Submit`提交文件，点击`Analyze`即可，现在就可以在执行`cuckoo`的终端查看到分析进度了，在`Dashboard`可以整体查看概览，也可以在`Rencent`中查看已经完成的任务。
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210607193218462.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+![](screenshots/2023-04-14-20-32-01.png)
 
 另外在正常情况下在分析的时候`$HOME/.cuckoo/storage/analyses`会出现很多`xxx.exe_`和`xxx.dmp`文件，可以使用`crontab`执行一些定时任务出来一下，例如我不需要则在存在时间大于`6`分钟的直接删除。
 

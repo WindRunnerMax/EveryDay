@@ -10,7 +10,9 @@
 http://127.0.0.1/ThinkPHP/index.php?s=index/think\app/invokefunction&function=call_user_func_array&vars[0]=phpinfo&vars[1][]=1
 ```
 由于对控制器名没有明确的检测，在没有开启强制路由的情况下，直接就可以执行phpinfo()，如果服务器未限制shell等函数的执行，便可以直接执行shell提权
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200210103949976.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-50-36.png)
+
 详细的漏洞执行过程可以参考 [漏洞执行过程](https://www.cnblogs.com/st404/p/10245844.html)
 
 ##### 官方补丁
@@ -42,7 +44,9 @@ _触发条件_
 ```
 
 利用`$_POST['_method']`变量来传递真实的请求方法，当`$_POST['_method']=__construct`时，Request类的method方法便会将该类的变量进行覆盖，利用该方式将filter变量覆盖为system等函数名，当内部进行参数过滤时便会进行执行任意命令
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20200210111131166.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQwNDEzNjcw,size_16,color_FFFFFF,t_70)
+
+![](screenshots/2023-04-14-20-50-45.png)
+
 基于此可以直接上传PHP文件 test.php
 ```xml
 <!-- POST -->
