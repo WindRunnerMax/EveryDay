@@ -34,6 +34,140 @@ export const CounterNormal: React.FC = () => {
 
 另外有一点我们需要明确一下，当我们点击了这个`count`按钮，`React`帮我们做了什么。其实对于当前这个`<CounterNormal />`组件而言，当我们点击了按钮，那么肯定就是需要刷新视图，`React`的策略是会重新执行这个函数，由此来获得返回的`JSX`，然后就是常说的`diff`等流程，最后才会去渲染，只不过我们目前关注的重点就是这个函数组件的重新执行。`Hooks`实际上无非就是个函数，`React`通过内置的`use`为函数赋予了特殊的意义，使得其能够访问`Fiber`从而做到数据与节点相互绑定，那么既然是一个函数，并且在`setState`的时候还会重新执行，那么在重新执行的时候，点击按钮之前的`add`函数地址与点击按钮之后的`add`函数地址是不同的，因为这个函数实际上是被重新定义了一遍，只不过名字相同而已，从而其生成的静态作用域是不同的，那么这样便可能会造成所谓的闭包陷阱，接下来我们就来继续探讨相关的问题。
 
+## 原生事件绑定
+虽然`React`为我们提供了合成事件，但是在实际开发中因为各种各样的原因我们无法避免的会用到原生的事件绑定，例如`ReactDOM`的`Portal`传送门，其是遵循合成事件的事件流而不是`DOM`的事件流，比如将这个组件直接挂在`document.body`下，那么事件可能并不符合看起来`DOM`结构应该遵循的事件流，这可能不符合我们的预期，此时可能就需要进行原生的事件绑定了。此外，很多库可能都会有类似`addEventListener`的事件绑定，那么同样的此时也需要在合适的时机去添加和解除事件的绑定。由此，我们来看下边这个原生事件绑定的例子：
+
+```js
+// https://codesandbox.io/s/react-ts-template-forked-z8o7sv?file=/src/counter-native.tsx
+import { useEffect, useRef, useState } from "react";
+
+export const CounterNative: React.FC = () => {
+  const ref1 = useRef<HTMLButtonElement>(null);
+  const ref2 = useRef<HTMLButtonElement>(null);
+  const [count, setCount] = useState(0);
+
+  const add = () => {
+    setCount(count + 1);
+  };
+
+  useEffect(() => {
+    const el = ref1.current;
+    const handler = () => console.log(count);
+    el?.addEventListener("click", handler);
+    return () => {
+      el?.removeEventListener("click", handler);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = ref2.current;
+    const handler = () => console.log(count);
+    el?.addEventListener("click", handler);
+    return () => {
+      el?.removeEventListener("click", handler);
+    };
+  }, [count]);
+
+  return (
+    <div>
+      {count}
+      <div>
+        <button onClick={add}>count++</button>
+        <button ref={ref1}>log count 1</button>
+        <button ref={ref2}>log count 2</button>
+      </div>
+    </div>
+  );
+};
+```
+
+在这个例子中，我们分别对`ref1`与`ref2`两个`button`进行了原生事件绑定，其中`ref1`的事件绑定是在组件挂载的时候进行的，而`ref2`的事件绑定是在`count`发生变化的时候进行的，看起来代码上只有依赖数组`[]`和`[count]`的区别，但实际的效果上差别就很大了。在上边在线的`CodeSandbox`中我们首先点击三次`count++`这个按钮，然后分别点击`log count 1`按钮和`log count 2`按钮，那么输出会是如下的内容：
+
+```js
+0 // log count 1
+3 // log count 2
+```
+
+此时我们可以看出，页面上的`count`值明明是`3`，但是我们点击`log count 1`按钮的时候，输出的值却是`0`，只有点击`log count 2`按钮的时候，输出的值才是`3`，那么点击`log count 1`的输出肯定是不符合我们的预期的。那么为什么会出现这个情况呢，其实这就是所谓的`React Hooks`闭包陷阱了，其实我们上边也说了为什么会发生这个问题，我们再重新看一下，`Hooks`实际上无非就是个函数，`React`通过内置的`use`为函数赋予了特殊的意义，使得其能够访问`Fiber`从而做到数据与节点相互绑定，那么既然是一个函数，并且在`setState`的时候还会重新执行，那么在重新执行的时候，点击按钮之前的`add`函数地址与点击按钮之后的`add`函数地址是不同的，因为这个函数实际上是被重新定义了一遍，只不过名字相同而已，从而其生成的静态作用域是不同的，那么在新的函数执行时，假设我们不去更新新的函数，也就是不更新函数作用域的话，那么就会保持上次的`count`引用，就会导致打印了第一次绑定的数据。  
+
+那么同样的，`useEffect`也是一个函数，我们那么我们定义的事件绑定那个函数也其实就是`useEffect`的参数而已，在`state`发生改变的时候，这个函数虽然也被重新定义，但是由于我们的第二个参数即依赖数组的关系，其数组内的值在两次`render`之后是相同的，所以`useEffect`就不会去触发这个副作用的执行。那么实际上在`log count 1`中，因为依赖数组是空的`[]`，两次`render`或者说两次执行依次比较数组内的值没有发生变化，那么便不会触发副作用函数的执行；那么在`log count 2`中，因为依赖的数组是`[count]`，在两次`render`之后依次比较其值发现是发生了变化的，那么就会执行上次副作用函数的返回值，在这里就是清理副作用的函数`removeEventListener`，然后再执行传进来的新的副作用函数`addEventListener`。另外实际上也就是因为`React`需要返回一个清理副作用的函数，所以第一个函数不能直接用`async`装饰，否则执行副作用之后返回的就是一个`Promise`对象而不是直接可执行的副作用清理函数了。
+
+## useCallback
+在上边的场景中，我们通过为`useEffect`添加依赖数组的方式似乎解决了这个问题，但是设想一个场景，如果一个函数需要被多个地方引入，也就是说类似于我们上一个示例中的`handler`函数，如果我们需要在多个位置引用这个函数，那么我们就不能像上一个例子一样直接定义在`useEffect`的第一个参数中。那么如果定义在外部，这个函数每次`re-render`就会被重新定义，那么就会导致`useEffect`的依赖数组发生变化，进而就会导致副作用函数的重新执行，显然这样也是不符合我们的预期的。此时就需要将这个函数的地址保持为唯一的，那么就需要`useCallback`这个`Hook`了，当使用`React`中的`useCallback Hook`时，其将返回一个`memoized`记忆化的回调函数，这个回调函数只有在其依赖项发生变化时才会重新创建，否则就会被缓存以便在后续的渲染中复用。通过这种方式可以帮助我们在`React`组件中优化性能，因为其可以防止不必要的重渲染，当将这个`memoized`回调函数传递给子组件时，就可以避免在每次渲染时重新创它，这样可以提高性能并减少内存的使用。由此，我们来看下边这个使用`useCallback`进行事件绑定的例子：
+
+```js
+// https://codesandbox.io/s/react-ts-template-forked-z8o7sv?file=/src/counter-callback.tsx
+import { useCallback, useEffect, useRef, useState } from "react";
+
+export const CounterCallback: React.FC = () => {
+  const ref1 = useRef<HTMLButtonElement>(null);
+  const ref2 = useRef<HTMLButtonElement>(null);
+  const [count, setCount] = useState(0);
+
+  const add = () => {
+    setCount(count + 1);
+  };
+
+  const logCount1 = () => console.log(count);
+
+  useEffect(() => {
+    const el = ref1.current;
+    el?.addEventListener("click", logCount1);
+    return () => {
+      el?.removeEventListener("click", logCount1);
+    };
+  }, []);
+
+  const logCount2 = useCallback(() => {
+    console.log(count);
+  }, [count]);
+
+  useEffect(() => {
+    const el = ref2.current;
+    el?.addEventListener("click", logCount2);
+    return () => {
+      el?.removeEventListener("click", logCount2);
+    };
+  }, [logCount2]);
+
+  return (
+    <div>
+      {count}
+      <div>
+        <button onClick={add}>count++</button>
+        <button ref={ref1}>log count 1</button>
+        <button ref={ref2}>log count 2</button>
+      </div>
+    </div>
+  );
+};
+```
+
+在这个例子中我们的`logCount1`没有`useCallback`包裹，每次`re-render`都会重新定义，此时`useEffect`也没有定义数组，所以在`re-render`时并没有再去执行新的事件绑定。那么对于`logCount2`而言，我们使用了`useCallback`包裹，那么每次`re-render`时，由于依赖数组是`[count]`的存在，因为`count`发生了变化`useCallback`返回的函数的地址也改变了，在这里如果有很多的状态的话，其他的状态改变了，`count`不变的话，那么这里的`logCount2`便不会改变，当然在这里我们只有`count`这一个状态，所以在`re-render`时，`useEffect`的依赖数组发生了变化，所以会重新执行事件绑定。在上边在线的`CodeSandbox`中我们首先点击三次`count++`这个按钮，然后分别点击`log count 1`按钮和`log count 2`按钮，那么输出会是如下的内容：
+
+```js
+0 // log count 1
+3 // log count 2
+```
+
+那么实际上我们可以看出来，在这里如果的`log count 1`与原生事件绑定例子中的`log count 1`一样，都因为没有及时更新而保持了上一次`render`的静态作用域，导致了输出`0`，而由于`log count 2`及时更新了作用域，所以正确输出了`3`，实际上这个例子并不全，我们可以很明显的发现实际上应该有其他种情况的，我们同样先点击`count++`三次，然后再分情况看输出:
+
+* `logCount`函数不用`useCallback`包装。
+  * `useEffect`依赖数组为`[]`: 输出`0`。
+  * `useEffect`依赖数组为`[count]`: 输出`3`。
+  * `useEffect`依赖数组为`[logCount]`: 输出`3`。
+* `logCount`函数使用`useCallback`包装，依赖为`[]`。
+  * `useEffect`依赖数组为`[]`: 输出`0`。
+  * `useEffect`依赖数组为`[count]`: 输出`0`。
+  * `useEffect`依赖数组为`[logCount]`: 输出`0`。
+* `logCount`函数使用`useCallback`包装，依赖为`[count]`。
+  * `useEffect`依赖数组为`[]`: 输出`0`。
+  * `useEffect`依赖数组为`[count]`: 输出`3`。
+  * `useEffect`依赖数组为`[logCount]`: 输出`3`。
+
+虽然看起来情况这么多，但是实际上如果接入了`react-hooks/exhaustive-deps`规则的话，发现其实际上是会建议我们使用`3.3`这个方法来处理依赖的，这也是最标准的解决方案，其他的方案要不就是存在不必要的函数重定义，要不就是存在应该重定义但是依然存在旧的函数作用域引用的情况，其实由此看来`React`的心智负担确实是有些重的，而且`useCallback`能够完全解决问题吗，实际上并没有，我们可以接着往下聊聊`useCallback`的缺陷。
+
+
 
 
 ## 每日一题
