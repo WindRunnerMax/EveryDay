@@ -167,8 +167,79 @@ export const CounterCallback: React.FC = () => {
 
 虽然看起来情况这么多，但是实际上如果接入了`react-hooks/exhaustive-deps`规则的话，发现其实际上是会建议我们使用`3.3`这个方法来处理依赖的，这也是最标准的解决方案，其他的方案要不就是存在不必要的函数重定义，要不就是存在应该重定义但是依然存在旧的函数作用域引用的情况，其实由此看来`React`的心智负担确实是有些重的，而且`useCallback`能够完全解决问题吗，实际上并没有，我们可以接着往下聊聊`useCallback`的缺陷。
 
+## useMemoizedFn
+同样的，我们继续来看一个例子，这个例子可能相对比较复杂，因为会有一个比较长的依赖传递，然后导致看起来比较麻烦。另外实际上这个例子也不能说`useCallback`是有问题的，只能说是会有相当重的心智负担。
 
+```js
+const getTextInfo = useCallback(() => { // 获取一段数据
+  return [text.length, dep.length];
+}, [text, dep]);
 
+const post = useCallback(() => { // 发送数据
+  const [textLen, depLen] = getTextInfo();
+  postEvent({ textLen, depLen });
+}, [getTextInfo, postEvent]);
+
+useEffect(() => {
+  post();
+}, [dep, post]);
+```
+在这个例子中，我们希望达到的目标是仅当`dep`发生改变的时候，触发`post`函数，从而将数据进行发送，在这里我们完全按照了`react-hooks/exhaustive-deps`的规则去定义了函数。那么看起来似乎并没有什么问题，但是当我们实际去应用的时候，会发现当`text`这个状态发生变化的时候，同样会触发这个`post`函数的执行，这是个并不明显的问题，如果`text`这个状态改变的频率很低的话，甚至在回归的过程中都可能无法发现这个问题。此外，可以看到这个依赖的链路已经很长了，如果函数在复杂一些，那复杂性越来越高，整个状态就会变的特别难以维护。
+
+那么如何解决这个问题呢，一个可行的办法是我们可以将函数定义在`useRef`上，那么这样的话我们就可以一直拿到最新的函数定义了，实际效果与直接定义一个函数调用无异，只不过不会受到`react-hooks/exhaustive-deps`规则的困扰了。那么实际上我们并没有减缓复杂性，只是将复杂性转移到了`useRef`上，这样的话我们就需要去维护这个`useRef`的值，这样的话就会带来一些额外的心智负担。
+
+```js
+const post = useRef(() => void 0);
+
+post.current = () => {
+  postEvent({ textLen, depLen });
+}
+
+useEffect(() => {
+  post.current();
+}, [dep]);
+```
+
+那么既然我们可以依靠`useRef`来解决这个问题，我们是不是可以将其封装为一个自定义的`Hooks`呢，然后因为实际上我们并没有办法阻止函数的创建，那么我们就使用两个`ref`，第一个`ref`保证永远是同一个引用，也就是说返回的函数永远指向同一个函数地址，第二个`ref`用来保存当前传入的函数，这样发生`re-render`的时候每次创建新的函数我们都将其更新，也就是说我们即将调用的永远都是最新的那个函数。这样通过两个`ref`我们就可以保证两点，第一点是无论发生多少次`re-render`，我们返回的都是同一个函数地址，第二点是无论发生了多少次`re-render`，我们即将调用的函数都是最新的。由此，我们就来看下`ahooks`是如何实现的`useMemoizedFn`。
+
+```js
+type noop = (this: any, ...args: any[]) => any;
+
+type PickFunction<T extends noop> = (
+  this: ThisParameterType<T>,
+  ...args: Parameters<T>
+) => ReturnType<T>;
+
+function useMemoizedFn<T extends noop>(fn: T) {
+  const fnRef = useRef<T>(fn);
+
+  // why not write `fnRef.current = fn`?
+  // https://github.com/alibaba/hooks/issues/728
+  fnRef.current = useMemo(() => fn, [fn]);
+
+  const memoizedFn = useRef<PickFunction<T>>();
+  if (!memoizedFn.current) {
+    memoizedFn.current = function (this, ...args) {
+      return fnRef.current.apply(this, args);
+    };
+  }
+
+  return memoizedFn.current as T;
+}
+```
+
+那么使用的时候就很简单了，可以看到我们使用`useMemoizedFn`时是不需要依赖数组的，并且虽然我们在`useEffect`中定义了`post`函数的依赖，但是由于我们上边保证了第一点，那么这个在这个组件被完全卸载之前，这个依赖的函数地址是不会变的，由此我们就可以保证只可能由于`dep`发生的改变才会触发`useEffect`，而且我们保证的第二点，可以让我们在`re-render`之后拿到的都是最新的函数作用域，也就是`textLen`和`depLen`是能够保证是最新的
+，不会存在拿到了旧的函数作用域里边值的问题。
+
+```js
+const post = useMemoizedFn(() => {
+  postEvent({ textLen, depLen });
+});
+
+useEffect(() => {
+  post.current();
+}, [dep, post]);
+```
 
 ## 每日一题
 
