@@ -55,7 +55,7 @@ console.log(req2()); // 重试请求 `{url: 'url2', token: 'token2'}`
 
 `Js`是静态作用域，但是`this`对象却是个例外，`this`的指向问题就类似于动态作用域，其并不关心函数和作用域是如何声明以及在何处声明的，只关心是从何处调用的，`this`的指向在函数定义的时候是确定不了的，只有函数执行的时候才能确定`this`到底指向谁，当然实际上`this`的最终指向的是那个调用的对象。`this`的设计主要是为了能够在函数体内部获得当前的运行环境`context`，因为在`Js`的内存设计中`Function`是独立的一个堆地址空间，不和`Object`直接相关，所以才需要绑定一个运行环境。
 
-前边提到了词法作用域是在定义时就确定了，所以词法作用域也可以称为静态作用域。那么我们可以看下下边的例子，虽然这个函数我们看起来都是是完全一样的，但是最后打印的时候得到的值是得到了之前作用域中的值。我们现在需要关注的是`fn`这个函数，我们我们说的定义时确定词法作用域这句话具体指的是这个函数被声明并定义的时候确定词法作用域，或者说是在生成函数地址的时候确定词法作用域。其实但从这个例子看起来好像没什么问题，本来就是应该这个样子的，那么为什么要举这个例子呢，其实在这里想表达的意思是，如果我们在写代码的时候不小心保持了之前的`fn`函数地址，那么虽然我们希望得到的`index`是`5`，但是实际拿到的`index`却是`1`，这其实就是所谓的闭包陷阱了，我们在下边探讨`React`的时候也可以通过这个例子理解`React`的视图模型。
+前边提到了词法作用域是在定义时就确定了，所以词法作用域也可以称为静态作用域。那么我们可以看下下边的例子，这个例子是不是很像我们的`React Hooks`来定义的组件。运行这个例子之后，我们可以看到虽然对于这个函数执行起来看起来都是是完全一样的，但是最后打印的时候得到的值是得到了之前作用域中的值。我们现在需要关注的是`fn`这个函数，我们我们说的定义时确定词法作用域这句话具体指的是这个函数被声明并定义的时候确定词法作用域，或者说是在生成函数地址的时候确定词法作用域。其实但从这个例子看起来好像没什么问题，本来就是应该这个样子的，那么为什么要举这个例子呢，其实在这里想表达的意思是，如果我们在写代码的时候不小心保持了之前的`fn`函数地址，那么虽然我们希望得到的`index`是`5`，但是实际拿到的`index`却是`1`，这其实就是所谓的闭包陷阱了，我们在下边探讨`React`的时候也可以通过这个例子理解`React`的视图模型。
 
 ```js
 const collect = [];
@@ -80,21 +80,142 @@ collect.forEach(fn => fn()); // 1 2 3 4 5
 ```
 
 ## 闭包陷阱
-说到这陷阱，不由得想起来一句话，出门出门就上当，当当当当不一样，平时开发的时候可以说是一不小心就上当掉入了陷阱。那么我们这个陷阱是完全由闭包引起的吗，那肯定不是，这只是`Js`的语言特性而已，那么这个陷阱是完全由`React`引起的吗，那肯定也不是，所以接下来我们就要来看看为什么需要闭包和`React`结合会引发这个陷阱。
+说到这陷阱，不由得想起来一句话，出门出门就上当，当当当当不一样，平时开发的时候可以说是一不小心就上当掉入了陷阱。那么我们这个陷阱是完全由闭包引起的吗，那肯定不是，这只是`Js`的语言特性而已，那么这个陷阱是完全由`React`引起的吗，当然也不是，所以接下来我们就要来看看为什么需要闭包和`React`结合会引发这个陷阱。
 
-闭包
-  词法作用域 
-  回调 fn => fn this
-  定义时确定作用域
-闭包陷阱
-  react渲染视图机制
-  函数多次运行示例
-  组件多次执行示例
-  setTimeout问题
-  useEffect问题
-useRef
-  存储变量
-  useMemoizedFn
+首先我们要考虑下`React`渲染视图的机制，我们可以想一下，`React`是没有模版的，类似于`Vue`的`template`这部分，那么也就是说`React`是很难去拿到我们希望渲染的视图，就更不用谈去做分析了。那么在`Hooks`中应该如何拿到视图再去更新`DOM`结构呢，很明显我们实际上只需要将这个`Hooks`执行一遍即可，无论你定义了多少分支多少条件，我只要执行一遍最后取得返回值不就可以拿到视图了嘛。同时也是因为`React`渲染视图非常的灵活，从而不得不这样搞，`Vue`不那么灵活但是因为模版的存在可以做更多的优化，这实际上还是个取舍问题。不过这不是我们讨论的重点，既然我们了解到了`React`的渲染机制，而且在上边我们举了一个函数多次运行的示例，那么在这里我们举一个组件多次执行的示例，
+
+```js
+// https://codesandbox.io/s/react-closure-trap-jl9jos?file=/src/multi-count.tsx
+import React, { useState } from "react";
+
+const collect: (() => number)[] = [];
+
+export const MultiCount: React.FC = () => {
+  const [count, setCount] = useState(0);
+
+  const click = () => {
+    setCount(count + 1);
+  };
+
+  collect.push(() => count);
+
+  const logCollect = () => {
+    collect.forEach((fn) => console.log(fn()));
+  };
+
+  return (
+    <div>
+      <div>{count}</div>
+      <button onClick={click}>count++</button>
+      <button onClick={logCollect}>log {">>"} collect</button>
+    </div>
+  );
+};
+```
+
+我们首先点击三次`count++`这个按钮，此时我们的视图上的内容是`3`，但是此时我们点击`log >> count`这个按钮的时候，发现在控制台打印的内容是`0 1 2 3`，这其实就是跟前边的例子一样，因为闭包`+`函数的多次执行造成的问题，因为实际上`Hooks`实际上无非就是个函数，`React`通过内置的`use`为函数赋予了特殊的意义，使得其能够访问`Fiber`从而做到数据与节点相互绑定，那么既然是一个函数，并且在`setState`的时候还会重新执行，那么在重新执行的时候，点击按钮之前的`add`函数地址与点击按钮之后的`add`函数地址是不同的，因为这个函数实际上是被重新定义了一遍，只不过名字相同而已，从而其生成的静态作用域是不同的，那么这样便可能会造成所谓的闭包陷阱。
+
+其实关于闭包陷阱的问题，大部分都是由于依赖更新不及时导致的，例如`useEffect`、`useCallback`的依赖定义的不合适，导致函数内部保持了对上一次组件刷新时定义的作用域，从而导致了问题。例如下边这个例子，我们的`useEffect`绑定的事件依赖是`count`，但是我们在点击`count++`的时候，实际上`useEffect`要执行的函数并没有更新，所以其内部的函数依然保持了上一次的作用域，从而导致了问题。
+
+```js
+// https://codesandbox.io/s/react-closure-trap-jl9jos?file=/src/bind-event.tsx
+import { useEffect, useRef, useState } from "react";
+
+export const BindEventCount: React.FC = () => {
+  const ref1 = useRef<HTMLButtonElement>(null);
+  const [count, setCount] = useState(0);
+
+  const add = () => {
+    setCount(count + 1);
+  };
+
+  useEffect(() => {
+    const el = ref1.current;
+    const handler = () => console.log(count);
+    el?.addEventListener("click", handler);
+    return () => {
+      el?.removeEventListener("click", handler);
+    };
+  }, []);
+
+  return (
+    <div>
+      {count}
+      <div>
+        <button onClick={add}>count++</button>
+        <button ref={ref1}>log count 1</button>
+      </div>
+    </div>
+  );
+};
+```
+
+当我们多次点击`count++`按钮之后，再去点击`log count 1`按钮，发现控制台输出的内容还是`0`，这就是因为我们的`useEffect`保持了旧的函数作用域，而那个函数作用的`count`为`0`，那么打印的值当然就是`0`，同样的`useCallback`也会出现类似的问题，解决这个问题的一个简单的办法就是在依赖数组中加入`count`变量，当`count`发生变化的时候，就会重新执行`useEffect`，从而更新函数作用域。那么问题来了，这样就能解决所有问题吗，显然是不能的，副作用依赖可能会造成非常长的函数依赖，可能会导致整个项目变得越来越难以维护，关于事件绑定的探讨可以研究下前边 `Hooks`与事件绑定 这篇文章。
+
+那么有没有什么好办法解决这个问题，那么我们就需要老朋友`useRef`了，`useRef`是解决闭包问题的万金油，其能存储一个不变的引用值。设想一下我们只是因为读取了旧的作用域中的内容而导致了问题，如果我们能够得到一个对象使得其无论更新了几次作用域，我们都能够保持对同一个对象的引用，那么更新之后直接取得这个值不就可以解决这个问题了嘛。在`React`中我们就可以借助`useRef`来做到这点，通过保持对象的引用来解决上述的问题。
+
+```js
+// https://codesandbox.io/s/react-closure-trap-jl9jos?file=/src/use-ref.tsx
+import { useEffect, useRef, useState } from "react";
+
+export const RefCount: React.FC = () => {
+  const ref1 = useRef<HTMLButtonElement>(null);
+  const [count, setCount] = useState(0);
+  const refCount = useRef<number>(count);
+
+  const add = () => {
+    setCount(count + 1);
+  };
+
+  refCount.current = count;
+  useEffect(() => {
+    const el = ref1.current;
+    const handler = () => console.log(refCount.current);
+    el?.addEventListener("click", handler);
+    return () => {
+      el?.removeEventListener("click", handler);
+    };
+  }, []);
+
+  return (
+    <div>
+      {count}
+      <div>
+        <button onClick={add}>count++</button>
+        <button ref={ref1}>log count 1</button>
+      </div>
+    </div>
+  );
+};
+```
+
+同样的，当我们多次点击`count++`按钮之后，再去点击`log count 1`按钮，发现控制台输出的内容就是最新的`count`值了而不是跟上边的例子一样一直保持`0`，这就是通过在`Hooks`中保持了同一个对象的引用而实现的。通过`useRef`我们就可以封装自定义`Hooks`来完成相关的实现，例如有必要的话可以实现一个`useRefState`，将`state`和`ref`一并返回，按需取用。再比如下边这个`ahooks`实现的`useMemoizedFn`，第一个`ref`保证永远是同一个引用，也就是说返回的函数永远指向同一个函数地址，第二个`ref`用来保存当前传入的函数，这样发生`re-render`的时候每次创建新的函数我们都将其更新，也就是说我们即将调用的永远都是最新的那个函数。由此通过两个`ref`我们就可以保证两点，第一点是无论发生多少次`re-render`，我们返回的都是同一个函数地址，第二点是无论发生了多少次`re-render`，我们即将调用的函数都是最新的。
+
+```js
+type noop = (this: any, ...args: any[]) => any;
+
+type PickFunction<T extends noop> = (
+  this: ThisParameterType<T>,
+  ...args: Parameters<T>
+) => ReturnType<T>;
+
+function useMemoizedFn<T extends noop>(fn: T) {
+  const fnRef = useRef<T>(fn);
+
+  // why not write `fnRef.current = fn`?
+  // https://github.com/alibaba/hooks/issues/728
+  fnRef.current = useMemo(() => fn, [fn]);
+
+  const memoizedFn = useRef<PickFunction<T>>();
+  if (!memoizedFn.current) {
+    memoizedFn.current = function (this, ...args) {
+      return fnRef.current.apply(this, args);
+    };
+  }
+
+  return memoizedFn.current as T;
+}
+```
 
 ## 每日一题
 
