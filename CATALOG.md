@@ -1,5 +1,10 @@
 # Catalog
 
+**2023-05-21**
+> 第400题：[React闭包陷阱](React/React闭包陷阱.md)
+
+<br>
+
 **2023-04-16**
 > 第399题：[Hooks与事件绑定](React/Hooks与事件绑定.md)
 
