@@ -73,9 +73,131 @@ export const {
 
 在完成了上述的集成之后，我们就可以成功地将项目完整的启动了，但是在实际使用的过程中发现还是有一些`BUG`，比如我们打开`Graph Editor`最新的在线链接，可以发现`Sketch`样式是无效的，所以我们还需要对整个包做一些`BUG`的修复，在这里主要列举了三个`BUG`的修改，仅作参考。
 
-修`BUG`: 外部加载模块、`Sketch`无效、`Scroll`与菜单的挂载子容器问题
+外部加载模块问题，众所周知(或者没那么周知)`mxGraph`的很多模块都是挂载到`window`上的，这里的模块有多种类型，比如图形模块`mxGraphModel`、`mxGeometry`、`mxCell`等等，工具模块`mxUtils`、`mxEvent`、`mxCodec`等等，但是在这里我们是作为`npm`包引进的，我们是不希望污染全局变量的，而且我们通过`xml`来加载图形的时候是需要找到这些图形模块，否则是无法呈现出图形的，经过分析源码我们可以知道动态加载在`mxCodec`的`decode`方法上，于是我们需要在这里处理好模块这个加载函数，当然可能通过`external`的方式加载`mxGraph`模块包的方式直接挂在`window`上也是个可行的办法，但是在这里我们是重写了相关模块来实现的。
 
-包体积，懒加载模块
+```js
+// https://github.com/maxGraph/maxGraph/issues/102
+// https://github.com/jgraph/mxgraph/blob/master/javascript/src/js/io/mxCodec.js#L423
+mxCodec.prototype.decode = function (node, into) {
+  this.updateElements();
+  let obj: unknown = null;
+  if (node && node.nodeType == mxConstants.NODETYPE_ELEMENT) {
+    let ctor: unknown = null;
+    try {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore // 因为需要处理的`XML Node`可能不在`Window`上
+      ctor = mx[node.nodeName] || window[node.nodeName];
+    } catch (error) {
+      console.log(`NODE ${node.nodeName} IS NOT FOUND`, error);
+    }
+    const dec = mx.mxCodecRegistry.getCodec(ctor);
+    if (dec) {
+      obj = dec.decode(this, node, into);
+    } else {
+      obj = node.cloneNode(true);
+      obj && (obj as Element).removeAttribute("as");
+    }
+  }
+  return obj;
+};
+```
+
+`Sketch`无效问题，如果我们打开`Graph Editor`最新的在线链接，可以发现`Sketch`样式是无效的，因为现在`mxGraph`是不再继续维护了，所以反馈`BUG`是无效的，实际上这个问题处理也比较简单，我们可以通过`git`回溯到功能正常的版本就可以了。
+
+```
+aa11697fbd5ba9f4bb
+https://github.com/jgraph/mxgraph-js 
+```
+
+`Scroll`与菜单的挂载子容器问题，这个问题比较尴尬，因为`mxGraph`一直是以一整个应用来设计的，但是当我们需要将其嵌入到其他应用中的时候，由于我们的滚动容器可能就是`body`，此时当我们已经将页面向下滚动了一部分，之后再打开流程图编辑器的话，就会发现我们没有办法正常拖拽画布或者选中图形了，并且菜单的位置计算也出现了错误，所以在这里需要保证相关的位置计算正确。
+
+```js
+mxUtils.getScrollOrigin = function (node, includeAncestors, includeDocument) {
+  includeAncestors = includeAncestors != null ? includeAncestors : false;
+  includeDocument = includeDocument != null ? includeDocument : false;
+  const doc = node != null ? node.ownerDocument : document;
+  const b = doc.body;
+  const d = doc.documentElement;
+  const result = new mxPoint();
+  let fixed = false;
+  while (node != null && node != b && node != d) {
+    if (!isNaN(node.scrollLeft) && !isNaN(node.scrollTop)) {
+      result.x += node.scrollLeft;
+      result.y += node.scrollTop;
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const style = mxUtils.getCurrentStyle(node);
+    if (style != null) {
+      fixed = fixed || style.position == "fixed";
+    }
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    node = includeAncestors ? node.parentNode : null;
+  }
+  if (!fixed && includeDocument) {
+    const origin = mxUtils.getDocumentScrollOrigin(doc);
+    result.x += origin.x;
+    result.y += origin.y;
+  }
+  return result;
+};
+
+// 处理菜单的挂载容器
+mxPopupMenu.prototype.showMenu = function () {
+  container.appendChild(this.div);
+  mxUtils.fit(this.div);
+};
+// 处理菜单的挂载子容器
+mxPopupMenu.prototype.showSubmenu = function (parent, row) {
+  if (row.div != null) {
+    row.div.style.left = parent.div.offsetLeft + row.offsetLeft + row.offsetWidth - 1 + "px";
+    row.div.style.top = parent.div.offsetTop + row.offsetTop + "px";
+    container.appendChild(row.div);
+    const left = parseInt(row.div.offsetLeft);
+    const width = parseInt(row.div.offsetWidth);
+    const offset = mxUtils.getDocumentScrollOrigin(document);
+    const b = document.body;
+    const d = document.documentElement;
+    const right = offset.x + (b.clientWidth || d.clientWidth);
+    if (left + width > right) {
+      row.div.style.left =
+        Math.max(0, parent.div.offsetLeft - width + (mxClient.IS_IE ? 6 : -6)) + "px";
+    }
+    mxUtils.fit(row.div);
+  }
+};
+```
+
+最后，实际上由于没有`TreeShaking`，并且我们可能需要动态地加载图形，所以我们整个包体积还是比较大的，所以为了不影响应用的主体能力，我们还是建议使用懒加载的方式去加载编辑器，具体来说就是可以通过`import type`来引入类型，然后通过`import()`来加载模块。
+
+```js
+import type * as DiagramEditor from "embed-drawio/dist/packages/core/diagram-editor";
+import type * as DiagramViewer from "embed-drawio/dist/packages/core/diagram-viewer";
+
+let editor: typeof DiagramEditor | null = null;
+export const diagramEditorLoader = (): Promise<typeof DiagramEditor> => {
+  if (editor) return Promise.resolve(editor);
+  return Promise.all([
+    import(
+      /* webpackChunkName: "embed-drawio-editor" */ "embed-drawio/dist/packages/core/diagram-editor"
+    ),
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    import(/* webpackChunkName: "embed-drawio-css" */ "embed-drawio/dist/index.css"),
+  ]).then(res => (editor = res[0]));
+};
+
+let viewer: typeof DiagramViewer | null = null;
+export const diagramViewerLoader = (): Promise<typeof DiagramViewer> => {
+  if (viewer) return Promise.resolve(viewer);
+  return Promise.all([
+    import(
+      /* webpackChunkName: "embed-drawio-viewer" */ "embed-drawio/dist/packages/core/diagram-viewer"
+    ),
+  ]).then(res => (viewer = res[0]));
+};
+```
 
 ## 嵌入drawio
 
