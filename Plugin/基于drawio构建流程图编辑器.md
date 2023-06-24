@@ -8,7 +8,7 @@
 
 集成`drawio`到我们自己的项目有很多优点，包括但不限于 开箱即用的能力、应用于生产环境的非常成熟的项目、开源项目、支持二次开发、强大的社区等等，但是同样的`drawio`也存在一些不足，从上边简单的概括实际上可以看出来这个项目的历史实际上是非常久远了，本身也没有支持`ESM`，有大量的原型链修改，如果看过相关源码可以发现实际上是非常复杂的，代码的可读性和可维护性都不是很好，同时也没有支持`TypeScript`，这些都是我们需要解决的问题。实际上，现代浏览器中更加流行的方案应该是完全基于`Canvas`绘制的画板，当然这种方式的成本会相当高，如果我们想以低成本的方式集成一个流程图编辑器到我们自己的项目，那么`drawio`是最好的选择之一。
 
-那么问题来了，我们应该如何将`drawio`集成到自己的项目当中，我们在这里提供了两种方案，一种是独立编辑器，这种方式是将`Npm`包打包到自己的项目当中，另一种是嵌入`drawio`，这种方式是通过`iframe`与部署好的`drawio`项目进行通信，这两种方式都可以用来完成流程图的集成，文中描述的相关内容都在`https://github.com/WindrunnerMax/FlowChartEditor`中。
+那么问题来了，我们应该如何将`drawio`集成到自己的项目当中，我们在这里提供了两种方案，一种是独立编辑器，这种方式是将`Npm`包打包到自己的项目当中，另一种是嵌入`drawio`，这种方式是通过`iframe`与部署好的`drawio`项目进行通信，这两种方式都可以用来完成流程图的集成，文中描述的相关内容都在  [Github](https://github.com/WindrunnerMax/FlowChartEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/FlowChartEditor/) 中。
 
 ## 独立编辑器
 首先我们来研究下作为独立编辑器集成到我们自己项目当中的方式，我们先来看一下`mxGraph`项目，文档地址为`https://jgraph.github.io/mxgraph/`，可以看到`mxGraph`有`.NET`、`Java`、`JavaScript`三种语言的支持，在这里我们主要关注的是`JavaScript`的支持，在文档中实际上我们是可以找到相当多的`Example`，在这里我们需要关注的是`Graph Editor`这个示例。当我们打开这个示例`https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html`之后，可以发现这实际上是一个非常完整的编辑器项目，而且我们可以看到这个链接的地址是以`.html`结尾并且是部署在`Github`的`Git Pages`上的，这就意味着这个`.html`后缀不是由后端输出的而是一个完整的纯前端项目，那么在理论上我们就可以将其作为纯前端的包集成到我们自己的项目中。
@@ -200,9 +200,139 @@ export const diagramViewerLoader = (): Promise<typeof DiagramViewer> => {
 ```
 
 ## 嵌入drawio
+在上边我们完成了基于`mxGraph Example`的流程图编辑器`NPM`包，但是毕竟`mxGraph`已经不再维护，而`JGraph`在`mxGraph Example`的基础上又扩展开发了`drawio`，这是个长期维护的项目，即使`drawio`不接受贡献，但是依旧不妨碍他的活跃，可以在这里体验`drawio`的部署版本`https://app.diagrams.net/`。
 
-`https://www.drawio.com/blog/embedding-walkthrough`
-`https://desk.draw.io/support/solutions/articles/16000042544`
+在这里我们更要关注的是如何将`drawio`嵌入到我们的应用当中，`drawio`提供了`embed`的方式来帮助我们集成到自己的应用中，通过`iframe`的方式利用`postMessage`进行通信，这样也不会受到跨域的限制，由此来实现编辑、导入导出的一系列功能。
+
+```
+https://www.drawio.com/blog/embedding-walkthrough
+https://desk.draw.io/support/solutions/articles/16000042544
+```
+
+我们在这里通过简单封装通信的方式来实现`drawio`的嵌入，具体来说就是通过`iframe`的方式来加载`drawio`，当然因为网络问题，真正投入到生产环境的话还是需要私有化部署一套才可以，私有化部署了之后也可以进行二开，当然如果在网络可以支持的情况下直接使用`drawio`的部署版本也是有可行性的，最终的数据存储都会存储到我们自己的应用当中。
+
+```js
+import { EditorEvents } from "./event";
+import { Config, DEFAULT_URL, ExportMsg, MESSAGE_EVENT, SaveMsg } from "./interface";
+
+export class EditorBus extends EditorEvents {
+  private lock: boolean;
+  protected url: string;
+  private config: Config;
+  protected iframe: HTMLIFrameElement | null;
+
+  constructor(config: Config = { format: "xml" }) {
+    super();
+    this.lock = false;
+    this.config = config;
+    this.url = config.url || DEFAULT_URL;
+    this.iframe = document.createElement("iframe");
+  }
+
+  public startEdit = () => {
+    if (this.lock || !this.iframe) return void 0;
+    this.lock = true;
+    const iframe = this.iframe;
+    const url =
+      `${this.url}?` +
+      [
+        "embed=1",
+        "spin=1",
+        "proto=json",
+        "configure=1",
+        "noSaveBtn=1",
+        "stealth=1",
+        "libraries=0",
+      ].join("&");
+    iframe.setAttribute("src", url);
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute(
+      "style",
+      "position:fixed;top:0;left:0;width:100%;height:100%;background-color:#fff;z-index:999999;"
+    );
+    iframe.className = "drawio-iframe-container";
+    document.body.style.overflow = "hidden";
+    document.body.appendChild(iframe);
+    window.addEventListener(MESSAGE_EVENT, this.handleMessageEvent);
+  };
+
+  public exitEdit = () => {
+    this.lock = false;
+    this.iframe && document.body.removeChild(this.iframe);
+    this.iframe = null;
+    document.body.style.overflow = "";
+    window.removeEventListener(MESSAGE_EVENT, this.handleMessageEvent);
+  };
+
+  onConfig(): void {
+    this.config.onConfig
+      ? this.config.onConfig()
+      : this.postMessage({
+          action: "configure",
+          config: {
+            compressXml: this.config.compress ?? false,
+            css: ".geTabContainer{display:none !important;}",
+          },
+        });
+  }
+  onInit(): void {
+    this.config.onInit
+      ? this.config.onInit()
+      : this.postMessage({
+          action: "load",
+          autosave: 1,
+          saveAndExit: "1",
+          modified: "unsavedChanges",
+          xml: this.config.data,
+          title: this.config.title || "流程图",
+        });
+  }
+  onLoad(): void {
+    this.config.onLoad && this.config.onLoad();
+  }
+  onAutoSave(msg: SaveMsg): void {
+    this.config.onAutoSave && this.config.onAutoSave(msg.xml);
+  }
+  onSave(msg: SaveMsg): void {
+    this.config.onSave && this.config.onSave(msg.xml);
+    if (this.config.onExport) {
+      this.postMessage({
+        action: "export",
+        format: this.config.format,
+        xml: msg.xml,
+      });
+    } else {
+      if (msg.exit) this.exitEdit();
+    }
+  }
+  onExit(msg: SaveMsg): void {
+    this.config.onExit && this.config.onExit(msg.xml);
+    this.exitEdit();
+  }
+  onExport(msg: ExportMsg): void {
+    if (!this.config.onExport) return void 0;
+    this.config.onExport(msg.data, this.config.format);
+    this.exitEdit();
+  }
+}
+```
+
+而在我们使用的时候，直接实例化对象并且进入编辑模式就可以了，另外`drawio`支持多种数据的导出，但是在这里还是推荐`xmlsvg`，简单来说就是这种数据结构是在`svg`标签的基础上携带了`xml`数据，这样的话作为部分冗余字段是可以直接展示为`svg`也可以直接将其导入到`drawio`再次编辑的，如果仅导出为`svg`则是不能再导入编辑的，如果只导出了`xml`虽然可以再次编辑，但是想作为`svg`展示的话就需要`viewer.min.js`来渲染，这部分还是看需求来决定导出类型比较合适。
+
+```js
+const bus = new diagram.EditorBus({
+  data: svgExample,
+  format: "xmlsvg",
+  onExport: (svg: string) => {
+    const svgStr = base64ToSvgString(svg);
+    if (svgStr) {
+      setSVGExample(svgStr);
+    }
+  },
+});
+bus.startEdit();
+```
+
 
 ## 每日一题
 
