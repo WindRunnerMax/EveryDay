@@ -21,7 +21,7 @@
     "name": "Extension",                // 插件名称
     "version": "1.0.0",                 // 插件版本号
     "description": "Chrome Extension",  // 插件描述信息
-    "icons": {                          // 插件在不同位置显示的图标 // 可以直接配置为`string`
+    "icons": {                          // 插件在不同位置显示的图标 
       "16": "icon16.png",               // `16x16`像素的图标
       "32": "icon32.png",               // `32x32`像素的图标
       "48": "icon48.png",               // `48x48`像素的图标
@@ -50,7 +50,9 @@
 ## Bundle
 既然在上边我们确定了`Chrome`扩展实际上还是`Web`技术，那么我们就完全可以利用`Web`的相关生态来完成插件的开发，当前实际上是有很多比较成熟的扩展框架的，其中也集合了相当一部分的能力，只不过我们在这里希望从零开始跑通一整套流程，那么我们就自行借助打包工具来完成产物的构建。在这里选用的是`Rspack`，`Rspack`是一个于`Rust`的高性能构建引擎，具备与`Webpack`生态系统的互操作性，可以被`Webpack`项目低成本集成，并提供更好的构建性能。选用`Rspack`的主要原因是其编译速度会快一些，特别是在复杂项目中`Webpack`特别是`CRA`创建的项目打包速度简直惨不忍睹，我这边有个项目改造前后的`dev`速度对比大概是`1min35s : 24s`，速度提升还是比较明显的，当然在我们这个简单的`Chrome`扩展场景下实际上是区别不大的，相关的所有代码都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/rspack--chrome-extension`下。
 
-
+基本配置(html js 写文件)
+watch script
+兼容webpack less sass
 
 
 manifest.json v3
@@ -72,6 +74,8 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://www.rspack.dev/
+https://zhuanlan.zhihu.com/p/410510492
+https://zhuanlan.zhihu.com/p/103072251
 https://developer.chrome.com/docs/extensions/mv3/intro/
 https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
 ```
