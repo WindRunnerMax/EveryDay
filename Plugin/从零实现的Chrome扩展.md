@@ -50,9 +50,90 @@
 ## Bundle
 既然在上边我们确定了`Chrome`扩展实际上还是`Web`技术，那么我们就完全可以利用`Web`的相关生态来完成插件的开发，当前实际上是有很多比较成熟的扩展框架的，其中也集合了相当一部分的能力，只不过我们在这里希望从零开始跑通一整套流程，那么我们就自行借助打包工具来完成产物的构建。在这里选用的是`Rspack`，`Rspack`是一个于`Rust`的高性能构建引擎，具备与`Webpack`生态系统的互操作性，可以被`Webpack`项目低成本集成，并提供更好的构建性能。选用`Rspack`的主要原因是其编译速度会快一些，特别是在复杂项目中`Webpack`特别是`CRA`创建的项目打包速度简直惨不忍睹，我这边有个项目改造前后的`dev`速度对比大概是`1min35s : 24s`，速度提升还是比较明显的，当然在我们这个简单的`Chrome`扩展场景下实际上是区别不大的，相关的所有代码都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/rspack--chrome-extension`下。
 
-基本配置(html js 写文件)
-watch script
-兼容webpack less sass
+那么现在我们先从`manifest.json`开始，目标是在右上角实现一个弹窗，当前很多扩展程序也都是基于右上角的小弹窗交互来控制相关能力的。首先我们需要在`manifest.json`配置`action`，`action`的配置就是控制单击浏览器工具栏按钮时的行为，因为实际上是`web`生态，所以我们应该为其配置一个`html`文件以及`icon`。
+
+```js
+"action": {
+  "default_popup": "popup.html",
+  "default_icon": "./static/favicon.png"
+}
+```
+
+已经有了配置文件，现在我们就需要将`HTML`生成出来，在这里就需要借助`rspack`来实现了，实际上跟`webpack`差不多，整体思路就是先配置一个`HTML`模版，然后从入口开始打包`Js`，最后将`Js`注入到`HTML`当中就可以了，在这里我们直接配置一个多入口的输出能力，通常一个扩展插件不会是只有一个`Js`和`HTML`文件的，所以我们需要配置一个多入口的能力。在这里我们还打包了两个文件，一个是`popup.html`作为入口，另一个是`worker.js`作为后台运行的`Service Worker`独立线程。
+
+```js
+entry: {
+    worker: "./src/worker/index.ts",
+    popup: "./src/popup/index.tsx",
+  },
+plugins: [
+  new HtmlPlugin({
+    filename: "popup.html",
+    template: "./public/popup.html",
+    inject: false,
+  }),
+],
+```
+
+实际上我们的`dev`模式生成的代码都是在内存当中的，而谷歌扩展是基于磁盘的文件的，所以我们需要将生成的相关文件写入到磁盘当中。在这里这个配置是比较简单的，直接在`devServer`中配置一下就好。
+
+```js
+devServer: {
+  devMiddleware: {
+    writeToDisk: true,
+  },
+},
+```
+
+但是实际上，如果我们是基于磁盘的文件来完成的扩展开发，那么`devServer`就显得没有那么必要了，我们直接可以通过`watch`来完成，也就是`build --watch`，这样就可以实现磁盘文件的实时更新了。我们使用`devServer`是更希望能够借助于`HMR`的能力，但是这个能力在`Chrome`扩展`v3`上的限制下目前表现的并不好，所以在这里这个能力先暂时放下，毕竟实际上`v3`当前还是在收集社区意见来更新的。不过我们可以有一些简单的方法，来缓解这个问题，我们在开发扩展的最大的一个问题是需要在更新的时候去手动点击刷新来加载插件，那么针对于这个问题，我们可以借助`chrome.runtime.reload()`来实现一个简单的插件重新加载能力，让我们在更新代码之后不必要去手动刷新。
+
+在这里主要提供一个思路，我们可以编写一个`rspack`插件，利用`ws.Server`启动一个`WebSocket`服务器，之后在`worker.js`也就是我们将要启动的`Service Worker`来链接`WebSocket`服务器，可以通过`new WebSocket`来链接并且在监听消息，当收到来自服务端的`reload`消息之后，我们就可以执行`chrome.runtime.reload()`来实现插件的重新加载了，那么在开启的`WebSocket`服务器中需要在每次编译完成之后例如`afterDone`这个`hook`向客户端发送`reload`消息，这样就可以实现一个简单的插件重新加载能力了。但是实际上这引入了另一个问题，在`v3`版本的`Service Worker`不会常驻，所以这个`WebSocket`链接也会随着`Service Worker`的销毁而销毁，是比较坑的一点，同样也是因为这一点大量的`Chrome`扩展无法从`v2`平滑过渡到`v3`，所以这个能力后续还有可能会被改善。
+
+最后，开发插件我们肯定是需要使用`CSS`以及组件库的，在这里我们引入了`@arco-design/web-react`，并且配置了`scss`和`less`的相关样式处理。首先是`define`，这个能力可以帮助我们借助`TreeShaking`来在打包的时候将`dev`模式的代码删除，当然不光是`dev`模式，我们可以借助这个能力以及配置来区分任意场景的代码打包；接下来`pluginImport`这个处理引用路径的配置，实际上就相当于`babel-plugin-import`，用来实现按需加载；最后是`CSS`以及预处理器相关的配置，用来处理`scss module`以及组件库的`less`文件。
+
+```js
+builtins: {
+  define: {
+    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
+  },
+  pluginImport: [
+    {
+      libraryName: "@arco-design/web-react",
+      style: true,
+    },
+  ],
+},
+module: {
+  rules: [
+    {
+      test: /\.module.scss$/,
+      use: [{ loader: "sass-loader" }],
+      type: "css/module",
+    },
+    {
+      test: /\.less$/,
+      use: [
+        {
+          loader: "less-loader",
+          options: {
+            lessOptions: {
+              javascriptEnabled: true,
+              importLoaders: true,
+              localIdentName: "[name]__[hash:base64:5]",
+            },
+          },
+        },
+      ],
+      type: "css",
+    },
+  ],
+},
+```
+
+## Service Worker
+
+
+## Correspond
 
 
 manifest.json v3
@@ -77,5 +158,6 @@ https://www.rspack.dev/
 https://zhuanlan.zhihu.com/p/410510492
 https://zhuanlan.zhihu.com/p/103072251
 https://developer.chrome.com/docs/extensions/mv3/intro/
+https://tomzhu.site/2022/06/25/webpack开发Chrome扩展时的热更新解决方案
 https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
 ```
