@@ -131,7 +131,26 @@ module: {
 ```
 
 ## Service Worker
+我们在`Chrome`浏览器中打开`chrome://extensions/`，可以看到我们浏览器中已经装载的插件，可以看到很多插件都会有一个类似于`background.html`的文件，这是`v2`版本的扩展独有的能力，是一个独立的线程，可以用来处理一些后台任务，比如网络请求、消息推送、定时任务等等。那么现在扩展已经发展到了`v3`版本，在`v3`版本中一个非常大的区别就是`Service Workers`不能保证常驻，需要主动唤醒，所以在`chrome://extensions/`中如果是`v3`版本的插件，我们会看到一个`Service Worker`的标识，那么在一段时间不动之后，这个`Service Worker`就会标记上`Idle`，在这个时候其就处于休眠状态了，而不再常驻于内存。
 
+对于这个`Service Worker`，`Chrome`会每`5`分钟清理所有扩展`Service Workers`，也就是说扩展的`Worker`最多存活`5`分钟，然后等待用户下次激活，但是激活方式没有明确的表述，那假如我们的拓展要做的工作没做完，要接上次的工作怎么办，`Google`答复是用`chrome.storage`类似存储来暂存工作任务，等待下次激活。为了对抗随机的清理事件，出现了很多肮脏的手段，甚至有的为了保持持续后台，做两个扩展然后相互唤醒。除了这方面还有一些类似于`webRequest -> declarativeNetRequest`等等的限制，会影响大部分的插件能力。
+
+当然如果我们想在用户主观运行时实现相关能力的常驻，就可以直接`chrome.tabs.create`在浏览器`Tab`中打开扩展程序的`HTML`页面，这样就可以作为前台运行，同样这个扩展程序的代码就会一直运行着。
+
+ `Chrome`官方博客发布了一个声明`More details on the transition to Manifest V3`，将`Manifest V2`的废除时间从`2023`年`1`月向后推迟了一年:
+
+```
+Starting in June in Chrome 115, Chrome may run experiments to turn off support for Manifest V2 extensions in all channels, including stable channel.
+
+In January 2024, following the expiration of the Manifest V2 enterprise policy, the Chrome Web Store will remove all remaining Manifest V2 items from the store.
+```
+
+再来看看两年前对废除`Manifest V2`的声明:
+
+```
+January 2023: The Chrome browser will no longer run Manifest V2 extensions. Developers may no longer push updates to existing Manifest V2 extensions.
+```
+从原本的斩钉截铁，变成现在的含糊和留有余地，看来强如`Google`想要执行一个影响全世界`65%`互联网用户的`Breaking Change`，也不是那么容易的。但`v3`实际上并不全是缺点，在用户隐私上面，`v3`绝对是一个提升，`v3`增加了很多在隐私方面的限制，非常重要的一点是不允许引用外部资源。`Chrome`扩展能做的东西实在是太多了，如果不了解或者不开源的话根本不敢安装，因为扩展权限太高可能会造成很严重的例如用户信息泄漏等问题，即使是比如像`Firefox`那样必须要上传源代码的方式来加强审核，也很难杜绝所有的隐患。
 
 ## Correspond
 
@@ -155,9 +174,12 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://www.rspack.dev/
+https://www.v2ex.com/t/861729
 https://zhuanlan.zhihu.com/p/410510492
 https://zhuanlan.zhihu.com/p/103072251
 https://developer.chrome.com/docs/extensions/mv3/intro/
+https://reorx.com/blog/understanding-chrome-manifest-v3/
 https://tomzhu.site/2022/06/25/webpack开发Chrome扩展时的热更新解决方案
 https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
+https://stackoverflow.com/questions/66618136/persistent-service-worker-in-chrome-extension
 ```
