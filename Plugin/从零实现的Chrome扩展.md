@@ -130,7 +130,7 @@ module: {
 },
 ```
 
-最后，我们需要处理一下资源文件，因为我们在代码中实际上是不会引用`manifest.json`以及我们配置的资源文件的，所以在这里我们需要通过一个`rspack`插件来完成相关的功能，因为`rspack`的相关接口是按照`webpack5`来做兼容的，所以在编写插件的时候实际跟编写`webpack`插件差不多。在这里主要是实现两个功能，一个是监听`manifest.json`以及资源目录`public/static`的变化，另一个是将`manifest.json`以及资源文件拷贝到打包目录中。
+最后，我们需要处理一下资源文件，因为我们在代码中实际上是不会引用`manifest.json`以及我们配置的资源文件的，所以在这里我们需要通过一个`rspack`插件来完成相关的功能，因为`rspack`的相关接口是按照`webpack5`来做兼容的，所以在编写插件的时候实际跟编写`webpack`插件差不多。在这里主要是实现两个功能，一个是监听`manifest.json`配置文件以及资源目录`public/static`的变化，另一个是将`manifest.json`文件以及资源文件拷贝到打包目录中。
 
 ```js
 const thread = require("child_process");
@@ -228,15 +228,230 @@ https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/manifest.
 | `devtools` | `chrome.runtime.sendMessage` | `chrome.runtime.sendMessage` | `/`  | `chrome.devtools.inspectedWindow.eval` | `/` |
 
 ## 实例
+接下来我们来实现一个实例，主要的功能是解除浏览器复制限制的通用方案，具体可以参考`https://github.com/WindrunnerMax/TKScript`文本选中复制-通用这部分，完整的操作实例都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/rspack--chrome-extension`中。此外注册`Chrome`扩展的开发者价格是`5$`，注册之后才能在谷歌商店发布扩展。那么首先，我们先在`popup`中绘制一个界面，用来展示当前的扩展状态，以及提供一些操作按钮。
 
-manifest.json v3
-rspack
-HMR WebSocket
-background.html/Service Worker/xxxxxx.html
-通信
-Copy DEMO
-谷歌开发者价格
+```js
+export const App: FC = () => {
+  const [copyState, setCopyState] = useState(false);
+  const [copyStateOnce, setCopyStateOnce] = useState(false);
+  const [menuState, setMenuState] = useState(false);
+  const [menuStateOnce, setMenuStateOnce] = useState(false);
+  const [keydownState, setKeydownState] = useState(false);
+  const [keydownStateOnce, setKeydownStateOnce] = useState(false);
 
+  // 与`content`通信 操作事件与`DOM`
+  const onSwitchChange = (
+    type:
+      | typeof POPUP_CONTENT_ACTION.MENU
+      | typeof POPUP_CONTENT_ACTION.KEYDOWN
+      | typeof POPUP_CONTENT_ACTION.COPY,
+    checked: boolean,
+    once = false
+  ) => {
+    PopupContentBridge.postMessage({ type: type, payload: { checked, once } });
+  };
+
+  // 与`content`通信 查询开启状态
+  useLayoutEffect(() => {
+    const queue = [
+      { key: QUERY_STATE_KEY.STORAGE_COPY, state: setCopyState },
+      { key: QUERY_STATE_KEY.STORAGE_MENU, state: setMenuState },
+      { key: QUERY_STATE_KEY.STORAGE_KEYDOWN, state: setKeydownState },
+      { key: QUERY_STATE_KEY.SESSION_COPY, state: setCopyStateOnce },
+      { key: QUERY_STATE_KEY.SESSION_MENU, state: setMenuStateOnce },
+      { key: QUERY_STATE_KEY.SESSION_KEYDOWN, state: setKeydownStateOnce },
+    ];
+    queue.forEach(item => {
+      PopupContentBridge.postMessage({
+        type: POPUP_CONTENT_ACTION.QUERY_STATE,
+        payload: item.key,
+      }).then(r => {
+        r && item.state(r.payload);
+      });
+    });
+  }, []);
+
+  return (
+    <div className={cs(style.container)}>
+      { /* xxx */ }
+    </div>
+  );
+};
+```
+
+可以看到我们实际上主要是通过`bridge`与`content script`进行了通信，在前边我们也描述了如何进行通信，在这里我们可以通过设计一个通信类来完成相关操作，同时为了保持完整的`TS`类型，在这里定义了很多通信时的标志。实际上在这里我们选择了一个相对麻烦的操作，所有的操作都必须要要通信到`content script`中完成，因为事件与`DOM`操作都必须要在`content script`或者`inject script`中才可以完成，但是实际上`chrome.scripting.executeScript`也可以完成类似的操作，但是在这里为了演示通信能力所以采用了比较麻烦的操作，另外如果要保持下次打开该页面的状态依旧是保持`Hook`状态的话，也必须要用`content script`。
+
+```js
+export const POPUP_CONTENT_ACTION = {
+  COPY: "___COPY",
+  MENU: "___MENU",
+  KEYDOWN: "___KEYDOWN",
+  QUERY_STATE: "___QUERY_STATE",
+} as const;
+
+export const QUERY_STATE_KEY = {
+  STORAGE_COPY: "___STORAGE_COPY",
+  STORAGE_MENU: "___STORAGE_MENU",
+  STORAGE_KEYDOWN: "___STORAGE_KEYDOWN",
+  SESSION_COPY: "___SESSION_COPY",
+  SESSION_MENU: "___SESSION_MENU",
+  SESSION_KEYDOWN: "___SESSION_KEYDOWN",
+} as const;
+
+export const POPUP_CONTENT_RTN = {
+  STATE: "___STATE",
+} as const;
+
+export type PopupContentAction =
+  | {
+      type:
+        | typeof POPUP_CONTENT_ACTION.MENU
+        | typeof POPUP_CONTENT_ACTION.KEYDOWN
+        | typeof POPUP_CONTENT_ACTION.COPY;
+      payload: { checked: boolean; once: boolean };
+    }
+  | {
+      type: typeof POPUP_CONTENT_ACTION.QUERY_STATE;
+      payload: (typeof QUERY_STATE_KEY)[keyof typeof QUERY_STATE_KEY];
+    };
+
+type PopupContentRTN = {
+  type: (typeof POPUP_CONTENT_RTN)[keyof typeof POPUP_CONTENT_RTN];
+  payload: boolean;
+};
+
+export class PopupContentBridge {
+  static async postMessage(data: PopupContentAction) {
+    return new Promise<PopupContentRTN | null>(resolve => {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        const tabId = tabs[0] && tabs[0].id;
+        if (tabId) {
+          chrome.tabs.sendMessage(tabId, data).then(resolve);
+          // https://developer.chrome.com/docs/extensions/reference/scripting/#runtime-functions
+          // chrome.scripting.executeScript;
+        } else {
+          resolve(null);
+        }
+      });
+    });
+  }
+
+  static onMessage(cb: (data: PopupContentAction) => void | PopupContentRTN) {
+    const handler = (
+      message: PopupContentAction,
+      sender: chrome.runtime.MessageSender,
+      sendResponse: (response?: PopupContentRTN | null) => void
+    ) => {
+      const rtn = cb(message);
+      sendResponse(rtn || null);
+    };
+    chrome.runtime.onMessage.addListener(handler);
+    return () => {
+      chrome.runtime.onMessage.removeListener(handler);
+    };
+  }
+}
+```
+
+最后，我们在`content script`中之行了实际上的操作，复制行为的`Hook`在这里抹除了细节，如果感兴趣可以直接看上边的仓库地址，在`content script`主要实现的操作就是接收`popup`发送过来的消息执行操作，并且根据存储在`storage`中的数据来做一些初始化的行为。
+
+```js
+let DOMLoaded = false;
+const collector: (() => void)[] = [];
+
+// Equivalent to content_scripts document_end
+window.addEventListener("DOMContentLoaded", () => {
+  DOMLoaded = true;
+  collector.forEach(fn => fn());
+});
+
+const withDOMReady = (fn: () => void) => {
+  if (DOMLoaded) {
+    fn();
+  } else {
+    collector.push(fn);
+  }
+};
+
+const onMessage = (data: PopupContentAction) => {
+  switch (data.type) {
+    case ACTION.COPY: {
+      if (data.payload.checked) withDOMReady(enableCopyHook);
+      else withDOMReady(disableCopyHook);
+      const key = STORAGE_KEY_PREFIX + ACTION.COPY;
+      if (!data.payload.once) {
+        localStorage.setItem(key, data.payload.checked ? "true" : "");
+      } else {
+        console.log("111", 111);
+        sessionStorage.setItem(key, data.payload.checked ? "true" : "");
+      }
+      break;
+    }
+    case ACTION.MENU: {
+      if (data.payload.checked) enableContextMenuHook();
+      else disableContextMenuHook();
+      const key = STORAGE_KEY_PREFIX + ACTION.MENU;
+      if (!data.payload.once) {
+        localStorage.setItem(key, data.payload.checked ? "true" : "");
+      } else {
+        sessionStorage.setItem(key, data.payload.checked ? "true" : "");
+      }
+      break;
+    }
+    case ACTION.KEYDOWN: {
+      if (data.payload.checked) enableKeydownHook();
+      else disableKeydownHook();
+      const key = STORAGE_KEY_PREFIX + ACTION.KEYDOWN;
+      if (!data.payload.once) {
+        localStorage.setItem(key, data.payload.checked ? "true" : "");
+      } else {
+        sessionStorage.setItem(key, data.payload.checked ? "true" : "");
+      }
+      break;
+    }
+    case ACTION.QUERY_STATE: {
+      const STATE_MAP = {
+        [QUERY_STATE_KEY.STORAGE_COPY]: { key: ACTION.COPY, storage: localStorage },
+        [QUERY_STATE_KEY.STORAGE_MENU]: { key: ACTION.MENU, storage: localStorage },
+        [QUERY_STATE_KEY.STORAGE_KEYDOWN]: { key: ACTION.KEYDOWN, storage: localStorage },
+        [QUERY_STATE_KEY.SESSION_COPY]: { key: ACTION.COPY, storage: sessionStorage },
+        [QUERY_STATE_KEY.SESSION_MENU]: { key: ACTION.MENU, storage: sessionStorage },
+        [QUERY_STATE_KEY.SESSION_KEYDOWN]: { key: ACTION.KEYDOWN, storage: sessionStorage },
+      };
+      for (const [key, value] of Object.entries(STATE_MAP)) {
+        if (key === data.payload)
+          return {
+            type: POPUP_CONTENT_RTN.STATE,
+            payload: !!value.storage[STORAGE_KEY_PREFIX + value.key],
+          };
+      }
+    }
+  }
+};
+
+PopupContentBridge.onMessage(onMessage);
+
+if (
+  localStorage.getItem(STORAGE_KEY_PREFIX + ACTION.COPY) ||
+  sessionStorage.getItem(STORAGE_KEY_PREFIX + ACTION.COPY)
+) {
+  withDOMReady(enableCopyHook);
+}
+if (
+  localStorage.getItem(STORAGE_KEY_PREFIX + ACTION.MENU) ||
+  sessionStorage.getItem(STORAGE_KEY_PREFIX + ACTION.MENU)
+) {
+  enableContextMenuHook();
+}
+if (
+  localStorage.getItem(STORAGE_KEY_PREFIX + ACTION.KEYDOWN) ||
+  sessionStorage.getItem(STORAGE_KEY_PREFIX + ACTION.KEYDOWN)
+) {
+  enableKeydownHook();
+}
+```
+
+因为在这里这个插件并没有发布到`Chrome`的应用市场，所以如果想检验效果只能本地处理，在`run dev`后可以发现打包出来的产物已经在`dist`文件夹下了，接下来我们在`chrome://extensions/`打开开发者模式，然后点击`加载已解压的扩展程序`，选择`dist`文件夹，这样就可以看到我们的插件了。之后我在百度搜索了"实习报告"关键词，出现了很多文档，随便打开一个在复制的时候就会出现付费的行为，此时我们点击插件，启动`Hook`复制行为，再复制文本内容就会发现不会弹出付费框了，内容也是成功复制了。请注意在这里我们实现的是一个通用的复制能力，对于百度文库、腾讯文档这类的`canvas`绘制的文档站是需要单独处理的，关于这些可以参考`https://github.com/WindrunnerMax/TKScript`。
 
 ## 每日一题
 
