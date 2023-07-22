@@ -382,7 +382,6 @@ const onMessage = (data: PopupContentAction) => {
       if (!data.payload.once) {
         localStorage.setItem(key, data.payload.checked ? "true" : "");
       } else {
-        console.log("111", 111);
         sessionStorage.setItem(key, data.payload.checked ? "true" : "");
       }
       break;
