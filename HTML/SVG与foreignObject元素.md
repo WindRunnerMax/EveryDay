@@ -1,8 +1,8 @@
-# SVG与foreignObject标签
+# SVG与foreignObject元素
 
 
-SVG text标签的不足
-foreignObject标签 绘制文本
+SVG text元素的不足
+foreignObject元素 绘制文本
 DrawIO SVG Sharp/Node-Canvas/Puppeteer
 DOM TO IMAGE
 
