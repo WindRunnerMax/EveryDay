@@ -35,7 +35,27 @@
 ```
 
 ## foreignObject元素
-那么如果想以比较低的成本实现接近于`HTML`的文本绘制体验，可以借助`foreignObject`元素。
+那么如果想以比较低的成本实现接近于`HTML`的文本绘制体验，可以借助`foreignObject`元素，`<foreignObject>`元素允许在`SVG`文档中嵌入`HTML`、`XML`或其他非`SVG`命名空间的内容，也就是说我们可以直接在`SVG`中嵌入`HTML`，借助`HTML`的能力来展示我们的元素，例如上边的这个例子，我们就可以将其改造为如下的形式:
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+  <g>
+    <rect width="200" height="100" fill="lightgray" />
+    <foreignObject x="10" width="180" height="80">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <p>This is a long text that will automatically wrap within the rectangle.</p>
+      </div>
+    </foreignObject>
+  </g>
+</svg>
+```
+
+当我们打开`DrawIO`绘制流程图时，其实也能发现其在绘制文本时使用的就是`<foreignObject>`元素，当然`DrawIO`为了更通用的场景做了很多兼容处理，特别是表现在行内样式上，类似于上述例子中的`SVG`在`DrawIO`表现出来是如下的示例，需要注意的是，直接从`DrawIO`导出的当前这个文件需要保存为`.html`文件而不是`.svg`文件，因为其没有声明命名空间，如果需要要保存为`.svg`文件并且能够正常展示的话，需要在`svg`元素上加入`xmlns="http://www.w3.org/2000/svg"`命名空间声明，但是仅仅加上这一个声明是不够的，如果此时打开`.svg`文件发现只展示了矩形而没有文字内容，此时我们还需要在`<foreignObject>`元素的第一个`<div>`上加入`xmlns="http://www.w3.org/1999/xhtml"`的命名空间声明，此时就可以将矩形与文字完整地表现出来。
+
+```xml
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="263px" height="103px" viewBox="-0.5 -0.5 263 103"><defs></defs><g><rect x="1" y="1" width="260" height="100" fill="#ffffff" stroke="#000000" pointer-events="all"></rect><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 258px; height: 1px; padding-top: 51px; margin-left: 2px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; "><div><span>This is a long text that will automatically wrap within the rectangle.</span></div></div></div></div></foreignObject><text x="131" y="55" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">This is a long text that will automatically...</text></switch></g></g><switch><g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"></g><a transform="translate(0,-5)" xlink:href="https://desk.draw.io/support/solutions/articles/16000042487" target="_blank"><text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text></a></switch></svg>
+```
+
 
 
 SVG text元素的不足
@@ -59,4 +79,5 @@ https://github.com/puppeteer/puppeteer
 https://developer.mozilla.org/zh-CN/docs/Web/SVG
 https://zzerd.com/blog/2021/04/10/linux/debian_install_puppeteer
 https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/foreignObject
+https://developer.mozilla.org/en-US/docs/Web/SVG/Namespaces_Crash_Course
 ```
