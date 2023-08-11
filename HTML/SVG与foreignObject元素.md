@@ -84,7 +84,71 @@
 ```
 
 ```xml
-<svg xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="263px" height="103px" viewBox="-0.5 -0.5 263 103"><defs></defs><g><rect x="1" y="1" width="260" height="100" fill="#ffffff" stroke="#000000" pointer-events="all"></rect><g transform="translate(-0.5 -0.5)"><switch><foreignObject style="overflow: visible; text-align: left;" pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"><div style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 258px; height: 1px; padding-top: 51px; margin-left: 2px;"><div style="box-sizing: border-box; font-size: 0; text-align: center; "><div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; "><div><span>This is a long text that will automatically wrap within the rectangle.</span></div></div></div></div></foreignObject><text x="131" y="55" fill="#000000" font-family="Helvetica" font-size="12px" text-anchor="middle">This is a long text that will automatically...</text></switch></g></g><switch><g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"></g><a transform="translate(0,-5)" xlink:href="https://desk.draw.io/support/solutions/articles/16000042487" target="_blank"><text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text></a></switch></svg>
+<svg
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  version="1.1"
+  width="263px"
+  height="103px"
+  viewBox="-0.5 -0.5 263 103"
+>
+  <defs></defs>
+  <g>
+    <rect
+      x="1"
+      y="1"
+      width="260"
+      height="100"
+      fill="#ffffff"
+      stroke="#000000"
+      pointer-events="all"
+    ></rect>
+    <g transform="translate(-0.5 -0.5)">
+      <switch>
+        <foreignObject
+          style="overflow: visible; text-align: left;"
+          pointer-events="none"
+          width="100%"
+          height="100%"
+          requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
+        >
+          <div style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 258px; height: 1px; padding-top: 51px; margin-left: 2px;">
+            <div style="box-sizing: border-box; font-size: 0; text-align: center; ">
+              <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: #000000; line-height: 1.2; pointer-events: all; white-space: normal; word-wrap: normal; ">
+                <div>
+                  <span>
+                    This is a long text that will automatically wrap within the rectangle.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </foreignObject>
+        <text
+          x="131"
+          y="55"
+          fill="#000000"
+          font-family="Helvetica"
+          font-size="12px"
+          text-anchor="middle"
+        >
+          This is a long text that will automatically...
+        </text>
+      </switch>
+    </g>
+  </g>
+  <switch>
+    <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"></g>
+    <a
+      transform="translate(0,-5)"
+      xlink:href="https://desk.draw.io/support/solutions/articles/16000042487"
+      target="_blank"
+    >
+      <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+        Viewer does not support full SVG 1.1
+      </text>
+    </a>
+  </switch>
+</svg>
 ```
 
 看起来一切都很完美，我们既能够借助`SVG`绘制矢量图形，又能够在比较复杂的情况下借助`HTML`的能力完成需求，但是事情总有两面性，当我们在某一方面享受到便利的时候，就可能在另一处带来意想不到的麻烦。设想一个场景，假设此时我们需要在后端将`SVG`绘制出来，然后将其转换为`PNG`格式的图片给予用户下载，在前端做一些批量的操作是不太现实的，再假设我们需要将这个`SVG`绘制出来拼接到`Word`或者`Excel`中，那么这些操作都要求我们需要在后端完整地将整个图片绘制出来，那么此时我们可能会想到`node-canvas`在后端创建和操作图形，但是当我们真的使用`node-canvas`绘制我们的`SVG`图形时例如上边的`DrawIO`的例子，会发现所有的图形形状是可以被绘制出来的，但是所有的文本都丢失了，那么既然`node-canvas`做不到，那么我们可能会想到`sharp`来完成图像处理的相关功能，例如先将`SVG`转换为`PNG`，但是很遗憾的是`sharp`也做不到这一点，最终效果与`node-canvas`是一致的。
@@ -138,8 +202,121 @@ return buffer;
 ```
 
 ## DOM TO IMAGE
+让我们想一想，`foreignObject`元素看起来是个非常神奇的设计，通过`foreignObject`元素我们可以把`HTML`绘制到`SVG`当中，那么我们是不是可以有一个非常神奇的点子，如果我们此时需要将浏览器当中的`DOM`绘制出来，实现于类似于截图的效果，那么我我们是不是就可以借助`foreignObject`元素来实现呢。这当然是可行的，而且是一件非常有意思的事情，我们可以将`DOM + CSS`绘制到`SVG`当中，紧接着将其转换为`DATA URL`，借助`canvas`将其绘制出来，最终我们就可以将`DOM`生成图像以及导出了。
 
+下面就是个这个能力的实现，当然在这里的实现还是比较简单的，主要处理的部分就是将`DOM`进行`clone`以及样式全部内联，由此来生成完整的`SVG`图像。实际上这其中还有很多需要注意的地方，例如生成伪元素、`@font-face`字体的声明、`BASE64`编码的内容、`img`元素到`CSS background`属性的转换等等，想要比较完整地实现整个功能还是需要考虑到很多`case`的，在这里就不涉及具体的实现了，可以参考`dom-to-image-more`。
 
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOM IMAGE</title>
+    <style>
+      #root {
+        width: 300px;
+        border: 1px solid #eee;
+      }
+
+      .list > .list-item {
+        display: flex;
+        background-color: #aaa;
+        color: #fff;
+        align-items: center;
+        justify-content: space-between;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- #root START -->
+    <!-- `DOM`内容-->
+    <div id="root">
+      <h1>Title</h1>
+      <hr />
+      <div>Content</div>
+      <div class="list">
+        <div class="list-item">
+          <span>label</span>
+          <span>value</span>
+        </div>
+        <div class="list-item">
+          <span>label</span>
+          <span>value</span>
+        </div>
+      </div>
+    </div>
+    <!-- #root END -->
+    <button onclick="onDOMToImage()">下载</button>
+  </body>
+  <script>
+    const cloneCSS = (target, origin) => {
+      const style = window.getComputedStyle(origin);
+      // 生成所有样式表
+      const cssText = Array.from(style).reduce((acc, key) => {
+        return `${acc}${key}:${style.getPropertyValue(key)};`;
+      }, "");
+      target.style.cssText = cssText;
+    };
+
+    const cloneDOM = (origin) => {
+      const target = origin.cloneNode(true);
+      const targetNodes = target.querySelectorAll("*");
+      const originNodes = origin.querySelectorAll("*");
+      // 复制根节点样式
+      cloneCSS(target, origin);
+      // 复制所有节点样式
+      Array.from(targetNodes).forEach((node, index) => {
+        cloneCSS(node, originNodes[index]);
+      });
+      // 去除元素的外边距
+      target.style.margin =
+        target.style.marginLeft =
+        target.style.marginTop =
+        target.style.marginBottom =
+        target.style.marginRight =
+          "";
+      return target;
+    };
+
+    const buildSVGUrl = (node, width, height) => {
+      const xml = new XMLSerializer().serializeToString(node);
+      const data = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                    <foreignObject width="100%" height="100%">
+                        ${xml}
+                    </foreignObject>
+                </svg>
+            `;
+      return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(data);
+    };
+
+    const onDOMToImage = () => {
+      const origin = document.getElementById("root");
+      const { width, height } = root.getBoundingClientRect();
+      const target = cloneDOM(origin);
+      const data = buildSVGUrl(target, width, height);
+      const image = new Image();
+      image.crossOrigin = "anonymous";
+      image.src = data;
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        // 值越大像素越高
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = width * ratio;
+        canvas.height = height * ratio;
+        const ctx = canvas.getContext("2d");
+        ctx.scale(ratio, ratio);
+        ctx.drawImage(image, 0, 0);
+        const a = document.createElement("a");
+        a.href = canvas.toDataURL("image/png");
+        a.download = "image.png";
+        a.click();
+      };
+    };
+  </script>
+</html>
+```
 
 ## 每日一题
 
@@ -153,6 +330,7 @@ https://github.com/WindrunnerMax/EveryDay
 https://github.com/jgraph/drawio
 https://github.com/pbakaus/domvas
 https://github.com/puppeteer/puppeteer
+https://www.npmjs.com/package/dom-to-image-more
 https://developer.mozilla.org/zh-CN/docs/Web/SVG
 https://zzerd.com/blog/2021/04/10/linux/debian_install_puppeteer
 https://developer.mozilla.org/zh-CN/docs/Web/SVG/Element/foreignObject
