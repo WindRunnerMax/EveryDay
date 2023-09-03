@@ -1,10 +1,13 @@
 # ReactPortals传送门
 
 
+描述
+MouseEnter事件
+Portal事件
+Trigger弹出层
 
 
-
-
+https://codesandbox.io/p/sandbox/trigger-component-1hv99o
 
 ## 每日一题
 
