@@ -131,7 +131,7 @@ export const App: FC = () => (
 
 ```
 --------------------------
-|     c|       b|       a|
+|    c |      b |      a |
 |      |        |        |
 |-------        |        |
 |               |        |
@@ -150,12 +150,290 @@ export const App: FC = () => (
 * `Portal`只影响`DOM`结构: 对于`React`来说`Portal`仅仅是视觉上渲染的位置变了，只会影响`HTML`的`DOM`结构，而不会影响`React`组件树。
 * 预定义的`HTML`挂载点: 使用`React Portal`时，我们需要提前定义一个`HTML DOM`元素作为`Portal`组件的挂载。
 
+在这里`https://codesandbox.io/p/sandbox/trigger-component-1hv99o?file=/src/components/portal-test.tsx:1,1`提供了一个`Portals`与`MouseEnter`事件的`DEMO`可以用来测试效果。那么在代码中实现的嵌套精简如下:
 
+```
+-------------------
+|               a |
+|           ------|------  --------
+|           |     |   b |  |    c | 
+|           |     |     |  |      |
+|           |     |     |  --------
+|           ------|------
+-------------------
+```
 
+```js
+const C = ReactDOM.createPortal(<div onMouseEnter={e => console.log("c", e)}></div>, document.body);
+const B = ReactDOM.createPortal(
+  <React.Fragment>
+    <div onMouseEnter={e => console.log("b", e)}>
+      {C}
+    </div>
+  </React.Fragment>,
+  document.body
+);
+const App = (
+  <React.Fragment>
+    <div onMouseEnter={e => console.log("a", e)}></div>
+    {B}
+  </React.Fragment>
+);
+
+// ==>
+
+const App = (
+  <React.Fragment>
+    <div onMouseEnter={e => console.log("a", e)}></div>
+    {ReactDOM.createPortal(
+      <React.Fragment>
+        <div onMouseEnter={e => console.log("b", e)}>
+          {ReactDOM.createPortal(
+            <div onMouseEnter={e => console.log("c", e)}></div>,
+            document.body
+          )}
+        </div>
+      </React.Fragment>,
+      document.body
+    )}
+  </React.Fragment>
+);
+```
+
+单纯从代码上来看，这就是一个很简单的嵌套结构，而因为传送门`Portals`的存在，在真实的`DOM`结构上，这段代码结构表现的效果是这样的，其中`id`只是用来标识`React`的`DOM`结构，实际并不存在:
+
+```html
+<body>
+  <div id="root">
+    <div id="a"></div>
+  </div>
+  <div id="b"></div>
+  <div id="c"></div>
+  <div>
+</body>
+```
+
+接下来我们依次来试试定义的`MouseEnter`事件触发情况，首先鼠标移动到`a`元素上，控制台打印`a`，符合预期，接下来鼠标移动到`b`元素上，控制台打印`b`，同样符合预期，那么接下来将鼠标移动到`c`，神奇的事情来了，我们会发现会先打印`b`再打印`c`，而不是仅仅打印了`c`，由此我们可以得到虽然看起来`DOM`结构不一样了，但是在`React`树中合成事件依然保持着嵌套结构，`C`组件作为`B`组件的子元素，在事件捕获时依然会从`B -> C`触发`MouseEnter`事件，基于此我们可以实现非常有意思的一件事情，多级嵌套的弹出层。
 
 ## Trigger弹出层
+实际上上边聊的内容都是都是为这部分内容做铺垫的，因为工作的关系我使用`ArcoDesign`是非常多的，又由于我实际是做富文本文档的，需要弹出层来做交互的地方就非常多，所以在平时的工作中会大量使用`ArcoDesign`的`Trigger`组件`https://arco.design/react/components/trigger`，之前我一直非常好奇这个组件的实现，这个组件可以无限层级地嵌套，而且当多级弹出层组件的最后一级鼠标移出之后，所有的弹出层都会被关闭，最主要的是我们只是将其嵌套做了一层业务实现，并没有做任何的通信传递，所以我也一直好奇这部分的实现，直到前一段时间我为了解决`BUG`深入研究了一下相关实现，发现其本质还是利用`React Portals`以及`React`树的合成事件来完成的，这其中还是有很多交互实现可以好好学习下的。
 
-https://codesandbox.io/p/sandbox/trigger-component-1hv99o
+
+同样的，在这里也完成了一个`DEMO`实现`https://codesandbox.io/p/sandbox/trigger-component-1hv99o?file=/src/components/trigger-simple.tsx:1,1`，而在调用时，则直接嵌套即可实现两层弹出层，当我们鼠标移动到`a`元素时，`b`元素与`c`元素会展示出来，当我们将鼠标移动到`c`元素时，`d`元素会被展示出来，当我们继续将鼠标快速移动到`d`元素时，所有的弹出层都不会消失，当我们直接将鼠标从`d`元素移动到空白区域时，所有的弹出层都会消失，如果我们将其移动到`b`元素，那么只有`d`元素会消失。
+
+```
+-------------------  -------------  --------
+|               a |  |         b |  |    d | 
+|                 |  |--------   |  |      |
+|                 |  |      c |  |  --------    
+|                 |  |--------   |      
+|                 |  -------------   
+|                 | 
+-------------------
+```
+
+```js
+<TriggerSimple
+  duration={200}
+  popup={() => (
+    <div id="b" style={{ height: 100, width: 100, backgroundColor: "green" }}>
+      <TriggerSimple
+        popup={() => <div id="d" style={{ height: 50, width: 50, backgroundColor: "blue" }}></div>}
+        duration={200}
+      >
+        <div id="c" style={{ paddingTop: 20 }}>Hover</div>
+      </TriggerSimple>
+    </div>
+  )}
+>
+  <div id="a" style={{ height: 150, width: 150, backgroundColor: "red" }}></div>
+</TriggerSimple>
+```
+
+让我们来拆解一下代码实现，首先是`Portal`组件的封装，在这里我们就认为我们将要挂载的组件是在`document.body`上的就可以了，因为我们要做的是弹出层，在最开始的时候也阐明了我们的弹出层`DOM`结构需要挂在最外层而不能直接嵌套地放在`DOM`结构中，当然如果能够保证不会出现相关问题，滚动容器不是`body`的情况且需要`position absolute`的情况下，可以通过`getContainer`传入`DOM`节点来制定传送的位置，当然在这里我们认为是`body`就可以了。在下面这段实现中我们就通过封装`Portal`组件来调度`DOM`节点的挂载和卸载，并且实际的组件也会被挂载到我们刚创建的节点上。
+
+
+```js
+// trigger-simple.tsx
+getContainer = () => {
+  const popupContainer = document.createElement("div");
+  popupContainer.style.width = "100%";
+  popupContainer.style.position = "absolute";
+  popupContainer.style.top = "0";
+  popupContainer.style.left = "0";
+  this.popupContainer = popupContainer;
+  this.appendToContainer(popupContainer);
+  return popupContainer;
+};
+
+// portal.tsx
+const Portal = (props: PortalProps) => {
+  const { getContainer, children } = props;
+  const containerRef = useRef<HTMLElement | null>(null);
+  const isFirstRender = useIsFirstRender();
+
+  if (isFirstRender || containerRef.current === null) {
+    containerRef.current = getContainer();
+  }
+
+  useEffect(() => {
+    return () => {
+      const container = containerRef.current;
+      if (container && container.parentNode) {
+        container.parentNode.removeChild(container);
+        containerRef.current = null;
+      }
+    };
+  }, []);
+  return containerRef.current
+    ? ReactDOM.createPortal(children, containerRef.current)
+    : null;
+};
+```
+
+接下来我们来看构造在`React`树中的`DOM`结构，这块可以说是整个实现的精髓，可能会比较绕，可以认为实际上每个弹出层都分为了两块，一个是原本的`child`，另一个是弹出的`portal`，这两个结构是平行的放在`React DOM`树中的，那么在多级弹出层之后，实际上每个子`trigger(portal + child)`都是上层`portal`的`children`，这个结构可以用一个树形结构来表示。
+
+```js
+<React.Fragment>
+  {childrenComponent}
+  {portal}
+</React.Fragment>
+```
+
+```
+                         ROOT
+                        /    \
+               A(portal)      A(child)
+                /     \
+        B(portal)      B(child)
+         /     \
+  C(portal)     C(child)
+   /     \
+.....   ..... 
+```
+
+```html
+<body>
+  <div id="root">
+    <!-- ... -->
+    <div id="A-child"></div>
+    <!-- ... -->
+  </div>
+  <div id="A-portal">
+    <div id="B-child"></div>
+  </div>
+  <div id="B-portal">
+    <div id="C-child"></div>
+  </div>
+  <div id="C-portal">
+    <!-- ... -->
+  </div>
+</body>
+```
+
+从树形结构中我们可以看出来，虽然在`DOM`结构中我们现实出来是平铺的结构，但是在`React`的事件树中却依旧保持着嵌套结构，那么我们就很容易解答最开始的一个问题，为什么我们可以无限层级地嵌套，而且当多级弹出层组件的最后一级鼠标移出之后，所有的弹出层都会被关闭，就是因为实际上即使我们的鼠标在最后一级，但是在`React`树结构中其依旧是属于所有`portal`的子元素，既然其是`child`那么实际上我们可以认为其并没有移出各级`trigger`的元素，自然不会触发`MouseLeave`事件来关闭弹出层，如果我们移出了最后一级弹出层到空白区域，那么相当于我们移出了所有`trigger`实例的`portal`元素区域，自然会触发所有绑定的`MouseLeave`事件来关闭弹出层。
+
+那么虽然上边我们虽然解释了`Trigger`组件为什么能够维持无限嵌套层级结构下能够维持弹出层的显示，并且在最后一级鼠标移出之后能够关闭所有弹出层，或者从最后一级返回到上一级只关闭最后一级弹出层，但是我们还有一个问题没有想明白，上边的问题是因为所有的`trigger`弹出层实例都是上一级`trigger`弹出层实例的子元素，那么我们还有一个平级的`portal`与`child`元素呢，当我们鼠标移动到`child`时，`portal`元素会展示出来，而此时我们将鼠标移动到`portal`元素时，这个`portal`元素并不会消失，而是会一直保持显示，在这里的`React`树是不存在嵌套结构的，所以这里需要对事件进行特殊处理。
+
+
+```js
+onMouseEnter = (e: React.SyntheticEvent<HTMLDivElement, MouseEvent>) => {
+  console.log("onMouseEnter", this.childrenDom);
+  const mouseEnterDelay = this.props.duration;
+  this.clearDelayTimer();
+    his.setPopupVisible(true, mouseEnterDelay || 0);
+};
+
+onMouseLeave = (e: React.SyntheticEvent<HTMLDivElement, MouseEvent>) => {
+  console.log("onMouseLeave", this.childrenDom);
+  const mouseLeaveDelay = this.props.duration;
+  this.clearDelayTimer();
+  if (this.state.popupVisible) {
+    this.setPopupVisible(false, mouseLeaveDelay || 0);
+  }
+};
+
+onPopupMouseEnter = () => {
+  console.log("onPopupMouseEnter", this.childrenDom);
+  this.clearDelayTimer();
+};
+
+onPopupMouseLeave = (e: React.SyntheticEvent<HTMLDivElement, MouseEvent>) => {
+  console.log("onPopupMouseLeave", this.childrenDom);
+  const mouseLeaveDelay = this.props.duration;
+  this.clearDelayTimer();
+
+  if (this.state.popupVisible) {
+    this.setPopupVisible(false, mouseLeaveDelay || 0);
+  }
+};
+
+setPopupVisible = (visible: boolean, delay = 0, callback?: () => void) => {
+    onst currentVisible = this.state.popupVisible;
+
+  if (visible !== currentVisible) {
+    this.delayToDo(delay, () => {
+      if (visible) {
+        this.setState({ popupVisible: true }, () => {
+          this.showPopup(callback);
+        });
+      } else {
+        this.setState({ popupVisible: false }, () => {
+          callback && callback();
+        });
+      }
+    });
+  } else {
+    callback && callback();
+  }
+};
+
+delayToDo = (delay: number, callback: () => void) => {
+  if (delay) {
+    this.clearDelayTimer();
+    this.delayTimer = setTimeout(() => {
+      callback();
+      this.clearDelayTimer();
+    }, delay);
+  } else {
+    callback();
+  }
+};
+```
+
+实际上在这里的通信会比较简单，之前我们也提到`portal`与`child`元素是平级的，那么我们可以明显地看出来实际上这是在一个组件内的，那么整体的实现就会简单很多，我们可以设计一个延时，并且可以为`portal`和`child`分别绑定`MouseEnter`和`MouseLeave`事件，在这里我们为`child`绑定的是`onMouseEnter`和`onMouseLeave`两个事件处理函数，为`portal`绑定了`onPopupMouseEnter`和`onPopupMouseLeave`两个事件处理函数。那么此时我们模拟一下上边的情况，当我们鼠标移入`child`元素时，会触发`onMouseEnter`事件处理函数，此时我们会清除掉`delayTimer`，然后会调用`setPopupVisible`方法，此时会将`popupVisible`设置为`true`然后显示出`portal`，那么此时重点来了，我们这里实际上会有一个`delay`的延时，也就是说实际上当我们移出元素时，在`delay`时间之后才会将元素真正的隐藏，那么如果此时我们将鼠标再移入到`portal`，触发`onPopupMouseEnter`事件时调用`clearDelayTimer`清除掉`delayTimer`，那么我们就可以阻止元素的隐藏，那么再往后的嵌套弹出层无论是`child`还是`portal`本身依旧是上一层`portal`的子元素，即使是在子`portal`与子`child`之间切换也可以利用`clearDelayTimer`来阻止元素的隐藏，所以之后的弹出层就可以利用这种方式递归处理就可以实现无限嵌套了。我们可以将`DEMO`中鼠标从`a -> b -> c -> d -> empty`事件打印出来: 
+
+```
+onMouseEnter a
+onMouseLeave a
+onPopupMouseEnter b
+onMouseEnter c
+onMouseLeave c
+onPopupMouseLeave b
+onPopupMouseEnter b
+onPopupMouseEnter d
+onPopupMouseLeave d
+onPopupMouseLeave b
+```
+
+至此我们探究了`Trigger`组件的实现，当然在实际的处理过程中还有相当多的细节需要处理，例如位置计算、动画、事件处理等等等等，而且实际上这个组件也有很多我们可以学习的地方，例如如何将外部传递的事件处理函数交予`children`、`React.Children.map`、`React.isValidElement`、`React.cloneElement`等方法的使用等等，也都是非常有意思的实现。
+
+```js
+const getWrappedChildren = () => {
+  return React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      const { props } = child;
+      return React.cloneElement(child, {
+        ...props,
+        onMouseEnter: mouseEnterHandler,
+        onMouseLeave: mouseLeaveHandler,
+      });
+    } else {
+      return child;
+    }
+  });
+};
+```
 
 
 ## 每日一题
