@@ -1,5 +1,5 @@
 # 初探富文本之React实时预览
-在前文中我们探讨了很多关于富文本引擎和协同的能力，在本文中我们更偏向具体的应用实现。在一些场景中比如组件库的文档编写时，我们希望能够有实时预览的能力，也就是用户可以在文档中直接编写代码，然后在页面中实时预览，这样可以让用户更加直观的了解组件的使用方式，这也是很多组件库文档中都会有的一个功能。那么我们在本文就侧重于`React`组件的实时预览，来探讨相关能力的实现。
+在前文中我们探讨了很多关于富文本引擎和协同的能力，在本文中我们更偏向具体的应用组件实现。在一些场景中比如组件库的文档编写时，我们希望能够有实时预览的能力，也就是用户可以在文档中直接编写代码，然后在页面中实时预览，这样可以让用户更加直观的了解组件的使用方式，这也是很多组件库文档中都会有的一个功能。那么我们在本文就侧重于`React`组件的实时预览，来探讨相关能力的实现。
 
 ## 描述
 首先我们先简单探讨下相关的场景，实际上当前很多组件库的`API`文档都是由`Markdown`来直接生成的，例如`Arco-Design`，实际上是通过一个个`md`文件来生成的组件应用示例以及`API`表格，那么其实我们用的时候也可以发现我们是无法直接在官网编辑代码来实时预览的，这是因为这种方式是直接利用`loader`来将`md`文件根据一定的规则编译成了`jsx`语法，这样实际上就相当于直接用`md`生成了代码，之后就是完整地走了代码打包流程。那么既然有静态部署的`API`文档，肯定也有动态渲染组件的`API`文档，例如`MUI`，其同样也是通过`loader`处理`md`文件的占位，将相应的`jsx`组件通过指定的位置加载进去，只不过其的渲染方式除了静态编译完成后还多了动态渲染的能力，官网的代码示例就是可以实时编辑的，并且能够即使预览效果。
@@ -63,7 +63,7 @@ export const compileWithBabel = function (code: string, options?: BabelOptions) 
   return result.code;
 };
 
-// https://babel.dev/rep
+// https://babel.dev/repl
 // https://babel.dev/docs/babel-standalone
 ```
 
@@ -248,22 +248,30 @@ sucrase: 47.10302734375 ms
 
 ## 代码构造
 
-### jsx/fn
+在上一节我们解决了浏览器无法直接执行`React`代码的第一个问题，即浏览器不认识形如`<Button />`的代码是`React`组件，我们需要将其编译成浏览器能够认识的`Js`代码，那么紧接着在本节中我们需要解决两个问题，第一个问题是如何让浏览器知道如何找到`Button`这个对象也就是依赖问题，在我们将`<Button />`组件编译为`React.createElement(Button, null)`之后，并没有告知浏览器`Button`对象是什么或者应该从哪里找到这个对象，第二个问题是我们处理好编译后的代码以及依赖问题之后，我们应该如何构造合适的代码，将其放置于`new Function`中执行，由此得到真正的`React`组件实例。
 
-```jsx
-<Button></Button>
-
-// return 
-// const ___COMPONENT = <Button></Button>; ___BRIDGE["sssss"] = ___COMPONENT;
-```
-
-```jsx
-const App = () => {
-  return <Button></Button>;
-};
-```
 
 ### with/deps
+在这里因为我们后边需要用到`new Function`以及`with`语法，所以在这里先回顾一下。通过`Function`构造函数可以动态创建函数对象，类似于`eval`可以动态执行代码，然而与具有访问本地作用域的`eval`不同，`Function`构造函数创建的函数仅在全局作用域中执行，其语法为`new Function(arg0, arg1, /* …, */ argN, functionBody)`。
+
+```js
+const sum = new Function('a', 'b', 'return a + b');
+
+console.log(sum(1, 2)); // 3
+```
+
+`with`语句可以将代码的作用域设置到一个特定的对象中，其语法为`with (expression) statement`，`expression`是一个对象，`statement`是一个语句或者语句块。`with`语句的作用是将代码的作用域设置到一个特定的对象中，其内部的变量都是指向该对象的属性，如果该对象中没有该属性，那么便会检索`window`，如果还找不到那么就会拋出`ReferenceError`异常，`with`语句的缺点是会增加作用域链的长度，而且严格模式下不允许使用`with`语句。
+
+```js
+with (Math) {
+  console.log(PI); // 3.1415926
+  console.log(cos(PI)); // -1
+  console.log(sin(PI/ 2)); // 1
+}
+```
+
+那么首先我们来解决一下组件的依赖问题
+
 
 ```js
 new Function("sandbox", `
@@ -277,6 +285,21 @@ with(sandbox){
 new Function(...Object.keys(sandbox), `
  // xxx
 `)(...Object.values(sandbox));
+```
+
+### jsx/fn
+
+```jsx
+<Button></Button>
+
+// return 
+// const ___COMPONENT = <Button></Button>; ___BRIDGE["sssss"] = ___COMPONENT;
+```
+
+```jsx
+const App = () => {
+  return <Button></Button>;
+};
 ```
 
 ## 渲染组件
@@ -323,6 +346,8 @@ const sandbox = { window: {} }
 ```
 
 ### proxy
+
+`window/unsafeWindow`
 
 ```js
 new Proxy(sandbox, {
