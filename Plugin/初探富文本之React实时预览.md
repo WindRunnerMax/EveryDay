@@ -260,7 +260,7 @@ const sum = new Function('a', 'b', 'return a + b');
 console.log(sum(1, 2)); // 3
 ```
 
-`with`语句可以将代码的作用域设置到一个特定的对象中，其语法为`with (expression) statement`，`expression`是一个对象，`statement`是一个语句或者语句块。`with`语句的作用是将代码的作用域设置到一个特定的对象中，其内部的变量都是指向该对象的属性，如果该对象中没有该属性，那么便会检索`window`，如果还找不到那么就会拋出`ReferenceError`异常，`with`语句的缺点是会增加作用域链的长度，而且严格模式下不允许使用`with`语句。
+`with`语句可以将代码的作用域设置到一个特定的对象中，其语法为`with (expression) statement`，`expression`是一个对象，`statement`是一个语句或者语句块。`with`可以将代码的作用域指定到特定的对象中，其内部的变量都是指向该对象的属性，如果访问某个`key`时该对象中没有该属性，那么便会继续沿着作用域检索直至`window`，如果在`window`上还找不到那么就会拋出`ReferenceError`异常，由此我们可以借助`with`来指定代码的作用域，只不过`with`语句会增加作用域链的长度，而且严格模式下不允许使用`with`语句。
 
 ```js
 with (Math) {
