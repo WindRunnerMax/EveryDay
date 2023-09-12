@@ -251,7 +251,7 @@ sucrase: 47.10302734375 ms
 在上一节我们解决了浏览器无法直接执行`React`代码的第一个问题，即浏览器不认识形如`<Button />`的代码是`React`组件，我们需要将其编译成浏览器能够认识的`Js`代码，那么紧接着在本节中我们需要解决两个问题，第一个问题是如何让浏览器知道如何找到`Button`这个对象也就是依赖问题，在我们将`<Button />`组件编译为`React.createElement(Button, null)`之后，并没有告知浏览器`Button`对象是什么或者应该从哪里找到这个对象，第二个问题是我们处理好编译后的代码以及依赖问题之后，我们应该如何构造合适的代码，将其放置于`new Function`中执行，由此得到真正的`React`组件实例。
 
 
-### with/deps
+### deps/with
 在这里因为我们后边需要用到`new Function`以及`with`语法，所以在这里先回顾一下。通过`Function`构造函数可以动态创建函数对象，类似于`eval`可以动态执行代码，然而与具有访问本地作用域的`eval`不同，`Function`构造函数创建的函数仅在全局作用域中执行，其语法为`new Function(arg0, arg1, /* …, */ argN, functionBody)`。
 
 ```js
@@ -270,21 +270,74 @@ with (Math) {
 }
 ```
 
-那么首先我们来解决一下组件的依赖问题
+那么紧接着我们就来解决一下组件的依赖问题，还是以`<Button />`组件为例在编译之后我们需要`React`以及`Button`这两个依赖，但是前边也提到了，`new Function`是全局作用域，不会取得当前作用域的值，所以我们需要想办法将相关的依赖传递给我们的代码中，以便其能够正常执行。首先我们可能想到直接将相关变量挂到`window`上即可，这不就是全局作用域嘛，当然这个方法可以是可以的，但是不优雅，入侵性太强了，所以我们可以先来看看`new Function`的语句的参数，看起来所有的参数中只有最后一个参数是函数语句，其他的都是参数，那么其实这个问题就简单了，我们先构造一个对象，然后将所有的依赖放置进去，最后在构造函数的时候将对象的所有`key`作为参数声明，执行的时候将所有的`value`作为参数值传入即可。
 
 
 ```js
-new Function("sandbox", `
-with(sandbox){
- // xxx
-}
-`)(sandbox);
+const sandbox = {
+  React: "React Object",
+  Button: "Button Object",
+};
+
+const code = `
+console.log(React, Button);
+`;
+
+const fn = new Function(...Object.keys(sandbox), code.trim());
+fn(...Object.values(sandbox)); // React Object Button Object
 ```
 
+使用参数的方法实际上是比较不错的，但是因为用了很多个变量变得并没有那么可控，此时如果我们还想做一些额外的功能，例如限制用户对于`window`的访问，那么使用`with`可能是个更好的选择，我们先来使用`with`完成最基本的依赖访问能力。
+
+
 ```js
-new Function(...Object.keys(sandbox), `
- // xxx
-`)(...Object.values(sandbox));
+const sandbox = {
+  React: "React Object",
+  Button: "Button Object",
+};
+
+const code = `
+with(sandbox){
+    console.log(React, Button);
+}
+`;
+
+const fn = new Function("sandbox", code.trim());
+fn(sandbox); // React Object Button Object
+```
+
+看起来可能会更优雅一些，那么我们可能并不想让用户的代码有如此高的权限访问全局的所有对象，例如我们可能想限制用户对于`window`的访问，当然我们可以直接将`window: {}`放在`sandbox`变量中，因为在沿着作用域向上查找的时候检索到`window`了就不会继续向上查找了，但是一个很明显的问题是我们不可能将所有的全局对象枚举出来放在参数中，此时我们就需要使用`with`了，因为使用`with`的时候我们是会首先访问这个变量的，如果我们能在访问这个变量的时候做个代理，不在白名单的全部返回`null`就可以了，此时我们还需要请出`Proxy`对象，我们可以通过`with`配合`Proxy`来限制用户访问，这个我们后边安全部分再展开。
+
+
+```js
+const sandbox = {
+  React: "React Object",
+  Button: "Button Object",
+  console: console
+};
+
+const whitelist = [...Object.keys(sandbox), "console"];
+
+const proxy = new Proxy(sandbox, {
+  get(target, prop) {
+    if(whitelist.indexOf(prop) > -1){
+      return sandbox[prop];
+    }else{
+      return null;
+    }
+  },
+  has: () => true
+});
+
+
+const code = `
+with(sandbox){
+  console.log(React, Button, window, document, setTimeout);
+}
+`;
+
+const fn = new Function("sandbox", code.trim());
+fn(proxy); // React Object Button Object null null null
 ```
 
 ### jsx/fn
@@ -384,6 +437,7 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://swc.rs/docs/usage/wasm
+https://zhuanlan.zhihu.com/p/589341143
 https://github.com/alangpierce/sucrase
 https://babel.dev/docs/babel-standalone
 https://github.com/simonguo/react-code-view
