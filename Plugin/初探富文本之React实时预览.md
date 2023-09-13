@@ -306,7 +306,7 @@ const fn = new Function("sandbox", code.trim());
 fn(sandbox); // React Object Button Object
 ```
 
-看起来可能会更优雅一些，那么我们可能并不想让用户的代码有如此高的权限访问全局的所有对象，例如我们可能想限制用户对于`window`的访问，当然我们可以直接将`window: {}`放在`sandbox`变量中，因为在沿着作用域向上查找的时候检索到`window`了就不会继续向上查找了，但是一个很明显的问题是我们不可能将所有的全局对象枚举出来放在参数中，此时我们就需要使用`with`了，因为使用`with`的时候我们是会首先访问这个变量的，如果我们能在访问这个变量的时候做个代理，不在白名单的全部返回`null`就可以了，此时我们还需要请出`Proxy`对象，我们可以通过`with`配合`Proxy`来限制用户访问，这个我们后边安全部分再展开。
+这样的实现看起来可能会更优雅一些，我们通过一个`sandbox`变量来承载了所有的依赖，这可以让访问依赖的行为变得更加可控，实际上我们可能并不想让用户的代码有如此高的权限访问全局的所有对象，例如我们可能想限制用户对于`window`的访问，当然我们可以直接将`window: {}`放在`sandbox`变量中，因为在沿着作用域向上查找的时候检索到`window`了就不会继续向上查找了，但是一个很明显的问题是我们不可能将所有的全局对象枚举出来放在参数中，此时我们就需要使用`with`了，因为使用`with`的时候我们是会首先访问这个变量的，如果我们能在访问这个变量的时候做个代理，不在白名单的全部返回`null`就可以了，此时我们还需要请出`Proxy`对象，我们可以通过`with`配合`Proxy`来限制用户访问，这个我们后边安全部分再展开。
 
 
 ```js
@@ -316,7 +316,7 @@ const sandbox = {
   console: console
 };
 
-const whitelist = [...Object.keys(sandbox), "console"];
+const whitelist = [...Object.keys(sandbox)];
 
 const proxy = new Proxy(sandbox, {
   get(target, prop) {
@@ -341,11 +341,35 @@ fn(proxy); // React Object Button Object null null null
 ```
 
 ### jsx/fn
+在上边我们解决了依赖的问题，并且对于安全问题做了简述，只不过到目前为止我们都是在处理字符串，还没有将其转换为真正的`React`组件，所以在这里我们专注于将`React`组件对象从字符串中生成出来，同样的我们依然使用`new Function`来执行代码，只不过我们需要将代码字符串拼接成我们想要的形式，由此来将生成的对象带出来，例如`<Button />`这个这个组件，经由编译器编译之后，我们可以得到`React.createElement(Button, null)`，那么在构造函数时，如果只是`new Function("sandbox", "React.createElement(Button, null)")`，即使执行之后我们也是得不到组件实例的，因为这个函数没有返回值，所以我们需要将其拼接为`return React.createElement(Button, null)`，所以我们就可以得到我们的第一种方法，拼接`render`来得到返回的组件实例。
+
+```js
+export const renderWithInline = (code: string, dependency: Sandbox) => {
+  return new Function("dependency", `return (${code.trim()})`)(dependency);
+};
+```
+
+虽然看起来是能够实现我们的需求的，只不过需要注意的是，我们必须要开启编译器的`production`等配置，并且要避免用户的额外输入例如`import`语句，否则例如下面的`Babel`编译结果，在这种情况下我们使用拼接`return`的形式显然就会出现问题，会造成语法错误。那么是不是可以换个思路，直接将`return`的这部分代码也就是`return <Button />`放在编译器中编译，实际上这样在`Sucrase`中是可以的，因为其不特别关注于语法，而是会尽可能地编译，而在`Babel`中会明显地抛出异常`'return' outside of function.`，虽然我们最终的目标是放置于`new Function`中来构造函数，使用`return`是合理的，但是编译器是不会知道这一点的，所以我们还是需要关注下这方面限制。
+
+```js
+"use strict";
+
+var _button = require("button");
+var _jsxFileName = "/sample.tsx";
+/*#__PURE__*/React.createElement(_button.Button, {
+  __self: void 0,
+  __source: {
+    fileName: _jsxFileName,
+    lineNumber: 3,
+    columnNumber: 1
+  }
+});
+```
 
 ```jsx
 <Button></Button>
 
-// return 
+// render with depedency
 // const ___COMPONENT = <Button></Button>; ___BRIDGE["sssss"] = ___COMPONENT;
 ```
 
@@ -401,6 +425,7 @@ const sandbox = { window: {} }
 ### proxy
 
 `window/unsafeWindow`
+`Symbol.unscopables`
 
 ```js
 new Proxy(sandbox, {
