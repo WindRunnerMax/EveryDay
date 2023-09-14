@@ -251,8 +251,8 @@ sucrase: 47.10302734375 ms
 在上一节我们解决了浏览器无法直接执行`React`代码的第一个问题，即浏览器不认识形如`<Button />`的代码是`React`组件，我们需要将其编译成浏览器能够认识的`Js`代码，那么紧接着在本节中我们需要解决两个问题，第一个问题是如何让浏览器知道如何找到`Button`这个对象也就是依赖问题，在我们将`<Button />`组件编译为`React.createElement(Button, null)`之后，并没有告知浏览器`Button`对象是什么或者应该从哪里找到这个对象，第二个问题是我们处理好编译后的代码以及依赖问题之后，我们应该如何构造合适的代码，将其放置于`new Function`中执行，由此得到真正的`React`组件实例。
 
 
-### deps/with
-在这里因为我们后边需要用到`new Function`以及`with`语法，所以在这里先回顾一下。通过`Function`构造函数可以动态创建函数对象，类似于`eval`可以动态执行代码，然而与具有访问本地作用域的`eval`不同，`Function`构造函数创建的函数仅在全局作用域中执行，其语法为`new Function(arg0, arg1, /* …, */ argN, functionBody)`。
+### Deps/With
+在这里因为我们后边需要用到`new Function`以及`with`语法，所以在这里先回顾一下。通过`Function`构造函数可以动态创建函数对象，类似于`eval`可以动态执行代码，然而与具有访问本地作用域的`eval`不同，`Function`构造函数创建的函数仅在全局作用域中执行，其语法为`new Function(arg0, arg1, /* ... */ argN, functionBody)`。
 
 ```js
 const sum = new Function('a', 'b', 'return a + b');
@@ -340,16 +340,17 @@ const fn = new Function("sandbox", code.trim());
 fn(proxy); // React Object Button Object null null null
 ```
 
-### jsx/fn
-在上边我们解决了依赖的问题，并且对于安全问题做了简述，只不过到目前为止我们都是在处理字符串，还没有将其转换为真正的`React`组件，所以在这里我们专注于将`React`组件对象从字符串中生成出来，同样的我们依然使用`new Function`来执行代码，只不过我们需要将代码字符串拼接成我们想要的形式，由此来将生成的对象带出来，例如`<Button />`这个这个组件，经由编译器编译之后，我们可以得到`React.createElement(Button, null)`，那么在构造函数时，如果只是`new Function("sandbox", "React.createElement(Button, null)")`，即使执行之后我们也是得不到组件实例的，因为这个函数没有返回值，所以我们需要将其拼接为`return React.createElement(Button, null)`，所以我们就可以得到我们的第一种方法，拼接`render`来得到返回的组件实例。
+### JSX/Fn
+在上边我们解决了依赖的问题，并且对于安全问题做了简述，只不过到目前为止我们都是在处理字符串，还没有将其转换为真正的`React`组件，所以在这里我们专注于将`React`组件对象从字符串中生成出来，同样的我们依然使用`new Function`来执行代码，只不过我们需要将代码字符串拼接成我们想要的形式，由此来将生成的对象带出来，例如`<Button />`这个这个组件，经由编译器编译之后，我们可以得到`React.createElement(Button, null)`，那么在构造函数时，如果只是`new Function("sandbox", "React.createElement(Button, null)")`，即使执行之后我们也是得不到组件实例的，因为这个函数没有返回值，所以我们需要将其拼接为`return React.createElement(Button, null)`，所以我们就可以得到我们的第一种方法，拼接`render`来得到返回的组件实例。此外用户通常可能会同一层级下写好几个组件，通常需要我们在最外层嵌套一层`div`或者`React.Fragment`。
 
 ```js
 export const renderWithInline = (code: string, dependency: Sandbox) => {
-  return new Function("dependency", `return (${code.trim()})`)(dependency);
+  const fn = new Function("dependency", `with(dependency) { return (${code.trim()})}`);
+  return fn(dependency);
 };
 ```
 
-虽然看起来是能够实现我们的需求的，只不过需要注意的是，我们必须要开启编译器的`production`等配置，并且要避免用户的额外输入例如`import`语句，否则例如下面的`Babel`编译结果，在这种情况下我们使用拼接`return`的形式显然就会出现问题，会造成语法错误。那么是不是可以换个思路，直接将`return`的这部分代码也就是`return <Button />`放在编译器中编译，实际上这样在`Sucrase`中是可以的，因为其不特别关注于语法，而是会尽可能地编译，而在`Babel`中会明显地抛出异常`'return' outside of function.`，虽然我们最终的目标是放置于`new Function`中来构造函数，使用`return`是合理的，但是编译器是不会知道这一点的，所以我们还是需要关注下这方面限制。
+虽然看起来是能够实现我们的需求的，只不过需要注意的是，我们必须要开启编译器的`production`等配置，并且要避免用户的额外输入例如`import`语句，否则例如下面的`Babel`编译结果，在这种情况下我们使用拼接`return`的形式显然就会出现问题，会造成语法错误。那么是不是可以换个思路，直接将`return`的这部分代码也就是`return <Button />`放在编译器中编译，实际上这样在`Sucrase`中是可以的，因为其不特别关注于语法，而是会尽可能地编译，而在`Babel`中会明显地抛出`'return' outside of function.`异常，在`SWC`中会抛出`Return statement is not allowed here`异常，虽然我们最终的目标是放置于`new Function`中来构造函数，使用`return`是合理的，但是编译器是不会知道这一点的，所以我们还是需要关注下这方面限制。
 
 ```js
 "use strict";
@@ -366,63 +367,166 @@ var _jsxFileName = "/sample.tsx";
 });
 ```
 
-```jsx
-<Button></Button>
-
-// render with depedency
-// const ___COMPONENT = <Button></Button>; ___BRIDGE["sssss"] = ___COMPONENT;
-```
+既然这个方式会有诸多的限制，需要关注和适配的地方比较多，那么我们需要换一个思路，即在编译代码的时候是完全符合语法规则的，并且不需要关注用户的输入，只需要将编译出来的组件带离出来即可，那么我们可以利用传递的依赖，通过依赖的引用来实现，首先生成一个随机`id`，然后配置一个空的对象，将编译好的组件赋值到这个对象中，在渲染函数的最后通过对象和`id`将其返回即可。
 
 ```jsx
-const App = () => {
-  return <Button></Button>;
+export const renderWithDependency = (code: string, dependency: Sandbox) => {
+  const id = getUniqueId();
+  dependency.___BRIDGE___ = {};
+  const bridge = dependency.___BRIDGE___ as Record<string, unknown>;
+  const fn = new Function(
+    "dependency",
+    `with(dependency) { ___BRIDGE___["${id}"] = ${code.trim()}; }`
+  );
+  fn(dependency);
+  return bridge[id];
 };
 ```
 
+在这里我们依旧使用`<Button />`组件为例，直接使用`Babel`编译的结果来对比一下，可以看出来即使我们没有开启`production`模式，编译的结果也是符合语法的，并且因为传递引用的关系，我们能够将编译的组件实例通过`___BRIDGE___`以及随机生成`id`带出来。
+
+```js
+"use strict";
+
+var _jsxFileName = "/sample.tsx";
+___BRIDGE___["id-xxx"] = /*#__PURE__*/React.createElement(Button, {
+  __self: void 0,
+  __source: {
+    fileName: _jsxFileName,
+    lineNumber: 1,
+    columnNumber: 26
+  }
+});
+```
+
+此外我们还可以相对更完整地开放组件能力，通过约定来固定一个函数的名字例如`App`，在拼接代码的时候使用`___BRIDGE___["id-xxx"] = React.createElement(App);`，之后用户便可以可以相对更加自由地对组件实现相关的交互等，例如使用`useEffect`等`Hooks`，这种约定式的方案会更加灵活一些，在应用中也比较常见比如约定式路由等，下面是约定`App`作为函数名编译并拼接后的结果，可以放置于`new Function`并且借助依赖的引用拿到最终生成的组件实例。
+
+```jsx
+"use strict";
+
+var _jsxFileName = "/sample.tsx";
+const App = () => {
+  React.useEffect(() => {
+    console.log("Effect");
+  }, []);
+  return /*#__PURE__*/React.createElement(Button, {
+    __self: void 0,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 7,
+      columnNumber: 10
+    }
+  });
+};
+___BRIDGE___["id-xxx"] = React.createElement(App);
+```
+
 ## 渲染组件
+在上文中我们解决了编译代码、组件依赖、构建代码的问题，并且最终得到了组件的实例，在本节中我们主要讨论如何将组件渲染到页面上，这部分实际上是比较简单的，我们可以选择几种方式来实现最终的渲染。
 
-### render
+### Render
+在`React`中我们渲染组件通常的都是直接使用`ReactDOM.render`，在这里我们同样可以使用这个方法来完成组件渲染，毕竟在之前我们已经得到了组件的实例，那么我们直接找到一个可以挂载的`div`，将组件渲染到`DOM`上即可。
 
 ```js
-const code = `
-const App = () => {
-    // xxx
-}
-return App;
-`;
-ReactDOM.render(<App></App>, dom);
+// https://github.com/WindrunnerMax/ReactLive/blob/master/src/index.tsx
+
+const code = `<Button type='primary' onClick={() => alert(111)}>Primary</Button>`;
+const el = ref.current;
+const sandbox = withSandbox({ React, Button, console, alert });
+const compiledCode = compileWithSucrase(code);
+const Component = renderWithDependency(compiledCode, sandbox) as JSX.Element;
+ReactDOM.render(Component, el);
 ```
 
-```js
-const code = `
-const App = () => {
-    // xxx
-}
-return App;
+当然我们也可以换个思路，我们也可以将渲染的能力交予用户，也就是说我们可以约定用户可以在代码中执行`ReactDOM.render`，我们可以对这个方法进行一次封装，使用户只能将组件渲染到我们固定的`DOM`结构上，当然我们直接将`ReactDOM`传递给用户代码来执行渲染逻辑也是可以的，只是并不可控不建议这么操作，如果可以完全保证用户的输入是可信的情况，这种渲染方法是可以的。
 
-ReactDOM.render(<App></App>);
+```js
+const INIT_CODE = `
+render(<Button type='primary' onClick={() => alert(111)}>Primary</Button>);
 `;
+const render = (element: JSX.Element) => ReactDOM.render(element, el);
+const sandbox = withSandbox({ React, Button, console, alert, render });
+const compiledCode = compileWithSucrase(code);
+renderWithDependency(compiledCode, sandbox);
 ```
 
-### ssr
+### SSR
+实际上渲染`React`组件在`Markdown`编辑器中也是很常见的应用，例如在编辑时的动态渲染以及消费时的静态渲染组件，当然在消费侧时动态渲染组件也就是我们最开始提到的使用场景，那么`Markdown`的相关框架通常是支持`SSR`的，我们当然也需要支持`SSR`来进行组件的静态渲染，实际上我们能够通过动态编译代码来获得`React`组件之后，通过`ReactDOMServer.renderToString`(多返回`data-reactid`标识，`React`会认识之前服务端渲染的内容, 不会重新渲染`DOM`节点)或者`ReactDOMServer.renderToStaticMarkup`来将`HTML`的标签生成出来，也就是所谓的脱水，然后将其放置于`HTML`中返回给客户端，在客户端中使用`ReactDOM.hydrate`来为其注入事件，也就是所谓的注水，这样就可以实现`SSR`服务端渲染了。下面就是使用`express`实现的`DEMO`，实际上也相当于`SSR`的最基本原理。
 
 ```js
-ReactDOMServer.renderToStaticMarkup
-ReactDOM.hydrate
+// https://codesandbox.io/p/sandbox/ssr-w468kc?file=/index.js:1,36
+const express = require("express");
+const React= require("react");
+const ReactDOMServer = require("react-dom/server");
+const { Button } = require("@arco-design/web-react");
+const { transform } = require("sucrase");
+
+const code = `<Button type="primary" onClick={() => alert(1)}>Primary</Button>`;
+const OPTIONS = { transforms: ["jsx"], production: true };
+
+const App = () => { // 服务端的`React`组件
+  const ref = React.useRef(null);
+
+  const getDynamicComponent = () => {
+    const { code: compiledCode } = transform(`return (${code.trim()});`, OPTIONS);
+    const sandbox= { React, Button };
+    const withCode = `with(sandbox) { ${compiledCode} }`;
+    const Component = new Function("sandbox", withCode)(sandbox);
+    return Component;
+  }
+
+  return React.createElement("div", { ref }, getDynamicComponent());
+}
+
+const app = express();
+const content = ReactDOMServer.renderToString(React.createElement(App));
+app.use('/', function(req, res, next){
+  res.send(
+    `<html>
+       <head>
+         <title>Example</title>
+         <link rel="stylesheet" href="https://unpkg.com/@arco-design/web-react@2.53.0/dist/css/arco.min.css">
+         <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/react/17.0.2/umd/react.production.min.js" type="application/javascript"></script>
+         <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/react-dom/17.0.2/umd/react-dom.production.min.js" type="application/javascript"></script>
+       </head>
+       <body>
+         <div id="root">${content}</div>
+       </body>
+       <script src="https://unpkg.com/@arco-design/web-react@2.53.0/dist/arco.min.js"></script>
+       <script>
+        const App = () => { // 客户端的\`React\`组件
+          const ref = React.useRef(null);
+          const getDynamicComponent = () => {
+            const compiledCode = 'return ' + 'React.createElement(Button, { type: "primary", onClick: () => alert(1),}, "Primary")';
+            const sandbox= { React, Button: arco.Button };
+            const withCode = "with(sandbox) { " + compiledCode + " }";
+            const Component = new Function("sandbox", withCode)(sandbox);
+            return Component;
+          }
+          return React.createElement("div", { ref }, getDynamicComponent());
+        }
+        ReactDOM.hydrate(React.createElement(App), document.getElementById("root"));
+        </script>
+      </html>`
+  );
+})
+app.listen(8080, () => {
+  console.log("Listen on port 8080")
+});
 ```
 
 ## 安全考量
-既然我们选择了动态渲染组件，那么安全性必然是需要考量的。例如最简单的一个攻击形式，我作为用户在代码中编写了函数能取得当前用户的`Cookie`，并且构造了`XHR`对象或者通过`fetch`将`Cookie`发送到我的服务器中，如果此时网站恰好没有开启`HttpOnly`，并且将这段代码落库了，那么以后每个打开这个页面的其他用户都会将其`Cookie`发送到我的服务器中，这样我就可以拿到其他用户的`Cookie`，这是非常危险的存储型`XSS`攻击。
+既然我们选择了动态渲染组件，那么安全性必然是需要考量的。例如最简单的一个攻击形式，我作为用户在代码中编写了函数能取得当前用户的`Cookie`，并且构造了`XHR`对象或者通过`fetch`将`Cookie`发送到我的服务器中，如果此时网站恰好没有开启`HttpOnly`，并且将这段代码落库了，那么以后每个打开这个页面的其他用户都会将其`Cookie`发送到我的服务器中，这样我就可以拿到其他用户的`Cookie`，这是非常危险的存储型`XSS`攻击，此外上边也提到了`SSR`的渲染模式，如果恶意代码在服务端执行那将是更加危险的操作，所以对于用户行为的安全考量是非常重要的。
 
 那么实际上只要接受了用户输入并且作为代码执行，那么我们就无法完全保证这个行为是安全的，我们应该注意的是永远不要相信用户的输入，所以实际上最安全的方式就是不让用户输入，当然对于目前这个场景来说是做不到的，那么我们最好还是要能够做到用户是可控范围的，比如只接受公司内部的输入来编写文档，对外来说只是消费侧不会将内容落库展示到其他用户面前，这样就可以很大程度上的避免一些恶意的攻击。当然即使是这样，我们依然希望能够做到安全地执行用户输入的代码，那么最常用的方式就是限制用户对于`window`等全局对象的访问。
 
-### deps
+### Deps
 
 ```js
 const sandbox = { window: {} }
 ```
 
-### proxy
+### Proxy
 
 `window/unsafeWindow`
 `Symbol.unscopables`
@@ -439,7 +543,10 @@ new Proxy(sandbox, {
 });
 ```
 
-### iframe
+### Iframe
+
+iframe sandbox
+
 
 ```js
 const iframe = document.createElement("iframe");
