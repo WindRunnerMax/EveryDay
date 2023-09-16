@@ -6,7 +6,7 @@
 
 这种小规模的`Playground`能力应用还是比较广泛的，其比较小而不至于使用类似于`code-sandbox`的能力来做完整的演示，基于`Markdown`来完成文档对于技术同学来说并不是什么难事，但是`Markdown`毕竟不是一个可以广泛接受的能力，还是需要有一定的学习成本的，富文本能力会相对更容易接受一些，那么有场景就有需求，我们同样也会希望能在富文本中实现这种动态渲染组件的能力，这种能力适合做成一种按需加载的第三方插件的形式。此外，在富文本的实现中可能会有一些非常复杂的场景，例如第三方接口常用的折叠表格能力，这不是一个常见的场景而且在富文本中实现成本会特别高，尤其体现在实现交互上，`ROI`会比较低，而实际上公司内部一般都会有自己的`API`接口平台，于是利用`OpenAPI`对接接口平台直接生成折叠表格等复杂组件就是一个相对可以接受的方式。上述的两种场景下实际上都需要动态渲染组件的能力，`Playground`能力的能力比较好理解，而对接接口平台需要动态渲染组件的原因是我们的数据结构大概率是无法平齐的，例如某些文本需要加粗，成本最低的方案就是我们直接组装为`<strong />`的标签，并入已有组件库的折叠表格中将其渲染出来即可。
 
-我们在这里也简单聊一下富文本中实现预览能力可以参考的方案，预览块的结构实际上很简单，无非是一部分是代码块，在编辑时另一部分可以实时预览，而在富文本中实现代码块一般都会有比较多的示例，例如使用`slate`时可以使用`decorate`的能力，或者可以在`quill`采用通用的方案，使用`prismjs`或者`lowlight`来解析整个代码块，之后将解析出的部分依次作为`text`的内容并且携带解析的属性放置于数据结构中，在渲染时根据属性来渲染出相应的样式即可，甚至于可以直接嵌套代码编辑器进去，只不过这样文档级别的搜索替换会比较难做，而且需要注意事件冒泡的处理，而预览区域主要需要做的是将渲染出的内容标记为`Embed/Void`，避免选区变换对编辑器的`Model`造成影响。
+我们在这里也简单聊一下富文本中实现预览能力可以参考的方案，预览块的结构实际上很简单，无非是一部分是代码块，在编辑时另一部分可以实时预览，而在富文本中实现代码块一般都会有比较多的示例，例如使用`slate`时可以使用`decorate`的能力，或者可以在`quill`采用通用的方案，使用`prismjs`或者`lowlight`来解析整个代码块，之后将解析出的部分依次作为`text`的内容并且携带解析的属性放置于数据结构中，在渲染时根据属性来渲染出相应的样式即可，甚至于可以直接嵌套代码编辑器进去，只不过这样文档级别的搜索替换会比较难做，而且需要注意事件冒泡的处理，而预览区域主要需要做的是将渲染出的内容标记为`Embed/Void`，避免选区变换对编辑器的`Model`造成影响。文中涉及的相关代码都在`https://github.com/WindrunnerMax/ReactLive`，在富文本文档中的实现效果可以参考`https://windrunnermax.github.io/DocEditor/`。
 
 那么接下来我们进入正题，如何动态渲染`React`组件来完成实时预览，我们首先来探究一下实现方向，实际上我们可以简单思考一下，实现一个动态渲染的组件实际上不就是从字符串到可执行代码嘛，那么如果在`Js`中我们能直接执行代码中能直接执行代码的方法有两个: `eval`和`new Function`，那么我们肯定是不能用`eval`的，`eval`执行的代码将在当前作用域中执行，这意味着其可以访问和修改当前作用域中的变量，虽然在严格模式下做了一些限制但明显还是没那么安全，这可能导致安全风险和意外的副作用，而`new Function`构造函数创建的函数有自己的作用域，其只能访问全局作用域和传递给它的参数，从而更容易控制代码的执行环境，在后文中安全也是我们需要考虑的问题，所以我们肯定是需要用`new Function`来实现动态代码执行的。
 
@@ -521,32 +521,134 @@ app.listen(8080, () => {
 那么实际上只要接受了用户输入并且作为代码执行，那么我们就无法完全保证这个行为是安全的，我们应该注意的是永远不要相信用户的输入，所以实际上最安全的方式就是不让用户输入，当然对于目前这个场景来说是做不到的，那么我们最好还是要能够做到用户是可控范围的，比如只接受公司内部的输入来编写文档，对外来说只是消费侧不会将内容落库展示到其他用户面前，这样就可以很大程度上的避免一些恶意的攻击。当然即使是这样，我们依然希望能够做到安全地执行用户输入的代码，那么最常用的方式就是限制用户对于`window`等全局对象的访问。
 
 ### Deps
+在前边我们也提到过`new Function`是全局的作用域，其是不会读取定义时的作用域变量的，但是由于我们是构造了一个函数，我们完全可以将`window`中的所有变量都传递给这个函数，并且对变量名都赋予`null`，这样当在作用域中寻找值时都会直接取得我们传递的值而不会继续向上寻找了，无论是使用参数的形式或者是构造`with`都可以采用这种方式，这样我们也可以通过白名单的形式来限制用户的访问。当然这个对象的属性将会多达上千，看起来可能并没有那么优雅。
 
 ```js
-const sandbox = { window: {} }
+const sandbox = Object.keys(Object.getOwnPropertyDescriptors(window))
+  .filter(key => key.indexOf("-") === -1)
+  .reduce((acc, key) => ({ ...acc, [key]: null }), {});
+
+sandbox.console = console;
+const code = "console.log(window, document, XMLHttpRequest, eval, Function);"
+
+const fn = new Function(...Object.keys(sandbox), code.trim());
+fn(...Object.values(sandbox)); // null null null null null
+
+const withCode = `with(sandbox) { ${code.trim()} }`;
+const withFn = new Function("sandbox", withCode);
+withFn(sandbox); // null null null null null
 ```
 
 ### Proxy
+`Proxy`对象能够为另一个对象创建代理，该代理可以拦截并重新定义该对象的基本操作，例如属性查找、赋值、枚举、函数调用等等，那么配合我们之前使用`with`就可以将所有的对象访问以及赋值全部赋予`sandbox`，由此来更精确地实现对于对象访问的控制。下面就是我们使用`Proxy`来实现的一个简单的沙箱，我们可以通过白名单的形式来限制用户的访问，如果访问的对象不在白名单中，那么直接返回`null`，如果在白名单中，那么返回对象本身。
 
-`window/unsafeWindow`
-`Symbol.unscopables`
+在这段实现中，`with`语句是通过`in`运算符来判定访问的字段是否在对象中，从而决定是否继续通过作用域链往上找，所以我们需要将`has`控制永远返回`true`，由此来阻断代码通过作用域链访问全局对象，此外例如`alert`和`setTimeout`等函数必须运行在`window`作用域下，这些函数都有个特点就是都是非构造函数，不能`new`且没有`prototype`属性，我们可以用这个特点来进行过滤，在获取时为其绑定`window`。
 
 ```js
-new Proxy(sandbox, {
-  get(_, name): unknown {
-    switch (name) {
-      case "window":
-      case "document":
-        return {};
+export const withSandbox = (dependency: Sandbox) => {
+  const top = typeof window === "undefined" ? global : window;
+  const whitelist: (keyof Sandbox)[] = [...Object.keys(dependency), ...BUILD_IN_SANDBOX_KEY];
+  const proxy = new Proxy(dependency, {
+    has: () => true,
+    get(_, prop) {
+      if (whitelist.indexOf(prop) > -1) {
+        const value = dependency[prop];
+        if (isFunction(value) && !value.prototype) {
+          return value.bind(top);
+        }
+        return dependency[prop];
+      } else {
+        return null;
+      }
+    },
+    set(_, prop, newValue) {
+      if (whitelist.indexOf(prop) > -1) {
+        dependency[prop] = newValue;
+      }
+      return true;
+    },
+  });
+
+  return proxy;
+};
+```
+
+如果大家用过`TamperMonkey`、`ViolentMonkey`暴力猴、`ScriptCat`脚本猫等相关谷歌插件的话，可以发现其存在`window`以及`unsafeWindow`两个对象，`window`对象是一个隔离的安全`window`环境，而`unsafeWindow`就是用户页面中的`window`对象。曾经我很长一段时间都认为这些插件中可以访问的`window`对象实际上是浏览器拓展的`Content Scripts`提供的`window`对象，而`unsafeWindow`是用户页面中的`window`，以至于我用了比较长的时间在探寻如何直接在浏览器拓展中的`Content Scripts`直接获取用户页面的`window`对象，当然最终还是以失败告终，这其中比较有意思的是一个逃逸浏览器拓展的实现，因为在`Content Scripts`与`Inject Scripts`是共用`DOM`的，所以可以通过`DOM`来实现逃逸，当然这个方案早已失效。
+
+```js
+var unsafeWindow;
+(function() {
+    var div = document.createElement("div");
+    div.setAttribute("onclick", "return window");
+    unsafeWindow = div.onclick();
+})();
+```
+
+此外在`FireFox`中还提供了一个`wrappedJSObject`来帮助我们从`Content Scripts`中访问页面的的`window`对象，但是这个特性也有可能因为不安全在未来的版本中被移除。那么为什么现在我们可以知道其实际上是同一个浏览器环境呢，除了看源码之外我们也可以通过以下的代码来验证脚本在浏览器的效果，可以看出我们对于`window`的修改实际上是会同步到`unsafeWindow`上，证明实际上是同一个引用。
+
+```js
+unsafeWindow.name = "111111";
+console.log(window === unsafeWindow); // false
+console.log(window); // Proxy {Symbol(Symbol.toStringTag): 'Window'}
+console.log(window.onblur); // null
+unsafeWindow.onblur = () => 111;
+console.log(unsafeWindow); // Window { ... }
+console.log(unsafeWindow.name, window.name); // 111111 111111
+console.log(window.onblur); // () => 111
+const win = new Function("return this")();
+console.log(win === unsafeWindow); // true
+
+
+// TamperMonkey: https://github.com/Tampermonkey/tampermonkey/blob/07f668cd1cabb2939220045839dec4d95d2db0c8/src/content.js#L476 // Not updated for a long time
+// ViolentMonkey: https://github.com/violentmonkey/violentmonkey/blob/ecbd94b4e986b18eef34f977445d65cf51fd2e01/src/injected/web/gm-global-wrapper.js#L141
+// ScriptCat: https://github.com/scriptscat/scriptcat/blob/0c4374196ebe8b29ae1a9c61353f6ff48d0d8843/src/runtime/content/utils.ts#L175
+// wrappedJSObject: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Sharing_objects_with_page_scripts
+```
+
+
+如果观察仔细的话，我们可以看到上边的验证代码最后两行我们竟然突破了这些扩展的沙盒限制，从而在未`@grant unsafeWindow`情况下能够直接访问`unsafeWindow`，从而我们同样需要思考这个问题，即使我们限制了用户的代码对于`window`等对象的访问，但是这样真的能够完整的保证安全吗，很明显是不够的，我们还需要对于各种`case`做处理，从而尽量减少用户突破沙盒限制的可能，例如在这里我们需要控制用户对于`this`的访问。
+
+```js
+export const renderWithDependency = (code: string, dependency: Sandbox) => {
+  const id = getUniqueId();
+  dependency.___BRIDGE___ = {};
+  const bridge = dependency.___BRIDGE___ as Record<string, unknown>;
+  const fn = new Function(
+    "dependency",
+    `with(dependency) { 
+      function fn(){  "use strict"; return (${code.trim()}); };
+      ___BRIDGE___["${id}"] = fn.call(null);
     }
-  },
-});
+    `
+  );
+  fn.call(null, dependency);
+  return bridge[id];
+};
+```
+
+其实说到`with`，关于`Symbol.unscopables`的知识也可以简单聊下，我们可以关注下面的例子，在第二部分我们在对象的原型链新增了一个属性，而这个属性跟我们的`with`变量重名，又恰好这个属性中的值在`with`中被访问了，于是造成了我们的值不符合预期的问题，这个问题甚至是在知名框架`Ext.js v4.2.1`中暴露出来的，于是为了兼容这个问题，`TC39`增加了`Symbol.unscopables`规则，在`ES6`之后的数组方法中每个方法都会应用这个规则。
+
+```js
+const value = [];
+with(value){
+  console.log(value.length); // 0
+}
+
+Array.prototype.value = { length: 10 };
+with(value){
+  console.log(value.length); // 10
+}
+
+Array.prototype[Symbol.unscopables].value = true;
+with(value){
+  console.log(value.length); // 0
+}
+
+// https://github.com/rwaldron/tc39-notes/blob/master/meetings/2013-07/july-23.md#43-arrayprototypevalues
 ```
 
 ### Iframe
-
-iframe sandbox
-
+在上文中我们一直是使用限制用户访问全局变量或者是隔离当前环境的方式来实现沙箱，但是实际上我们还可以换个思路，我们可以将用户的代码放置于一个`iframe`中来执行，这样我们就可以将用户的代码隔离在一个独立的环境中，从而实现沙箱的效果，这种方式也是比较常见的，例如`CodeSandbox`就是使用这种方式来实现的，我们可以直接使用`iframe`的`contentWindow`来获取到`window`对象，然后利用该对象进行用户代码的执行，这样就可以做到用户访问环境的隔离了，此外我们还可以通过`iframe`的`sandbox`属性来限制用户的行为，例如限制`allow-forms`表单提交、`allow-popups`弹窗、`allow-top-navigation`导航修改等，这样就可以做到更加安全的沙箱了。
 
 ```js
 const iframe = document.createElement("iframe");
@@ -554,10 +656,61 @@ iframe.src = "about:blank";
 iframe.style.position = "fixed";
 iframe.style.left = "-10000px";
 iframe.style.top = "-10000px";
+iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
 document.body.appendChild(iframe);
-const sandbox = iframe.contentWindow;
+const win = iframe.contentWindow;
 document.body.removeChild(iframe);
+console.log(win && win !== window && win.parent !== window); // true
 ```
+
+那么同样的我们也可以为其加一层代理，让其中的对象访问都是使用`iframe`中的全局对象，在找不到的情况下继续访问原本传递的值，并且在编译函数的时候，我们可以使用这个完全隔离的`window`环境来执行，由此来获得完全隔离的代码运行环境。
+
+```js
+export const withIframeSandbox = (win: Record<string | symbol, unknown>, proto: Sandbox) => {
+  const sandbox = Object.create(proto);
+  return new Proxy(sandbox, {
+    get(_, key) {
+      return sandbox[key] || win[key];
+    },
+    has: () => true,
+    set(_, key, newValue) {
+      sandbox[key] = newValue;
+      return true;
+    },
+  });
+};
+
+export const renderWithIframe = (code: string, dependency: Sandbox) => {
+  const id = getUniqueId();
+  dependency.___BRIDGE___ = {};
+  const bridge = dependency.___BRIDGE___ as Record<string, unknown>;
+  const iframe = document.createElement("iframe");
+  iframe.src = "about:blank";
+  iframe.style.position = "fixed";
+  iframe.style.left = "-10000px";
+  iframe.style.top = "-10000px";
+  iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
+  document.body.appendChild(iframe);
+  const win = iframe.contentWindow;
+  document.body.removeChild(iframe);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const sandbox = withIframeSandbox(win || {}, dependency);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const fn = new win.Function(
+    "dependency",
+    `with(dependency) { 
+      function fn(){  "use strict"; return (${code.trim()}); };
+      ___BRIDGE___["${id}"] = fn.call(null);
+    }
+    `
+  );
+  fn.call(null, sandbox);
+  return bridge[id];
+};
+```
+
 
 ## 每日一题
 
