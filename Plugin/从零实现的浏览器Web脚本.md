@@ -71,17 +71,98 @@
 * `GM.xmlHttpRequest(options: { method?: string, url: string, headers?: Record<string, string>, onload?: (response: { status: number; responseText: string , ... }) => void , ... })`: 用于与标准`XMLHttpRequest`对象类似的发起请求的功能，但允许这些请求跨越同源策略。
 * `unsafeWindow`: 用于访问页面原始的`window`对象，在脚本中直接访问的`window`对象是经过脚本管理器封装过的沙箱环境。
 
+单看这些常用的`API`其实并不好玩，特别是其中很多能力我们也可以直接换种思路借助脚本来实现，当然有一些例如`unsafeWindow`和`GM.xmlHttpRequest`我们必须要借助脚本管理器的`API`来完成。那么在这里我们还可以聊一下脚本管理器中非常有意思的实现方案，首先是`unsafeWindow`这个非常特殊的`API`，试想一下如果我们完全信任用户当前页面的`window`，那么我们可能会直接将`API`挂载到`window`对象上，听起来似乎没有什么问题，但是设想这么一个场景，假如用户访问了一个恶意页面，然后这个网页又恰好被类似`https://*/*`规则匹配到了，那么这个页面就可以获得访问我们的脚本管理器的相关`API`，这相当于是浏览器扩展级别的权限，例如直接获取用户磁盘中的文件内容，并且可以直接将内容跨域发送到恶意服务器，这样的话我们的脚本管理器就会成为一个安全隐患，再比如当前页面已经被`XSS`攻击了，攻击者便可以借助脚本管理器`GM.cookie.get`来获取`HTTP Only`的`Cookie`，并且即使不开启`CORS`也可以轻松将请求发送到服务端。那么显然我们本身是准备使用脚本管理器来`Hook`浏览器的`Web`页面，此时反而却被越权访问了更高级的函数，这显然是不合理的，所以`GreaseMonkey`实现了`XPCNativeWrappers`机制，也可以理解为针对于`window`对象的沙箱环境。
 
-单看这些常用的`API`其实并不好玩，特别是其中很多能力我们也可以直接换种思路借助脚本来实现，当然有一些例如`unsafeWindow`和`GM.xmlHttpRequest`我们必须要借助脚本管理器的`API`来完成。那么在这里我们还可以聊一下脚本管理器中非常有意思的实现方案，首先是`unsafeWindow`这个非常特殊的`API`，试想一下如果我们完全信任用户当前页面的`window`，那么我们可能会直接将`API`挂载到`window`对象上
+那么我们在隔离的环境中，可以得到`window`对象是一个隔离的安全`window`环境，而`unsafeWindow`就是用户页面中的`window`对象。曾经我很长一段时间都认为这些插件中可以访问的`window`对象实际上是浏览器拓展的`Content Scripts`提供的`window`对象，而`unsafeWindow`是用户页面中的`window`，以至于我用了比较长的时间在探寻如何直接在浏览器拓展中的`Content Scripts`直接获取用户页面的`window`对象，当然最终还是以失败告终，这其中比较有意思的是一个逃逸浏览器拓展的实现，因为在`Content Scripts`与`Inject Scripts`是共用`DOM`的，所以可以通过`DOM`来实现逃逸，当然这个方案早已失效。
+
+```js
+var unsafeWindow;
+(function() {
+    var div = document.createElement("div");
+    div.setAttribute("onclick", "return window");
+    unsafeWindow = div.onclick();
+})();
+```
+
+此外在`FireFox`中还提供了一个`wrappedJSObject`来帮助我们从`Content Scripts`中访问页面的的`window`对象，但是这个特性也有可能因为不安全在未来的版本中被移除。那么为什么现在我们可以知道其实际上是同一个浏览器环境呢，除了看源码之外我们也可以通过以下的代码来验证脚本在浏览器的效果，可以看出我们对于`window`的修改实际上是会同步到`unsafeWindow`上，证明实际上是同一个引用。
 
 
-那么现在到目前为止我们使用`Proxy`实现了`window`对象隔离的沙箱环境，我们的目标是实现一个干净的`window`沙箱环境，也就是说我们希望网站本身执行的`Js`不会影响到我们的`window`对象，比如网站本体在`window`上挂载了`$$`对象，我们本身不希望其能直接在开发者的脚本中访问到这个对象，那么如果想解决这个问题就要在用户脚本执行之前将原本`window`对象上的`key`记录副本，相当于以白名单的形式操作沙箱，由此引出了我们要讨论的下一个问题，如何在`document-start`即页面加载之前执行脚本。
+```js
+unsafeWindow.name = "111111";
+console.log(window === unsafeWindow); // false
+console.log(window); // Proxy {Symbol(Symbol.toStringTag): 'Window'}
+console.log(window.onblur); // null
+unsafeWindow.onblur = () => 111;
+console.log(unsafeWindow); // Window { ... }
+console.log(unsafeWindow.name, window.name); // 111111 111111
+console.log(window.onblur === unsafeWindow.onblur); // true
+const win = new Function("return this")();
+console.log(win === unsafeWindow); // true
+```
+
+实际上在`@grant none`的情况下，脚本管理器会认为当前的环境是安全的，同样也不存在越权访问的问题了，所以此时访问的`window`就是页面原本的`window`对象。此外，如果观察仔细的话，我们可以看到上边的验证代码最后两行我们突破了这些扩展的沙盒限制，从而可以在未`@grant unsafeWindow`情况下能够直接访问`unsafeWindow`，当然这并不是什么大问题，因为脚本管理器本身也是提供`unsafeWindow`访问的，而且如果在页面未启用`unsafe-eval`的`CSP`情况下这个例子就失效了。只不过我们也可以想一下其他的方案，是不是直接禁用`Function`函数以及`eval`的执行就可以了，但是很明显即使我们直接禁用了`Function`对象的访问，也同样可以通过构造函数的方式即`(function(){}).constructor`来访问`Function`对象，所以针对于`window`沙箱环境也是需要不断进行攻防的，甚至于说直接使用`iframe`创建一个`about:blank`的`window`对象作为隔离环境。
+
+那么我们紧接着可以简单讨论下如何实现简单的沙箱环境隔离，其实在上边的例子中也可以看到直接打印`window`输出的是一个`Proxy`对象，那么在这里我们同样使用`Proxy`来实现简单的沙箱环境，我们需要实现的是对于`window`对象的代理，在这里我们简单一些，我们希望的是所有的操作都在新的对象上，不会操作原本的对象，在取值的时候可以做到首先从我们新的对象取，取不到再去`window`对象上取，写值的时候只会在我们新的对象上操作，在这里我们还用到了`with`操作符，主要是为了将代码的作用域设置到一个特定的对象中，在这里就是我们创建的的`context`，在最终结果中我们可以看到我们对于`window`对象的读操作是正确的，并且写操作都只作用在沙箱环境中。
+
+```js
+const context = Object.create(null);
+const global = window;
+const proxy = new Proxy(context, {
+    // `Proxy`使用`in`操作符号判断是否存在属性
+    has: () => true,
+    // 写入属性作用到`context`上
+    set: (target, prop, value) => {
+        target[prop] = value;
+        return true;
+    },
+    // 特判特殊属性与方法 读取属性依次读`context`、`window`
+    get: (target, prop) => {
+        switch (prop) {
+            // 重写特殊属性指向
+            case "globalThis":
+            case "window":
+            case "parent":
+            case "self":
+                return proxy;
+            default:
+                if (prop in target) {
+                    return target[prop];
+                }
+                const value = global[prop];
+                // `alert`、`setTimeout`等方法作用域必须在`window`下
+                if (typeof value === "function" && !value.prototype) {
+                    return value.bind(global);
+                }
+                return value;
+        }
+    },
+});
+
+window.name = "111";
+with (proxy) {
+    console.log(window.name); // 111
+    window.name = "222";
+    console.log(name); // 222
+    console.log(window.name); // 222
+}
+console.log(window.name); // 111
+console.log(context); // { name: '222' }
+```
+
+那么现在到目前为止我们使用`Proxy`实现了`window`对象隔离的沙箱环境，总结起来我们的目标是实现一个干净的`window`沙箱环境，也就是说我们希望网站本身执行的任何不会影响到我们的`window`对象，比如网站本体在`window`上挂载了`$$`对象，我们本身不希望其能直接在开发者的脚本中访问到这个对象，我们的沙箱环境是完全隔离的，而用户脚本管理器的目标则是不同的，比如用户需要在`window`上挂载事件，那么我们就应该将这个事件处理函数挂载到原本的`window`对象上，那么我们就需要区分读或者写的属性是原本`window`上的还是`Web`页面新写入的属性，显然如果想解决这个问题就要在用户脚本执行之前将原本`window`对象上的`key`记录副本，相当于以白名单的形式操作沙箱。由此引出了我们要讨论的下一个问题，如何在`document-start`即页面加载之前执行脚本。
+
+
+
 
 
 还记得我们最初的问题吗，即使我们完成了沙箱环境的构建，但是如何将这个对象传递给用户脚本，我们不能将这些变量暴露给网站本身，但是又需要将相关的变量传递给脚本，而脚本本身就是运行在用户页面上的，否则我们没有办法访问用户页面的`window`对象，所以接下来我们就来讨论如何保证我们的高级方法安全地传递到用户脚本的问题。闭包访问变量
 
 
+
+
 我们都知道浏览器会有跨域的限制，但是为什么我们的脚本可以通过`GM.xmlHttpRequest`来实现跨域接口的访问，而且我们之前也提到了脚本是运行在用户页面也就是作为`Inject Script`执行的，所以是会受到跨域访问的限制的，所以在这里发起的通信很明显并不是直接从页面的`window`发起的，而是从浏览器扩展发出去的，所以在这里我们就需要讨论如何做到在用户页面与浏览器扩展之间进行通信的问题。
+
+
 
 ## 脚本构建
 在构建`Chrome`扩展的时候我们是使用`Rspack`来完成的，这次我们换个构建工具使用`Rollup`来打包，主要还是`Rspack`更适合打包整体的`Web`应用，而`Rollup`更适合打包工具类库，我们的`Web`脚本是单文件的脚本，相对来说更适合使用`Rollup`来打包，当然如果想使用`Rspack`来体验`Rust`构建工具的打包速度也是没问题的，甚至也可以直接使用`SWC`来完成打包，实际上在这里我并没有使用`Babel`而是使用`ESBuild`来构建的脚本，速度也是非常不错的。
@@ -114,6 +195,7 @@ https://wiki.greasespot.net/Security
 https://docs.scriptcat.org/docs/dev/api/
 https://en.wikipedia.org/wiki/Greasemonkey
 https://wiki.greasespot.net/Metadata_Block
+https://juejin.cn/post/6844903977759293448  
 https://www.tampermonkey.net/documentation.php
 https://wiki.greasespot.net/Greasemonkey_Manual:API
 https://learn.scriptcat.org/docs/%E7%AE%80%E4%BB%8B/
