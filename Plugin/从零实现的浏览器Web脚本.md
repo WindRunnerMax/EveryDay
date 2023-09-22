@@ -60,10 +60,19 @@
 ```
 
 * `GM.info`: 获取当前脚本的元数据以及脚本管理器的相关信息。
+* `GM.setValue(name: string, value: string | number | boolean): Promise<void>`: 用于写入数据并储存，数据通常会存储在脚本管理器本体维护的`IndexDB`中。
+* `GM.getValue(name: string, default?: T): : Promise<string | number | boolean | T | undefined>`: 用于获取脚本之前使用`GM.setValue`赋值储存的数据。
+* `GM.deleteValue(name: string): Promise<void>`: 用于删除之前使用`GM.setValue`赋值储存的数据。
+* `GM.getResourceUrl(name: string): Promise<string>`: 用于获取之前使用`@resource`声明的资源地址。
+* `GM.notification(text: string, title?: string, image?: string, onclick?: () => void): Promise<void>`: 用于调用系统级能力的窗口通知。
+* `GM.openInTab(url: string, open_in_background?: boolean )`: 用于在新选项卡中打开指定的`URL`。
+* `GM.registerMenuCommand(name: string, onclick: () => void, accessKey?: string): void`: 用于在脚本管理器的菜单中添加一个菜单项。
+* `GM.setClipboard(text: string): void`: 用于将指定的文本数据写入剪贴板。
+* `GM.xmlHttpRequest(options: { method?: string, url: string, headers?: Record<string, string>, onload?: (response: { status: number; responseText: string , ... }) => void , ... })`: 用于与标准`XMLHttpRequest`对象类似的发起请求的功能，但允许这些请求跨越同源策略。
+* `unsafeWindow`: 用于访问页面原始的`window`对象，在脚本中直接访问的`window`对象是经过脚本管理器封装过的沙箱环境。
 
 
-
-在这里我们可以聊一下脚本管理器中非常有意思的实现，首先是`unsafeWindow`这个非常特殊的`API`，试想一下如果我们完全信任用户当前页面的`window`，那么我们可能会直接将`API`挂载到`window`对象上
+单看这些常用的`API`其实并不好玩，特别是其中很多能力我们也可以直接换种思路借助脚本来实现，当然有一些例如`unsafeWindow`和`GM.xmlHttpRequest`我们必须要借助脚本管理器的`API`来完成。那么在这里我们还可以聊一下脚本管理器中非常有意思的实现方案，首先是`unsafeWindow`这个非常特殊的`API`，试想一下如果我们完全信任用户当前页面的`window`，那么我们可能会直接将`API`挂载到`window`对象上
 
 
 那么现在到目前为止我们使用`Proxy`实现了`window`对象隔离的沙箱环境，我们的目标是实现一个干净的`window`沙箱环境，也就是说我们希望网站本身执行的`Js`不会影响到我们的`window`对象，比如网站本体在`window`上挂载了`$$`对象，我们本身不希望其能直接在开发者的脚本中访问到这个对象，那么如果想解决这个问题就要在用户脚本执行之前将原本`window`对象上的`key`记录副本，相当于以白名单的形式操作沙箱，由此引出了我们要讨论的下一个问题，如何在`document-start`即页面加载之前执行脚本。
@@ -101,6 +110,8 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+https://wiki.greasespot.net/Security
+https://docs.scriptcat.org/docs/dev/api/
 https://en.wikipedia.org/wiki/Greasemonkey
 https://wiki.greasespot.net/Metadata_Block
 https://www.tampermonkey.net/documentation.php
