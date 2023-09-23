@@ -100,9 +100,9 @@ const win = new Function("return this")();
 console.log(win === unsafeWindow); // true
 ```
 
-实际上在`@grant none`的情况下，脚本管理器会认为当前的环境是安全的，同样也不存在越权访问的问题了，所以此时访问的`window`就是页面原本的`window`对象。此外，如果观察仔细的话，我们可以看到上边的验证代码最后两行我们突破了这些扩展的沙盒限制，从而可以在未`@grant unsafeWindow`情况下能够直接访问`unsafeWindow`，当然这并不是什么大问题，因为脚本管理器本身也是提供`unsafeWindow`访问的，而且如果在页面未启用`unsafe-eval`的`CSP`情况下这个例子就失效了。只不过我们也可以想一下其他的方案，是不是直接禁用`Function`函数以及`eval`的执行就可以了，但是很明显即使我们直接禁用了`Function`对象的访问，也同样可以通过构造函数的方式即`(function(){}).constructor`来访问`Function`对象，所以针对于`window`沙箱环境也是需要不断进行攻防的，甚至于说直接使用`iframe`创建一个`about:blank`的`window`对象作为隔离环境。
+实际上在`@grant none`的情况下，脚本管理器会认为当前的环境是安全的，同样也不存在越权访问的问题了，所以此时访问的`window`就是页面原本的`window`对象。此外，如果观察仔细的话，我们可以看到上边的验证代码最后两行我们突破了这些扩展的沙盒限制，从而可以在未`@grant unsafeWindow`情况下能够直接访问`unsafeWindow`，当然这并不是什么大问题，因为脚本管理器本身也是提供`unsafeWindow`访问的，而且如果在页面未启用`unsafe-eval`的`CSP`情况下这个例子就失效了。只不过我们也可以想一下其他的方案，是不是直接禁用`Function`函数以及`eval`的执行就可以了，但是很明显即使我们直接禁用了`Function`对象的访问，也同样可以通过构造函数的方式即`(function(){}).constructor`来访问`Function`对象，所以针对于`window`沙箱环境也是需要不断进行攻防的，例如小程序不允许使用`Function`、`eval`、`setTimeout`、`setInterval`来动态执行代码，那么社区就开始有了手写解释器的实现，对于我们这个场景来说，我们甚至可以直接使用`iframe`创建一个`about:blank`的`window`对象作为隔离环境。
 
-那么我们紧接着可以简单讨论下如何实现简单的沙箱环境隔离，其实在上边的例子中也可以看到直接打印`window`输出的是一个`Proxy`对象，那么在这里我们同样使用`Proxy`来实现简单的沙箱环境，我们需要实现的是对于`window`对象的代理，在这里我们简单一些，我们希望的是所有的操作都在新的对象上，不会操作原本的对象，在取值的时候可以做到首先从我们新的对象取，取不到再去`window`对象上取，写值的时候只会在我们新的对象上操作，在这里我们还用到了`with`操作符，主要是为了将代码的作用域设置到一个特定的对象中，在这里就是我们创建的的`context`，在最终结果中我们可以看到我们对于`window`对象的读操作是正确的，并且写操作都只作用在沙箱环境中。
+那么我们紧接着可以简单地讨论下如何实现沙箱环境隔离，其实在上边的例子中也可以看到直接打印`window`输出的是一个`Proxy`对象，那么在这里我们同样使用`Proxy`来实现简单的沙箱环境，我们需要实现的是对于`window`对象的代理，在这里我们简单一些，我们希望的是所有的操作都在新的对象上，不会操作原本的对象，在取值的时候可以做到首先从我们新的对象取，取不到再去`window`对象上取，写值的时候只会在我们新的对象上操作，在这里我们还用到了`with`操作符，主要是为了将代码的作用域设置到一个特定的对象中，在这里就是我们创建的的`context`，在最终结果中我们可以看到我们对于`window`对象的读操作是正确的，并且写操作都只作用在沙箱环境中。
 
 ```js
 const context = Object.create(null);
@@ -151,16 +151,70 @@ console.log(context); // { name: '222' }
 
 那么现在到目前为止我们使用`Proxy`实现了`window`对象隔离的沙箱环境，总结起来我们的目标是实现一个干净的`window`沙箱环境，也就是说我们希望网站本身执行的任何不会影响到我们的`window`对象，比如网站本体在`window`上挂载了`$$`对象，我们本身不希望其能直接在开发者的脚本中访问到这个对象，我们的沙箱环境是完全隔离的，而用户脚本管理器的目标则是不同的，比如用户需要在`window`上挂载事件，那么我们就应该将这个事件处理函数挂载到原本的`window`对象上，那么我们就需要区分读或者写的属性是原本`window`上的还是`Web`页面新写入的属性，显然如果想解决这个问题就要在用户脚本执行之前将原本`window`对象上的`key`记录副本，相当于以白名单的形式操作沙箱。由此引出了我们要讨论的下一个问题，如何在`document-start`即页面加载之前执行脚本。
 
+实际上`document-start`是用户脚本管理器中非常重要的实现，当然其本身的能力也是源自于浏览器拓展，而如何将浏览器扩展的这个能力暴露给`Web`页面就是需要考量的问题了。首先我们大概率会写过动态/异步加载`JS`脚本的实现，类似于下面这种方式:
 
+```js
+const loadScriptAsync = (url: string) => {
+    return new Promise<Event>((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = url;
+        script.async = true;
+        script.onload = e => {
+            script.remove();
+            resolve(e);
+        };
+        script.onerror = e => {
+            script.remove();
+            reject(e);
+        };
+        document.body.appendChild(script);
+    });
+};
+```
 
+那么现在就有一个明显的问题，我们如果在`body`标签构建完成也就是大概在`DOMContentLoaded`时机再加载脚本肯定是达不到`document-start`的目标的，甚至于在`head`标签完成之后处理也不行，很多网站都会在`head`内编写部分`JS`资源，在这里加载同样时机已经不合适了。那么对于整个页面来说，最先加载的必定是`html`这个标签，那么很明显我们只要将脚本在`html`标签级别插入就好了，配合浏览器扩展中`background`的`chrome.tabs.executeScript`动态执行代码以及`content.js`的`"run_at": "document_start"`建立消息通信确认注入的`tab`，这个方法是不是看起来很简单，但就是这么简单的问题让我思索了很久是如何做到的。此外这个方案目前在扩展`V2`中是可以行的，在`V3`中移除了`chrome.tabs.executeScript`，替换为了`chrome.scripting.executeScript`，当前的话使用这个`API`可以完成框架的注入，但是做不到用户脚本的注入，因为无法动态执行代码。
 
+```js
+(function () {
+    const script = document.createElementNS("http://www.w3.org/1999/xhtml", "script");
+    script.setAttribute("type", "text/javascript");
+    script.innerText = "console.log(111);";
+    script.className = "injected-js";
+    document.documentElement.appendChild(script);
+    script.remove();
+})();
+```
 
-还记得我们最初的问题吗，即使我们完成了沙箱环境的构建，但是如何将这个对象传递给用户脚本，我们不能将这些变量暴露给网站本身，但是又需要将相关的变量传递给脚本，而脚本本身就是运行在用户页面上的，否则我们没有办法访问用户页面的`window`对象，所以接下来我们就来讨论如何保证我们的高级方法安全地传递到用户脚本的问题。闭包访问变量
+此外我们可能纳闷，为什么脚本管理器框架和用户脚本都是采用这种方式注入的，而在浏览器控制台的`Sources`控制面板下只能看到一个`userscript.html?name=xxxxxx.user.js`却看不到脚本管理器的代码注入，实际上这是因为脚本管理器会在用户脚本的最后部分注入一个类似于`//# sourceURL=chrome.runtime.getURL(xxx.user.js)`的注释，其中这个`sourceURL`会将注释中指定的`URL`作为脚本的源`URL`，并在`Sources`面板中以该`URL`标识和显示该脚本，这对于在调试和追踪代码时非常有用，特别是在加载动态生成的或内联脚本时。
 
+```js
+window["xxxxxxxxxxxxx"] = function (context, GM_info) {
+  with (context)
+    return (() => {
+      // ==UserScript==
+      // @name       TEST
+      // @description       TEST
+      // @version    1.0.0
+      // @match      http://*/*
+      // @match      https://*/*
+      // ==/UserScript==
 
+      console.log(window);
 
+      //# sourceURL=chrome-extension://xxxxxx/DEBUG.user.js
+    })();
+};
+```
+
+还记得我们最初的问题吗，即使我们完成了沙箱环境的构建，但是如何将这个对象传递给用户脚本，我们不能将这些变量暴露给网站本身，但是又需要将相关的变量传递给脚本，而脚本本身就是运行在用户页面上的，否则我们没有办法访问用户页面的`window`对象，所以接下来我们就来讨论如何保证我们的高级方法安全地传递到用户脚本的问题。实际上在上边的`source-map`我们也可以明显地看出来，我们可以直接借助闭包以及`with`访问变量即可，并且在这里还需要注意`this`的问题，所以在调用该函数的时候通过如下方式调用即可将当前作用域的变量作为传递给脚本执行。
+
+```js
+script.apply(proxyContent, [ proxyContent, GM_info ]);
+```
 
 我们都知道浏览器会有跨域的限制，但是为什么我们的脚本可以通过`GM.xmlHttpRequest`来实现跨域接口的访问，而且我们之前也提到了脚本是运行在用户页面也就是作为`Inject Script`执行的，所以是会受到跨域访问的限制的，所以在这里发起的通信很明显并不是直接从页面的`window`发起的，而是从浏览器扩展发出去的，所以在这里我们就需要讨论如何做到在用户页面与浏览器扩展之间进行通信的问题。
+
+
 
 
 
