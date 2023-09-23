@@ -215,15 +215,38 @@ script.apply(proxyContent, [ proxyContent, GM_info ]);
 我们都知道浏览器会有跨域的限制，但是为什么我们的脚本可以通过`GM.xmlHttpRequest`来实现跨域接口的访问，而且我们之前也提到了脚本是运行在用户页面也就是作为`Inject Script`执行的，所以是会受到跨域访问的限制的。那么解决这个问题的方式也比较简单，很明显在这里发起的通信并不是直接从页面的`window`发起的，而是从浏览器扩展发出去的，所以在这里我们就需要讨论如何做到在用户页面与浏览器扩展之间进行通信的问题。在`Content Script`中的`DOM`和事件流是与`Inject Script`共享的，那么实际上我们就可以有两种方式实现通信，首先我们常用的方法是`window.addEventListener + window.postMessage`，只不过这种方式很明显的一个问题是在`Web`页面中也可以收到我们的消息，即使我们可以生成一些随机的`token`来验证消息的来源，但是这个方式毕竟能够非常简单地被页面本身截获不够安全，所以在这里通常是用的另一种方式，即`document.addEventListener + document.dispatchEvent + CustomEvent`自定义事件的方式，在这里我们需要注意的是事件名要随机，通过在注入框架时于`background`生成唯一的随机事件名，之后在`Content Script`与`Inject Script`都使用该事件名通信，就可以防止用户截获方法调用时产生的消息了。
 
 ```js
+// Content Script
+document.addEventListener("xxxxxxxxxxxxx" + "content", e => {
+    console.log("From Inject Script", e.detail);
+});
 
+// Inject Script
+document.addEventListener("xxxxxxxxxxxxx" + "inject", e => {
+    console.log("From Content Script", e.detail);
+});
+
+// Inject Script
+document.dispatchEvent(
+    new CustomEvent("xxxxxxxxxxxxx" + "content", {
+        detail: { message: "call api" },
+    }),
+);
+
+// Content Script
+document.dispatchEvent(
+    new CustomEvent("xxxxxxxxxxxxx" + "inject", {
+        detail: { message: "return value" },
+    }),
+);
 ```
 
 ## 脚本构建
 在构建`Chrome`扩展的时候我们是使用`Rspack`来完成的，这次我们换个构建工具使用`Rollup`来打包，主要还是`Rspack`更适合打包整体的`Web`应用，而`Rollup`更适合打包工具类库，我们的`Web`脚本是单文件的脚本，相对来说更适合使用`Rollup`来打包，当然如果想使用`Rspack`来体验`Rust`构建工具的打包速度也是没问题的，甚至也可以直接使用`SWC`来完成打包，实际上在这里我并没有使用`Babel`而是使用`ESBuild`来构建的脚本，速度也是非常不错的。
 
-此外，渠道包
+此外，之前我们也提到过脚本管理器的`API`虽然都对`GreaseMonkey`兼容，但实际上各个脚本管理器会出现特有的`API`，这也是比较正常的现象毕竟是不同的脚本管理器，完全实现相同的功能是意义不大的，那么如果我们需要全平台支持的话就需要实现渠道包，这个概念在`Android`开发中是非常常见的，那么每个包都由开发者手写显然是不现实的，使用现代化的构建工具除了方便维护之外，对于渠道包的支持也更加方便，利用环境变量与`TreeShaking`可以轻松地实现渠道包的构建，再配合脚本管理器以及脚本网站的同步功能，就可以实现分发不同渠道的能力。
 
 ### Rollup
+
 
 ### Meta
 
