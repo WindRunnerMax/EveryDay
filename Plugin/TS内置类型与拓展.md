@@ -2,12 +2,22 @@
 `TypeScript`具有类型系统，且是`JavaScript`的超集，其可以编译成普通的`JavaScript`代码，也就是说，其是带有类型检查的`JavaScript`。
 
 ## 内置类型
-`TypeScript`提供了几种实用程序类型来促进常见的类型转换，这些类型在全局范围内可用。
+`TypeScript`提供了几种实用程序类型来促进常见的类型转换，这些类型在全局范围内可用。`TypeScript Playground`也就是`https://www.typescriptlang.org/play`提供了在线编译`TS`的能力，在这里还有一个小技巧，假如我们在`Playground`编写了比较复杂的类型，此时我们想看一下类型推断过程中的中间类型，就可以用到`//  ^?`标识，通过这个标识我们就可以直接在`Playground`看到相关的类型定义。
+
+```js
+type Instance = Record<string | symbol, number>;
+type InstanceKey = keyof Instance;
+//  ^? type InstanceKey = string | symbol
+type InstanceValue = Instance[keyof Instance];
+//  ^? type InstanceValue = number
+
+// https://www.typescriptlang.org/play?#code/C4TwDgpgBAkgdgZ2AQzgY2gXigJQmgewCcATAHiSIEs4BzKAHygRAFsAjAgGwBoo4ArhwhEAfAG4AUKEixEKdBADSEEFGwBrVQQBmcpKgxSA9MahQAegH5p4aPAOKAasi4Cs+hRgDaWkLs9DCABdEzNLGyA
+```
 
 ### Partial
 `Partial<Type>`构造一个类型使`Type`的所有属性都设置为可选。
 
-```
+```js
 /**
  * Make all properties in T optional
  */
@@ -17,7 +27,7 @@ type Partial<T> = {
 };
 ```
 
-```
+```js
 interface Example {
     a: string;
     b: number;
@@ -37,7 +47,7 @@ type PartialExample = Partial<Example>;
 ### Required
 `Required<Type>`构造一个类型使`Type`的所有属性都设置为`required`，与`Partial<Type>`功能相反。
 
-```
+```js
 /**
  * Make all properties in T required
  */
@@ -47,7 +57,7 @@ type Required<T> = {
 };
 ```
 
-```
+```js
 interface Example {
     a?: string;
     b?: number;
@@ -67,7 +77,7 @@ type RequiredExample = Required<Example>;
 ### Readonly
 `Required<Type>`构造一个类型使`Type`的所有属性都设置为`readonly`，这意味着构造类型的属性都是只读的，不能被修改，这对使用`Object.freeze()`方法的对象非常有用。
 
-```
+```js
 /**
  * Make all properties in T readonly
  */
@@ -77,7 +87,7 @@ type Readonly<T> = {
 };
 ```
 
-```
+```js
 interface Example {
     a: string;
     b: number;
@@ -97,7 +107,7 @@ type ReadonlyExample = Readonly<Example>;
 ### Record
 `Record<Keys, Type>`构造一个对象类型，其属性键为`Keys`，其属性值为`Type`，通常可以使用`Record`来表示一个对象。
 
-```
+```js
 /**
  * Construct a type with a set of properties K of type T
  */
@@ -107,7 +117,7 @@ type Record<K extends keyof any, T> = {
 };
 ```
 
-```
+```js
 type RecordType = Record<string, string|number>;
 
 const recordExample: RecordType ={
@@ -119,7 +129,7 @@ const recordExample: RecordType ={
 ### Pick
 `Pick<Type, Keys>`通过从`Type`中选择一组属性`Keys`来构造一个类型。
 
-```
+```js
 /**
  * From T, pick a set of properties whose keys are in the union K
  */
@@ -129,7 +139,7 @@ type Pick<T, K extends keyof T> = {
 };
 ```
 
-```
+```js
 interface Example {
     a: string;
     b: number;
@@ -150,7 +160,7 @@ type PickExample = Pick<Example, "a"|"b">;
 ### Omit
 `Omit<Type, Keys>`通过从`Type`中选择所有属性然后删除`Keys`来构造一个类型，与`Pick<Type, Keys>`功能相反。
 
-```
+```js
 /**
  * Construct a type with the properties of T except for those in type K.
  */
@@ -158,7 +168,7 @@ type PickExample = Pick<Example, "a"|"b">;
 type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 ```
 
-```
+```js
 interface Example {
     a: string;
     b: number;
@@ -178,7 +188,7 @@ type OmitExample = Omit<Example, "a"|"b">;
 ### Exclude
 `Exclude<UnionType, ExcludedMembers>`通过从`UnionType`中排除可分配给`ExcludedMembers`的所有联合成员来构造类型。
 
-```
+```js
 /**
  * Exclude from T those types that are assignable to U
  */
@@ -186,7 +196,7 @@ type OmitExample = Omit<Example, "a"|"b">;
 type Exclude<T, U> = T extends U ? never : T;
 ```
 
-```
+```js
 type ExcludeExample = Exclude<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 
 /**
@@ -198,7 +208,7 @@ type ExcludeExample = Exclude<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 ### Extract
 `Extract<Type, Union>`通过从`Type`中提取所有可分配给`Union`的联合成员来构造一个类型，与`Exclude<UnionType, ExcludedMembers>`功能相反。
 
-```
+```js
 /**
  * Extract from T those types that are assignable to U
  */
@@ -206,7 +216,7 @@ type ExcludeExample = Exclude<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 type Extract<T, U> = T extends U ? T : never;
 ```
 
-```
+```js
 type ExtractExample = Extract<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 
 /**
@@ -218,7 +228,7 @@ type ExtractExample = Extract<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 ### NonNullable
 `NonNullable<Type>`通过从`Type`中排除`null`和`undefined`来构造一个类型。
 
-```
+```js
 /**
  * Exclude null and undefined from T
  */
@@ -226,7 +236,7 @@ type ExtractExample = Extract<"a"|"b"|"c"|"z", "a"|"b"|"d">;
 type NonNullable<T> = T extends null | undefined ? never : T;
 ```
 
-```
+```js
 type NonNullableExample = NonNullable<number|string|null|undefined>;
 
 /**
@@ -238,7 +248,7 @@ type NonNullableExample = NonNullable<number|string|null|undefined>;
 ### Parameters
 `Parameters<Type>`从函数类型`Type`的参数中使用的类型构造元组类型。
 
-```
+```js
 /**
  * Obtain the parameters of a function type in a tuple
  */
@@ -246,7 +256,7 @@ type NonNullableExample = NonNullable<number|string|null|undefined>;
 type Parameters<T extends (...args: any) => any> = T extends (...args: infer P) => any ? P : never;
 ```
 
-```
+```js
 type FnType = (a1: number, a2: string) => void;
 
 type ParametersExample = Parameters<FnType>;
@@ -260,7 +270,7 @@ type ParametersExample = Parameters<FnType>;
 ### ConstructorParameters
 `ConstructorParameters<Type>`从构造函数类型的类型构造元组或数组类型，其产生一个包含所有参数类型的元组类型。
 
-```
+```js
 /**
  * Obtain the parameters of a constructor function type in a tuple
  */
@@ -268,7 +278,7 @@ type ParametersExample = Parameters<FnType>;
 type ConstructorParameters<T extends abstract new (...args: any) => any> = T extends abstract new (...args: infer P) => any ? P : never;
 ```
 
-```
+```js
 interface Example{
   fn(a: string): string;
 }
@@ -290,7 +300,7 @@ type ConstructorParametersExample = ConstructorParameters<ExampleConstructor>;
 ### ReturnType
 `ReturnType<Type>`构造一个由函数`Type`的返回类型组成的类型。
 
-```
+```js
 /**
  * Obtain the return type of a function type
  */
@@ -298,7 +308,7 @@ type ConstructorParametersExample = ConstructorParameters<ExampleConstructor>;
 type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
 ```
 
-```
+```js
 type FnType = (a1: number, a2: string) => string | number;
 
 type ReturnTypeExample = ReturnType<FnType>;
@@ -312,7 +322,7 @@ type ReturnTypeExample = ReturnType<FnType>;
 ### InstanceType
 `InstanceType<Type>`构造一个由`Type`中构造函数的实例类型组成的类型。
 
-```
+```js
 /**
  * Obtain the return type of a constructor function type
  */
@@ -320,7 +330,7 @@ type ReturnTypeExample = ReturnType<FnType>;
 type InstanceType<T extends abstract new (...args: any) => any> = T extends abstract new (...args: any) => infer R ? R : any;
 ```
 
-```
+```js
 interface Example{
   fn(a: string): string;
 }
@@ -344,7 +354,7 @@ type InstanceTypeExample = InstanceType<ExampleConstructor>;
 ### ThisParameterType
 `ThisParameterType<Type>`提取函数类型的`this`参数的类型，如果函数类型没有`this`参数，则为`unknown`。
 
-```
+```js
 /**
  * Extracts the type of the 'this' parameter of a function type, or 'unknown' if the function type has no 'this' parameter.
  */
@@ -352,7 +362,7 @@ type InstanceTypeExample = InstanceType<ExampleConstructor>;
 type ThisParameterType<T> = T extends (this: infer U, ...args: any[]) => any ? U : unknown;
 ```
 
-```
+```js
 function toHex(this: Number) {
   return this.toString(16);
 }
@@ -370,7 +380,7 @@ console.log(toHex.apply(27)); // 1b
 ### OmitThisParameter
 `OmitThisParameter<Type>`从`Type`中移除`this`参数，如果`Type`没有显式声明此参数，则结果只是`Type`，否则，从`Type`创建一个不带此参数的新函数类型。泛型被删除，只有最后一个重载签名被传播到新的函数类型中。
 
-```
+```js
 /**
  * Removes the 'this' parameter from a function type.
  */
@@ -378,7 +388,7 @@ console.log(toHex.apply(27)); // 1b
 type OmitThisParameter<T> = unknown extends ThisParameterType<T> ? T : T extends (...args: infer A) => infer R ? (...args: A) => R : T;
 ```
 
-```
+```js
 function toHex(this: Number) {
   return this.toString(16);
 }
@@ -397,14 +407,14 @@ console.log(toHex27()); // 1b
 ### ThisType
 `ThisType<Type>`可以在对象字面量中键入`this`，并提供通过上下文类型控制`this`类型的便捷方式，其只有在`--noImplicitThis`的选项下才有效。
 
-```
+```js
 /**
  * Marker for contextual 'this' type
  */
 interface ThisType<T> { }
 ```
 
-```
+```js
 // const foo1 = {
 //     bar() {
 //          console.log(this.a); // error
@@ -421,7 +431,7 @@ const foo2: { bar: () => void } & ThisType<{ a: number }> = {
 ### Uppercase
 `Uppercase<StringType>`将`StringType`转为大写，`TS`以内置关键字`intrinsic`来通过编译期来实现。
 
-```
+```js
 /**
  * Convert string literal type to uppercase
  */
@@ -429,7 +439,7 @@ const foo2: { bar: () => void } & ThisType<{ a: number }> = {
 type Uppercase<S extends string> = intrinsic;
 ```
 
-```
+```js
 type UppercaseExample = Uppercase<"abc">;
 
 /**
@@ -441,7 +451,7 @@ type UppercaseExample = Uppercase<"abc">;
 ### Lowercase
 `Lowercase<StringType>`将`StringType`转为小写。
 
-```
+```js
 /**
  * Convert string literal type to lowercase
  */
@@ -449,7 +459,7 @@ type UppercaseExample = Uppercase<"abc">;
 type Lowercase<S extends string> = intrinsic;
 ```
 
-```
+```js
 type LowercaseExample = Lowercase<"ABC">;
 
 /**
@@ -461,7 +471,7 @@ type LowercaseExample = Lowercase<"ABC">;
 ### Capitalize
 `Capitalize<StringType>`将`StringType`首字母转为大写。
 
-```
+```js
 /**
  * Convert first character of string literal type to uppercase
  */
@@ -469,7 +479,7 @@ type LowercaseExample = Lowercase<"ABC">;
 type Capitalize<S extends string> = intrinsic;
 ```
 
-```
+```js
 type CapitalizeExample = Capitalize<"abc">;
 
 /**
@@ -481,7 +491,7 @@ type CapitalizeExample = Capitalize<"abc">;
 ### Uncapitalize
 `Uncapitalize<StringType>`将`StringType`首字母转为小写。
 
-```
+```js
 /**
  * Convert first character of string literal type to lowercase
  */
@@ -489,7 +499,7 @@ type CapitalizeExample = Capitalize<"abc">;
 type Uncapitalize<S extends string> = intrinsic;
 ```
 
-```
+```js
 type UncapitalizeExample = Uncapitalize<"ABC">;
 
 /**
@@ -504,7 +514,7 @@ type UncapitalizeExample = Uncapitalize<"ABC">;
 ### 泛型
 泛型`Generics`是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性。举一个简单的例子，如果需要实现一个生成数组的函数，这个数组会填充默认值，这个数组填充的类型不需要事先指定，而可以在使用的时候指定。当然在这里使用`new Array`组合`fill`函数是一个效果。
 
-```
+```js
 function createArray<T>(value: T, length: number): T[] {
   const result: T[] = [];
     for (let i = 0; i < length; i++) {
@@ -518,7 +528,7 @@ console.log(createArray<number>(1, 3)); // 不显式地指定`number`也可以�
 
 我们也可以约束`T`的类型只能为`number`与`string`。
 
-```
+```js
 const createArray = <T extends number|string>(value: T, length: number): T[] => {
   const result: T[] = [];
     for (let i = 0; i < length; i++) {
@@ -533,7 +543,7 @@ console.log(createArray<number>(1, 3));
 
 多个类型也可以相互约束，例如上边的`Pick`，在这里的`K`必须是`T`中`key`的子集。
 
-```
+```js
 type Pick<T, K extends keyof T> = {
     [P in K]: T[P];
 };
@@ -541,7 +551,7 @@ type Pick<T, K extends keyof T> = {
 
 在传递泛型的时候可以为`T`指定默认值，使用范型编写`class`即泛型类也是完全支持的。
 
-```
+```js
 class Example<T = number> {
     public value: T;
     public add: (x: T, y: T) => T;
@@ -559,7 +569,7 @@ console.log(example.add(1, 2)); // 3
 ### 断言
 类型断言`Type Assertion`可以用来手动指定一个值的类型，由于`<Type>value`的语法容易与`TSX`冲突，所以通常都是使用`value as Type`的语法。通常当`TypeScript`不确定一个联合类型的变量到底是哪个类型的时候，我们只能访问此联合类型的所有类型中共有的属性或方法。
 
-```
+```js
 interface Cat {
     name: string;
     run(): void;
@@ -576,7 +586,7 @@ function getName(animal: Cat | Fish) {
 
 而有时候，我们确实需要在还不确定类型的时候就访问其中一个类型特有的属性或方法。
 
-```
+```js
 interface Cat {
     name: string;
     run(): void;
@@ -596,7 +606,7 @@ function isFish(animal: Cat | Fish) {
 
 上面的例子中，获取`animal.swim`的时候会报错，此时可以使用类型断言，将`animal`断言成`Fish`。当然这里只是举一个例子说明断言的使用，因为滥用断言是不提倡的，类型断言只能够欺骗`TypeScript`编译器，而无法避免运行时的错误，滥用类型断言可能会导致运行时错误。
 
-```
+```js
 interface Cat {
     name: string;
     run(): void;
@@ -619,7 +629,7 @@ function isFish(animal: Cat | Fish) {
 此外类型断言之所以不被称为类型转换，是因为类型转换通常意味着某种运行时的支持，而类型断言只会影响`TypeScript`编译时的类型，类型断言语句在编译结果中会被删除，也就是说类型断言纯粹是一个编译时语法，同时其也是一种为编译器提供关于如何分析代码的方法。    
 与类型断言相关的还有一个`!`的表达式，其在`TypeScript 2.7`被加入，其称为`definite assignment assertion`显式赋值断言，显式赋值断言允许你在实例属性和变量声明之后加一个感叹号`!`，来告诉`TypeScript`这个变量确实已被赋值，即使`TypeScript`不能分析出这个结果。
 
-```
+```js
 let x: number;
 let y!: number;
 console.log(x + x); // Variable 'x' is used before being assigned.(2454)
@@ -628,7 +638,7 @@ console.log(y + y); // ok
 
 既然说到了`!`，那么也可以说一下`?`，在`interface`中`?`和`undefined`并不是等效的，在下面的例子中，在`b`未将`?`声明的情况下，其在`interface`下是`required`，`TypeScript`认为其是必须指定的`key`即使其值只能为`undefined`。
 
-```
+```js
 interface Example{
   a?: number;
   b: undefined;
@@ -641,13 +651,13 @@ const example2: Example = { b: undefined }; // ok
 ### infer
 `infer`示在`extends`条件语句中待推断的类型变量，也可以认为其是一个占位符，用以在使用时推断。例如上边的`ReturnType`就是通过`infer`进行推断的，首先是范型约束了一个函数类型，然后在后边进行`infer`占位后进行推断。
 
-```
+```js
 type ReturnType<T extends (...args: any) => any> = T extends (...args: any) => infer R ? R : any;
 ```
 
 有一些应用，`tuple`转`union`，如`[string, number, symbol] -> string | number | symbol`。
 
-```
+```js
 type ElementOf<T> = T extends Array<infer E> ? E : never;
 
 type TTuple = [string, number, symbol];
@@ -657,7 +667,7 @@ type ToUnion = ElementOf<TTuple>; // string | number | symbol
 
 还有一个比较离谱的实现。
 
-```
+```js
 type TTuple = [string, number, symbol];
 type Res = TTuple[number]; // string | number | symbol
 
@@ -666,7 +676,7 @@ type Res = TTuple[number]; // string | number | symbol
 
 还比如获取函数参数的第一个参数类型。
 
-```
+```js
 type fn = (a: number, b: string, ddd: boolean) => void;
 
 type FirstParameter<T> = T extends (args1: infer R, ...rest: any[]) => any ? R : never;
@@ -677,7 +687,7 @@ type firstArg = FirstParameter<fn>;  // number
 ### 函数重载
 `TypeScript`允许声明函数重载，即允许一个函数接受不同数量或类型的参数时，作出不同的处理。当然，最终声明即从函数内部看到的真正声明与所有重载兼容是很重要的。这是因为这是函数体需要考虑的函数调用的真实性质。
 
-```
+```js
 function reverse(x: number): number;
 function reverse(x: string): string;
 function reverse(x: number | string): number | string | void {
@@ -703,7 +713,7 @@ console.log(date.getDay()); // 2
 
 所以需要对时间日期对象做一下简单的兼容，但是做兼容时又需要保证`TS`的声明，这时就可以使用函数重载等方式处理。
 
-```
+```js
 function safeDate(): Date;
 function safeDate(date: Date): Date;
 function safeDate(timestamp: number): Date;
@@ -745,7 +755,7 @@ function safeDate(
 console.log(safeDate("2022-04-05 20:00:00").getDay()); // 2
 ```
 
-```
+```js
 type DateParams =
     | []
     | [string]
@@ -775,7 +785,7 @@ console.log(safeDate("2022-04-05 20:00:00").getDay()); // 2
 
 我们可以通过`declare`关键字来告诉`TypeScript`，某些变量或者对象已经声明，我们可以选择把这些声明放入`.ts`或者`.d.ts`里。`declare namespace`表示全局变量是一个对象，包含很多子属性。
 
-```
+```js
 // global.d.ts
 declare namespace App {
     interface Utils {
@@ -802,7 +812,7 @@ window.utils = {
 
 模块的声明文件与全局变量的声明文件有很大区别，在模块的声明文件中，使用`declare`不再会声明一个全局变量，而只会在当前文件中声明一个局部变量，只有在声明文件中使用`export`导出，然后在使用方`import`导入后，才会应用到这些类型声明，如果想使用模块的声明文件而并没有实际的`export`时，通常会显示标记一个空导出`export {}`。对于模块的声明文件我们更推荐使用 `ES6`标准的`export default`和`export`。
 
-```
+```js
 // xxx.ts
 export const name: string = "1";
 
@@ -813,7 +823,7 @@ console.log(name); // 1 // typeof name === "string"
 
 如果是需要扩展原有模块的话，需要在类型声明文件中先引用原有模块，再使用`declare module`扩展原有模块。
 
-```
+```js
 // xxx.d.ts
 import * as moment from "moment";
 
@@ -826,7 +836,7 @@ import * as moment from "moment";
 moment.foo();
 ```
 
-```
+```js
 import Vue from "vue";
 
 declare module "vue/types/vue" {
@@ -838,21 +848,21 @@ declare module "vue/types/vue" {
 
 还有一些诸如`.vue`文件、`.css`、`.scss`文件等，需要在全局中进行声明其`import`时对象的类型。
 
-```
+```js
 declare module "*.vue" {
     import Vue from "vue/types/vue";
     export default Vue;
 }
 ```
 
-```
+```js
 declare module "*.module.css" {
   const classes: { readonly [key: string]: string };
   export default classes;
 }
 ```
 
-```
+```js
 declare module "*.module.scss" {
   const classes: { readonly [key: string]: string };
   export default classes;
@@ -861,7 +871,7 @@ declare module "*.module.scss" {
 
 在声明文件中，还可以通过三斜线指令即`///`来导入另一个声明文件，在全局变量的声明文件中，是不允许出现`import`、`export`关键字的，一旦出现了，那么他就会被视为一个模块或`UMD`库，就不再是全局变量的声明文件了，故当我们在书写一个全局变量的声明文件时，如果需要引用另一个库的类型，那么就必须用三斜线指令了。
 
-```
+```js
 // types/jquery-plugin/index.d.ts
 /// <reference types="jquery" />
 declare function foo(options: JQuery.AjaxSettings): string;
@@ -873,7 +883,7 @@ foo({});
 ### 协变与逆变
 子类型在编程理论上是一个复杂的话题，而他的复杂之处来自于一对经常会被混淆的现象。简单来说，协变即类型收敛，逆变即类型发散。在这里由下面的例子引起关于这个问题的讨论，在这里我们定义了一个父类型以及一个子类型，而且我们验证了这个子类型在`TS`中是`OK`的。
 
-```
+```js
 type SuperType = (value: number|string) => number|string; // 父类型
 type SubType = (value: number|string|boolean) => number; // 子类型 参数逆变 返回值协变
 
@@ -883,7 +893,7 @@ const superFn: SuperType = subFn; // ok
 
 首先我们可以探讨一下子类型，明显`number`是`number|string`的子类型，那么下面这个例子是完全`OK`的，这同样也是一个协变的过程，由此看来在上边例子的`SubType`确实是`SuperType`的子类型。
 
-```
+```js
 type SuperType = number|string; // 父类型
 type SubType = number; // 子类型
 
@@ -893,7 +903,7 @@ const superValue: SuperType = subValue; // ok
 
 那么此时就回到最上边的例子，这个函数参数`value`的类型就很奇怪，明明是子类型，反而类型的种类更多了，这个其实就是所谓的逆变，其实这就是为了保证类型的收敛是安全的。此时我们的`subFn`实际代表的函数是`SuperType`类型的，当我们实际调用的时候，传递的参数由于是`SuperType`类型的即`number|string`，所以必定是`SubType`类型的子类即`number|string|boolean`，这样也就保证了函数参数的收敛安全，之后当函数执行完成进行返回值时，由于函数实际定义时的返回类型是`number`，那么在返回出去的时候也必定是`number|string`的子类，这样也就保证了函数返回值的收敛安全。我们可以通过这个图示去理解这个函数子类型的问题，类似于以下的调用过程，由此做到类型收敛的安全。
 
-```
+```js
 父类型参数 -> 子类型参数 -> 执行 -> 子类型返回值 -> 父类型返回值
 number|string -> number|string|boolean -> ... -> number -> number|string
 ```
@@ -925,7 +935,7 @@ number|string -> number|string|boolean -> ... -> number -> number|string
 
 ### tsconfig.json
 
-```
+```js
 {
   "compilerOptions": {
     /* Basic Options */
