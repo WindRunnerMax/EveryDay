@@ -259,6 +259,7 @@
     * [初探富文本之CRDT协同实例](Plugin/初探富文本之CRDT协同实例.md)
     * [基于drawio构建流程图编辑器](Plugin/基于drawio构建流程图编辑器.md)
     * [从零实现的Chrome扩展](Plugin/从零实现的Chrome扩展.md)
+    * [初探富文本之React实时预览](Plugin/初探富文本之React实时预览.md)
 
 * Patterns
     * [简单工厂模式](Patterns/简单工厂模式.md)
