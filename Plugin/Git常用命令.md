@@ -32,6 +32,8 @@
 * `git commit -v`: 提交时显示所有`diff`信息。
 * `git commit --amend -m [message]`: 用一次新的`commit`，替代上一次提交，如果代码没有任何新变化，则用来改写上一次`commit`的提交信息。
 * `git commit --amend [file1] [file2] ...`: 重做上一次`commit`，并包括指定文件的新变化。
+* `git update-index --assume-unchanged file`: 假设未修改，已经被追踪的文件即使在本地修改了也不会被标记已修改。
+* `git update-index --no-assume-unchanged file`: 不再假设未修改，恢复对文件更改的跟踪。
 
 ## 分支
 * `git branch`: 列出所有本地分支。
