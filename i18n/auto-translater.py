@@ -11,7 +11,7 @@ openai.api_key = os.environ.get("CHATGPT_API_KEY")
 openai.api_base = os.environ.get("CHATGPT_API_BASE")
 
 # 设置最大输入字段，超出会拆分输入，防止超出输入字数限制
-max_length = 1800
+max_length = 3000
 
 # 设置翻译的路径
 dir_to_translate = "to-translate"
@@ -23,6 +23,18 @@ dir_translated = {
 exclude_list = ["index.md", "Contact-and-Subscribe.md", "WeChat.md"]
 # 已处理的 Markdown 文件名的列表，会自动生成
 processed_list = "processed_list.txt"
+
+# 读缓存文件
+temp_log = {}
+temp_log_file = "./temp_part.log"
+if not os.path.exists(temp_log_file):
+    with open(temp_log_file, 'w') as file:
+        pass
+import json
+with open(temp_log_file, 'r') as file:
+    data = file.read()
+    if data: 
+        temp_log = json.loads(data)
 
 # 由 ChatGPT 翻译的提示
 tips_translated_by_chatgpt = {
@@ -128,7 +140,12 @@ def translate_text(text, lang, type):
     target_lang = {
         "en": "English",
     }[lang]
-    
+
+    if text in temp_log: 
+        print("Hit Translat Part Temp")
+        return temp_log[text]
+    print("Call OpenAI API To Translat Part")
+     
     # Front Matter 与正文内容使用不同的 prompt 翻译
     # 翻译 Front Matter。
     if type == "front-matter":
@@ -151,6 +168,12 @@ def translate_text(text, lang, type):
 
     # 获取翻译结果
     output_text = completion.choices[0].message.content
+
+    temp_log[text] = output_text
+    with open(temp_log_file, 'w') as output_file:
+        serialized_data = json.dumps(temp_log)
+        output_file.write(serialized_data)
+
     return output_text
 
 # Front Matter 处理规则
