@@ -11,7 +11,7 @@ openai.api_key = os.environ.get("CHATGPT_API_KEY")
 openai.api_base = os.environ.get("CHATGPT_API_BASE")
 
 # 设置最大输入字段，超出会拆分输入，防止超出输入字数限制
-max_length = 3000
+max_length = 2300
 
 # 设置翻译的路径
 dir_to_translate = "to-translate"
