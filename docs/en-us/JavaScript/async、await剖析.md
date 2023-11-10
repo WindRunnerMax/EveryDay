@@ -186,13 +186,13 @@ run(generator).then( () => {
 ## Daily Question
 
 ```
-[https://github.com/WindrunnerMax/EveryDay](https://github.com/WindrunnerMax/EveryDay)
+https://github.com/WindrunnerMax/EveryDay
 ```
 
 ## References
 
 ```
-[https://segmentfault.com/a/1190000007535316](https://segmentfault.com/a/1190000007535316)
-[http://www.ruanyifeng.com/blog/2015/05/co.html](http://www.ruanyifeng.com/blog/2015/05/co.html)
-[http://www.ruanyifeng.com/blog/2015/05/async.html](http://www.ruanyifeng.com/blog/2015/05/async.html)
+https://segmentfault.com/a/1190000007535316
+http://www.ruanyifeng.com/blog/2015/05/co.html
+http://www.ruanyifeng.com/blog/2015/05/async.html
 ```

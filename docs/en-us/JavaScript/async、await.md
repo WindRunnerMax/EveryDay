@@ -75,10 +75,8 @@ function notPromise(){
     console.log(result);
 })();
 ```
-
-## Question of the Day
+## Daily Question
 
 ```
 https://github.com/WindrunnerMax/EveryDay
-```
 ```
