@@ -1,4 +1,4 @@
-﻿VScode配置CMD本地运行环境(2.0)
+﻿# VScode配置CMD本地运行环境(2.0)
 [官方Task.json说明](https://code.visualstudio.com/docs/editor/tasks)
 [完整的Task.json配置信息](https://code.visualstudio.com/docs/editor/tasks-appendix)
 [Task.json预定义变量](https://code.visualstudio.com/docs/editor/variables-reference)

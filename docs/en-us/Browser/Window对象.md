@@ -1,4 +1,4 @@
-## The Window Object
+# The Window Object
 The `window` acts as a global variable, representing the window in which the script is running, and exposes properties and methods to `JavaScript`.
 
 ## Properties of the Window Object
