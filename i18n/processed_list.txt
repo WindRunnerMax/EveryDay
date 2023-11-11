@@ -432,3 +432,5 @@ Vue中diff算法的理解.md
 Vue中key的作用.md
 Vue中数组变动监听.md
 Vue中的三种Watcher.md
+Vue中组件间通信的方式.md
+Vue中虚拟DOM的理解.md
