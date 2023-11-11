@@ -1,4 +1,4 @@
-# Understanding 'this' in JavaScript
+# Understanding this in JavaScript
 
 The reference of `this` cannot be determined when a function is defined. It is only established when the function is executed; in fact, `this` ultimately refers to the object that calls it.
 

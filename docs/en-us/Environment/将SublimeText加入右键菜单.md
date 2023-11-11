@@ -1,3 +1,5 @@
+# Add SublimeText to the right-click menu
+
 ```bash
 # Adding SublimeText to the right-click menu
 

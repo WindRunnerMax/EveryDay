@@ -1,12 +1,12 @@
-## Basic Usage of Rollup
+# Basic Usage of Rollup
 
 `rollup.js` is a module bundler that allows you to start with an entry file and bundle all the modules used in a project into a single final release file. `Rollup` is extremely suitable for building a utility library, and the source code of `Vue.js` is built using `Rollup`.
 
-### Description
+## Description
 
 `Rollup` uses new standardized formats for code modules, all of which are included in the `ES6` version of `JavaScript`, rather than previous special solutions like `CommonJS` and `AMD`, which means that `rollup` uses the `ES6` module standard. This means that we can directly use `import` and `export` without the need to introduce `babel`. However, in current projects, `babel` is considered a necessary tool. In addition, `rollup` implements another important feature called `tree-shaking`, which automatically removes unused code, i.e., code that is not being used. This feature is based on the static analysis of `ES6` modules, which means that variables that are `exported` but not `imported` will not be bundled into the final code.
 
-### Example
+## Example
 
 One of my small Greasemonkey plugins is bundled using `rollup`. The `GreasyFork` address is `https://greasyfork.org/zh-CN/scripts/405130`, and the source code address is `https://github.com/WindrunnerMax/TKScript`. You can package and build it using `npm run build`. The configuration of `package.json` file and `rollup.config.js` file are as follows.
 

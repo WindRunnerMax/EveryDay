@@ -1,4 +1,4 @@
-## Exploring Writing Loaders for Webpack
+# Exploring Writing Loaders for Webpack
 
 `Loader` is one of the core features of `Webpack`, which is used to convert different types of files into modules that `Webpack` can recognize. In other words, it transforms the original content of the modules into new content as needed to load non-`js` modules. By working in conjunction with extension plugins, it injects extension logic into the specific stages of the `Webpack` build process to alter the build result, thus completing a full build process.
 

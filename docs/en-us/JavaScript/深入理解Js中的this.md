@@ -1,4 +1,4 @@
-## Understanding `this` in JavaScript
+# Understanding this in JavaScript
 
 The scope of `JavaScript` is `static`, but `this` in `Js` is an exception. The issue of what `this` refers to is more akin to `dynamic` scope, as it doesn't concern itself with how functions and scopes are declared or where, but rather with where they are called from. The reference of `this` cannot be determined when a function is defined, only when it is executed. In practice, `this` ultimately points to the object that calls it.
 
