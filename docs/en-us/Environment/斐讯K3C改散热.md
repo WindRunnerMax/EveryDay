@@ -1,4 +1,3 @@
-```markdown
 # Improve the Heat Dissipation of the PHICOMM K3C Router
 
 The PHICOMM K3C router is pretty good for daily use, but the temperature tends to run high, although it's still handy as a hand warmer during the winter.
@@ -40,4 +39,3 @@ Once the fan is turned on, you'll notice a significant improvement in heat dissi
 Let's sneak a peek at the fan setup borrowed from the Tieba user.
 
 ![Screenshot](screenshots/2023-04-14-18-56-13.png)
-```
