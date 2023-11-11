@@ -3,7 +3,7 @@ import { sidebar } from "./sidebar";
 
 export default defineConfig({
   root: "docs",
-  outDir: process.env.NODE_ENV === "development" ? "site-dev" : "site",
+  outDir: "site-dev",
   icon: "/favicon.ico",
   logo: "/favicon.ico",
   route: {
@@ -64,6 +64,7 @@ export default defineConfig({
     tools: {
       rspack(options) {
         options.module.rules.unshift({
+          enforce: "pre",
           test: /\.md$/,
           use: [{ loader: "./script/asset-loader" }],
         });
