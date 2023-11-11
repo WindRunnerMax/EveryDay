@@ -434,3 +434,10 @@ Vue中数组变动监听.md
 Vue中的三种Watcher.md
 Vue中组件间通信的方式.md
 Vue中虚拟DOM的理解.md
+Vue为何采用异步渲染.md
+Vue事件绑定原理.md
+Vue学习笔记.md
+Vue常用性能优化.md
+Vue数据双向绑定.md
+Vue父子组件生命周期.md
+Vue生命周期.md
