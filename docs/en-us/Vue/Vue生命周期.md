@@ -1,10 +1,8 @@
-```markdown
 # Vue Lifecycle
 A `Vue` instance needs to go through a series of processes like creation, data initialization, template compilation, mounting `DOM`, rendering, updating, rendering, and unmounting. This whole process is called the lifecycle of `Vue`, which provides many hooks at different stages of the lifecycle. The lifecycle hooks provided in `Vue` include `beforeCreate`, `created`, `beforeMount`, `mounted`, `beforeUpdate`, `updated`, `beforeDestroy`, and `destroyed`.
 
 ## Example
 During the instantiation of a `Vue` instance, the lifecycle hooks that are directly triggered include `beforeCreate`, `created`, `beforeMount`, and `mounted`. During the process of data updating, the triggered lifecycle hooks include `beforeUpdate` and `updated`. And during the component destruction process, the triggered lifecycle hooks include `beforeDestroy` and `destroyed`.
-```
 
 ```html
 <!DOCTYPE html>
@@ -96,7 +94,6 @@ During the instantiation of a `Vue` instance, the lifecycle hooks that are direc
 </html>
 ```
 
-```markdown
 ## beforeCreate
 The process from the creation of the `Vue` instance to the execution of the `beforeCreate` hook mainly involves some initialization operations, such as initializing component events and lifecycle hooks. At this lifecycle hook execution time, the component is not yet mounted, and `data`,` methods`, etc. are not bound. It is mainly used to perform some operations unrelated to `Vue` data, such as displaying a `loading` indicator.
 
@@ -167,7 +164,6 @@ console.log("--------------------");
 ```
 
 
-```markdown
 ## beforeDestroy
 The `beforeDestroy` hook is called before the `Vue` instance is destroyed, and at this point the instance is still fully functional.
 

@@ -69,7 +69,7 @@ C:\Users\Czy\Desktop\project-name>mklink /J node_modules D:\Project\Library\Modu
 Junction created for node_modules <<===>> D:\Project\Library\Modules\node_modules
 ```
 
-```markdown
+```powershell
 C:\Users\Czy\Desktop\project-name>npm run dev
 > project-name@1.0.0 dev C:\Users\Czy\Desktop\project-name
 > webpack-dev-server --inline --progress --config build/webpack.dev.conf.js

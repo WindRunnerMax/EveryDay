@@ -1,4 +1,3 @@
-```markdown
 # Difference between $router and $route
 `Vue Router` is the routing manager for `Vue.js`. The route is the access path for the Single Page Application (`SPA`). Within the `Vue` instance, the routing instance can be accessed via `$router`, which is the routing instance defined with `export default new Router(/*...*/)` in the routing definition file. With `$route`, you can access the status information of the currently active route, including the information parsed from the current URL and the route record matched by the URL. We can think of `$router` as a container managing a group of `$route`, while `$route` maps the current URL to the components.
 
@@ -21,7 +20,6 @@
 * `$router.addRoutes(route)`: Dynamically adds more route rules. The parameter must be an array that meets the requirements of the `routes` option.
 * `$router.onReady(callback[, errorCallback])`: Queues a callback to be called when the initial navigation is completed. This means it can resolve all asynchronous entry hooks and asynchronously loaded components related to route initialization, effectively ensuring consistency between server-side rendering and client-side output. The second parameter, `errorCallback`, is called when an error occurs during the route initialization resolution.
 * `$router.onError(callback)`: Registers a callback that is called when an error occurs during the route navigation process. The invoked error must be one of the following: an error is synchronously thrown within a route guard function, an error is asynchronously caught and handled in a route guard function by calling `next(err)`, or an error occurs while trying to resolve an asynchronous component during the rendering of a route.
-```
 
 ## $route object properties
 * `$route.path`: Returns a string representing the current route's path, always resolved as an absolute path.
