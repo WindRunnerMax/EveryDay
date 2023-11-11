@@ -16,7 +16,6 @@ io.unobserve(element);
 io.disconnect();
 ```
 
-```markdown
 * The parameter `callback`, when a new `IntersectionObserver` object is created, will execute the specified callback function when it observes that the visible portion of the target element has crossed one or more thresholds `thresholds`.
 
 * The parameter `option`, the second parameter of the `IntersectionObserver` constructor is a configuration object, which can set the following properties:
@@ -51,7 +50,6 @@ Additionally, when the `callback` function is executed, it will pass an `Interse
 * `intersectionRect:` information about the intersecting area of the target element with the viewport or root element.
 
 * `intersectionRatio:` the visible ratio of the target element, i.e. the ratio of `intersectionRect` to `boundingClientRect`. It is `1` when fully visible and less than or equal to `0` when fully invisible.
-```
 
 ## Application
 Implement a simple example using `IntersectionObserver`. Two squares can demonstrate whether square `1` is within the visible area of the screen and whether square `2` is within the relatively visible intersection area of square `1`. Additionally, `IntersectionObserver` can be used to optimize the initial screen rendering, which can be referenced at `https://github.com/WindrunnerMax/EveryDay/blob/master/Vue/Vue%E9%A6%96%E5%B1%8F%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%BB%84%E4%BB%B6.md`.

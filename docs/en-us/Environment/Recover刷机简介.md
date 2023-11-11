@@ -1,4 +1,3 @@
-```markdown
 # Recovery
 Recovery is a mode that allows for modifying data files on an Android phone, similar to a PE on a computer. Different recoveries have different functions. Understanding rec is essential for smooth flash when it comes to the basis of flashing.
 

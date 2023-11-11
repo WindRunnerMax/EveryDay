@@ -13,7 +13,7 @@ Events in `React` have the following characteristics:
 
 Each `SyntheticEvent` object contains the following properties:
 
-```markdown
+```
 boolean bubbles
 boolean cancelable
 DOMEventTarget currentTarget
@@ -33,7 +33,7 @@ string type
 
 List of supported synthetic events. Note that the following event handling functions are triggered during the bubbling phase. If you need to register event handling functions in the capture phase, you should append `Capture` to the event name. For example, to handle the capture phase of a click event, use `onClickCapture` instead of `onClick`.
 
-```markdown
+```html
 <!-- Clipboard Events -->
 onCopy onCut onPaste
 
@@ -73,8 +73,6 @@ onScroll
 <!-- Wheel Events -->
 onWheel
 
-
-```html
 <!-- Media Events -->
 onAbort onCanPlay onCanPlayThrough onDurationChange onEmptied onEncrypted
 onEnded onError onLoadedData onLoadedMetadata onLoadStart onPause onPlay

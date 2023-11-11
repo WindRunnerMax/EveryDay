@@ -63,7 +63,6 @@ Finally, the package can be published using the `npm publish` command.
 npm publish --access=public
 ```
 
-```markdown
 ## Installation
 It should be noted that whether it's the release package or the installation package, authorization is required. This involves generating the 'Token' mentioned above as well as the configuration process. Otherwise, the specified package cannot be installed. Taking my published package as an example, execute the installation.
 

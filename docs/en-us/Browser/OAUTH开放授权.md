@@ -68,8 +68,8 @@ https://github.com/WindrunnerMax/EveryDay
 
 ## Reference
 
-```markdown
-[Zhuanlan Zhihu](https://zhuanlan.zhihu.com/p/138424479)
-[Ruan Yifeng's Blog 2014](http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html)
-[Ruan Yifeng's Blog 2019](http://www.ruanyifeng.com/blog/2019/04/oauth_design.html)
+```
+https://zhuanlan.zhihu.com/p/138424479
+http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html
+http://www.ruanyifeng.com/blog/2019/04/oauth_design.html
 ```

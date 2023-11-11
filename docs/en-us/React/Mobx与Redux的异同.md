@@ -147,7 +147,7 @@ const CountRedux: React.FC = () => {
 export default CountRedux;
 ```
 
-```markdown
+```js
 // src/App.tsx
 import React from "react";
 import "./styles.css";

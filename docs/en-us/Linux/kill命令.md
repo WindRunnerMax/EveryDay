@@ -1,4 +1,3 @@
-```markdown
 # kill command
 The `kill` command sends a signal to the specified `pid` process. If the `signal` to be sent is not specified, then by default the `signal` is `SIGTERM`, which terminates the process. To display all available signals, the `-l` option can be used to obtain the Linux signal list. Commonly used signals include `HUP`, `INT`, `KILL`, `STOP`, `CONT`, and `0`. Signals can be specified in three ways: by number, for example, `-9`; with the `SIG` prefix, for example, `-SIGKILL`; or without the `SIG` prefix, for example, `-KILL`. Negative `PID` values are used to indicate process group `ID`. If a process group `ID` is passed, then all processes in that group will receive the signal. `PID` `-1` is special, as it indicates all processes except for two: the `kill` process itself and `init`, specifically `PID 1`, which is the parent process of all processes on the system. Specifying `-1` as the target will send the signal to all processes except these two.
 
@@ -36,7 +35,6 @@ Certain signals may not be used because they may not be supported by the system 
 ```
 
 
-```markdown
 * `SIGHUP`: The `SIGHUP` signal is used to disconnect a process from its parent process, and it can also be used to restart a process, which is useful for daemons with memory leaks.
 * `SIGINT`: This signal is equivalent to pressing `Ctrl+C`. On some systems, `delete + break` will send the same signal to the process, causing it to interrupt and stop, but the process itself can ignore this signal.
 * `SIGQUIT`: Similar to `SIGINT`, but because the `QUIT` character is usually controlled by `Ctrl+\`, when a process exits upon receiving `SIGQUIT`, a `core` file is generated, in this sense similar to a program error signal.
@@ -76,7 +74,6 @@ Certain signals may not be used because they may not be supported by the system 
 
 ## Example
 To display all available signals and view detailed information about a signal, the `man` command can be used, for example for the signal `7 SIGBUS` you can use `man 7 signal`.
-```
 
 ```shell
 kill -l
@@ -88,37 +85,37 @@ kill -L
 ```
 Terminate the session, reload the configuration file, and smoothly restart.
 
-```
+```shell
 kill -1 111
 ```
 Notify the process to close, allowing it to shut down on its own in a safe, clean manner. If the `kill` command is followed directly by the process's `pid`, the default option is `-15`. This signal can be ignored and the process can continue. It can be blocked and ignored.
 
-```
+```shell
 kill -15 111
 ```
 Forcefully interrupt the current program's execution, similar to pressing `Ctrl+C` to terminate a process. This signal can be blocked and ignored.
 
-```
+```shell
 kill -2 111
 ```
 Exit the process, similar to pressing `Ctrl+\` to terminate a process. This signal can be blocked and ignored.
 
-```
+```shell
 kill -3 111
 ```
 Forcefully terminate the process. The `-9` signal unconditionally terminates a process, cannot be caught or ignored, and the receiving process cannot perform any cleanup upon receiving this signal. This signal cannot be blocked or ignored, but it's generally not recommended to use `kill -9`. It's better to try using `-15` and `-2` to give the target process a chance to clean up its resources. Don't use a scythe to prune the flowers in a flowerpot.
 
-```
+```shell
 kill -9 111
 ```
 Pause the process. The process itself cannot ignore this pause signal.
 
-```
+```shell
 kill -19 111 
 ```
 Resume the process. The resume signal must be sent to a paused process to be effective.
 
-```
+```shell
 kill -18 111 
 ```
 

@@ -169,7 +169,6 @@ Next, allocate memory and storage space, and proceed by clicking "Next". Then, y
 
 Here, select the downloaded `XP` system image, and follow the system's installation process. After the installation is complete, shut down the virtual machine. In the `Settings` under `Storage`, remove the boot position of the disc shape to prevent the program from prompting you to boot from the CD every time you start the machine, as this would reinitiate the installation process.
 
-```markdown
 ![](screenshots/2023-04-14-20-29-55.png)
 
 Next, we need to configure the network environment by creating a new virtual network card in the running `virtualbox` and setting the `ip` address as follows.
@@ -215,7 +214,6 @@ python3 -m http.server --bind 0.0.0.0 8088
 ```
 
 ![](screenshots/2023-04-14-20-31-04.png)
-```
 
 Afterwards, you can directly double-click to launch `agent.py`. Additionally, you can set it to start automatically at boot by going to `C:\Document and Settings\Administrator\start menu\program\start`, although this isn't really necessary because all we need to do is create a snapshot. After running `agent.py`, you can use the `netstat` command to check if port `8000` is in use. If it is, it means `agent.py` has been successfully started.
 
@@ -295,7 +293,6 @@ machines = cuckoo1 ### Virtual machine name
 controlports = 5000-5050
 
 
-```markdown
 [cuckoo1]
 label = cuckoo1 ### label
 platform = windows

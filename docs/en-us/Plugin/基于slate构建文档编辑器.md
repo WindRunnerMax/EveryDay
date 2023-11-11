@@ -193,7 +193,6 @@ declare module "slate" {
 Here is the specific plugin implementation approach and examples. Each section represents the implementation of a specific type of plugin. The specific code can be found on [Github](https://github.com/WindrunnerMax/DocEditor). In terms of plugin implementation, we mainly leverage HTML5 tags to achieve various styles, which helps maintain the semantic integrity of the document, but may result in deep DOM nesting. It's also feasible to use pure CSS to implement various plugins, which is simpler in implementation. The `context` provides `classList` to manipulate `className`, but the semantic integrity of the tags is somewhat compromised when using pure CSS for styling. This is mainly a matter of trade-off. The plugins implemented here are all based on HTML5 tags and some custom interaction strategies. Interactions are executed by triggering the implementation after registering commands for the plugin.
 
 
-```markdown
 ### Leaf
 The `leaf` type of plugin is an inline element, such as bold, italics, underline, and strikethrough. In its implementation, you only need to pay attention to the registration of the plugin's command and how to render the element under that command. Below is the implementation of the `bold` plugin, mainly registering the command for manipulating `attributes` and using `<strong />` as the rendering format tag.
 

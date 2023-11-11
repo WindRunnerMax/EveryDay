@@ -142,7 +142,6 @@ module.exports = {
 }
 ```
 
-```markdown
 ### Writing a Plugin
 Next, when it comes to the main body, we need to write a plugin to handle the requirements mentioned earlier. Specifically, what we need to do is first leave a comment tag similar to `<!-- inject:name="head" -->` in the `html`. Then after `webpack` bundles the `html` file, we need to perform a regular match to replace the information related to the comment with a page slice, distinguishing which page slice to load by the `name`. Additionally, personally, when actually writing `webpack` plugins, it's best to first refer to the implementations of `webpack` plugins written by others. It's a bit costly to go through the documents and look up various `hooks` on your own.
 
@@ -192,7 +191,6 @@ class StaticPageSlice {
 }
 
 module.exports = StaticPageSlice;
-```
 ```
 
 Next, let's officially start processing the logic. First, we need to determine the type of this file. We only need to handle `html` files, so we need to check if it's an `html` file. Then it's a process of regular expression matching. After matching the comment information, we will replace it with a page fragment. We will directly simulate an asynchronous process using `Promise` here for the page fragment. After that, we can reference it in `webpack` and successfully bundle it.

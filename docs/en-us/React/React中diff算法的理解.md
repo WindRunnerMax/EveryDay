@@ -512,9 +512,9 @@ Next, let's consider how to reuse nodes when they are moved, i.e., in cases wher
 const existingChildren = mapRemainingChildren(returnFiber, oldFiber);
 ```
 
-```markdown
 ### Translation
 
+```js
 // Keep scanning and use the map to restore deleted items as moves.
 // When there are new nodes left to compare, go through the map of old nodes one by one using keys or indexes to see if they can be reused.
 for (; newIdx < newChildren.length; newIdx++) {

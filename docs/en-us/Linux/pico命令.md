@@ -55,7 +55,7 @@ Edit a file using `nano`, and edit the file according to the prompts.
 ```shell
 nano file.txt
 
-```markdown
+```
 # ^G Get Help
 # ^O WriteOut
 # ^R Read File
@@ -68,7 +68,6 @@ nano file.txt
 # ^V Next Page
 # ^U UnCut Text
 # ^T To Spell
-```
 
 
 ## Daily Question

@@ -176,7 +176,6 @@ send       →     ACK=1,seq=u+1,ack=w+1   →  receive
 3. Third handshake: The server sends a release flag `FIN=1`, acknowledgment flag `ACK=1`, acknowledgment number `ack=u+1`, its own sequence number `seq=w`, and enters the LAST-ACK state.
 4. Fourth handshake: After the client receives the response, it sends an acknowledgment flag `ACK=1`, acknowledgment number `ack=w+1`, its own sequence number `seq=u+1`, and enters the TIME-WAIT state. After `2` maximum segment lifetime periods, the client `CLOSES`. Upon receiving the acknowledgment, the server immediately enters the `CLOSE` state.
 
-```markdown
 ### Transmission Control
 * Flow Control: Use sliding windows to control the flow, maintaining the sending speed not too fast, so that the receiver can keep up, and prevent network congestion.
 * Congestion Control
@@ -211,7 +210,6 @@ The main function of the presentation layer is to transform the information prov
 
 ### Application Layer
 The application layer is the highest layer of the OSI reference model. Its function is to facilitate the exchange of information between application processes and to provide a series of services required for business processing.
-```
 
 ### Common Application Layer Protocols
 * `DNS` Protocol: Domain Name Service protocol, which translates domain names to `IP` addresses. Domain name resolution queries are usually transmitted using `UDP` with default port `53`. When synchronizing zone transfer data, data is generally transmitted using `TCP`.

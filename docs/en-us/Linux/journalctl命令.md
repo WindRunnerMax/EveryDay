@@ -1,4 +1,3 @@
-```markdown
 # journalctl command
 
 The `journalctl` command is a command of the `Systemd` logging system. Its main purpose is to view the logs recorded by the `Systemd` logging system. Before the advent of `Systemd`, logs of the `Linux` system and various applications were managed separately. After `Systemd` replaced `initd`, it began to uniformly manage the boot logs of all `Unit`. With just one `journalctl` command, you can view the logs of all kernels and applications.
@@ -68,7 +67,6 @@ journalctl [OPTIONS...] [MATCHES...]
 * `-h, --help`: Output help information.
 * `--version`: Output version information.
 
-```markdown
 ## Example
 Display all the logs since the last boot.
 
@@ -148,7 +146,7 @@ Reduce disk usage to below the specified size.
 journalctl --vacuum-size=10M
 ```
 
-## Today's Task
+## Daily Question
 
 ```
 https://github.com/WindrunnerMax/EveryDay
@@ -160,5 +158,4 @@ https://github.com/WindrunnerMax/EveryDay
 http://www.jinbuguo.com/systemd/journalctl.html#
 https://www.commandlinux.com/man-page/man1/journalctl.1.html
 https://blog.orchidflower.cn/2020/04/20/linux-command-introduction-04-journalctl/
-```
 ```

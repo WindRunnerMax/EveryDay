@@ -12,7 +12,7 @@ Perhaps some of the above concepts may be difficult to understand at first, so t
 ## Counter
 First, let's run a basic collaboration example, `Counter`, where the main function is to maintain the total count in the scenario where multiple clients can `+1`. The address of this example is `https://github.com/WindrunnerMax/Collab/tree/master/packages/crdt-counter`. First, let's take a look at the directory structure (`tree --dirsfirst -I node_modules`):
 
-```markdown
+```
 crdt-counter
 ├── public
 │   ├── favicon.ico

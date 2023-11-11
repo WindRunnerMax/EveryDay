@@ -164,7 +164,6 @@ console.log(regex.test("1")); // true
 ```
 
 
-```markdown
 ### RegExp.prototype\[@@match\]()
 `regexp[Symbol.match](str)`
 When matching a string with a regular expression, the `[@@match]()` method is used to obtain the matching results. The usage of this method is the same as `String.prototype.match()`, except for the `this` and parameter order.
@@ -225,7 +224,6 @@ console.log(regex.toString()); // /\d+/g
 
 ## Regular Expression Rules
 A list of metacharacter rules and their behaviors in the context of regular expressions. This section is taken from `https://www.runoob.com/regexp/regexp-metachar.html`.
-```
 
 * `\`: Marks the next character as either a special character, a literal character, a back reference, or an octal escape character. For example, `n` matches the character `n`, `\n` matches a newline character, the sequence `\\` matches `\`, and `\(`
 matches `(`.

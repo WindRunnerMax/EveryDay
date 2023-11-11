@@ -1,4 +1,3 @@
-```markdown
 # The `colrm` Command
 
 The `colrm` command is used to edit text in source code files, script files, or regular text files. This command removes selected columns from a file, where a column is defined as a single character in a line. The index always starts at `1`, not `0`. If both the start and end are specified, the columns between them, including the start and end, will be deleted. If only one column needs to be deleted, the start and end must be the same. `colrm` can also accept input from `stdin`. If no parameters are provided, the command will not filter any lines.
@@ -50,5 +49,4 @@ https://github.com/WindrunnerMax/EveryDay
 https://linux.die.net/man/1/colrm
 https://www.runoob.com/linux/linux-comm-colrm.html
 https://www.geeksforgeeks.org/colrm-command-in-linux-with-examples/
-```
 ```

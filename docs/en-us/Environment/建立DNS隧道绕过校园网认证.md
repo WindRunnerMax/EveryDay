@@ -8,7 +8,7 @@ The description of the `dns` tunnel is directly quoted from a section in the ref
 ## Server Side
 Suppose we have a domain name `example.com` with the server's `IP` address being `111.111.111.111`. Next, we need to resolve the domain name and add an `NS` record and an `A` record. The name of the added `NS` record is `dns.example.com`, with the value being `dnsserver.example.com`, and the name of the added `A` record is `dnsserver.example.com` with the value being the `IP` address, i.e., `111.111.111.111`.
 
-```markdown
+```
 Type  Name                    Value
 NS    dns.example.com         dnsserver.example.com
 A     dnsserver.example.com   111.111.111.111

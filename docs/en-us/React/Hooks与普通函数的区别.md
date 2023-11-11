@@ -48,7 +48,7 @@ To summarize the differences between the two:
 
 ## Daily Quiz
 
-```markdown
+```
 https://github.com/WindrunnerMax/EveryDay
 ```
 

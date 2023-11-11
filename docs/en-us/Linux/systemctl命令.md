@@ -11,7 +11,6 @@ systemctl [OPTIONS...] {COMMAND} ...
 ## Parameters
 ### OPTIONS
 
-```markdown
 * `-t, --type=`: The parameter should be a comma-separated list of unit types, such as `service` and `socket`. If one of the parameters is a unit type, only units of that type will be listed. If `help` is one of the parameters, a list of allowable values will be printed, and the program will exit.
 * `--state=`: The parameter should be a comma-separated list of unit load, substate, or activity state. When listing units, only units in the specified state will be displayed.
 * `-p, --property=`: When using the `show` command to display `unit/job/manager` properties, the display will be limited to the properties specified by the parameter. If not specified, all set properties will be displayed. The parameter should be a comma-separated list of property names, such as `MainPID`. If specified multiple times, all properties with the specified names will be displayed.
@@ -47,7 +46,6 @@ systemctl [OPTIONS...] {COMMAND} ...
 * `-M, --machine=`: Perform operations on the local container, specify the container name to connect to.
 * `-h, --help`: Print help information.
 * `--version`: Print version information.
-```
 
 ### Commands for Managing Units
 

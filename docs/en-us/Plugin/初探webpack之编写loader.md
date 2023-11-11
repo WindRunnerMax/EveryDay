@@ -30,7 +30,7 @@ yarn install --registry https://registry.npm.taobao.org/
 
 After this, we can run `yarn dev` to see the effect. Here, let's first print the current directory structure.
 
-```markdown
+```
 webpack--vue-cli
 ├── dist
 │   ├── static
