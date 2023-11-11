@@ -36,6 +36,11 @@ export const sidebar: Sidebar = {
         "HTML/SVG与foreignObject元素",
       ],
     },
+    {
+      text: "CSS",
+      collapsed: true,
+      items:[]
+    }
   ],
 };
 

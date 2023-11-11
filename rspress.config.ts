@@ -65,7 +65,7 @@ export default defineConfig({
       rspack(options) {
         options.module.rules.unshift({
           test: /\.md$/,
-          use: [{ loader: "./config/asset-loader" }],
+          use: [{ loader: "./script/asset-loader" }],
         });
       },
     },
