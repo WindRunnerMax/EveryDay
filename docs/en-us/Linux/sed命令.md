@@ -79,7 +79,7 @@ sed "s/unix/linux/2g" file.txt
 
 Enclose the first character of each word in parentheses and print it inside the parentheses.
 
-```
+```shell
 echo "Welcome To The World" | sed "s/\(\b[A-Z]\)/\(\1\)/g"
 
 # (W)elcome (T)o (T)he (W)orld
@@ -87,11 +87,10 @@ echo "Welcome To The World" | sed "s/\(\b[A-Z]\)/\(\1\)/g"
 
 You can restrict the `sed` command to replace the string on a specific line number.
 
-```
+```shell
 sed "3 s/unix/linux/g" file.txt
+```
 
-```markdown
-# Unix is a great operating system. It's open source and free. If you want to learn about operating systems, consider Linux. The decision is up to you!
 
 ## Daily Question
 
@@ -105,5 +104,4 @@ https://github.com/WindrunnerMax/EveryDay
 https://www.computerhope.com/unix/used.htm
 https://www.runoob.com/linux/linux-comm-sed.html
 https://www.geeksforgeeks.org/sed-command-in-linux-unix-with-examples/
-```
 ```

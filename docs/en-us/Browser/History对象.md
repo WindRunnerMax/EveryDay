@@ -1,4 +1,3 @@
-```markdown
 # History Object
 
 The `History` object allows manipulation of the session history for the browser, including pages visited in the tab or frame.
@@ -25,5 +24,4 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://developer.mozilla.org/zh-CN/docs/Web/API/History
-```
 ```

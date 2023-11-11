@@ -64,7 +64,7 @@ console.log(v + 1); // 11
 `JavaScript` returns a string representing the object by calling the `toString` method, and every object has a `toString` method. It is automatically called when the object is represented as a text value, or when an object is referenced in the expected string way. By default, the `toString()` method is inherited by every `Object` object, and if this method is not overridden in a custom object, `toString` returns`[object type]`, where `type` is the object's type.  
 Many built-in objects in `JavaScript` rewrite this function to suit their specific needs. Therefore, the return value and return value type of the `toString` method for different types of objects may vary.
 
-```markdown
+
 | Object | Return Value |
 | --- | --- |
 | `Array` | A comma-separated string, such as `toString` of `[1,2]` returns `1,2`. |

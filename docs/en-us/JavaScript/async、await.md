@@ -1,4 +1,3 @@
-```markdown
 # async/await
 
 `async` is a keyword related to asynchronous operations in `ES7`, it returns a `Promise` object. `await` operator is used to wait for a `Promise` object, and it can only be used inside an asynchronous function `async function`. The purpose of `async/await` is to simplify synchronous behavior when using multiple `promises` and perform certain operations on a group of `Promises`. Just as `Promises` are similar to structured callbacks, `async/await` is more like a combination of `generators` and `promises`.

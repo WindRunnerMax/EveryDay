@@ -172,7 +172,6 @@ console.log(s.padStart(3, ".")); // ..|
 ```
 
 
-```markdown
 ### String.prototype.repeat()
 `str.repeat(count)`  
 The `repeat()` constructs and returns a new string that contains the specified number of copies of the string that have been concatenated together. The `count` parameter represents an integer between `0` and `+Infinity`, indicating how many times the original string is repeated in the newly constructed string.

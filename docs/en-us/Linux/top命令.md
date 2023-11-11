@@ -70,7 +70,6 @@ The following default value operations assume no related configuration file, tha
 * `si`: Percentage of CPU time spent on software interrupts.
 * `st:` Percentage of CPU time taken by virtual machines.
 
-```markdown
 ### Column Fields
 You can use the `f` interactive command to customize the position and visibility of the columns.
 * `%CPU`: `CPU Usage`, the percentage of CPU time used by tasks since the last screen update, expressed as a percentage of total CPU time. In a true SMP environment, if a process is multi-threaded and `top` is not in thread-mode, it may report a value greater than `100%`. You can use the `H` interactive command to switch to thread-mode. Similarly, in a multi-processor environment, if `Irixmode` is off, `top` will run in `Solarismode`, where the task's `CPU` usage is divided by the total number of CPUs. You can use the `I` interactive command to switch `Irix/Solaris` mode.
@@ -122,7 +121,6 @@ You can use the `f` interactive command to customize the position and visibility
 * `nsUTS`: `UTS namespace`, the `Inode` for the namespace isolating the hostname and `NIS` domain name. `UTS` stands for `UNIX` Time-sharing System.
 * `vMj`: `Major Page Fault Count Delta`, the number of major page faults that has occurred since the last update.
 * `vMn`: `Minor Page Fault Count Delta`, the number of minor page faults that has occurred since the last update.
-```
 
 ## Example
 

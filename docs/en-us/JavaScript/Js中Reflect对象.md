@@ -200,7 +200,6 @@ console.log(proto === Reflect.getPrototypeOf(obj)); // true
 
 ## Comparison
 
-```markdown
 | `Method Name` | `Object` | `Reflect` |
 | --- | --- | --- |
 | `defineProperty()` | `Object.defineProperty()` returns the object passed to the function. If the property is not successfully defined on the object, it returns `TypeError`. | If the property is successfully defined on the object, `Reflect.defineProperty()` returns `true`, otherwise it returns `false`. |

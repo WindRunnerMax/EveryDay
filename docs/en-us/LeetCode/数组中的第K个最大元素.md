@@ -1,4 +1,3 @@
-```markdown
 # The Kth Largest Element in an Array
 Find the `k`th largest element in an unsorted array. Note that it is the `k`th largest element in the sorted order, not the `k`th distinct element.
 
@@ -60,5 +59,4 @@ https://github.com/WindrunnerMax/EveryDay
 ## Reference
 ```
 https://leetcode-cn.com/problems/kth-largest-element-in-an-array/
-```
 ```

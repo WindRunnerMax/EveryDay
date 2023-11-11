@@ -362,7 +362,6 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):
     
 ```
 
-```markdown
 # Build the first convolutional layer
 # The shape [3, 3, 1, 32] indicates the patch size of the convolutional kernel in the first two parameters;
 # the third parameter represents the number of image channels, and the fourth parameter represents the number of convolutional kernels in that layer, which will output as many convolutional feature images as there are convolutional kernels
@@ -388,9 +387,7 @@ conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding=
 conv1 = tf.nn.dropout(conv1, keep_prob)
 # With the original image size of HEIGHT=22 and WIDTH=62, after passing through the first layer of convolution in the neural network (image size remains the same, features x 32), and pooling (image size reduced by half, features remain the same);
 # the output size will be 11x31x32
-```
 
-```markdown
 # Building the second convolutional layer
 w_c2 = tf.Variable(w_alpha * tf.random_normal([3, 3, 32, 64]))
 b_c2 = tf.Variable(b_alpha * tf.random_normal([64]))
@@ -493,9 +490,6 @@ if __name__ == '__main__':
     train_crack_captcha_cnn()
     print ("FINISH")
     # print(vec2text(text2vec("123z")))
-```
-
-```
 
 ##### Test set accuracy
 With 3109 images in the training set, 128 images in the test set, and 1600 training iterations, the test set accuracy is approximately 96%.

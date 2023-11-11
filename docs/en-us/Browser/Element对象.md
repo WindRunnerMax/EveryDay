@@ -1,8 +1,5 @@
-```markdown
 # Element Object
 The `Element` is a very versatile base class. All objects under the `Document` inherit from it, describing the common methods and properties of all elements of the same type. Some interfaces inherit from `Element` and add additional functionality. For example, the `HTMLElement` interface describes the basic interface for all `HTML` elements, while the `SVGElement` interface is the foundation for all `SVG` elements. Most functions are further specified in interfaces at a deeper level of this class.
-```
-
 
 ## Properties
 All properties inherit from its ancestor interface `Node`, and extend the parent interface `EventTarget` of `Node`, and inherits properties from `ParentNode`, `ChildNode`, `NonDocumentTypeChildNode`, and `Animatable`.

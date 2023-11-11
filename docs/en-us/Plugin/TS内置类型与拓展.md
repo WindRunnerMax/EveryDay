@@ -262,7 +262,7 @@ type FnType = (a1: number, a2: string) => void;
 type ParametersExample = Parameters<FnType>;
 ```
 
-```markdown
+```js
 /**
  * ParametersExample
  * [a1: number, a2: string]

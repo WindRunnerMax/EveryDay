@@ -439,7 +439,7 @@ PopupContentBridge.onMessage(onMessage);
 
 ```
 
-```markdown
+```js
 if (
   localStorage.getItem(STORAGE_KEY_PREFIX + ACTION.COPY) ||
   sessionStorage.getItem(STORAGE_KEY_PREFIX + ACTION.COPY)

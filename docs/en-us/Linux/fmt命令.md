@@ -1,4 +1,3 @@
-```markdown
 # fmt command
 
 The `fmt` command is used to format text files. It reads the content from a specified file, reorganizes it according to the specified format, and outputs it to the standard output device. If the specified file name is `-`, the `fmt` command will read data from the standard input device.
@@ -80,5 +79,4 @@ https://github.com/WindrunnerMax/EveryDay
 https://www.computerhope.com/unix/ufmt.htm
 https://www.runoob.com/linux/linux-comm-fmt.html
 https://www.geeksforgeeks.org/fmt-command-unixlinux/
-```
 ```

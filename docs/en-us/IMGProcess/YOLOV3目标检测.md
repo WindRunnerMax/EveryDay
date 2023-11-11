@@ -123,7 +123,6 @@ import xml.etree.ElementTree as ET
 from os import getcwd
 ```
 
-```markdown
 ```python
 sets=[('2007', 'train'), ('2007', 'val'), ('2007', 'test')]
 
@@ -156,7 +155,6 @@ for year, image_set in sets:
         list_file.write('\n')
     list_file.close()
 ```
-```
 Next, copy all the files in the `Train` directory to the directory after `git clone`. At this time, the file directory structure is as follows.
 
 ![](screenshots/2023-04-14-20-39-27.png)
@@ -165,7 +163,6 @@ Next, copy all the files in the `Train` directory to the directory after `git cl
 At this point, you need to modify the `model_data/coco_classes.txt` and `voc_classes.txt` files. Both of these files need to contain the training categories. Similarly, I am only training the `person` category, so there is only one line `person` in this place.
 
 Next, modify `yolov3.cfg`. If you don't need to load pre-trained weights, then it is unnecessary to modify this file. This file is for configuring the generation of `yolo_weights.h5`. Search for `yolo` in this file. There will be three matches, all of which require the same way of modification. Taking the first match as an example, there are three places for comments, which means a total of 9 lines need to be changed.
-```
 ...
 [convolutional]
 size=1
@@ -175,7 +172,6 @@ filters=18  # 3*(5+len(classes)) # I train one category, thus 3*(5+1) = 18
 activation=linear
 ```
 
-```markdown
 [yolo]
 mask = 6,7,8
 anchors = 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
@@ -220,7 +216,6 @@ def _main():
     input_shape = (416,416) # multiple of 32, hw
 ```
 
-```markdown
 # The judgment of create_tiny_model has been removed here # If load_pretrained is False, the pre-trained weights will not be loaded, and if it is True, the pre-trained weights will be loaded
 model = create_model(input_shape, anchors, num_classes,load_pretrained=False,
         freeze_body=2, weights_path='model_data/yolo_weights.h5') # make sure you know what you freeze
@@ -253,9 +248,7 @@ if True:
     # The batch_size needs to be changed according to the amount of VRAM
     batch_size = 10
     print('Train on {} samples, val on {} samples, with batch size {}.'.format(num_train, num_val, batch_size))
-```
 
-```markdown
 # epochs is the number of training times
 model.fit_generator(data_generator_wrapper(lines[:num_train], batch_size, input_shape, anchors, num_classes),
         steps_per_epoch=max(1, num_train//batch_size),

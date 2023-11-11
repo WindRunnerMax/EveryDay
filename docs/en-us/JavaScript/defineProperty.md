@@ -181,15 +181,14 @@ obj.x = 11;
 
 ## Related
 
-```markdown
 Strict mode in JavaScript: [link](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F.md)
 Object traversal in JavaScript: [link](https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/Js%E9%81%8D%E5%8E%86%E5%AF%B9%E8%B1%A1%E6%80%BB%E7%BB%93.md)
 
 ## Daily Topic
 
-[link](https://github.com/WindrunnerMax/EveryDay)
+https://github.com/WindrunnerMax/EveryDay
 
 ## Reference
-
-[link](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+```
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
 ```

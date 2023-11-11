@@ -196,7 +196,6 @@ Before examining collaboration with the involvement of a central server, let's c
 
 Returning to the scenario of OT collaboration with a central server, suppose we have "A," "B," and the server. We can effectively consider communication to be only between "A/B" and the server, with "A" and "B" not directly communicating. All clients communicate solely with the server to simplify the synchronization and conflict resolution process. In this context, it is necessary to design a scheduling strategy for the server. We can start with a simple approach where the server only handles conflicts without actually resolving them. If a conflict is detected, the server sends the conflicting parts back to the clients along with all Ops applied since the same starting point "S," allowing the clients to resolve the conflict and calculate the applied Ops before resubmitting them.
 
-```markdown
 According to the design above, let's do a deduction of the scenario. Assuming the initial state of the document is `S(0,0)`.
 * The server has stored three operations of user `B`, namely `B(0,0)`, `B(0,1)`, `B(0,2)`, and the document state has progressed to `S(0,3)`.
 * User `A` opened the document in state `S(0,0)` and performed four operations `A(0,0)`, `A(1,0)`, `A(2,0)`, `A(3,0)`, and the document state reached `S(4,0)`.
@@ -215,7 +214,6 @@ Assuming the initial state of the document is `S(0,0)`.
 * At this point, `A` sent the `Ops` to the server, and the server performed `OT` at this time, and after storing the result, the server state also progressed to `S(4, 3)`.
 * Now the server needs to make changes to `B`'s operations based on `A`, i.e., perform `OT` on `B(0,0) B(0,1) B(0,2)` based on `A(0,0) A(1,0) A(2,0) A(3,0)` to get `B(4,0) B(4,1) B(4,2)`, then send the `OT`-transformed `B` operations to `A`. After `A` applies the `Ops`, the state transitions from `S(4,0)` to `S(4,3)`.
 * The server also needs to send `A(0,3) A(1,3) A(2,3) A(3,3)` to `B`, and the state transitions from `S(0,3)` to `S(4,3)`. At this point, the states of all three parties reach `S(4,3)` and achieve final consistency.
-```
 
 It seems that the design of this server is feasible. The main issue lies in the server handling conflict resolution and the distribution of `Op` instances. However, let's consider another scenario.
 
@@ -260,22 +258,23 @@ With so much said, there are already many open-source `OT` algorithm implementat
 
 ## Daily Question
 
-```markdown
+```
 https://github.com/WindrunnerMax/EveryDay
 ```
 
 ## References
 
-- [1] https://zhuanlan.zhihu.com/p/50990721
-- [2] https://zhuanlan.zhihu.com/p/426184831
-- [3] https://zhuanlan.zhihu.com/p/559699843
-- [4] https://zhuanlan.zhihu.com/p/425265438
-- [5] http://www.alloyteam.com/2020/01/14221/
-- [6] http://www.alloyteam.com/2019/07/13659/
-- [7] https://segmentfault.com/a/1190000040203619
-- [8] https://www.shangyexinzhi.com/article/4676182.html
-- [9] http://operational-transformation.github.io/index.html
-- [10] https://xie.infoq.cn/article/a6fad791493bf4f698781d98e
-- [11] https://github.com/yoyoyohamapi/book-slate-editor-design
-- [12] https://www3.ntu.edu.sg/scse/staff/czsun/projects/otfaq/
+```
+https://zhuanlan.zhihu.com/p/50990721
+https://zhuanlan.zhihu.com/p/426184831
+https://zhuanlan.zhihu.com/p/559699843
+https://zhuanlan.zhihu.com/p/425265438
+http://www.alloyteam.com/2020/01/14221/
+http://www.alloyteam.com/2019/07/13659/
+https://segmentfault.com/a/1190000040203619
+https://www.shangyexinzhi.com/article/4676182.html
+http://operational-transformation.github.io/index.html
+https://xie.infoq.cn/article/a6fad791493bf4f698781d98e
+https://github.com/yoyoyohamapi/book-slate-editor-design
+https://www3.ntu.edu.sg/scse/staff/czsun/projects/otfaq/
 ```

@@ -151,7 +151,6 @@ console.log(arr.filter( currentValue => currentValue > 2 )); // [3, 4, 5]
 console.log(arr); // [1, 2, 3, 4, 5] // Does not change the original array
 ```
 
-```markdown
 ### Array.prototype.find()
 `arr.find(callback(currentValue [, index [, array]])[, thisArg])`  
 The `callback` is a function executed for each element in the array, receiving one to three arguments.  
@@ -217,7 +216,6 @@ The `callback` is a function executed for each element in the array, receiving o
 `thisArg` is an optional parameter used as the `this` value when executing the `callback` function. It's worth noting that if an arrow function expression is used to pass in the `callback`, the `thisArg` parameter will be ignored, as arrow functions lexically bind the `this` value.  
 The `forEach()` method executes the given function once for each element in the array.  
 Note that if you want to end the iteration before it's completed, `forEach` is not the best choice as compared to `map`.
-```
 
 ```javascript
 var arr = [1, 2, 3, 4, 5];

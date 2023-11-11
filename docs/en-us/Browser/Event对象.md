@@ -1,4 +1,3 @@
-```markdown
 # Event Object
 The `Event` object represents an event that occurs in the `DOM`. There are many different types of events in the `DOM`, and they primarily use secondary interfaces based on the `Event` object as the main interface. The `Event` object itself contains properties and methods that are applicable to all events.
 
@@ -7,7 +6,6 @@ There are many types of events. Some events are triggered by the user, such as m
 An element can have multiple event handling functions bound to it, even for the same type of event. Especially in this case, separate and independent code modules bind event handling functions to the same element, each with its own distinct purpose. Event handling functions can be bound to different `HTML elements` using the `EventTarget.addEventListener()` method. This method of binding event handling functions essentially replaces the old-fashioned way of binding event handling functions using `HTML event handler attributes`, that is, the `DOM0` level events. In addition, these event handling functions can also be removed using the `removeEventListener()` method.
 When there are many nested elements, each with its own event handling functions, the event handling process can become very complex, especially when a parent element and a child element are both bound with event handling functions of the same type. Due to structural overlap, event handling functions may be triggered in sequence, and the order of triggering depends on the setting of event bubbling and event capturing on each element.
 Below is the list of primary interfaces based on the `Event` interface. It should be noted that all event interface names end with `Event`.
-```
 
 * `AnimationEvent`
 * `AudioProcessingEvent`

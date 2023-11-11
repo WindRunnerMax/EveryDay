@@ -230,8 +230,8 @@ https://github.com/WindrunnerMax/EveryDay
 
 ## Reference
 
-```markdown
-[Link to Article 1](https://blog.csdn.net/c__dreamer/article/details/82182649)
-[Link to Article 2](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map)
-[Link to Article 3](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
+```
+https://blog.csdn.net/c__dreamer/article/details/82182649
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/WeakMap
 ```

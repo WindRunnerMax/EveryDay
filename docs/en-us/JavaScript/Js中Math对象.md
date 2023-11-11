@@ -125,7 +125,6 @@ console.log(Math.clz32(10)); // 28
 console.log(Math.clz32(10)); // 28
 ```
 
-```markdown
 ### Math.cosh()
 `Math.cosh(x)`   
 The `Math.cosh()` function returns the hyperbolic cosine of a number.

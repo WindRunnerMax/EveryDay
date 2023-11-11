@@ -1,4 +1,3 @@
-```markdown
 # Binary Tree Level Order Traversal II
 Given a binary tree, return the bottom-up level order traversal of its nodes' values. That is, from the leaf nodes' level to the root node's level, in ascending order.
 
