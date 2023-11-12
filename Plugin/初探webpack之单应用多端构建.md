@@ -21,7 +21,7 @@ if("gecko" === "chromium"){
 
 ## __DEV__ 
 
-## IF-DEF
+## if-def
 
 ## 每日一题
 
