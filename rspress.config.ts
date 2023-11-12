@@ -5,7 +5,7 @@ export default defineConfig({
   root: "docs",
   outDir: "site-dev",
   icon: "/favicon.ico",
-  logo: "/favicon.ico",
+  logo: "/logo.png",
   route: {
     include: ["docs/**/*.md"],
   },

@@ -1,5 +1,10 @@
 export const sidebar: Sidebar = {
   "/": [
+    // @ts-ignore
+    {
+      text: "BLOG",
+      link: "index",
+    },
     {
       text: "HTML",
       collapsed: true,
@@ -598,4 +603,4 @@ interface SidebarGroup {
   collapsed?: boolean;
   tag?: string;
 }
-type Sidebar = Record<string, SidebarGroup[]>;
+type Sidebar = Record<string, (SidebarGroup )[]>;
