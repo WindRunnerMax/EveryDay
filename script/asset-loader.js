@@ -6,15 +6,36 @@ const path = require("path");
  */
 function AssetLoader(source) {
   /** @type {string} */
-  const context = this.context.replace("/en-us/", "/zh-cn/");
-  let target = source;
-  target = target.replace(/\/.+\/([0-9\-]+\.png)/g, function (_, $1) {
-    return path.join("screenshots", $1);
-  });
-  target = target.replace(/screenshots\/([0-9\-]+\.png)/g, function (_, $1) {
-    return path.join(context, "screenshots", $1);
-  });
-  return target;
+  const context = this.context;
+  const dirName = context.slice(context.lastIndexOf("/") + 1);
+  return source
+    .split("\n")
+    .map((item) => {
+      let line = item;
+      if (line.startsWith("<img")) {
+        const result = /src="(.*?)"/.exec(line);
+        if(result && result[1] && result[1].endsWith(".png")) {
+          line = `![IMG](${result[1]})`;
+        }
+      }
+      const regexp = /^\!\[(.*)\]\((.+)\)/;
+      if (regexp.test(line)) {
+        const result = regexp.exec(line);
+        if (!result || !result[2]) return line;
+        const fileName = result[2].slice(result[2].lastIndexOf("/") + 1);
+        const filePath = path.join(
+          "..",
+          "..",
+          "zh-cn",
+          dirName,
+          "screenshots",
+          fileName
+        );
+        return `![${result[1]}](${filePath})`;
+      }
+      return line;
+    })
+    .join("\n");
 }
 
 module.exports = AssetLoader;
