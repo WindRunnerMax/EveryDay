@@ -360,7 +360,6 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):
     # The -1 in shape means that the number is not fixed, it is obtained according to the actual situation, which is the size of the number of images entered in each round of iteration (batch size);
     x = tf.reshape(X, shape=[-1, IMAGE_HEIGHT, IMAGE_WIDTH, 1])
     
-```
 
 # Build the first convolutional layer
 # The shape [3, 3, 1, 32] indicates the patch size of the convolutional kernel in the first two parameters;
@@ -493,10 +492,9 @@ if __name__ == '__main__':
 
 ##### Test set accuracy
 With 3109 images in the training set, 128 images in the test set, and 1600 training iterations, the test set accuracy is approximately 96%.
+```
 
 Testing the dataset with `Spot.py`
-
-```
 
 ```python
 import numpy as np
@@ -628,8 +626,6 @@ with tf.Session() as sess:
         print("Actual: {0}  Predicted: {1}".format(text_, predict_text),text_ == predict_text)
         if text_ == predict_text: acceptCount += 1;
     print("Test set accuracy",acceptCount,count,acceptCount/count)
-```
-
 ```
 
 

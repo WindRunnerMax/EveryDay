@@ -3,124 +3,125 @@
 Recently, the personal beta version of Alipay Mini Program was launched, so I wanted to give it a try. However, I didn't expect it to be so troublesome just to obtain the unique identifier of the user. Unlike the openid which can be obtained with a simple GET request in WeChat, getting the user_id in Alipay requires integrating the SDK and performing public and private key verification. Moreover, the Alipay development tool consumes a huge amount of memory; just opening it alone takes up at least 2GB of memory. Quite a headache, isn't it?
 
 1. **Firstly, register a Mini Program and include some useful links**  
-    - [Alipay Mini Program Registration Link](https://mini.open.alipay.com/channel/miniIndex.htm)  
-    - [Development Tool Download Link](https://opendocs.alipay.com/mini/ide/download)  
-    - [SDK Download Address](https://docs.open.alipay.com/20180417160701241302/litbla/)  
-    - [Alipay Mini Program Development Documentation](https://opendocs.alipay.com/mini/006kyi)  
-    - [RSA Key Generation Tool Download Address](https://docs.open.alipay.com/291/105971/)
+
+- [Alipay Mini Program Registration Link](https://mini.open.alipay.com/channel/miniIndex.htm)  
+- [Development Tool Download Link](https://opendocs.alipay.com/mini/ide/download)  
+- [SDK Download Address](https://docs.open.alipay.com/20180417160701241302/litbla/)  
+- [Alipay Mini Program Development Documentation](https://opendocs.alipay.com/mini/006kyi)  
+- [RSA Key Generation Tool Download Address](https://docs.open.alipay.com/291/105971/)
 
 2. **After registration, download all the provided software. Then, in the development center—Mini Program application—select Mini Program—development management—function list (at the bottom), add the [Get Member Basic Information] function.**
 
-   ![Screenshot](screenshots/2023-04-14-20-50-13.png)
+![Screenshot](screenshots/2023-04-14-20-50-13.png)
 
 3. **Use the RSA key generation tool to create a key, which can be used for signature verification in the future.**
 
-   ![Screenshot](screenshots/2023-04-14-20-50-19.png)
+![Screenshot](screenshots/2023-04-14-20-50-19.png)
 
-   After generating the application private key and application public key, copy the application public key and paste it in the [development center—Mini Program application—select Mini Program—settings—development settings—set interface encryption method].
+After generating the application private key and application public key, copy the application public key and paste it in the [development center—Mini Program application—select Mini Program—settings—development settings—set interface encryption method].
 
-   ![Screenshot](screenshots/2023-04-14-20-50-27.png)
+![Screenshot](screenshots/2023-04-14-20-50-27.png)
 
 4. **For the frontend, I used silent access without displaying the authorization box. I only need the user_id.**
 
-   ```javascript
-   my.getAuthCode({
-       scopes: 'auth_base', 
-       success:(res) =>{
-           // Send res.authCode to the backend here
-           // Reference: https://blog.csdn.net/qq_40413670/article/details/103796680 (Section Five: Deployment class `dispose.js`, 9. APP startup event)
-       }
-   })
-   ```
+```javascript
+my.getAuthCode({
+    scopes: 'auth_base', 
+    success:(res) =>{
+        // Send res.authCode to the backend here
+        // Reference: https://blog.csdn.net/qq_40413670/article/details/103796680 (Section Five: Deployment class `dispose.js`, 9. APP startup event)
+    }
+})
+```
 
 5. **Regarding the ThinkPHP part, start by downloading the SDK. The SDK contains many classes, but if you only need to obtain the user_id, you will only need the following six classes:**
 
-   ```powershell
-   AopClient.php
-   AopEncrypt.php
-   EncryptParseItem.php
-   EncryptResponseData.php
-   SignData.php
-   request/AlipaySystemOauthTokenRequest.php
-   ```
+```powershell
+AopClient.php
+AopEncrypt.php
+EncryptParseItem.php
+EncryptResponseData.php
+SignData.php
+request/AlipaySystemOauthTokenRequest.php
+```
 
-   According to its directory structure, these first five classes belong to the same namespace, while the sixth class belongs to the request namespace at the higher level. Place the SDK in the extend directory in the root directory, list the first few parts of these classes, and keep the rest consistent with the SDK. The main task is to annotate the namespace. Thanks to the automatic loading mechanism of the TP framework, manual inclusion is not required.
+According to its directory structure, these first five classes belong to the same namespace, while the sixth class belongs to the request namespace at the higher level. Place the SDK in the extend directory in the root directory, list the first few parts of these classes, and keep the rest consistent with the SDK. The main task is to annotate the namespace. Thanks to the automatic loading mechanism of the TP framework, manual inclusion is not required.
 
-   ```php
-   // AopClient.php
-   <?php
-   namespace lib\alipay;
+```php
+// AopClient.php
+<?php
+namespace lib\alipay;
 
-   use think\Exception;
+use think\Exception;
 
-   class AopClient
-   {
-       // Application ID
-       public $appId;
-       // ..................
-   }
-   ```
+class AopClient
+{
+    // Application ID
+    public $appId;
+    // ..................
+}
+```
 
-   ```php
-   // AopEncrypt.php
-   <?php
-   namespace lib\alipay;
-   /**
-    * Encryption Utility Class
-    *
-    * User: jiehua
-    * Date: 16/3/30
-    * Time: 3:25 PM
-    */
+```php
+// AopEncrypt.php
+<?php
+namespace lib\alipay;
+/**
+* Encryption Utility Class
+*
+* User: jiehua
+* Date: 16/3/30
+* Time: 3:25 PM
+*/
 
 
-   /**
-    * Encryption method
-    * @param string $str
-    * @return string
-    */
-   function encrypt($str, $secret_key)
-   {
-       // ..................
-   }
-   ```
+/**
+* Encryption method
+* @param string $str
+* @return string
+*/
+function encrypt($str, $secret_key)
+{
+    // ..................
+}
+```
 
-   ```php
-   // EncryptParseItem.php
-   <?php
-   namespace lib\alipay;
-   /**
-    *  TODO: Add explanation
-    *
-    * User: jiehua
-    * Date: 16/3/30
-    * Time: 8:55 PM
-    */
+```php
+// EncryptParseItem.php
+<?php
+namespace lib\alipay;
+/**
+*  TODO: Add explanation
+*
+* User: jiehua
+* Date: 16/3/30
+* Time: 8:55 PM
+*/
 
-   class EncryptParseItem
-   {
-       // ..................
-   }
-   ```
+class EncryptParseItem
+{
+    // ..................
+}
+```
 
-   ```php
-   // EncryptResponseData.php
-   <?php
-   namespace lib\alipay;
-   /**
-    *  TODO: Add explanation
-    *
-    * User: jiehua
-    * Date: 16/3/30
-    * Time: 8:51 PM
-    */
+```php
+// EncryptResponseData.php
+<?php
+namespace lib\alipay;
+/**
+*  TODO: Add explanation
+*
+* User: jiehua
+* Date: 16/3/30
+* Time: 8:51 PM
+*/
 
-   class EncryptResponseData
-   {
-       public $realContent;
-       public $returnContent;
-   }
-   ```
+class EncryptResponseData
+{
+    public $realContent;
+    public $returnContent;
+}
+```
 
 ```php
 // SignData.php
