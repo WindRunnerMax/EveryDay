@@ -1,8 +1,8 @@
 # BLOG
 
-## Hi
-
 [Github](https://github.com/WindrunnerMax/EveryDay) ｜ [Timeline](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md) ｜ [Blog](https://blog.touchczy.top/) ｜ [Blog-SSG](https://blog-ssg.touchczy.top/)
+
+## Hi ~
 
 如果觉得不错，在 [版本库](https://github.com/WindrunnerMax/EveryDay) 点个`star`吧 😁 
 
