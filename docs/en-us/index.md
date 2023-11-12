@@ -4,9 +4,9 @@ sidebar: true
 
 # BLOG
 
-## Hi
-
 [Github](https://github.com/WindrunnerMax/EveryDay) ｜ [Timeline](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md) ｜ [Blog](https://blog.touchczy.top/) ｜ [Blog-SSG](https://blog-ssg.touchczy.top/)
+
+## Hi ~
 
 If you find it helpful, please give it a `star` on the [repository](https://github.com/WindrunnerMax/EveryDay) 😁   
 
