@@ -45,6 +45,13 @@ export default defineConfig({
     html: {
       tags: [
         {
+          tag: "meta",
+          attrs: {
+            name: "baidu-site-verification",
+            content: "codeva-MoRHD4glR8",
+          },
+        },
+        {
           tag: "script",
           attrs: {
             async: true,
