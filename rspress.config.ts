@@ -20,7 +20,7 @@ export default defineConfig({
       {
         icon: "github",
         mode: "link",
-        content: "https://github.com/WindrunnerMax",
+        content: "https://github.com/WindrunnerMax/EveryDay",
       },
     ],
     locales: [
@@ -29,6 +29,11 @@ export default defineConfig({
         label: "English",
         title: "Blog",
         description: "WindrunnerMax Blog",
+        editLink: {
+          docRepoBaseUrl:
+            "https://github.com/WindrunnerMax/EveryDay/tree/gh-pages-ssg/docs",
+          text: "📝 Edit this page on GitHub",
+        },
       },
       {
         lang: "zh-cn",
@@ -38,6 +43,11 @@ export default defineConfig({
         prevPageText: "上一篇",
         nextPageText: "下一篇",
         outlineTitle: "目录",
+        editLink: {
+          docRepoBaseUrl:
+            "https://github.com/WindrunnerMax/EveryDay/tree/gh-pages-ssg/docs",
+          text: "📝 在 GitHub 上编辑此页",
+        },
       },
     ],
   },
