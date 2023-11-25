@@ -12,12 +12,39 @@
 if("chromium" === "chromium"){
     // xxx
 }
+
 if("gecko" === "chromium"){
     // xxx
 }
 ```
 
-## process.env 
+## process.env
+我们在平时开发的过程中，特别是引入第三方`Npm`包的时候，可能会发现打包之后会有出现`ReferenceError: process is not defined`的错误，这也算是经典的异常了，当然这种情况通常是发生在将`Node.js`代码应用到浏览器环境中，除了这种情况之外，在前端构建的场景中也会需要使用到`process.env`，例如在`React`的入口文件`react/index.js`中就可以看到如下的代码:
+
+```js
+if (process.env.NODE_ENV === 'production') {
+  module.exports = require('./cjs/react.production.min.js');
+} else {
+  module.exports = require('./cjs/react.development.js');
+}
+```
+
+当然在这里是构建时发生的，实际上还是运行在`Node`环境中的，通过区分不同的环境变量打包不同的产物，从而可以区分生产环境与开发环境的代码，从而提供开发环境相关的功能和警告。那么类似的，我们同样也可以借助这种方式作为多端构建的条件判断，通过`process.env`来判断当前的平台，从而在构建的过程中将不符合条件的代码处理掉。类似于`React`的这种方式来做跨平台编译当然是可行的，只不过看起来这似乎是`commonjs`的模块化管理方式，而`ES Module`是静态声明的语句，也就是说导入导出语句必须在模块的顶层作用域中使用，而不能在条件语句或循环语句等代码块中使用，所以这段代码通常可能需要手动维护或者需要借助工具自动生成。
+
+那么在`ES Module`静态声明中，我们就需要借助共建工具来完成跨端编译的方案了。回到刚开始时提到的那个`process is not defined`的问题，除了上述的两种情况，还有一种常见的情况是`process`这个变量代码本身就存在于代码当中，而在浏览器在`runtime`执行的时候发现并没有`process`这个变量从而抛出的异常。在最开始的时候，我还是比较纳闷这个`Node`变量为什么会出现在浏览器当中，所以为了解决这个问题我可能会在全局声明一下这个变量，那么在现在看来当时我可能产生了误用的情况，实际上我们应该借助于浏览器构建工具来处理当前的环境配置。那么我们来举个例子，假设此时我们的环境变量是`process.env.NODE_ENV`是`development`，而我们的源码中是这样的，那么在借助打包工具之后，我们实际得到的`url`是`xxx`，在`production`的时候得到的`url`就会变成`xxxxxx`。
+
+```js
+let url = "xxx";
+if(process.env.NODE_ENV === 'development'){
+    console.log("Development Env");
+}else{
+    url = "xxxxxx";
+}
+export const URL = url;
+```
+
+实际上这是个非常通用的处理方式，通过指定环境变量的方式来做环境的区分，以便打包时将不需要的代码移除，例如在`Create React App`脚手架中就有`custom-environment-variables`相关的配置，也就是必须要以`REACT_APP_`开头的环境变量注入，并且`NODE_ENV`环境变量也会被自动注入，当然值得注意的是我们不应该把任何私钥等环境变量的名称以`REACT_APP_`开头，因为这样如果在前端构建的源码中有这个环境变量的使用，则会造成密钥泄漏的风险，这也是`Create React App`约定需要以`REACT_APP_`开头的环境变量才会被注入的原因。
+
 
 ## __DEV__ 
 
