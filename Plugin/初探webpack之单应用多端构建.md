@@ -172,9 +172,152 @@ console.log("IS IN GECKO");
 
 此外，在之前实现跨平台相关需求的时候，我发现使用预处理指令实现过多的逻辑反而不好，特别是涉及到`else`的逻辑，因为我们很难保证后续会不会需要兼容新的平台，那么如果我们使用了`else`相关逻辑的话，后续增删平台编译的时候就需要检查所有的跨平台分支逻辑，而且比较容易忽略掉一些分支情况，从而导致错误的发生，所以在这里我们只需要使用`#IFDEF`、`#ENDIF`就可以了，即明确地指出这段代码需要编译的平台，由此来尽可能避免不必要的问题，同时保留平台的扩展性。
 
-那么接下来就需要通过`loader`来实现功能了，在这里我是基于`rspack`来实现的，同样兼容`webpack5`的基本接口，当然在这里使用的都是最基本的`Api`能力，实际上在大部分情况下都是通用的。
+那么接下来就需要通过`loader`来实现功能了，在这里我是基于`rspack`来实现的，同样兼容`webpack5`的基本接口，当然在这里因为我们主要是对源代码进行处理，所以使用的都是最基本的`Api`能力，实际上在大部分情况下都是通用的。那么编写`loader`这部分就不需要过多描述了，`loader`是一个函数，接收源代码作为参数，返回处理后的代码即可，并且需要的相关信息可以直接从`this`中取得即可，在这里我通过`jsdoc`将类型标注了一下。
 
+```js
+const path = require("path");
+const fs = require("fs");
 
+/**
+ * @this {import('@rspack/core').LoaderContext}
+ * @param {string} source
+ * @returns {string}
+ */
+function IfDefineLoader(source) {
+  return source;
+}
+```
+
+接下来，为了保持通用性，我们处理一些参数，包括读取的环境变量名字、`include`、`exclude`以及`debug`模式，并且做一下匹配，如果命中了该文件需要处理则继续，否则直接返回源代码即可，并且`debug`模式可以帮我们输出一些调试信息。
+
+```js
+// 检查参数配置
+/** @type {boolean} */
+const debug = this.query.debug || false;
+/** @type {(string|RegExp)[]} */
+const include = this.query.include || [path.resolve("src")];
+/** @type {(string|RegExp)[]} */
+const exclude = this.query.exclude || [/node_modules/];
+/** @type {string} */
+const envKey = this.query.platform || "PLATFORM";
+
+// 过滤资源路径
+let hit = false;
+const resourcePath = this.resourcePath;
+for (const includeConfig of include) {
+  const verified =
+    includeConfig instanceof RegExp
+      ? includeConfig.test(resourcePath)
+      : resourcePath.startsWith(includeConfig);
+  if (verified) {
+    hit = true;
+    break;
+  }
+}
+for (const excludeConfig of exclude) {
+  const verified =
+    excludeConfig instanceof RegExp
+      ? excludeConfig.test(resourcePath)
+      : resourcePath.startsWith(excludeConfig);
+  if (verified) {
+    hit = false;
+    break;
+  }
+}
+if (debug && hit) {
+  console.log("if-def-loader hit path", resourcePath);
+}
+if (!hit) return source;
+```
+
+接下来就是具体的代码处理逻辑了，最开始的时候我想使用正则的方式直接进行处理的，但是发现处理起来比较麻烦，尤其是存在嵌套的情况下，就不太容易处理逻辑，那么再后来我想反正代码都是 一行一行的逻辑，按行处理的方式才是最方便的，特别是在处理的过程中因为本身就是注释，最终都是要删除的，即使存在缩进的情况直接去掉前后的空白就能直接匹配标记进行处理了。这样思路就变的简单了很多，预处理指令起始`#IFDEF`只会置`true`，预处理指令结束`#ENDIF`只会置`false`，而我们的最终目标实际上就是删除代码，所以将不符合条件判断的代码行返回空白即可，但是处理嵌套的时候还是需要注意一下，我们需要一个栈来记录当前的处理预处理指令起始`#IFDEF`的索引即进栈，当遇到`#ENDIF`再出栈，并且还需要记录当前的处理状态，如果当前的处理状态是`true`，那么在出栈的时候就需要确定是否需要标记当前状态为`false`从而结束当前块的处理。
+
+```js
+// CURRENT PLATFORM: GECKO
+
+// #IFDEF CHROMIUM
+// some expressions... // remove
+// #ENDIF
+
+// #IFDEF GECKO
+// some expressions... // retain
+// #ENDIF
+
+// #IFDEF CHROMIUM
+// some expressions... // remove
+// #IFDEF GECKO
+// some expressions... // remove
+// #ENDIF
+// #ENDIF
+
+// #IFDEF GECKO
+// some expressions... // retain
+// #IFDEF CHROMIUM
+// some expressions... // remove
+// #ENDIF
+// #ENDIF
+
+// #IFDEF CHROMIUM|GECKO
+// some expressions... // retain
+// #IFDEF GECKO
+// some expressions... // retain
+// #ENDIF
+// #ENDIF
+```
+
+```js
+// 迭代时控制该行是否命中预处理条件
+const platform = (process.env[envKey] || "").toLowerCase();
+let terser = false;
+let revised = false;
+let terserIndex = -1;
+/** @type {number[]} */
+const stack = [];
+const lines = source.split("\n");
+const target = lines.map((line, index) => {
+  // 去掉首尾的空白 去掉行首注释符号与空白符(可选)
+  const code = line.trim().replace(/^\/\/\s*/, "");
+  // 检查预处理指令起始 `#IFDEF`只会置`true`
+  if (/^#IFDEF/.test(code)) {
+    stack.push(index);
+    // 如果是`true`继续即可
+    if (terser) return "";
+    const match = code.replace("#IFDEF", "").trim();
+    const group = match.split("|").map(item => item.trim().toLowerCase());
+    if (group.indexOf(platform) === -1) {
+      terser = true;
+      revised = true;
+      terserIndex = index;
+    }
+    return "";
+  }
+  // 检查预处理指令结束 `#IFDEF`只会置`false`
+  if (/^#ENDIF$/.test(code)) {
+    const index = stack.pop();
+    // 额外的`#ENDIF`忽略
+    if (index === undefined) return "";
+    if (index === terserIndex) {
+      terser = false;
+      terserIndex = -1;
+    }
+    return "";
+  }
+  // 如果命中预处理条件则擦除
+  if (terser) return "";
+  return line;
+});
+
+// 测试文件复写
+if (debug && revised) {
+  // rm -rf ./**/*.log
+  console.log("if-def-loader revise path", resourcePath);
+  fs.writeFile(resourcePath + ".log", target.join("\n"), () => null);
+}
+// 返回处理结果
+return target.join("\n");
+```
+
+完整的代码可以参考`https://github.com/WindrunnerMax/TKScript/blob/master/packages/force-copy/script/if-def/index.js`，并且开发浏览器扩展`v2/v3`以及兼容`Gecko/Chromeium`相关的实现可以参考，当然油猴插件相关的开发在仓库中也可以找到，如果想使用已经开发好的`loader`的话，可以直接安装`if-def-processor`即可。
 
 ## 每日一题
 

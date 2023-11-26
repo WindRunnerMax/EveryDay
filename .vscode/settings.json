@@ -3,6 +3,7 @@
         "elif",
         "IFDEF",
         "IFNDEF",
+        "instanceof",
         "Rspack",
         "Vite"
     ]
