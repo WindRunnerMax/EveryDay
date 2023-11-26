@@ -141,6 +141,40 @@ module.exports = {
 ```
 
 ## if-def
+在处理一些跨平台的编译问题时，我最常用的的方法就是`process.env`与`__DEV__`，但是在用多了之后发现，在这种类似于条件编译的情况下，大量使用`process.env.PLATFORM === xxx`很容易出现深层次嵌套的问题，可读性会变得很差，毕竟我们的`Promise`就是为了解决异步回调的嵌套地狱的问题，如果我们因为需要跨平台编译而继续引入嵌套问题的话，总感觉并不是一个好的解决方案。
+
+在`C/C++`中有一个非常有意思的预处理器，`C Preprocessor`不是编译器的组成部分，但其是编译过程中一个单独的步骤，简单来说`C Preprocessor`相当于是一个文本替换工具，例如不加入标识符的宏参数等都是原始文本直接替换，可以指示编译器在实际编译之前完成所需的预处理。`#include`、`#define`、`#ifdef`等等都属于`C Preprocessor`的预处理器指令，在这里我们主要关注条件编译的部分，也就是`#if`、`#endif`、`#ifdef`、`#endif`、`#ifndef`、`#endif`等条件编译指令。
+
+```c
+#if VERBOSE >= 2
+  print("trace message");
+#endif
+
+#ifdef __unix__ /* __unix__ is usually defined by compilers targeting Unix systems */
+# include <unistd.h>
+#elif defined _WIN32 /* _WIN32 is usually defined by compilers targeting 32 or 64 bit Windows systems */
+# include <windows.h>
+#endif
+```
+
+那么我们同样也可以将类似的方式借助构建工具来实现，首先`C Preprocessor`是一个预处理工具，不参与实际的编译时的行为，那么是不是就很像`webpack`中的`loader`，而原始文本的直接替换我们在`loader`中也是完全可以做到的，而类似于`#ifdef`、`#endif`我们可以通过注释的形式来实现，这样就可以避免深层次的嵌套问题，而字符串替换的相关逻辑是可以直接修改原来来处理，例如不符合平台条件的就可以移除掉，符合平台条件的就可以保留下来，这样就可以实现类似于`#ifdef`、`#endif`的效果了。此外，通过注释来实现对某些复杂场景还是有帮助的，例如我就遇到过比较复杂的`SDK`打包场景，对内与对外以及对本体项目平台的行为都是不一致的，如果在不构建多个包的情况下，跨平台就需要用户自己来配置构建工具，而使用注释可以在不配置`loader`的情况下同样能够完整打包，在某些情况下可以避免用户需要改动自己的配置，当然这种情况还是比较深地耦合在业务场景的，只是提供一种情况的参考。
+
+
+```js
+// #IFDEF CHROMIUM
+console.log("IS IN CHROMIUM");
+// #ENDIF
+
+// #IFDEF GECKO
+console.log("IS IN GECKO");
+// #ENDIF
+```
+
+此外，在之前实现跨平台相关需求的时候，我发现使用预处理指令实现过多的逻辑反而不好，特别是涉及到`else`的逻辑，因为我们很难保证后续会不会需要兼容新的平台，那么如果我们使用了`else`相关逻辑的话，后续增删平台编译的时候就需要检查所有的跨平台分支逻辑，而且比较容易忽略掉一些分支情况，从而导致错误的发生，所以在这里我们只需要使用`#IFDEF`、`#ENDIF`就可以了，即明确地指出这段代码需要编译的平台，由此来尽可能避免不必要的问题，同时保留平台的扩展性。
+
+那么接下来就需要通过`loader`来实现功能了，在这里我是基于`rspack`来实现的，同样兼容`webpack5`的基本接口，当然在这里使用的都是最基本的`Api`能力，实际上在大部分情况下都是通用的。
+
+
 
 ## 每日一题
 
