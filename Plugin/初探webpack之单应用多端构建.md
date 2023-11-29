@@ -55,7 +55,7 @@ export const URL = url;
 
 实际上这是个非常通用的处理方式，通过指定环境变量的方式来做环境的区分，以便打包时将不需要的代码移除，例如在`Create React App`脚手架中就有`custom-environment-variables`相关的配置，也就是必须要以`REACT_APP_`开头的环境变量注入，并且`NODE_ENV`环境变量也会被自动注入，当然值得注意的是我们不应该把任何私钥等环境变量的名称以`REACT_APP_`开头，因为这样如果在前端构建的源码中有这个环境变量的使用，则会造成密钥泄漏的风险，这也是`Create React App`约定需要以`REACT_APP_`开头的环境变量才会被注入的原因。
 
-那么实际上这个功能看起来是不是非常像字符串替换，而`webpack`就提供了开箱即用的`webpack.DefinePlugin`来实现这个能力`https://webpack.js.org/plugins/define-plugin/`，这个插件可以在打包的过程中将指定的变量替换为指定的值，从而实现我们要做的允许跨端的的不同行为，我们直接在`webpack`的配置文件中配置即可。
+那么实际上这个功能看起来是不是非常像字符串替换，而`webpack`就提供了开箱即用的`webpack.DefinePlugin`来实现这个能力`https://webpack.js.org/plugins/define-plugin/`，这个插件可以在打包的过程中将指定的变量替换为指定的值，从而实现我们要做的允许跨端的的不同行为，我们直接在`webpack`的配置文件中配置即可。此外，使用`ps -e`或`systemctl status`查看进程`pid`，并配合`cat /proc/${pid}/environ | tr '\0' '\n'`来读取运行中程序的环境变量是个不错的方式。
 
 ```js
 new webpack.DefinePlugin({
