@@ -78,7 +78,7 @@ In practice, it is usually not sufficient to simply set `sideEffects` to `false`
 ],
 ```
 
-## __DEV__
+## \_\_DEV\_\_ 
 
 When reading the source code of React and Vue, you may often encounter the variable `__DEV__`. If you pay close attention, you will notice that although this is a variable, it is not declared in the current file and is not imported from any other module, except when it is declared in `global.d.ts`. Therefore, just like the variable `process.env.NODE_ENV`, this variable is injected at compile time and serves a similar purpose. However, from its name, it is clear that this variable focuses more on defining different behaviors between development and production builds.
 
