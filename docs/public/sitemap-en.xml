@@ -3233,4 +3233,11 @@
  <changefreq>weekly</changefreq>
 </url>
 
+<url>
+ <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之单应用多端构建.html</loc>
+ <priority>1.0</priority>
+ <lastmod>2023-12-02</lastmod>
+ <changefreq>weekly</changefreq>
+</url>
+
 </urlset>
