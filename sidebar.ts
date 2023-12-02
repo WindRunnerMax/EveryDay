@@ -295,6 +295,7 @@ export const sidebar: Sidebar = {
         "Plugin/从零实现的Chrome扩展",
         "Plugin/初探富文本之React实时预览",
         "Plugin/从零实现的浏览器Web脚本",
+        "Plugin/初探webpack之单应用多端构建",
       ],
     },
     {
