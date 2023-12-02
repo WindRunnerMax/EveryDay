@@ -64,6 +64,24 @@ new webpack.DefinePlugin({
 });
 ```
 
+说到这里，就不得不提到`package.json`的`sideEffects`配置项了，`sideEffects`通常被译作副作用，当然我们也可以将其看作附带效应。在`ES Module`中，顶部声明的模块是完全静态的，也就是说整个模块的依赖结构在编译时是能够明确确定的，那么通过确定的依赖来实现`TreeShaking`就是比较简单的事情了，当然通过`require`以及`import()`等动态导入的方式就无法静态确定依赖结构了，所以通常对于动态引用的模块不容易进行`TreeShaking`。那么假设我们现在实现了`ES`模块`A`，并且引用了模块`B`，而在`B`模块中实现的函数只用了其中一部分，而另一部分在整个项目中并未使用，那么这部分代码在静态分析之后就会被移除掉。
+
+上边描述的是比较常规的情况，实际上配合我们的`process.env`就可以更大程度地发挥这部分能力，在不同的平台中通过环境变量封装不同的模块，在打包的时候因为实际只引用但是并未调用，所以整个模块都可以被`TreeShaking`，假设我们有`A -> B -> C`三个模块，如果能够在`A`处判断没有用到`B`，也就是认为`B`是无副作用的模块，那么通过打断`B`的引用，便可以在包中省下来`B`模块与`C`模块的体积，而实际上我们的模块引用深度可能是会相当大的，这是个`N`叉树级的层次结构，假如能在中间打断的话，便可以很大程度上优化体积。
+
+回到`sideEffects`的配置上，假设我们的模块`A`引用了模块`B`，而实际上在`A`中并没有任何关于`B`模块函数的调用只是单纯的引用了而已，在`B`模块中实现了初始化的副作用代码，例如直接在模块`B`中劫持了`Node.prototype`的函数，注意在这里并没有将这个劫持封装到函数中，是直接在模块中执行的。那么在默认情况下，也就是`package.json`没有配置`sideEffects`默认为`true`，即认为所有模块都有副作用的情况下，`B`模块这段代码实际上同样会被执行，而如果标记了`sideEffects`为`false`的情况下，这段代码是不会被执行的。还有一种情况，在写`TS`的时候我们可能通常不会写`import type xxx from "xxx";`的语法，在这种我们实际上仅引用了类型的情况下不必要的副作用代码还是会被执行的，所以在这里`sideEffects`是很有必要的，当然我们也可以通过`Lint`自动处理仅引用类型时的`import type`语句。
+
+实际上配置`sideEffects`将直接配置为`false`的情况下通常是无法满足我们的需求的，有些时候我们是直接引用了`css`，类似于`import "./index.css"`的这种形式，因为没有实际的函数调用，所以这段`CSS`也会被`TreeShaking`掉，另外在开发环境下`Webpack`是默认不会开启`TreeShaking`的，所以需要配置一下，所以在很多`Npm`包中我们能够看到如下配置，通常就是明确地标明了副作用模块，避免意外的模块移除。
+
+```js
+"sideEffects": [
+   "dist/**/*",
+  "*.scss",
+  "*.less",
+  "*.css",
+  "**/styles/**"
+],
+```
+
 ## __DEV__ 
 在阅读`React`和`Vue`的源码的时候，我们通常可以看到`__DEV__`这个变量，而如果我们观察仔细的话就可以发现，虽然这是个变量但是并没有在当前文件中声明，也没有从别的模块当中引入，当然在`global.d.ts`中声明的不算，因为其并不会注入到`runtime`中。那么实际上，这个变量与`process.env.NODE_ENV`变量一样，都是在编译时注入的，起到的也是相通的作用，只不过这个变量从命名中就可以看出来，是比较关注于开发构建和生产构建之间的不同行为的定义。
 
@@ -317,7 +335,7 @@ if (debug && revised) {
 return target.join("\n");
 ```
 
-完整的代码可以参考`https://github.com/WindrunnerMax/TKScript/blob/master/packages/force-copy/script/if-def/index.js`，并且开发浏览器扩展`v2/v3`以及兼容`Gecko/Chromeium`相关的实现可以参考，当然油猴插件相关的开发在仓库中也可以找到，如果想使用已经开发好的`loader`的话，可以直接安装`if-def-processor`，并且参考`https://github.com/WindrunnerMax/TKScript/blob/master/packages/force-copy/rspack.config.js`配置即可。
+完整的代码可以参考`https://github.com/WindrunnerMax/TKScript/blob/master/packages/force-copy/script/if-def/index.js`，并且有开发浏览器扩展`v2/v3`以及兼容`Gecko/Chromeium`相关的实现可以参考，当然油猴插件相关的开发在仓库中也可以找到，如果想使用已经开发好的`loader`的话，可以直接安装`if-def-processor`，并且参考`https://github.com/WindrunnerMax/TKScript/blob/master/packages/force-copy/rspack.config.js`配置即可。
 
 ## 每日一题
 
