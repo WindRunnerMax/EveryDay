@@ -1,5 +1,5 @@
 # 基于WebRTC的局域网文件传输
-`WebRTC(Web Real-Time Communications)`是一项实时通讯技术，允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点`P2P(Peer-to-Peer)`的连接，实现视频流、音频流、文件等等任意数据的传输，`WebRTC`包含的这些标准使用户在无需安装任何插件或者第三方的软件的情况下，可以创建点对点`Peer-to-Peer`的数据分享和电话会议等。
+`WebRTC(Web Real-Time Communications)`是一项实时通讯技术，允许网络应用或者站点，在不借助中间媒介的情况下，建立浏览器之间点对点`P2P(Peer-To-Peer)`的连接，实现视频流、音频流、文件等等任意数据的传输，`WebRTC`包含的这些标准使用户在无需安装任何插件或者第三方的软件的情况下，可以创建点对点`Peer-To-Peer`的数据分享和电话会议等。
 
 
 ## 描述
@@ -13,7 +13,7 @@
 4. `P2P`传输方式可以直接在通信双方之间传输数据，减少了数据传输的路径和中间环节，从而降低了传输延迟，实现更实时的通信体验。
 5. `P2P`传输方式不需要经过中心服务器的中转，减少了第三方对通信内容的访问和监控，提高了通信的隐私保护。
 
-在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`，整体来说解决了如下问题: 
+在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`也就是隔空投送，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`。通过这种方式，任何拥有浏览器的设备都有传输数据的可能，不需要借助数据线传输文件，也不会受限于`Apple`全家桶才能使用的隔空投送，以及可以应用于常见的`IOS/Android`设备向`PC`台式设备传输文件的场景等等。那么回归到项目本身，具体来说在完成功能的过程中解决了如下问题: 
 
 1. 局域网内可以互相发现，不需要手动输入对方`IP`地址等信息。
 2. 多个设备中的任意两个设备之间可以相互传输文本消息与文件数据。
@@ -24,13 +24,42 @@
 
 
 ## WebRTC
-`WebRTC`是一套复杂的协议，同样也是`API`，并且提供了音视频传输的一整套解决方案，可以总结为跨平台、低时延、端对端的音视频实时通信技术。`WebRTC`提供的`API`大致可以分为三类，分别是`Media Stream API`设备音视频流、`RTCPeerConnection API`本地计算机到远端的`WebRTC`连接、`Peer-To-Peer Data API`浏览器之间`P2P`数据传输信道。在`WebRTC`的核心层中，同样包含三大核心模块，分别是`Voice Engine`音频引擎、`Video Engine`视频引擎、`Transport`传输模块。音频引擎`Voice Engine`中包含`iSAC/iLBC Codec`音频编解码器、`NetEQ For Voice`网络抖动和丢包处理、` Echo Canceler/Noise Reduction`回音消除与噪音抑制等。`Video Engine`视频引擎中包括`VP8 Codec`视频编解码器、`Video Jitter Buffer`视频抖动缓冲器、`Image Enhancements`图像增强等。`Transport`传输模块中包括`SRTP`安全实时传输协议、`Multiplexing`多路复用、​`STUN+TURN+ICE`网络传输`NAT`穿越，`DTLS`数据报安全传输等。
+`WebRTC`是一套复杂的协议，同样也是`API`，并且提供了音视频传输的一整套解决方案，可以总结为跨平台、低时延、端对端的音视频实时通信技术。`WebRTC`提供的`API`大致可以分为三类，分别是`Media Stream API`设备音视频流、`RTCPeerConnection API`本地计算机到远端的`WebRTC`连接、`Peer-To-Peer DataChannel API`浏览器之间`P2P`数据传输信道。在`WebRTC`的核心层中，同样包含三大核心模块，分别是`Voice Engine`音频引擎、`Video Engine`视频引擎、`Transport`传输模块。音频引擎`Voice Engine`中包含`iSAC/iLBC Codec`音频编解码器、`NetEQ For Voice`网络抖动和丢包处理、` Echo Canceler/Noise Reduction`回音消除与噪音抑制等。`Video Engine`视频引擎中包括`VP8 Codec`视频编解码器、`Video Jitter Buffer`视频抖动缓冲器、`Image Enhancements`图像增强等。`Transport`传输模块中包括`SRTP`安全实时传输协议、`Multiplexing`多路复用、​`STUN+TURN+ICE`网络传输`NAT`穿越，`DTLS`数据报安全传输等。
 
 由于在这里我们的主要目的是数据传输，所以我们只需要关心`API`层面上的`RTCPeerConnection API`和`Peer-To-Peer Data API`，以及核心层中的`Transport`传输模块即可。实际上由于网络以及场景的复杂性，基于`WebRTC`衍生出了大量的方案设计，而在网络框架模型方面，便有着三种架构: `Mesh`架构即真正的`P2P`传输，每个客户端与其他客户端都建立了连接，形成了网状的结构，这种架构可以同时连接的客户端有限，但是优点是不需要中心服务器，实现简单；`MCU-MultiPoint Control Unit`网络架构即传统的中心化架构，每个浏览器仅与中心的MCU服务器连接，`MCU`服务器负责所有的视频编码、转码、解码、混合等复杂逻辑，这种架构会对服务器造成较大的压力，但是优点是可以支持更多的人同时音视频通讯，比较适合多人视频会议。`SFU-Selective Forwarding Unit`网络架构类似于`MCU`的中心化架构，仍然有中心节点服务器，但是中心节点只负责转发，不做太重的处理，所以服务器的压力会低很多，这种架构需要比较大的带宽消耗，但是优点是服务器压力较小，典型场景是`1`对`N`的视频互动。对于我们而言，我们的目标是局域网之间的数据传输，所以并不会涉及此类复杂的网络传输架构模型，我们实现的是非常典型的`P2P`架构，甚至不需要`N-N`的数据传输，但是同样也会涉及到一些复杂的问题，例如`NAT`穿越、`ICE`交换、`STUN`服务器、`TURN`服务器等等。
 
 ### 信令
+信令是涉及到通信系统时，用于建立、控制和终止通信会话的信息，包含了与通信相关的各种指令、协议和消息，用于使通信参与者之间能够相互识别、协商和交换数据。主要目的是确保通信参与者能够建立连接、协商通信参数，并在需要时进行状态的改变或终止，这其中涉及到各种通信过程中的控制信息交换，而不是直接传输实际的用户数据。
+
+或许会产生一个疑问，既然`WebRTC`可以做到`P2P`的数据传输，那么为什么还需要信令服务器来调度连接。实际上这很简单，因为我们的网络环境是非常复杂的，我们并不能明确地得到对方的`IP`等信息来直接建立连接，所以我们需要借助信令服务器来协调连接。需要注意的是信令服务器的目标是协调而不是直接传输数据，数据本身的传输是`P2P`的，那么也就是说我们建立信令服务器并不需要大量的资源。
+
+那如果说我们是不是必须要有信令服务器，那确实不是必要的，在`WebRTC`中虽然没有建立信令的标准或者说客户端来回传递消息来建立连接的方法，因为网络环境的复杂特别是`IPv4`的时代在客户端直接建立连接是不太现实的，也就是我们做不到直接在互联网上描述我要连接到我的朋友，但是我们通过信令需要传递的数据是很明确的，而这些信息都是文本信息，所以如果不建立信令服务器的话，我们可以通过一些即使通讯软件`IM`来将需要传递的信息明确的发给对方，那么这样就不需要信令服务器了。那么人工转发消息的方式看起来非常麻烦可能并不是很好的选择，由此实际上我们可以理解为信令服务器就是把协商这部分内容自动化了，并且附带的能够提高连接的效率以及附加协商鉴权能力等等。
+
+```
+             SIGNLING
+
+             /      \ 
+  SDP/ICE   /        \   SDP/ICE
+           /          \
+
+      Client    <->    Client
+```
+
+基本的数据传输过程如上图所示，我们可以通过信令服务器将客户端的`SDP/ICE`等信息传递，然后就可以在两个`Client`之间建立起连接，之后的数据传输就完全在两个客户端也就是浏览器之间进行了，而信令服务器的作用就是协调这个过程，使得两个客户端能够建立起连接，实际上整个过程非常类似于`TCP`的握手，只不过这里并没有那么严格而且只握手两次就可以认为是建立连接了。此外`WebRTC`是基于`UDP`的，所以`WebRTC DataChannel`也可以相当于在`UDP`的不可靠传输的基础上实现了基本可靠的传输，类似于`QUIC`希望能取得可靠与速度之间的平衡。
+
+那么我们现在已经了解了信令服务器的作用，接下来我们就来实现信令服务器用来调度协商`WebRTC`。前边我们也提到了，因为`WebRTC`并没有规定信令服务器的标准或者协议，并且传输的都是文本内容，那么我们是可以使用任何方式来搭建这个信令服务器的，例如我们可以使用`HTTP`协议的短轮询`+`超时、长轮询，甚至是`EventSource`都可以作为信令服务器。在这里我们的目标不是仅仅建立起链接，而是希望能够实现类似于房间的概念，由此来管理我们的设备链接，所以首选的方案是`WebSocket`，`WebSocket`可以把这个功能做的更自然一些，全双工的客户端与服务器通信，消息可以同时在两个方向上流动，而`socket.io`是基于`WebSocket`封装了服务端和客户端，使用起来非常简单方便，所以接下来我们使用`socket.io`来实现信令服务器。
+
 
 ### 连接
+
+
+`ipv6`
+```bash
+$ nc -lk6 9999
+```
+```bash
+$ nc -6 ${ip} 9999
+```
 
 ### 通信
 
@@ -50,16 +79,19 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+http://v6t.ipip.net/
 https://icetest.info/
 https://www.stunprotocol.org/
+https://webrtc.github.io/samples/
 https://blog.p2hp.com/archives/11075
 https://github.com/RobinLinus/snapdrop
 https://web.dev/articles/webrtc-basics
 https://juejin.cn/post/6950234563683713037
 https://juejin.cn/post/7171836076246433799
+https://chidokun.github.io/p2p-file-transfer
 https://bloggeek.me/webrtc-vs-websockets/amp
 https://github.com/wangrongding/frontend-park
-https://muazkhan.com:9001/demos/file-sharing.html
+https://web.dev/articles/webrtc-infrastructure
 https://socket.io/zh-CN/docs/v4/server-socket-instance/
 https://socket.io/zh-CN/docs/v4/client-socket-instance/
 https://developer.mozilla.org/zh-CN/docs/Web/API/RTCPeerConnection/createDataChannel
