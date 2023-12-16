@@ -24,7 +24,7 @@
 
 
 ## WebRTC
-`WebRTC`是一套复杂的协议，同样也是`API`，并且提供了音视频传输的一整套解决方案，可以总结为跨平台、低时延、端对端的音视频实时通信技术。`WebRTC`提供的`API`大致可以分为三类，分别是`Media Stream API`设备音视频流、`RTCPeerConnection API`本地计算机到远端的`WebRTC`连接、`Peer-To-Peer DataChannel API`浏览器之间`P2P`数据传输信道。在`WebRTC`的核心层中，同样包含三大核心模块，分别是`Voice Engine`音频引擎、`Video Engine`视频引擎、`Transport`传输模块。音频引擎`Voice Engine`中包含`iSAC/iLBC Codec`音频编解码器、`NetEQ For Voice`网络抖动和丢包处理、` Echo Canceler/Noise Reduction`回音消除与噪音抑制等。`Video Engine`视频引擎中包括`VP8 Codec`视频编解码器、`Video Jitter Buffer`视频抖动缓冲器、`Image Enhancements`图像增强等。`Transport`传输模块中包括`SRTP`安全实时传输协议、`Multiplexing`多路复用、​`STUN+TURN+ICE`网络传输`NAT`穿越，`DTLS`数据报安全传输等。
+`WebRTC`是一套复杂的协议，同样也是`API`，并且提供了音视频传输的一整套解决方案，可以总结为跨平台、低时延、端对端的音视频实时通信技术。`WebRTC`提供的`API`大致可以分为三类，分别是`Media Stream API`设备音视频流、`RTCPeerConnection API`本地计算机到远端的`WebRTC`连接、`Peer-To-Peer RTCDataChannel API`浏览器之间`P2P`数据传输信道。在`WebRTC`的核心层中，同样包含三大核心模块，分别是`Voice Engine`音频引擎、`Video Engine`视频引擎、`Transport`传输模块。音频引擎`Voice Engine`中包含`iSAC/iLBC Codec`音频编解码器、`NetEQ For Voice`网络抖动和丢包处理、` Echo Canceler/Noise Reduction`回音消除与噪音抑制等。`Video Engine`视频引擎中包括`VP8 Codec`视频编解码器、`Video Jitter Buffer`视频抖动缓冲器、`Image Enhancements`图像增强等。`Transport`传输模块中包括`SRTP`安全实时传输协议、`Multiplexing`多路复用、​`STUN+TURN+ICE`网络传输`NAT`穿越，`DTLS`数据报安全传输等。
 
 由于在这里我们的主要目的是数据传输，所以我们只需要关心`API`层面上的`RTCPeerConnection API`和`Peer-To-Peer Data API`，以及核心层中的`Transport`传输模块即可。实际上由于网络以及场景的复杂性，基于`WebRTC`衍生出了大量的方案设计，而在网络框架模型方面，便有着三种架构: `Mesh`架构即真正的`P2P`传输，每个客户端与其他客户端都建立了连接，形成了网状的结构，这种架构可以同时连接的客户端有限，但是优点是不需要中心服务器，实现简单；`MCU-MultiPoint Control Unit`网络架构即传统的中心化架构，每个浏览器仅与中心的MCU服务器连接，`MCU`服务器负责所有的视频编码、转码、解码、混合等复杂逻辑，这种架构会对服务器造成较大的压力，但是优点是可以支持更多的人同时音视频通讯，比较适合多人视频会议。`SFU-Selective Forwarding Unit`网络架构类似于`MCU`的中心化架构，仍然有中心节点服务器，但是中心节点只负责转发，不做太重的处理，所以服务器的压力会低很多，这种架构需要比较大的带宽消耗，但是优点是服务器压力较小，典型场景是`1`对`N`的视频互动。对于我们而言，我们的目标是局域网之间的数据传输，所以并不会涉及此类复杂的网络传输架构模型，我们实现的是非常典型的`P2P`架构，甚至不需要`N-N`的数据传输，但是同样也会涉及到一些复杂的问题，例如`NAT`穿越、`ICE`交换、`STUN`服务器、`TURN`服务器等等。
 
@@ -33,7 +33,7 @@
 
 或许会产生一个疑问，既然`WebRTC`可以做到`P2P`的数据传输，那么为什么还需要信令服务器来调度连接。实际上这很简单，因为我们的网络环境是非常复杂的，我们并不能明确地得到对方的`IP`等信息来直接建立连接，所以我们需要借助信令服务器来协调连接。需要注意的是信令服务器的目标是协调而不是直接传输数据，数据本身的传输是`P2P`的，那么也就是说我们建立信令服务器并不需要大量的资源。
 
-那如果说我们是不是必须要有信令服务器，那确实不是必要的，在`WebRTC`中虽然没有建立信令的标准或者说客户端来回传递消息来建立连接的方法，因为网络环境的复杂特别是`IPv4`的时代在客户端直接建立连接是不太现实的，也就是我们做不到直接在互联网上描述我要连接到我的朋友，但是我们通过信令需要传递的数据是很明确的，而这些信息都是文本信息，所以如果不建立信令服务器的话，我们可以通过一些即使通讯软件`IM`来将需要传递的信息明确的发给对方，那么这样就不需要信令服务器了。那么人工转发消息的方式看起来非常麻烦可能并不是很好的选择，由此实际上我们可以理解为信令服务器就是把协商这部分内容自动化了，并且附带的能够提高连接的效率以及附加协商鉴权能力等等。
+那如果说我们是不是必须要有信令服务器，那确实不是必要的，在`WebRTC`中虽然没有建立信令的标准或者说客户端来回传递消息来建立连接的方法，因为网络环境的复杂特别是`IPv4`的时代在客户端直接建立连接是不太现实的，也就是我们做不到直接在互联网上广播我要连接到我的朋友，但是我们通过信令需要传递的数据是很明确的，而这些信息都是文本信息，所以如果不建立信令服务器的话，我们可以通过一些即使通讯软件`IM`来将需要传递的信息明确的发给对方，那么这样就不需要信令服务器了。那么人工转发消息的方式看起来非常麻烦可能并不是很好的选择，由此实际上我们可以理解为信令服务器就是把协商这部分内容自动化了，并且附带的能够提高连接的效率以及附加协商鉴权能力等等。
 
 ```
              SIGNLING
@@ -47,8 +47,125 @@
 
 基本的数据传输过程如上图所示，我们可以通过信令服务器将客户端的`SDP/ICE`等信息传递，然后就可以在两个`Client`之间建立起连接，之后的数据传输就完全在两个客户端也就是浏览器之间进行了，而信令服务器的作用就是协调这个过程，使得两个客户端能够建立起连接，实际上整个过程非常类似于`TCP`的握手，只不过这里并没有那么严格而且只握手两次就可以认为是建立连接了。此外`WebRTC`是基于`UDP`的，所以`WebRTC DataChannel`也可以相当于在`UDP`的不可靠传输的基础上实现了基本可靠的传输，类似于`QUIC`希望能取得可靠与速度之间的平衡。
 
-那么我们现在已经了解了信令服务器的作用，接下来我们就来实现信令服务器用来调度协商`WebRTC`。前边我们也提到了，因为`WebRTC`并没有规定信令服务器的标准或者协议，并且传输的都是文本内容，那么我们是可以使用任何方式来搭建这个信令服务器的，例如我们可以使用`HTTP`协议的短轮询`+`超时、长轮询，甚至是`EventSource`都可以作为信令服务器。在这里我们的目标不是仅仅建立起链接，而是希望能够实现类似于房间的概念，由此来管理我们的设备链接，所以首选的方案是`WebSocket`，`WebSocket`可以把这个功能做的更自然一些，全双工的客户端与服务器通信，消息可以同时在两个方向上流动，而`socket.io`是基于`WebSocket`封装了服务端和客户端，使用起来非常简单方便，所以接下来我们使用`socket.io`来实现信令服务器。
+那么我们现在已经了解了信令服务器的作用，接下来我们就来实现信令服务器用来调度协商`WebRTC`。前边我们也提到了，因为`WebRTC`并没有规定信令服务器的标准或者协议，并且传输的都是文本内容，那么我们是可以使用任何方式来搭建这个信令服务器的，例如我们可以使用`HTTP`协议的短轮询`+`超时、长轮询，甚至是`EventSource`、`SIP`等等都可以作为信令服务器的传输协议。在这里我们的目标不是仅仅建立起链接，而是希望能够实现类似于房间的概念，由此来管理我们的设备链接，所以首选的方案是`WebSocket`，`WebSocket`可以把这个功能做的更自然一些，全双工的客户端与服务器通信，消息可以同时在两个方向上流动，而`socket.io`是基于`WebSocket`封装了服务端和客户端，使用起来非常简单方便，所以接下来我们使用`socket.io`来实现信令服务器。
 
+首先我们需要实现房间的功能，在最开始的时候我们就明确我们需要在局域网自动发现设备，那么也就是相当于局域网的设备是属于同一个房间的，那么我们就需要存储一些信息，在这里我们使用`Map`分别存储了`id`、房间、连接信息。那么在一个基本的房间中，我们除了将设备加入到房间外还需要实现几个功能，对于新加入的设备`A`，我们需要将当前房间内已经存在的设备信息告知当前新加入的设备`A`，对于房间内的其他设备，则需要通知当前新加入的设备`A`的信息，同样的在设备`A`退出房间的时候，我们也需要通知房间内的其他设备当前离开的设备`A`的信息，并且更新房间数据。
+
+```js
+// packages/webrtc/server/index.ts
+const authenticate = new WeakMap<ServerSocket, string>();
+const mapper = new Map<string, Member>();
+const rooms = new Map<string, string[]>();
+
+socket.on(CLINT_EVENT.JOIN_ROOM, ({ id, device }) => {
+  // 验证
+  if (!id) return void 0;
+  authenticate.set(socket, id);
+  // 加入房间
+  const ip = getIpByRequest(socket.request);
+  const room = rooms.get(ip) || [];
+  rooms.set(ip, [...room, id]);
+  mapper.set(id, { socket, device, ip });
+  // 房间通知消息
+  const initialization: SocketEventParams["JOINED_MEMBER"]["initialization"] = [];
+  room.forEach(key => {
+    const instance = mapper.get(key);
+    if (!instance) return void 0;
+    initialization.push({ id: key, device: instance.device });
+    instance.socket.emit(SERVER_EVENT.JOINED_ROOM, { id, device });
+  });
+  socket.emit(SERVER_EVENT.JOINED_MEMBER, { initialization });
+});
+
+const onLeaveRoom = (id: string) => {
+  // 验证
+  if (authenticate.get(socket) !== id) return void 0;
+  // 退出房间
+  const instance = mapper.get(id);
+  if (!instance) return void 0;
+  const room = (rooms.get(instance.ip) || []).filter(key => key !== id);
+  if (room.length === 0) {
+    rooms.delete(instance.ip);
+  } else {
+    rooms.set(instance.ip, room);
+  }
+  mapper.delete(id);
+  // 房间内通知
+  room.forEach(key => {
+    const instance = mapper.get(key);
+    if (!instance) return void 0;
+    instance.socket.emit(SERVER_EVENT.LEFT_ROOM, { id });
+  });
+};
+
+socket.on(CLINT_EVENT.LEAVE_ROOM, ({ id }) => {
+  onLeaveRoom(id);
+});
+
+socket.on("disconnect", () => {
+  const id = authenticate.get(socket);
+  id && onLeaveRoom(id);
+});
+```
+
+可以看出我们管理房间是通过`IP`来实现的，因为此时需要注意一个问题，如果我们的信令服务器是部署在公网的服务器上，那么我们的房间就是全局的，也就是说所有的设备都可以连接到同一个房间，这样的话显然是不合适的，解决这个问题的方法很简单，对于服务器而言我们获取用户的`IP`地址，如果用户的`IP`地址是相同的就认为是同一个局域网的设备，所以我们需要获取当前连接的`Socket`的`IP`信息，在这里我们特殊处理了`127.0.0.1`和`192.168.0.0`两个网域的设备，以便我们在本地/路由器部署时能够正常发现设备。
+
+```js
+// packages/webrtc/server/utils.ts
+export const getIpByRequest = (request: http.IncomingMessage) => {
+  let ip = "";
+  if (request.headers["x-forwarded-for"]) {
+    ip = request.headers["x-forwarded-for"].toString().split(/\s*,\s*/)[0];
+  } else {
+    ip = request.socket.remoteAddress || "";
+  }
+  // 本地部署应用时，`ip`地址可能是`::1`或`::ffff:`
+  if (ip === "::1" || ip === "::ffff:127.0.0.1" || !ip) {
+    ip = "127.0.0.1";
+  }
+  // 局域网部署应用时，`ip`地址可能是`192.168.x.x`
+  if (ip.startsWith("::ffff:192.168") || ip.startsWith("192.168")) {
+    ip = "192.168.0.0";
+  }
+  return ip;
+};
+```
+
+至此信令服务器的房间功能就完成了，看起来实现信令服务器并不是一件难事，将这段代码以及静态资源部署在服务器上也仅占用`20MB`左右的内存，几乎不占用太多资源。而信令服务器的功能并不仅仅是房间的管理，我们还需要实现`SDP`和`ICE`的交换，只不过先前也提到了信令服务器的目标是协调连接，那么在这里我们还需要实现`SDP`和`ICE`的转发用以协调链接，在这里我们先将这部分内容前置，接下来再开始聊`RTCPeerConnection`的协商过程。
+
+```js
+// packages/webrtc/server/index.ts
+socket.on(CLINT_EVENT.SEND_OFFER, ({ origin, offer, target }) => {
+  if (authenticate.get(socket) !== origin) return void 0;
+  if (!mapper.has(target)) {
+    socket.emit(SERVER_EVENT.NOTIFY_ERROR, {
+      code: ERROR_TYPE.PEER_NOT_FOUND,
+      message: `Peer ${target} Not Found`,
+    });
+    return void 0;
+  }
+  // 转发`Offer` -> `target`
+  const targetSocket = mapper.get(target)?.socket;
+  if (targetSocket) {
+    targetSocket.emit(SERVER_EVENT.FORWARD_OFFER, { origin, offer, target });
+  }
+});
+
+socket.on(CLINT_EVENT.SEND_ICE, ({ origin, ice, target }) => {
+  // 转发`ICE` -> `target`
+  // ...
+});
+
+socket.on(CLINT_EVENT.SEND_ANSWER, ({ origin, answer, target }) => {
+  // 转发`Answer` -> `target`
+  // ...
+});
+
+socket.on(CLINT_EVENT.SEND_ERROR, ({ origin, code, message, target }) => {
+  // 转发`Error` -> `target`
+  // ...
+});
+```
 
 ### 连接
 
