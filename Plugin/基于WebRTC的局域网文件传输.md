@@ -13,7 +13,7 @@
 4. `P2P`传输方式可以直接在通信双方之间传输数据，减少了数据传输的路径和中间环节，从而降低了传输延迟，实现更实时的通信体验。
 5. `P2P`传输方式不需要经过中心服务器的中转，减少了第三方对通信内容的访问和监控，提高了通信的隐私保护。
 
-在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`也就是隔空投送，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`。通过这种方式，任何拥有浏览器的设备都有传输数据的可能，不需要借助数据线传输文件，也不会受限于`Apple`全家桶才能使用的隔空投送，以及可以应用于常见的`IOS/Android`设备向`PC`台式设备传输文件的场景等等。此外即使因为各种原因路由器开启了`AP`隔离功能，我们的服务依旧可以正常交换数据，这样避免了在路由器不受我们控制的情况下通过`Wifi`传输文件的掣肘。那么回归到项目本身，具体来说在完成功能的过程中解决了如下问题: 
+在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`也就是隔空投送，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`。通过这种方式，任何拥有浏览器的设备都有传输数据的可能，不需要借助数据线传输文件，也不会受限于`Apple`全家桶才能使用的隔空投送，以及天然的跨平台优势可以应用于常见的`IOS/Android/Mac`设备向`PC`台式设备传输文件的场景等等。此外即使因为各种原因路由器开启了`AP`隔离功能，我们的服务依旧可以正常交换数据，这样避免了在路由器不受我们控制的情况下通过`WIFI`传输文件的掣肘。那么回归到项目本身，具体来说在完成功能的过程中解决了如下问题: 
 
 1. 局域网内可以互相发现，不需要手动输入对方`IP`地址等信息。
 2. 多个设备中的任意两个设备之间可以相互传输文本消息与文件数据。
@@ -26,7 +26,7 @@
 ## WebRTC
 `WebRTC`是一套复杂的协议，同样也是`API`，并且提供了音视频传输的一整套解决方案，可以总结为跨平台、低时延、端对端的音视频实时通信技术。`WebRTC`提供的`API`大致可以分为三类，分别是`Media Stream API`设备音视频流、`RTCPeerConnection API`本地计算机到远端的`WebRTC`连接、`Peer-To-Peer RTCDataChannel API`浏览器之间`P2P`数据传输信道。在`WebRTC`的核心层中，同样包含三大核心模块，分别是`Voice Engine`音频引擎、`Video Engine`视频引擎、`Transport`传输模块。音频引擎`Voice Engine`中包含`iSAC/iLBC Codec`音频编解码器、`NetEQ For Voice`网络抖动和丢包处理、` Echo Canceler/Noise Reduction`回音消除与噪音抑制等。`Video Engine`视频引擎中包括`VP8 Codec`视频编解码器、`Video Jitter Buffer`视频抖动缓冲器、`Image Enhancements`图像增强等。`Transport`传输模块中包括`SRTP`安全实时传输协议、`Multiplexing`多路复用、​`STUN+TURN+ICE`网络传输`NAT`穿越，`DTLS`数据报安全传输等。
 
-由于在这里我们的主要目的是数据传输，所以我们只需要关心`API`层面上的`RTCPeerConnection API`和`Peer-To-Peer RTCDataChannel API`，以及核心层中的`Transport`传输模块即可。实际上由于网络以及场景的复杂性，基于`WebRTC`衍生出了大量的方案设计，而在网络框架模型方面，便有着三种架构: `Mesh`架构即真正的`P2P`传输，每个客户端与其他客户端都建立了连接，形成了网状的结构，这种架构可以同时连接的客户端有限，但是优点是不需要中心服务器，实现简单；`MCU-MultiPoint Control Unit`网络架构即传统的中心化架构，每个浏览器仅与中心的MCU服务器连接，`MCU`服务器负责所有的视频编码、转码、解码、混合等复杂逻辑，这种架构会对服务器造成较大的压力，但是优点是可以支持更多的人同时音视频通讯，比较适合多人视频会议。`SFU-Selective Forwarding Unit`网络架构类似于`MCU`的中心化架构，仍然有中心节点服务器，但是中心节点只负责转发，不做太重的处理，所以服务器的压力会低很多，这种架构需要比较大的带宽消耗，但是优点是服务器压力较小，典型场景是`1`对`N`的视频互动。对于我们而言，我们的目标是局域网之间的数据传输，所以并不会涉及此类复杂的网络传输架构模型，我们实现的是非常典型的`P2P`架构，甚至不需要`N-N`的数据传输，但是同样也会涉及到一些复杂的问题，例如`NAT`穿越、`ICE`交换、`STUN`服务器、`TURN`服务器等等。
+由于在这里我们的主要目的是数据传输，所以我们只需要关心`API`层面上的`RTCPeerConnection API`和`Peer-To-Peer RTCDataChannel API`，以及核心层中的`Transport`传输模块即可。实际上由于网络以及场景的复杂性，基于`WebRTC`衍生出了大量的方案设计，而在网络框架模型方面，便有着三种架构: `Mesh`架构即真正的`P2P`传输，每个客户端与其他客户端都建立了连接，形成了网状的结构，这种架构可以同时连接的客户端有限，但是优点是不需要中心服务器，实现简单；`MCU(MultiPoint Control Unit)`网络架构即传统的中心化架构，每个浏览器仅与中心的MCU服务器连接，`MCU`服务器负责所有的视频编码、转码、解码、混合等复杂逻辑，这种架构会对服务器造成较大的压力，但是优点是可以支持更多的人同时音视频通讯，比较适合多人视频会议。`SFU(Selective Forwarding Unit)`网络架构类似于`MCU`的中心化架构，仍然有中心节点服务器，但是中心节点只负责转发，不做太重的处理，所以服务器的压力会低很多，这种架构需要比较大的带宽消耗，但是优点是服务器压力较小，典型场景是`1`对`N`的视频互动。对于我们而言，我们的目标是局域网之间的数据传输，所以并不会涉及此类复杂的网络传输架构模型，我们实现的是非常典型的`P2P`架构，甚至不需要`N-N`的数据传输，但是同样也会涉及到一些复杂的问题，例如`NAT`穿越、`ICE`交换、`STUN`服务器、`TURN`服务器等等。
 
 ### 信令
 信令是涉及到通信系统时，用于建立、控制和终止通信会话的信息，包含了与通信相关的各种指令、协议和消息，用于使通信参与者之间能够相互识别、协商和交换数据。主要目的是确保通信参与者能够建立连接、协商通信参数，并在需要时进行状态的改变或终止，这其中涉及到各种通信过程中的控制信息交换，而不是直接传输实际的用户数据。
@@ -211,7 +211,7 @@ const connection = new RTCPeerConnection({
 
 `NAT(Network Address Translation)`网络地址转换是一种在`IP`网络中广泛使用的技术，主要是将一个`IP`地址转换为另一个`IP`地址，具体来说其工作原理是将一个私有`IP`地址(如在家庭网络或企业内部网络中使用的地址)映射到一个公共`IP`地址(如互联网上的`IP`地址)。当一个设备从私有网络向公共网络发送数据包时，`NAT`设备会将源`IP`地址从私有地址转换为公共地址，并且在返回数据包时将目标`IP`地址从公共地址转换为私有地址。`NAT`可以通过多种方式实现，例如静态`NAT`、动态`NAT`和端口地址转换`PAT`等，静态`NAT`将一个私有`IP`地址映射到一个公共`IP`地址，而动态`NAT`则动态地为每个私有地址分配一个公共地址，`PAT`是一种特殊的动态`NAT`，在将私有`IP`地址转换为公共`IP`地址时，还会将源端口号或目标端口号转换为不同的端口号，以支持多个设备使用同一个公共`IP`地址。`NAT`最初是为了解决`IPv4`地址空间的短缺而设计的，后来也为提高网络安全性并简化网络管理提供了基础。在互联网上大多数设备都是通过路由器或防火墙连接到网络的，这些设备通常使用网络地址转换`NAT`将内部`IP`地址映射到一个公共的`IP`地址上，这个公共`IP`地址可以被其他设备用来访问，但是这些设备内部的`IP`地址是隐藏的，其他的设备不能直接通过它们的内部`IP`地址建立`P2P`连接。因此，直接进行`P2P`连接可能会受到网络地址转换`NAT`的限制，导致连接无法建立。
 
-`STUN(Session Traversal Utilities for NAT)`会话穿透应用程序用于在`NAT`或防火墙后面的客户端之间建立`P2P`连接，`STUN`服务器并不会中转数据，而是主要用于获取客户端的公网`IP`地址，在客户端请求服务器时服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接，主要目标是探测和发现通讯对方客户端是否躲在防火墙或者`NAT`路由器后面，并且确定内网客户端所暴露在外的广域网的`IP`和端口以及`NAT`类型等信息，`STUN`服务器利用这些信息协助不同内网的计算机之间建立点对点的`UDP`通讯。实际上`STUN`是一个`Client/Server`模式的协议，客户端发送一个`STUN`请求到`STUN`服务器，请求包含了客户端本身所见到的自己的`IP`地址和端口号，`STUN`服务器收到请求后，会从请求中获取到设备所在的公网`IP`地址和端口号，并将这些信息返回给设备，设备收到`STUN`服务器的回复后，就可以将这些信息告诉其他设备，从而实现对等通信，本质上将地址交给客户端设备，客户端利用这些信息来尝试建立通信。`NAT`主要分为四种，分别是完全圆锥形`NAT`、受限圆锥形`NAT`、端口受限圆锥形`NAT`、对称`NAT`，`STUN`对于前三种`NAT`是比较有效的，而大型公司网络中经常采用的对称型`NAT`则不能使用`STUN`获取公网`IP`及需要的端口号，具体的`NAT`穿越过程我们后边再聊，在我的理解上`STUN`只适用于简单的单层`NAT`，而实际上因为国内网络环境的复杂性，甚至出现了多级`NAT`这种情况，实际使用`STUN`进行`NAT`穿越的成功率还是比较低的。
+`STUN(Session Traversal Utilities for NAT)`会话穿透应用程序用于在`NAT`或防火墙后面的客户端之间建立`P2P`连接，`STUN`服务器并不会中转数据，而是主要用于获取客户端的公网`IP`地址，在客户端请求服务器时服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接，主要目标是探测和发现通讯对方客户端是否躲在防火墙或者`NAT`路由器后面，并且确定内网客户端所暴露在外的广域网的`IP`和端口以及`NAT`类型等信息，`STUN`服务器利用这些信息协助不同内网的计算机之间建立点对点的`UDP`通讯。实际上`STUN`是一个`Client/Server`模式的协议，客户端发送一个`STUN`请求到`STUN`服务器，请求包含了客户端本身所见到的自己的`IP`地址和端口号，`STUN`服务器收到请求后，会从请求中获取到设备所在的公网`IP`地址和端口号，并将这些信息返回给设备，设备收到`STUN`服务器的回复后，就可以将这些信息告诉其他设备，从而实现对等通信，本质上将地址交给客户端设备，客户端利用这些信息来尝试建立通信。`NAT`主要分为四种，分别是完全圆锥形`NAT`、受限圆锥形`NAT`、端口受限圆锥形`NAT`、对称`NAT`，`STUN`对于前三种`NAT`是比较有效的，而大型公司网络中经常采用的对称型`NAT`则不能使用`STUN`获取公网`IP`及需要的端口号，具体的`NAT`穿越过程我们后边再聊，在我的理解上`STUN`比较适用于单层`NAT`，而实际上因为国内网络环境的复杂性，甚至出现了多级`NAT`这种情况，实际使用`STUN`进行`NAT`穿越的成功率还是比较低的。
 
 `TURN(Traversal Using Relay NAT)`即通过`Relay`方式穿越`NAT`，由于网络的复杂性，当两个设备都位于对称型`NAT`后面或存在防火墙限制时时，直接的`P2P`连接通常难以建立，而当设备无法直接连接时，设备可以通过与`TURN`服务器建立连接来进行通信，设备将数据发送到`TURN`服务器，然后`TURN`服务器将数据中继给目标设备。实际上是一种中转方案，并且因为是即将传输的设备地址，避免了`STUN`应用模型下出口`NAT`对`RTP/RTCP`地址端口号的任意分配，但无论如何就是相当于`TURN`服务器成为了中间人，使得设备能够在无法直接通信的情况下进行数据传输，那么使用`TURN`服务器就会引入一定的延迟和带宽消耗，因为数据需要经过额外的中间步骤，所以`TURN`服务器在`WebRTC`中通常被视为备用方案，当直接点对点连接无法建立时才使用，并且通常没有公共的服务器资源可用，而且因为实际上是在前端配置的`iceServers`，所以通常是通过加密的方式生成限时连接用于传输，类似于常用的图片防盗链机制。实际上在`WebRTC`中使用中继服务器的场景是很常见的，例如多人视频通话的场景下通常会选择`MCU`或者`SFU`的中心化网络架构用来传输音视频流。
 
@@ -237,9 +237,134 @@ SIGNLING:                                              9.9.9.9:9999
 [9.9.9.9:9999]  ->  [6.6.6.6:6666]       [3.3.3.3:3333]
 [6.6.6.6:6666]  ->  [9.9.9.9:9999]       [8.8.8.8:8888]
 [9.9.9.9:9999]  ->  [1.1.1.1:1111]       [8.8.8.8:8888]
-[1.1.1.1:1111]  ->  [6.6.6.6:6666]       [DATA]
-[6.6.6.6:6666]  ->  [1.1.1.1:1111]       [DATA]
+[1.1.1.1:1111]  ->  [8.8.8.8:8888]       [DATA]
+[6.6.6.6:6666]  ->  [3.3.3.3:3333]       [DATA]
 ```
+
+受限圆锥形`NAT`和端口受限圆锥形`NAT`比较类似，我们就放在一起了，这两种`NAT`是基于圆锥形`NAT`加入了限制，受限圆锥形`NAT`是一种特殊的完全圆锥形`NAT`，其的限制是内部主机只能向之前已经发送过数据包的外部主机发送数据包，也就是说数据包的源地址需要与`NAT`表相符，而端口受限圆锥形`NAT`是一种特殊的受限圆锥形`NAT`，其限制是内部主机只能向之前已经发送或者接收过数据包的外部主机的相同端口发送数据包，也就是说数据包的源`IP`和`PORT`都要与`NAT`表相符。举个例子的话就是只有路由表中已经存在的`IP/IP:PORT`才能被路由器转发数据，实际上很好理解，当我们正常发起一个请求的时候都是向某个固定的`IP:PORT`发送数据，而接受数据的时候，这个`IP:PORT`已经在路由表中了所以是可以正常接受数据的，而这两种`NAT`虽然限制了`IP/IP:PORT`必需要在路由表中，但是并没有限制`IP:PORT`只能与之前的`IP:PORT`通信，所以我们只需要在之前的圆锥形`NAT`基础上，主动预发送数据包即可，相当于把`IP/IP:PORT`写入了路由表，那么路由器在收到来自这个`IP/IP:PORT`的数据包时就可以正常转发了。
+
+```
+     From                 To                Playload
+[1.1.1.1:1111]  ->  [7.7.7.7:7777]       [1.1.1.1:1111]
+[7.7.7.7:7777]  ->  [1.1.1.1:1111]       [3.3.3.3:3333]
+[6.6.6.6:6666]  ->  [7.7.7.7:7777]       [6.6.6.6:6666]
+[7.7.7.7:7777]  ->  [6.6.6.6:6666]       [8.8.8.8:8888]
+[1.1.1.1:1111]  ->  [9.9.9.9:9999]       [3.3.3.3:3333]
+[9.9.9.9:9999]  ->  [6.6.6.6:6666]       [3.3.3.3:3333]
+[6.6.6.6:6666]  ->  [9.9.9.9:9999]       [8.8.8.8:8888]
+[9.9.9.9:9999]  ->  [1.1.1.1:1111]       [8.8.8.8:8888]
+[1.1.1.1:1111]  ->  [8.8.8.8:8888]       [PRE-REQUEST]
+[6.6.6.6:6666]  ->  [3.3.3.3:3333]       [PRE-REQUEST]
+[1.1.1.1:1111]  ->  [8.8.8.8:8888]       [DATA]
+[6.6.6.6:6666]  ->  [3.3.3.3:3333]       [DATA]
+```
+
+对称`NAT`是限制最多的，每一个来自相同内部`IP`与`PORT`，到一个特定目的地`IP`和`PORT`的请求，都映射到一个独特的外部`IP`地址和`PORT`，同一内部`IP`与端口发到不同的目的地和端口的信息包，都使用不同的映射，类似于在端口受限圆锥形`NAT`的基础上，限制了`IP:PORT`只能与之前的`IP:PORT`通信，对于`STUN`来说具体的限制实际上是我们发起的`IP:PORT`探测请求与最终实际连接的`IP:PORT`是同一个地址与端口的映射，然而在对称`NAT`中，我们发起的`IP:PORT`探测请求与最终实际连接的`IP:PORT`会被记录为不同的地址与端口映射，或者换句话说，我们通过`STUN`拿到的`IP:PORT`只能跟`STUN`通信，无法用来共享给别的设备传输数据。
+
+```
+     From                 To                Playload
+[1.1.1.1:1111]  ->  [7.7.7.7:7777]       [1.1.1.1:1111]
+[7.7.7.7:7777]  ->  [1.1.1.1:1111]       [3.3.3.3:3333]
+[6.6.6.6:6666]  ->  [7.7.7.7:7777]       [6.6.6.6:6666]
+[7.7.7.7:7777]  ->  [6.6.6.6:6666]       [8.8.8.8:8888]
+[1.1.1.1:1111]  ->  [9.9.9.9:9999]       [3.3.3.3:3333]
+[9.9.9.9:9999]  ->  [6.6.6.6:6666]       [3.3.3.3:3333]
+[6.6.6.6:6666]  ->  [9.9.9.9:9999]       [8.8.8.8:8888]
+[9.9.9.9:9999]  ->  [1.1.1.1:1111]       [8.8.8.8:8888]
+[1.1.1.1:1111]  --  [8.8.8.8:8888]       []
+[6.6.6.6:6666]  --  [3.3.3.3:3333]       []
+```
+
+在完整了解了`WebRTC`有关`NAT`穿透相关的概念之后，我们继续完成`WebRTC`的链接过程，实际上因为我们已经深入分析了`NAT`的穿透，那么就相当于我们已经可以在互联上建立起链接了，但是因为`WebRTC`并不仅仅是建立了一个传输信道，这其中还伴随着音视频媒体的描述，用于媒体信息的传输协议、传输类型、编解码协商等等也就是`SDP`协议，`SDP`是`<type>=<value>`格式的纯文本协议，一个典型的`SDP`如下所示，而我们将要使用的`Offer/Answer/RTCSessionDescription`就是带着类型的`SDP`即`{ type: "offer"/"answer"/"pranswer"/"rollback", sdp: "..." }`，对于我们来说可能并不需要过多关注，因为我们现在的目标是建立连接以及传输信道，所以我们更多的还是关注于链接建立的流程。
+
+```
+v=0
+o=- 8599901572829563616 2 IN IP4 127.0.0.1
+s=-
+c=IN IP4 0.0.0.0
+t=0 0
+m=audio 49170 RTP/AVP 0
+a=rtpmap:0 PCMU/8000
+m=video 51372 RTP/AVP 31
+a=rtpmap:31 H261/90000
+m=video 53000 RTP/AVP 32
+a=rtpmap:32 MPV/90000
+```
+
+那么此时我们需要创建链接，看起来发起流程非常简单，我们假设现在有两个客户端`A`、`B`，此时客户端`A`通过`createOffer`创建了`Offer`，并且通过`setLocalDescription`将其设置为本地描述，紧接着将`Offer`通过信令服务器发送到了目标客户端`B`。
+
+
+```js
+public createRemoteConnection = async (target: string) => {
+  console.log("Send Offer To:", target);
+  this.connection.onicecandidate = async event => {
+    if (!event.candidate) return void 0;
+    console.log("Local ICE", event.candidate);
+    const payload = { origin: this.id, ice: event.candidate, target };
+    this.signaling.emit(CLINT_EVENT.SEND_ICE, payload);
+  };
+  const offer = await this.connection.createOffer();
+  await this.connection.setLocalDescription(offer);
+  console.log("Offer SDP", offer);
+  const payload = { origin: this.id, offer, target };
+  this.signaling.emit(CLINT_EVENT.SEND_OFFER, payload);
+};
+```
+
+当目标客户端`B`收到`Offer`之后，可以通过判断当前是否正在建立连接等状态来决定是否接受这个`Offer`，接受的话就将收到的`Offer`通过`setRemoteDescription`设置为远程描述，并且通过`createAnswer`创建`answer`，同样将`answer`设置为本地描述后，紧接着将`answer`通过信令服务器发送到了`Offer`来源的客户端`A`。
+
+```js
+private onReceiveOffer = async (params: SocketEventParams["FORWARD_OFFER"]) => {
+  const { offer, origin } = params;
+  console.log("Receive Offer From:", origin, offer);
+  if (this.connection.currentLocalDescription || this.connection.currentRemoteDescription) {
+    this.signaling.emit(CLINT_EVENT.SEND_ERROR, {
+      origin: this.id,
+      target: origin,
+      code: ERROR_TYPE.PEER_BUSY,
+      message: `Peer ${this.id} is Busy`,
+    });
+    return void 0;
+  }
+  this.connection.onicecandidate = async event => {
+    if (!event.candidate) return void 0;
+    console.log("Local ICE", event.candidate);
+    const payload = { origin: this.id, ice: event.candidate, target: origin };
+    this.signaling.emit(CLINT_EVENT.SEND_ICE, payload);
+  };
+  await this.connection.setRemoteDescription(offer);
+  const answer = await this.connection.createAnswer();
+  await this.connection.setLocalDescription(answer);
+  console.log("Answer SDP", answer);
+  const payload = { origin: this.id, answer, target: origin };
+  this.signaling.emit(CLINT_EVENT.SEND_ANSWER, payload);
+};
+```
+
+当发起方的客户端`A`收到了目标客户端`B`的应答之后，如果当前没有设置远程描述的话，就通过`setRemoteDescription`设置为远程描述，此时我们的`SDP`协商过程就完成了。
+
+```js
+private onReceiveAnswer = async (params: SocketEventParams["FORWARD_ANSWER"]) => {
+  const { answer, origin } = params;
+  console.log("Receive Answer From:", origin, answer);
+  if (!this.connection.currentRemoteDescription) {
+    this.connection.setRemoteDescription(answer);
+  }
+};
+```
+
+实际上我们可以关注到在创建`Offer`和`Answer`的时候还存在`onicecandidate`事件的回调，这里实际上就是`ICE`候选人变化的过程，我们可以通过`event.candidate`获取到当前的候选人，然后我们需要尽快通过信令服务器将其转发到目标客户端，目标客户端收到之后通过`addIceCandidate`添加候选人，这样就完成了`ICE`候选人的交换。在这里我们需要注意的是我们需要尽快转发`ICE`，那么对于我们而言就并不需要关注时机，但实际上时机已经在规范中明确了，在`setLocalDescription`不会开始收集候选者信息。
+
+```js
+private onReceiveIce = async (params: SocketEventParams["FORWARD_ICE"]) => {
+  const { ice, origin } = params;
+  console.log("Receive ICE From:", origin, ice);
+  await this.connection.addIceCandidate(ice);
+};
+```
+
+那么到这里我们的链接协商过程就结束了，而我们实际建立`P2P`信道的过程就非常依赖`ICE(Interactive Connectivity Establishment)`的交换，`ICE`候选者描述了`WebRTC`能够与远程设备通信所需的协议和路由，当启动`WebRTC P2P`连接时，通常连接的每一端都会提出许多候选连接，直到他们就描述他们认为最好的连接达成一致，然后`WebRTC`就会使用该候选人的详细信息来启动连接。`ICE`和`STUN`密切相关，前边我们已经了解了`NAT`穿越的过程，那么接下来我们就来看一下`ICE`候选人交换的数据结构，`ICE`候选人实际上是一个`RTCIceCandidate`对象，而这个对象包含了很多信息，但是实际上这个对象中存在了`toJSON`方法，所以实际交换的数据只有`candidate`、`sdpMid`、`sdpMLineIndex`、`usernameFragment`，而这些交换的数据又会在`candidate`字段中体现，所以我们在这里就关注这四个字段代表的意义。
+
 
 
 内网传输
