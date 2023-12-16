@@ -13,7 +13,7 @@
 4. `P2P`传输方式可以直接在通信双方之间传输数据，减少了数据传输的路径和中间环节，从而降低了传输延迟，实现更实时的通信体验。
 5. `P2P`传输方式不需要经过中心服务器的中转，减少了第三方对通信内容的访问和监控，提高了通信的隐私保护。
 
-在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`也就是隔空投送，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`。通过这种方式，任何拥有浏览器的设备都有传输数据的可能，不需要借助数据线传输文件，也不会受限于`Apple`全家桶才能使用的隔空投送，以及可以应用于常见的`IOS/Android`设备向`PC`台式设备传输文件的场景等等。那么回归到项目本身，具体来说在完成功能的过程中解决了如下问题: 
+在前一段时间，我想在手机上向电脑发送文件，因为要发送的文件比较多，所以我想直接通过`USB`连到电脑上传输，等我将手机连到电脑上之后，我发现手机竟然无法被电脑识别，能够充电但是并不能传文件，因为我的电脑是`Mac`而手机是`Android`，所以无法识别设备这件事就变得合理了起来。那么接着我想用`WeChat`去传文件，但是一想到传文件之后我还需要手动将文件删掉否则会占用我两份手机存储并且传输还很慢，我就又开始在网上寻找软件，这时候我突然想起来了`AirDrop`也就是隔空投送，就想着有没有类似的软件可以用，然后我就找到了`Snapdrop`这个项目，我觉得这个项目很神奇，不需要登录就可以在局域网内发现设备并且传输文件，于是在好奇心的驱使下我也学习了一下，并且基于`WebRTC/WebSocket`实现了类似的文件传输方案`https://github.com/WindrunnerMax/FileTransfer`。通过这种方式，任何拥有浏览器的设备都有传输数据的可能，不需要借助数据线传输文件，也不会受限于`Apple`全家桶才能使用的隔空投送，以及可以应用于常见的`IOS/Android`设备向`PC`台式设备传输文件的场景等等。此外即使因为各种原因路由器开启了`AP`隔离功能，我们的服务依旧可以正常交换数据，这样避免了在路由器不受我们控制的情况下通过`Wifi`传输文件的掣肘。那么回归到项目本身，具体来说在完成功能的过程中解决了如下问题: 
 
 1. 局域网内可以互相发现，不需要手动输入对方`IP`地址等信息。
 2. 多个设备中的任意两个设备之间可以相互传输文本消息与文件数据。
@@ -144,7 +144,7 @@ socket.on(CLINT_EVENT.SEND_OFFER, ({ origin, offer, target }) => {
     });
     return void 0;
   }
-  // 转发`Offer` -> `target`
+  // 转发`Offer` -> `Target`
   const targetSocket = mapper.get(target)?.socket;
   if (targetSocket) {
     targetSocket.emit(SERVER_EVENT.FORWARD_OFFER, { origin, offer, target });
@@ -152,30 +152,85 @@ socket.on(CLINT_EVENT.SEND_OFFER, ({ origin, offer, target }) => {
 });
 
 socket.on(CLINT_EVENT.SEND_ICE, ({ origin, ice, target }) => {
-  // 转发`ICE` -> `target`
+  // 转发`ICE` -> `Target`
   // ...
 });
 
 socket.on(CLINT_EVENT.SEND_ANSWER, ({ origin, answer, target }) => {
-  // 转发`Answer` -> `target`
+  // 转发`Answer` -> `Target`
   // ...
 });
 
 socket.on(CLINT_EVENT.SEND_ERROR, ({ origin, code, message, target }) => {
-  // 转发`Error` -> `target`
+  // 转发`Error` -> `Target`
   // ...
 });
 ```
 
 ### 连接
+在建设好信令服务器之后，我们就可以开始聊一聊`RTCPeerConnection`的具体协商过程了，在这部分会涉及比较多的概念，例如`Offer`、`Answer`、`SDP`、`ICE`、`STUN`、`TURN`等等，不过我们先不急着了解这些概念我们先开看一下`RTCPeerConnection`的完整协商过程，整个过程是非常类似于`TCP`的握手，当然没有那么严格，但是也是需要经过几个步骤才能够建立起连接的：
 
 
-`ipv6`
+```
+              A                         SIGNLING                        B
+-------------------------------        ----------        --------------------------------
+|  Offer -> LocalDescription  |   ->   |   ->   |   ->   |  Offer -> RemoteDescription  |
+|                             |        |        |        |                              |
+| RemoteDescription <- Answer |   <-   |   <-   |   <-   |  LocalDescription <- Answer  |
+|                             |        |        |        |                              |
+|    RTCIceCandidateEvent     |   ->   |   ->   |   ->   |       AddRTCIceCandidate     |
+|                             |        |        |        |                              |
+|     AddRTCIceCandidate      |   <-   |   <-   |   <-   |     RTCIceCandidateEvent     |
+-------------------------------        ----------        --------------------------------
+```
+
+1. 假设我们有`A`、`B`客户端，两个客户端都已经实例化`RTCPeerConnection`对象等待连接，当然按需实例化`RTCPeerConnection`对象也是可以的。
+2. `A`客户端准备发起链接请求，此时`A`客户端需要创建`Offer`也就是`RTCSessionDescription(SDP)`，并且将创建的`Offer`设置为本地的`LocalDescription`，紧接着借助信令服务器将`Offer`转发到目标客户端也就是`B`客户端。
+3. `B`客户端收到`A`客户端的`Offer`之后，此时`B`客户端需要将收到`Offer`设置为远端的`RemoteDescription`，然后创建`Answer`即同样也是`RTCSessionDescription(SDP)`，并且将创建的`Answer`设置为本地的`LocalDescription`，紧接着借助信令服务器将`Answer`转发到目标客户端也就是`A`客户端。
+4. `A`客户端收到`B`客户端的`Answer`之后，此时`A`客户端需要将收到`Answer`设置为远端的`RemoteDescription`，客户端`A`、`B`之间的握手过程就结束了。
+5. 在`A`客户端与`B`客户端握手的整个过程中，还需要穿插着`ICE`的交换，我们需要在`ICECandidate`候选人发生变化的时候，将`ICE`完整地转发到目标的客户端，之后目标客户端将其设置为目标候选人。
+
+经过我们上边简单`RTCPeerConnection`协商过程描述，此时如果网络连通情况比较好的话，就可以顺利建立连接，并且通过信道发送消息了，但是实际上在这里涉及的细节还是比较多的，我们可以一步步来拆解这个过程并且描述涉及到的相关概念，并且在最后我们会聊一下当前`IPv6`设备的`P2P`、局域网以及`AP`隔离时的信道传输。
+
+首先我们来看`RTCPeerConnection`对象，因为`WebRTC`有比较多的历史遗留问题，所以我们为了兼容性可能会需要做一些冗余的设置，当然随着`WebRTC`越来约规范化这些兼容问题会逐渐减少，但是我们还是可以考虑一下这个问题的，比如在建立`RTCPeerConnection`时做一点小小的兼容。
+```js
+// packages/webrtc/client/core/instance.ts
+ const RTCPeerConnection =
+  // @ts-expect-error RTCPeerConnection
+  window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+const connection = new RTCPeerConnection({
+  // https://icetest.info/
+  // https://webrtc.github.io/samples/src/content/peerconnection/trickle-ice/
+  iceServers: options.ice
+      ? [{ urls: options.ice }]
+      : [{ urls: ["stun:stunserver.stunprotocol.org:3478", "stun:stun.l.google.com:19302"] }],
+});
+```
+
+在这里我们主要是配置了`iceServers`，其他的参数我们保持默认即可我们不需要太多关注，以及例如`sdpSemantics: unified-plan`等配置项也越来越统一化病作为默认值，在比较新的`TS`版本中甚至都不再提供这个配置项的定义了。那么我们目光回到`iceServers`这个配置项，`iceServers`主要是用来提供我们协商链接以及中转的用途，我们可以简单理解一下，试想我们的很多设备都是内网的设备，而信令服务器仅仅是做了数据的转发，所以我们如果要是跨局域网想在公网上或者在路由器`AP`隔离的情况下传输数据的话，最起码需要知道我们的设备出口`IP`地址，`STNU`服务器就是用来获取我们的出口`IP`地址的，`TURN`服务器则是用来中转数据的，而因为`STNU`服务器并不需要太大的资源占用，所以有有比较多的公网服务器提供免费的`STNU`服务，但是`TURN`实际上相当于中转服务器，所以通常是需要购置云服务器自己搭建，并且设置`Token`过期时间等等防止盗用。上边我们只是简单理解一下，所以我们接下来需要聊一下`NAT`、`STNU`、`TURN`三个概念。
+
+`NAT(Network Address Translation)`网络地址转换是一种在`IP`网络中广泛使用的技术，主要是将一个`IP`地址转换为另一个`IP`地址，具体来说其工作原理是将一个私有`IP`地址(如在家庭网络或企业内部网络中使用的地址)映射到一个公共`IP`地址(如互联网上的`IP`地址)。当一个设备从私有网络向公共网络发送数据包时，`NAT`设备会将源`IP`地址从私有地址转换为公共地址，并且在返回数据包时将目标`IP`地址从公共地址转换为私有地址。`NAT`可以通过多种方式实现，例如静态`NAT`、动态`NAT`和端口地址转换`PAT`等，静态`NAT`将一个私有`IP`地址映射到一个公共`IP`地址，而动态`NAT`则动态地为每个私有地址分配一个公共地址，`PAT`是一种特殊的动态`NAT`，在将私有`IP`地址转换为公共`IP`地址时，还会将源端口号或目标端口号转换为不同的端口号，以支持多个设备使用同一个公共`IP`地址。`NAT`最初是为了解决`IPv4`地址空间的短缺而设计的，后来也为提高网络安全性并简化网络管理提供了基础。在互联网上大多数设备都是通过路由器或防火墙连接到网络的，这些设备通常使用网络地址转换`NAT`将内部`IP`地址映射到一个公共的`IP`地址上，这个公共`IP`地址可以被其他设备用来访问，但是这些设备内部的`IP`地址是隐藏的，其他的设备不能直接通过它们的内部`IP`地址建立`P2P`连接。因此，直接进行`P2P`连接可能会受到网络地址转换`NAT`的限制，导致连接无法建立。
+
+`STUN(Session Traversal Utilities for NAT)`会话穿越工具用于在`NAT`或防火墙后面的客户端之间建立`P2P`连接，`STUN`服务器主要用于获取客户端的公网`IP`地址，`STUN`服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接。`STUN`服务器并不会中转数据，它只是用来获取客户端的公网`IP`地址和端口号，`STUN`服务器的工作原理是客户端向`STUN`服务器发送请求，`STUN`服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接。`STUN`服务器并不会中转数据，它只是用来获取客户端的公网`IP`地址和端口号，`STUN`服务器的工作原理是客户端向`STUN`服务器发送请求，`STUN`服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接。`STUN`服务器并不会中转数据，它只是用来获取客户端的公网`IP`地址和端口号，`STUN`服务器的工作原理是客户端向`STUN`服务器发送请求，`STUN`服务器会返回客户端的公网`IP`地址和端口号，这样客户端就可以通过这个公网`IP`地址和端口号来建立`P2P`连接。`STUN`服务器并不会中转数据，它只是用来获取客户端的公网`IP`地址和端口号，`STUN`服务器的工作原理是客户端向
+
+
+内网传输
+```
+ICE Candidate pair: 101.68.35.129:25595 <=> 101.68.35.129:25596
+```
+
+```
+ICE Candidate pair: :60622 <=> 192.168.0.100:44103
+ICE Candidate pair: :55305 <=> 2408:8240:e12:3c45:f1ba:c574:6328:a70:45954
+```
+
+
+`IPv6`
 ```bash
-$ nc -lk6 9999
+$ nc -vk6 9999
 ```
 ```bash
-$ nc -6 ${ip} 9999
+$ nc -v6 ${ip} 9999
 ```
 
 ### 通信
@@ -200,6 +255,7 @@ http://v6t.ipip.net/
 https://icetest.info/
 https://www.stunprotocol.org/
 https://webrtc.github.io/samples/
+https://bford.info/pub/net/p2pnat/
 https://blog.p2hp.com/archives/11075
 https://github.com/RobinLinus/snapdrop
 https://web.dev/articles/webrtc-basics
