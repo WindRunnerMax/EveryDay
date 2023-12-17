@@ -412,7 +412,7 @@ $ nc -vk6 9999
 $ nc -v6 ${ip} 9999 
 ```
 
-这里的测试就很有意思了，然后我屋里的路由器设备已经开启了`IPv6`，而且关闭了标准中未定义而是社区提供的`NAT6`方案，并且使用获取`IPv6`前缀的`Native`方案，然而无论我如何尝试都不能通过我的电脑连接到我的手机，实际上即使我的电脑没有公网地址而只要手机有公网地址，那么从电脑发起连接请求并且连接到手机，但是可惜还是无法建立链接。而我找我朋友的手机进行链接测试，我是联通卡朋友是电信卡，我能够连接到我的朋友，但是我朋友无法直接连接到我，而我们的`IPv6`都是`2`开头的是公网地址，然后我们怀疑是运营商限制了端口所以尝试不断切换端口来建立链接，还是不能直接连接。
+这里的测试就很有意思了，然后我屋里的路由器设备已经开启了`IPv6`，而且关闭了标准中未定义而是社区提供的`NAT6`方案，并且使用获取`IPv6`前缀的`Native`方案，然而无论我如何尝试都不能通过我的电脑连接到我的手机，实际上即使我的电脑没有公网地址而只要手机有公网地址，那么从电脑发起连接请求并且连接到手机，但是可惜还是无法建立链接，但是使用`ping6`是可以`ping`通的，所以实际上是能寻址到只是被拦截了连接k请求。而我找我朋友的手机进行链接测试，我是联通卡朋友是电信卡，我能够连接到我的朋友，但是我朋友无法直接连接到我，而我们的`IPv6`都是`2`开头的是公网地址，然后我们怀疑是运营商限制了端口所以尝试不断切换端口来建立链接，还是不能直接连接。
 
 于是我最后测试了一下，我换到了我的卡`2`电信卡，此时无论是我的朋友还是我的电脑都可以直接通过电信分配的`IPv6`地址连接到我的手机了。这就很难绷，而我另一个朋友的联通又能够直接连接，所以在国内的网络环境下还是需要看地域性的。之后我找了好几个朋友测试了`P2P`的链接，因为只要设备双方只要有一方有公网的`IP`那么大概率就是能够直接`P2P`的，所以通过`WebRTC`连接的成功率还是可以的，并没有想象中那么低，但我们主要的场景还是局域网传输，只是我们会在项目中留一个输入对方`ID`用以跨网段链接的方式。
 
@@ -479,7 +479,6 @@ const sendFilesBySlice = async (file: File) => {
   channel.send(TSON.encode({ type: "file", name, id, size, total }));
   const newList = [...list, { type: "file", from: "self", name, size, progress: 0, id } as const];
   setList(newList);
-  setTransferring(true);
   let offset = 0;
   while (offset < file.size) {
     const slice = file.slice(offset, offset + chunkSize);
@@ -489,8 +488,7 @@ const sendFilesBySlice = async (file: File) => {
         channel.onbufferedamountlow = () => resolve(0);
       });
     }
-    const arrayBuffer = await slice.arrayBuffer();
-    fileMapper.current[id] = [...(fileMapper.current[id] || []), arrayBuffer];
+    fileMapper.current[id] = [...(fileMapper.current[id] || []), buffer];
     channel.send(buffer);
     offset = offset + buffer.byteLength;
     updateFileProgress(id, Math.floor((offset / size) * 100), newList);
@@ -499,14 +497,14 @@ const sendFilesBySlice = async (file: File) => {
 
 const onSendFile = () => {
   const KEY = "webrtc-file-input";
-  const input: HTMLInputElement =
-    document.querySelector(`body > [data-type='${KEY}']`) || document.createElement("input");
+  const exist = document.querySelector(`body > [data-type='${KEY}']`) as HTMLInputElement;
+  const input: HTMLInputElement = exist || document.createElement("input");
   input.value = "";
   input.setAttribute("data-type", KEY);
   input.setAttribute("type", "file");
   input.setAttribute("class", styles.fileInput);
   input.setAttribute("accept", "*");
-  document.body.append(input);
+  !exist && document.body.append(input);
   input.onchange = e => {
     const target = e.target as HTMLInputElement;
     document.body.removeChild(input);
@@ -521,19 +519,17 @@ const onSendFile = () => {
 那么最后我们只需要在接收的时候将内容组装到数组当中，并且在调用下载的时候将其组装为`Blob`下载即可，当然因为目前我们是单文件发送的，也就是说发送文件块的时候并没有携带当前块的任何描述信息，所以我们在接收块的时候是不能再发送其他内容的。
 
 ```js
+// packages/webrtc/client/components/modal.tsx
 const onMessage = useMemoizedFn((event: MessageEvent<string | ChunkType>) => {
-  console.log("onMessage", event);
   if (isString(event.data)) {
     const data = TSON.decode(event.data);
     if (data && data.type === "text") {
       setList([...list, { from: "peer", ...data }]);
     } else if (data?.type === "file") {
-      setTransferring(true);
       fileState.current = { id: data.id, current: 0, total: data.total };
       setList([...list, { from: "peer", progress: 0, ...data }]);
     } else if (data?.type === "file-finish") {
       updateFileProgress(data.id, 100);
-      setTransferring(false);
     }
   } else {
     const state = fileState.current;
@@ -545,7 +541,6 @@ const onMessage = useMemoizedFn((event: MessageEvent<string | ChunkType>) => {
       const progress = Math.floor((state.current / state.total) * 100);
       updateFileProgress(state.id, progress);
       if (progress === 100) {
-        setTransferring(false);
         fileState.current = void 0;
         rtc.current?.send(TSON.encode({ type: "file-finish", id: state.id }));
       }
@@ -565,11 +560,273 @@ const onDownloadFile = (id: string, fileName: string) => {
 };
 ```
 ## WebSocket
-`P2P`打洞难点、`TURN`转发、全双工信道、非`AP`隔离
+当`WebRTC`无法成功进行`NAT`穿越时，如果想在公网发送数据还是需要经过`TURN`转发，那么都是通过`TURN`转发了还是需要走我们服务器的中继，那么我们不如直接借助`WebSocket`传输了，`WebSocket`也是全双工信道，在非`AP`隔离的情况下我们同样也可以直接部署在路由器上，在局域网之间进行数据传输。
 
 ### 连接
+使用`WebSocket`进行传输的时候，我们是直接借助服务器转发所有数据的，不知道大家是不是注意到`WebRTC`的链接过程实际上是比较麻烦的，而且相对难以管理，这其中部分原因就是建立一个链接涉及到了多方的通信链接，需要客户端`A`、信令服务器、`STUN`服务器、客户端`B`之间的相互连接，那么如果我们使用`WebSocket`就没有这么多方连接需要管理，每个客户端都只需要管理自身与服务器之间的连接，就像是我们的`HTTP`模型一样是`Client/Server`结构。
+
+```
+             WebSocket
+
+             /      \ 
+     DATA   /        \   DATA
+           /          \
+
+      Client           Client
+```
+
+那么此时我们在`WebSocket`的服务端依然要定义一些事件，与`WebRTC`不一样的是，我们只需要定义一个房间即可，并且所有的状态都可以在服务端直接进行管理，例如是否连接成功、是否正在传输等等，在`WebRTC`的实现中我们必须要将这个实现放在客户端，因为连接状态实际上是客户端直接连接的对等客户端，在服务端并不是很容易实时管理整个状态，当然不考虑延迟或者实现心跳的话也是可以的。
+
+那么同样的在这里我们的服务端定义了`JOIN_ROOM`加入到房间、`LEAVE_ROOM`离开房间，这里的管理流程与`WebRTC`基本一致。
+
+```js
+// packages/websocket/server/index.ts
+const authenticate = new WeakMap<ServerSocket, string>();
+const room = new Map<string, Member>();
+const peer = new Map<string, string>();
+
+socket.on(CLINT_EVENT.JOIN_ROOM, ({ id, device }) => {
+  // 验证
+  if (!id) return void 0;
+  authenticate.set(socket, id);
+  // 房间通知消息
+  const initialization: SocketEventParams["JOINED_MEMBER"]["initialization"] = [];
+  room.forEach((instance, key) => {
+    initialization.push({ id: key, device: instance.device });
+    instance.socket.emit(SERVER_EVENT.JOINED_ROOM, { id, device });
+  });
+  // 加入房间
+  room.set(id, { socket, device, state: CONNECTION_STATE.READY });
+  socket.emit(SERVER_EVENT.JOINED_MEMBER, { initialization });
+});
+
+
+const onLeaveRoom = () => {
+  // 验证
+  const id = authenticate.get(socket);
+  if (id) {
+    const peerId = peer.get(id);
+    peer.delete(id);
+    if (peerId) {
+      // 状态复位
+      peer.delete(peerId);
+      updateMember(room, peerId, "state", CONNECTION_STATE.READY);
+    }
+    // 退出房间
+    room.delete(id);
+    room.forEach(instance => {
+      instance.socket.emit(SERVER_EVENT.LEFT_ROOM, { id });
+    });
+  }
+};
+
+socket.on(CLINT_EVENT.LEAVE_ROOM, onLeaveRoom);
+socket.on("disconnect", onLeaveRoom);
+```
+
+之后便是我们建立连接时要处理的`SEND_REQUEST`发起连接请求、`SEND_RESPONSE`回应连接请求、`SEND_MESSAGE`发送消息、`SEND_UNPEER`发送断开连接请求，并且在这里因为状态是由服务端管理的，我们可以立即响应对方是否正在忙线等状态，那么便可以直接使用回调函数通知发起方。
+
+```js
+// packages/websocket/server/index.ts
+socket.on(CLINT_EVENT.SEND_REQUEST, ({ origin, target }, cb) => {
+  // 验证
+  if (authenticate.get(socket) !== origin) return void 0;
+  // 转发`Request`
+  const member = room.get(target);
+  if (member) {
+    if (member.state !== CONNECTION_STATE.READY) {
+      cb?.({ code: ERROR_TYPE.PEER_BUSY, message: `Peer ${target} is Busy` });
+      return void 0;
+    }
+    updateMember(room, origin, "state", CONNECTION_STATE.CONNECTING);
+    member.socket.emit(SERVER_EVENT.FORWARD_REQUEST, { origin, target });
+  } else {
+    cb?.({ code: ERROR_TYPE.PEER_NOT_FOUND, message: `Peer ${target} Not Found` });
+  }
+});
+
+socket.on(CLINT_EVENT.SEND_RESPONSE, ({ origin, code, reason, target }) => {
+  // 验证
+  if (authenticate.get(socket) !== origin) return void 0;
+  // 转发`Response`
+  const targetSocket = room.get(target)?.socket;
+  if (targetSocket) {
+    updateMember(room, origin, "state", CONNECTION_STATE.CONNECTED);
+    updateMember(room, target, "state", CONNECTION_STATE.CONNECTED);
+    peer.set(origin, target);
+    peer.set(target, origin);
+    targetSocket.emit(SERVER_EVENT.FORWARD_RESPONSE, { origin, code, reason, target });
+  }
+});
+
+socket.on(CLINT_EVENT.SEND_MESSAGE, ({ origin, message, target }) => {
+  // 验证
+  if (authenticate.get(socket) !== origin) return void 0;
+  // 转发`Message`
+  const targetSocket = room.get(target)?.socket;
+  if (targetSocket) {
+    targetSocket.emit(SERVER_EVENT.FORWARD_MESSAGE, { origin, message, target });
+  }
+});
+
+socket.on(CLINT_EVENT.SEND_UNPEER, ({ origin, target }) => {
+  // 验证
+  if (authenticate.get(socket) !== origin) return void 0;
+  // 处理自身的状态
+  peer.delete(origin);
+  updateMember(room, origin, "state", CONNECTION_STATE.READY);
+  // 验证
+  if (peer.get(target) !== origin) return void 0;
+  // 转发`Unpeer`
+  const targetSocket = room.get(target)?.socket;
+  if (targetSocket) {
+    // 处理`Peer`状态
+    updateMember(room, target, "state", CONNECTION_STATE.READY);
+    peer.delete(target);
+    targetSocket.emit(SERVER_EVENT.FORWARD_UNPEER, { origin, target });
+  }
+});
+```
 
 ### 通信
+在先前我们实现了`WebRTC`的单文件传输，那么在这里我们就来实现一下多文件的传输，由于涉及到对于`Buffer`的一些操作，我们就先来了解一下`Unit8Array`、`ArrayBuffer`、`Blob`的概念以及关系。
+
+* `Uint8Array`: `Uint8Array`是一种用于表示8位无符号整数的数组类型，类似于`Array`，但是其元素是固定在范围`0`到`255`之间的整数，也就是说每个值都可以存储一个字节的`8`位无符号整数，`Uint8Array`通常用于处理二进制数据。
+* `ArrayBuffer`: `ArrayBuffer`是一种用于表示通用的、固定长度的二进制数据缓冲区的对象，提供了一种在`JS`中存储和操作二进制数据的方式，但是其本身不能直接访问和操作数据，`ArrayBuffer = Uint8Array.buffer`。
+* `Blob`: `Blob`是一种用于表示二进制数据的对象，可以将任意数据转换为二进制数据并存储在`Blob`中，`Blob`可以看作是`ArrayBuffer`的扩展，`Blob`可以包含任意类型的数据，例如图像、音频或其他文件，通常用于在`Web`应用程序中处理和传输文件，`Blob = new Blob([ArrayBuffer])`。
+
+实际上看起来思路还是比较清晰的，如果我们自拟一个协议，前`12`个字节表示当前块所属的文件`ID`，再使用`4`个字节也就是`32`位表示当前块的序列号，其余的内容作为文件块的实际内容，那么我们就可以直接同时发送多个文件了，而不必要像之前一样等待一个文件传输完成之后再传输下一个文件。不过看起来还是比较麻烦，毕竟涉及到了很多字节的操作，所以我们可以偷懒，想一想我们的目标实际上就是在传输文件块的时候携带一些信息，让我们能够知道当前块是属于哪个`ID`以及序列。
+
+那么我们很容易想到二进制文件实际上是可以用`Base64`来表示的，由此我们就可以直接传输纯文本了，当然使用`Base64`传输的缺点也很明显，`Base64`将每`3`个字节的数据编码为`4`个字符，编码后的数据通常会比原始二进制数据增加约`1/3`的大小，所以我们实际传输的过程中还可以加入压缩程序，比如`pako`，那么便可以相对抵消一些传输字节数量的额外传输成本，实际上也是因为`WebSocket`是基于`TCP`的，而`TCP`的最大段大小通常为`1500`字节，这是以太网上广泛使用的标准`MTU`，所以传输大小没有那么严格的限制，而如果使用`WebRTC`的话单次传输的分片是比较小的，我们一旦转成`Base64`那么传输的大小便会增加，就可能会出现问题，所以我们自定义协议的多文件传输还是留到`WebRTC`中实现，这里我们就直接使用`Base64`传输。
+
+```js
+// packages/websocket/client/utils/format.ts
+export const blobToBase64 = async (blob: Blob) => {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const data = new Uint8Array(reader.result as ArrayBuffer);
+      const compress = pako.deflate(data);
+      resolve(Base64.fromUint8Array(compress));
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(blob);
+  });
+};
+
+export const base64ToBlob = (base64: string) => {
+  const bytes = Base64.toUint8Array(base64);
+  const decompress = pako.inflate(bytes);
+  const blob = new Blob([decompress]);
+  return blob;
+};
+
+export const getChunkByIndex = (file: Blob, current: number): Promise<string> => {
+  const start = current * CHUNK_SIZE;
+  const end = Math.min(start + CHUNK_SIZE, file.size);
+  return blobToBase64(file.slice(start, end));
+};
+```
+
+接下来就是我们的常规操作了，首先是分片发送文件，这里因为我们是纯文本的文件发送，所以并不需要特殊处理`Text/Buffer`的数据差异，只需要直接发送就好，大致流程与`WebRTC`是一致的。
+
+```js
+// packages/websocket/client/components/modal.tsx
+const onSendText = () => {
+  sendMessage({ type: "text", data: text });
+  setList([...list, { type: "text", from: "self", data: text }]);
+  setText("");
+};
+
+const sendFilesBySlice = async (files: FileList) => {
+  const newList = [...list];
+  for (const file of files) {
+    const name = file.name;
+    const id = getUniqueId();
+    const size = file.size;
+    const total = Math.ceil(file.size / CHUNK_SIZE);
+    sendMessage({ type: "file-start", id, name, size, total });
+    fileSource.current[id] = file;
+    newList.push({ type: "file", from: "self", name, size, progress: 0, id } as const);
+  }
+  setList(newList);
+};
+
+const onSendFile = () => {
+  const KEY = "websocket-file-input";
+  const exist = document.querySelector(`body > [data-type='${KEY}']`) as HTMLInputElement;
+  const input: HTMLInputElement = exist || document.createElement("input");
+  input.value = "";
+  input.setAttribute("data-type", KEY);
+  input.setAttribute("type", "file");
+  input.setAttribute("class", styles.fileInput);
+  input.setAttribute("accept", "*");
+  input.setAttribute("multiple", "true");
+  !exist && document.body.append(input);
+  input.onchange = e => {
+    const target = e.target as HTMLInputElement;
+    document.body.removeChild(input);
+    const files = target.files;
+    files && sendFilesBySlice(files);
+  };
+  input.click();
+};
+```
+
+在接收消息的地方，我们改变了策略，因为当前的数据是纯文本携带了很多数据，所以对于文件分块而言我们的可控性更高了，所以我们采用一种客户端请求的多文件分片策略，具体就是说在`A`向`B`发送文件的时候，我们由`B`来请求我希望拿到的下一个文件分片，`A`在收到请求的时候将这个文件进行切片然后发送给`B`，当这个文件分片传输完成之后再继续请求下一个，直到整个文件传输完成，而每个分片我们都携带了所属文件的`ID`以及序列号、总分片数量等等，这样就不会因为多文件传递的时候造成混乱，而且两端的文件传输进度是完全一致的，不会因为缓冲区的差异造成两端传输进度上的差别。
+
+```js
+// packages/websocket/client/components/modal.tsx
+const onMessage: ServerFn<typeof SERVER_EVENT.FORWARD_MESSAGE> = useMemoizedFn(event => {
+  if (event.origin !== peerId) return void 0;
+  const data = event.message;
+  if (data.type === "text") {
+    setList([...list, { from: "peer", ...data }]);
+  } else if (data.type === "file-start") {
+    const { id, name, size, total } = data;
+    fileMapper.current[id] = [];
+    setList([...list, { type: "file", from: "peer", name, size, progress: 0, id }]);
+    sendMessage({ type: "file-next", id, current: 0, size, total });
+  } else if (data.type === "file-chunk") {
+    const { id, current, total, size, chunk } = data;
+    const progress = Math.floor((current / total) * 100);
+    updateFileProgress(id, progress);
+    if (current >= total) {
+      sendMessage({ type: "file-finish", id });
+    } else {
+      const mapper = fileMapper.current;
+      if (!mapper[id]) mapper[id] = [];
+      mapper[id][current] = base64ToBlob(chunk);
+      sendMessage({ type: "file-next", id, current: current + 1, size, total });
+    }
+  } else if (data.type === "file-next") {
+    const { id, current, total, size } = data;
+    const progress = Math.floor((current / total) * 100);
+    updateFileProgress(id, progress);
+    const file = fileSource.current[id];
+    if (file) {
+      getChunkByIndex(file, current).then(chunk => {
+        sendMessage({ type: "file-chunk", id, current, total, size, chunk });
+      });
+    }
+  } else if (data.type === "file-finish") {
+    const { id } = data;
+    updateFileProgress(id, 100);
+  }
+});
+
+const onDownloadFile = (id: string, fileName: string) => {
+  const blob = fileMapper.current[id]
+    ? new Blob(fileMapper.current[id], { type: "application/octet-stream" })
+    : fileSource.current[id] || new Blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+```
 
 ## 每日一题
 
