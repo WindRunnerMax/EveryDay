@@ -417,7 +417,153 @@ $ nc -v6 ${ip} 9999
 于是我最后测试了一下，我换到了我的卡`2`电信卡，此时无论是我的朋友还是我的电脑都可以直接通过电信分配的`IPv6`地址连接到我的手机了。这就很难绷，而我另一个朋友的联通又能够直接连接，所以在国内的网络环境下还是需要看地域性的。之后我找了好几个朋友测试了`P2P`的链接，因为只要设备双方只要有一方有公网的`IP`那么大概率就是能够直接`P2P`的，所以通过`WebRTC`连接的成功率还是可以的，并没有想象中那么低，但我们主要的场景还是局域网传输，只是我们会在项目中留一个输入对方`ID`用以跨网段链接的方式。
 
 ### 通信
+在我们成功建立链接之后，我们就可以开启传输信道`Peer-To-Peer RTCDataChannel API`相关部分了，通过`createDataChannel`方法可以创建一个与远程对等点链接的新通道，可以通过该通道传输任何类型的数据，例如图像、文件传输、文本聊天、游戏更新数据包等。我们可以在`RTCPeerConnection`对象实例化的时候就创建信道，之后等待链接成功建立即可，同样的`createDataChannel`也存在很多参数可以配置。
 
+* `label`: 可读的信道名称，不超过`65,535 bytes`。
+* `ordered`: 保证传输顺序，默认为`true`。
+* `maxPacketLifeTime`: 信道尝试传输消息可能需要的最大毫秒数，如果设置为`null`则表示没有限制，默认为`null`。
+* `maxRetransmits`: 信道尝试传输消息可能需要的最大重传次数，如果设置为`null`则表示没有限制，默认为`null`。
+* `protocol`: 信道使用的子协议，如果设置为`null`则表示没有限制，默认为`null`。
+* `negotiated`: 是否为协商信道，如果设置为`true`则表示信道是协商的，如果设置为`false`则表示信道是非协商的，默认为`false`。
+* `id`: 信道的唯一标识符，如果设置为`null`则表示没有限制，默认为`null`。
+
+前边我们也提到了`WebRTC`希望借助`UDP`实现相对可靠的数据传输，类似于`QUIC`希望能取得可靠与速度之间的平衡，所以在这里我们的`order`指定了`true`，并且设置了最大传输次数，在这里需要注意的是，我们最终的消息事件绑定是在`ondatachannel`事件之后的，当信道真正建立之后，这个事件将会被触发，并且在此时将可以进行信息传输，此外当`negotiated`指定为`true`时则必须设置`id`，此时就是通过`id`协商信道相当于双向通信，那么就不需要指定`ondatachannel`事件了，直接在`channel`上绑定事件回调即可。
+
+```js
+// packages/webrtc/client/core/instance.ts
+const channel = connection.createDataChannel("FileTransfer", {
+  ordered: true, // 保证传输顺序
+  maxRetransmits: 50, // 最大重传次数
+});
+this.connection.ondatachannel = event => {
+  const channel = event.channel;
+  channel.onopen = options.onOpen || null;
+  channel.onmessage = options.onMessage || null;
+  // @ts-expect-error RTCErrorEvent
+  channel.onerror = options.onError || null;
+  channel.onclose = options.onClose || null;
+};
+```
+
+那么在信道创建完成之后，我们现在暂时只需要关注最基本的两个方法，一个是`channel.send`方法可以用来发送数据，例如纯文本数据、`Blob`、`ArrayBuffer`都是可以直接发送的，同样的`channel.onmessage`事件也是可以接受相同的数据类型，那么我们接下来就借助这两个方法来完成文本与文件的传输。那么我们就来最简单地实现传输，首先我们要规定好基本的传输数据类型，因为我们是实际上只区分两种类型的数据，也就是`Text/Blob`数据，所以需要对这两种数据做基本的判断，然后再根据不同的类型响应不同的行为，当然我们也可以自拟数据结构/协议，例如借助`Uint8Array`构造`Blob`前`N`个字节表示数据类型、`id`、序列号等等，后边携带数据内容，这样也可以组装直接传输`Blob`，在这里我们还是简单处理，主要处理单个文件的传输。
+
+```js
+export type ChunkType = Blob | ArrayBuffer;
+export type TextMessageType =
+  | { type: "text"; data: string }
+  | { type: "file"; size: number; name: string; id: string; total: number }
+  | { type: "file-finish"; id: string };
+```
+
+那么我们封装发送文本和文件的方法，我们可以看到我们在发送文件的时候，我们会先发送一个文件信息的消息，然后再发送文件内容，这样就可以在接收端进行文件的组装。在这里需要注意的有两点，对于大文件来说我们是需要将其分割发送的，在协商`SCTP`时会有`maxMessageSize`的值，表示每次调用`send`方法最大能发送的字节数，通常为`256KB`大小，在`MDN`的`WebRTC_API/Using_data_channels`对这个问题有过描述，另一个需要注意的地方时是缓冲区，由于发送大文件时缓冲区会很容易大量占用缓冲区，并且也不利于我们对发送进度的统计，所以我们还需要借助`onbufferedamountlow`事件来控制缓冲区的发送状态。
+
+```js
+// packages/webrtc/client/components/modal.tsx
+const onSendText = () => {
+  const str = TSON.encode({ type: "text", data: text });
+  if (str && rtc.current && text) {
+    rtc.current?.send(str);
+    setList([...list, { type: "text", from: "self", data: text }]);
+  }
+};
+
+const sendFilesBySlice = async (file: File) => {
+  const instance = rtc.current?.getInstance();
+  const channel = instance?.channel;
+  if (!channel) return void 0;
+  const chunkSize = instance.connection.sctp?.maxMessageSize || 64000;
+  const name = file.name;
+  const id = getUniqueId();
+  const size = file.size;
+  const total = Math.ceil(file.size / chunkSize);
+  channel.send(TSON.encode({ type: "file", name, id, size, total }));
+  const newList = [...list, { type: "file", from: "self", name, size, progress: 0, id } as const];
+  setList(newList);
+  setTransferring(true);
+  let offset = 0;
+  while (offset < file.size) {
+    const slice = file.slice(offset, offset + chunkSize);
+    const buffer = await slice.arrayBuffer();
+    if (channel.bufferedAmount >= chunkSize) {
+      await new Promise(resolve => {
+        channel.onbufferedamountlow = () => resolve(0);
+      });
+    }
+    const arrayBuffer = await slice.arrayBuffer();
+    fileMapper.current[id] = [...(fileMapper.current[id] || []), arrayBuffer];
+    channel.send(buffer);
+    offset = offset + buffer.byteLength;
+    updateFileProgress(id, Math.floor((offset / size) * 100), newList);
+  }
+};
+
+const onSendFile = () => {
+  const KEY = "webrtc-file-input";
+  const input: HTMLInputElement =
+    document.querySelector(`body > [data-type='${KEY}']`) || document.createElement("input");
+  input.value = "";
+  input.setAttribute("data-type", KEY);
+  input.setAttribute("type", "file");
+  input.setAttribute("class", styles.fileInput);
+  input.setAttribute("accept", "*");
+  document.body.append(input);
+  input.onchange = e => {
+    const target = e.target as HTMLInputElement;
+    document.body.removeChild(input);
+    const files = target.files;
+    const file = files && files[0];
+    file && sendFilesBySlice(file);
+  };
+  input.click();
+};
+```
+
+那么最后我们只需要在接收的时候将内容组装到数组当中，并且在调用下载的时候将其组装为`Blob`下载即可，当然因为目前我们是单文件发送的，也就是说发送文件块的时候并没有携带当前块的任何描述信息，所以我们在接收块的时候是不能再发送其他内容的。
+
+```js
+const onMessage = useMemoizedFn((event: MessageEvent<string | ChunkType>) => {
+  console.log("onMessage", event);
+  if (isString(event.data)) {
+    const data = TSON.decode(event.data);
+    if (data && data.type === "text") {
+      setList([...list, { from: "peer", ...data }]);
+    } else if (data?.type === "file") {
+      setTransferring(true);
+      fileState.current = { id: data.id, current: 0, total: data.total };
+      setList([...list, { from: "peer", progress: 0, ...data }]);
+    } else if (data?.type === "file-finish") {
+      updateFileProgress(data.id, 100);
+      setTransferring(false);
+    }
+  } else {
+    const state = fileState.current;
+    if (state) {
+      const mapper = fileMapper.current;
+      if (!mapper[state.id]) mapper[state.id] = [];
+      mapper[state.id].push(event.data);
+      state.current++;
+      const progress = Math.floor((state.current / state.total) * 100);
+      updateFileProgress(state.id, progress);
+      if (progress === 100) {
+        setTransferring(false);
+        fileState.current = void 0;
+        rtc.current?.send(TSON.encode({ type: "file-finish", id: state.id }));
+      }
+    }
+  }
+});
+
+const onDownloadFile = (id: string, fileName: string) => {
+  const data = fileMapper.current[id] || new Blob();
+  const blob = new Blob(data, { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+```
 ## WebSocket
 `P2P`打洞难点、`TURN`转发、全双工信道、非`AP`隔离
 
