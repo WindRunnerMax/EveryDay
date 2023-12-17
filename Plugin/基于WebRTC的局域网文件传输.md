@@ -559,6 +559,43 @@ const onDownloadFile = (id: string, fileName: string) => {
   URL.revokeObjectURL(url);
 };
 ```
+
+在后来补充了一下多文件传输的方案，具体的思路是构造`ArrayBuffer`，其中前`12`个字节表示当前块所属的文件`ID`，再使用`4`个字节也就是`32`位表示当前块的序列号，其余的内容作为文件块的实际内容，然后就可以实现文件传输的过程中不同文件发送块，然后就可以在接收端通过存储的`ID`和序列号进行`Blob`组装，思路与后边的`WebSocket`通信部分保持一致，所以在这里只是描述一下`ArrayBuffer`的组装方法。
+
+```js
+// packages/webrtc/client/utils/binary.ts
+export const getNextChunk = (
+  instance: React.MutableRefObject<WebRTCApi | null>,
+  id: string,
+  series: number
+) => {
+  const file = FILE_SOURCE.get(id);
+  const chunkSize = getMaxMessageSize(instance);
+  if (!file) return new Blob([new ArrayBuffer(chunkSize)]);
+  const start = series * chunkSize;
+  const end = Math.min(start + chunkSize, file.size);
+  const idBlob = new Uint8Array(id.split("").map(char => char.charCodeAt(0)));
+  const seriesBlob = new Uint8Array(4);
+  // `0xff = 1111 1111`
+  seriesBlob[0] = (series >> 24) & 0xff;
+  seriesBlob[1] = (series >> 16) & 0xff;
+  seriesBlob[2] = (series >> 8) & 0xff;
+  seriesBlob[3] = series & 0xff;
+  return new Blob([idBlob, seriesBlob, file.slice(start, end)]);
+};
+
+export const destructureChunk = async (chunk: ChunkType) => {
+  const buffer = chunk instanceof Blob ? await chunk.arrayBuffer() : chunk;
+  const id = new Uint8Array(buffer.slice(0, ID_SIZE));
+  const series = new Uint8Array(buffer.slice(ID_SIZE, ID_SIZE + CHUNK_SIZE));
+  const data = chunk.slice(ID_SIZE + CHUNK_SIZE);
+  const idString = String.fromCharCode(...id);
+  const seriesNumber = (series[0] << 24) | (series[1] << 16) | (series[2] << 8) | series[3];
+  return { id: idString, series: seriesNumber, data };
+};
+```
+
+
 ## WebSocket
 当`WebRTC`无法成功进行`NAT`穿越时，如果想在公网发送数据还是需要经过`TURN`转发，那么都是通过`TURN`转发了还是需要走我们服务器的中继，那么我们不如直接借助`WebSocket`传输了，`WebSocket`也是全双工信道，在非`AP`隔离的情况下我们同样也可以直接部署在路由器上，在局域网之间进行数据传输。
 
