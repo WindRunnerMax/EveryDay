@@ -3240,4 +3240,11 @@
  <changefreq>weekly</changefreq>
 </url>
 
+<url>
+ <loc>https://blog-ssg.touchczy.top/Plugin/基于WebRTC的局域网文件传输.html</loc>
+ <priority>1.0</priority>
+ <lastmod>2024-01-01</lastmod>
+ <changefreq>weekly</changefreq>
+</url>
+
 </urlset>
