@@ -52,6 +52,223 @@
 虚拟图层
 
 
+实际上想要做好整个能力还是比较复杂的，特别是有很多边界`case`需要处理，完整的`DEMO`如下所示: 
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quill-diff</title>
+    <link
+      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+      .container {
+        display: flex;
+        height: calc(100% - 43px);
+      }
+      .container > div {
+        width: 50%;
+        margin: 5px;
+      }
+      .ql-editor {
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div><div id="prev"></div></div>
+      <div><div id="next"></div></div>
+    </div>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script
+      src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/lodash.js/4.17.21/lodash.min.js"
+      type="application/javascript"
+    ></script>
+    <script>
+      const prevEditorDOM = document.getElementById("prev");
+      const nextEditorDOM = document.getElementById("next");
+      const prev = new Quill(prevEditorDOM, { theme: "snow" });
+      prev.setContents([
+        // 设置内容
+        { insert: "insert\ncontent\nheading line" },
+        { insert: "\n", attributes: { header: 1 } },
+        { insert: "end\n" },
+      ]);
+      window.prev = prev;
+      const next = new Quill(nextEditorDOM, { theme: "snow" });
+      next.setContents([
+        // 设置内容
+        { insert: "content", attributes: { italic: true } },
+        { insert: "\nformat " },
+        { insert: "bold", attributes: { bold: true } },
+        { insert: "\nheading line\nend\n\n" },
+      ]);
+      window.next = next;
+      // 创建`VirtualLayer`图层`DOM`
+      const deleteRangeDOM = document.createElement("div");
+      deleteRangeDOM.className = "ql-range diff-delete";
+      const insertRangeDOM = document.createElement("div");
+      insertRangeDOM.className = "ql-range diff-insert";
+      const retainRangeDOM = document.createElement("div");
+      retainRangeDOM.className = "ql-range diff-retain";
+      prevEditorDOM.appendChild(deleteRangeDOM);
+      nextEditorDOM.appendChild(insertRangeDOM);
+      nextEditorDOM.appendChild(retainRangeDOM);
+      // 在`VirtualLayer`图层中渲染内容
+      const buildLayerDOM = (editor, dom, ranges, color) => {
+        dom.innerText = ""; // 清理`DOM`
+        ranges.forEach((range) => {
+          // 获取边界位置
+          const startRect = editor.getBounds(range.index, 0);
+          const endRect = editor.getBounds(range.index + range.length, 0);
+          // 单行的块容器
+          const block = document.createElement("div");
+          block.style.position = "absolute";
+          block.style.width = "100%";
+          block.style.height = "0";
+          block.style.top = startRect.top + "px";
+          block.style.pointerEvents = "none";
+          const head = document.createElement("div");
+          const body = document.createElement("div");
+          const tail = document.createElement("div");
+          // 依据不同情况渲染
+          if (startRect.top === endRect.top) {
+            head.style.marginLeft = startRect.left + "px";
+            head.style.height = startRect.height + "px";
+            head.style.width = endRect.right - startRect.left + "px";
+            head.style.backgroundColor = color;
+          } else if (endRect.top - startRect.bottom < startRect.height) {
+            head.style.marginLeft = startRect.left + "px";
+            head.style.height = startRect.height + "px";
+            head.style.width = startRect.width - startRect.left + "px";
+            head.style.backgroundColor = color;
+            body.style.height = endRect.top - startRect.bottom + "px";
+            tail.style.width = endRect.right + "px";
+            tail.style.height = endRect.height + "px";
+            tail.style.backgroundColor = color;
+          } else {
+            head.style.marginLeft = startRect.left + "px";
+            head.style.height = startRect.height + "px";
+            head.style.width = startRect.width - startRect.left + "px";
+            head.style.backgroundColor = color;
+            body.style.width = "100%";
+            body.style.height = endRect.top - startRect.bottom + "px";
+            body.style.backgroundColor = color;
+            tail.style.marginLeft = 0;
+            tail.style.height = endRect.height + "px";
+            tail.style.width = endRect.right + "px";
+            tail.style.backgroundColor = color;
+          }
+          block.appendChild(head);
+          block.appendChild(body);
+          block.appendChild(tail);
+          dom.appendChild(block);
+        });
+      };
+      // `diff`计算
+      const diffDelta = () => {
+        const prevContent = prev.getContents();
+        const nextContent = next.getContents();
+        // 按行计算索引位置
+        const buildLines = (content) => {
+          const text = content.ops.map((op) => op.insert || "").join("");
+          let index = 0;
+          const lines = text.split("\n").map((str) => {
+            const length = str.length + 1;
+            const line = { start: index, length };
+            index = index + length;
+            return line;
+          });
+          return (index, length, ignoreLineMarker = true) => {
+            const ranges = [];
+            let traceLength = length;
+            // 可以用二分搜索优化
+            for (const line of lines) {
+              if (length === 1 && index + length === line.start + line.length) {
+                if (ignoreLineMarker) break;
+                // 行标识符
+                const payload = { index: line.start, length: line.length - 1 };
+                !ignoreLineMarker && payload.length > 0 && ranges.push(payload);
+                break;
+              }
+              // 迭代行 通过行索引构造`Range`
+              if (
+                index < line.start + line.length &&
+                line.start <= index + traceLength
+              ) {
+                const nextIndex = Math.max(line.start, index);
+                const nextLength = Math.min(
+                  traceLength,
+                  line.length - 1,
+                  line.start + line.length - nextIndex
+                );
+                traceLength = traceLength - nextLength;
+                const payload = { index: nextIndex, length: nextLength };
+                if (nextIndex + nextLength === line.start + line.length) {
+                  // 边界`\n`的情况
+                  payload.length--;
+                }
+                payload.length > 0 && ranges.push(payload);
+              } else if (line.start > index + length || traceLength <= 0) {
+                break;
+              }
+            }
+            return ranges;
+          };
+        };
+        // 构造基本数据
+        const toPrevRanges = buildLines(prevContent);
+        const toNextRanges = buildLines(nextContent);
+        const diff = prevContent.diff(nextContent);
+        const inserts = [];
+        const retains = [];
+        const deletes = [];
+        let prevIndex = 0;
+        let nextIndex = 0;
+        // console.log("diff.ops :>> ", diff.ops);
+        // 迭代`diff`结果并进行转换
+        for (const op of diff.ops) {
+          if (op.delete !== undefined) {
+            deletes.push(...toPrevRanges(prevIndex, op.delete));
+            prevIndex = prevIndex + op.delete;
+          } else if (op.retain !== undefined) {
+            if (op.attributes) {
+              retains.push(...toNextRanges(nextIndex, op.retain, false));
+            }
+            prevIndex = prevIndex + op.retain;
+            nextIndex = nextIndex + op.retain;
+          } else if (op.insert !== undefined) {
+            inserts.push(...toNextRanges(nextIndex, op.insert.length));
+            nextIndex = nextIndex + op.insert.length;
+          }
+        }
+        // console.log("op - results :>> ", inserts, deletes, retains);
+        // 根据转换的结果渲染`DOM`
+        buildLayerDOM(prev, deleteRangeDOM, deletes, "rgba(245, 63, 63, 0.3)");
+        buildLayerDOM(next, insertRangeDOM, inserts, "rgba(0, 180, 42, 0.3)");
+        buildLayerDOM(next, retainRangeDOM, retains, "rgba(114, 46, 209, 0.3)");
+      };
+      // `diff`渲染时机
+      prev.on("text-change", _.debounce(diffDelta, 300));
+      next.on("text-change", _.debounce(diffDelta, 300));
+      window.onload = diffDelta;
+    </script>
+  </body>
+</html>
+```
+
 ## 每日一题
 
 ```
@@ -61,6 +278,7 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+https://quilljs.com/docs/api/
 https://www.npmjs.com/package/quill-delta
 https://github.com/quilljs/quill/issues/1125
 ```
