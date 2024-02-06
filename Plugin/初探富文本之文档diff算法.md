@@ -42,7 +42,7 @@
 ## diff-delta
 在这里我们的目标是希望实现更细粒度的`diff`，并且可以直接构造`delta`并且应用，也就是`A.apply(diff(a, b)) = B`，实际上在`quill-delta`中是存在已经实现好的`diff`算法，在这里我们只是将其精简了一些非`insert`的操作以便于理解，需要注意的是在这里我们讨论的是非协同模式下的`diff`，如果是已经实现`OT`的文档编辑器可以直接从历史记录中取出相关的版本`Op`进行`compose + invert`即可，并不是必须要进行文档全文的`diff`算法。
 
-完整`DEMO`可以直接在`https://codesandbox.io/p/devbox/z9l5sl`中打开控制台查看，在前边我们提到了使用`JSON`进行`diff`后续还需要两步处理数据，特别是对于粒度的处理看起来更加费劲，那么针对粒度这个问题上不如我们换个角度思考，我们现在的是要处理富文本，而富文本就是带属性的文本，那么我们是不是就可以采用`diff`文本的算法，然后针对属性值额外进行额外的处理即可，理论上这种方式看起来是可行的，我们可以继续沿着这个思路继续处理下去。
+完整`DEMO`可以直接在`https://codesandbox.io/p/devbox/z9l5sl`中打开控制台查看，在前边我们提到了使用`JSON`进行`diff`后续还需要两步处理数据，特别是对于粒度的处理看起来更加费劲，那么针对粒度这个问题上不如我们换个角度思考，我们现在的是要处理富文本，而富文本就是带属性的文本，那么我们是不是就可以采用`diff`文本的算法，然后针对属性值进行额外的处理即可，这样就可以将粒度处理得很细，理论上这种方式看起来是可行的，我们可以继续沿着这个思路继续探索下去。
 
 首先是纯文本的`diff`算法，那么我们可以先简单了解下`diff-match-patch`使用的的`diff`算法，该算法通常被认为是最好的通用`diff`算法，是由`Eugene W. Myers`设计的`https://neil.fraser.name/writing/diff/myers.pdf`，其算法本身在本文就不展开了。由于`diff-match-patch`本身还存在`match`与`patch`能力，而我们将要用到的算法实际上只需要`diff`的能力，那么我们只需要使用`fast-diff`就可以了，其将匹配和补丁以及所有额外的差异选项都移除，只留下最基本的`diff`能力，其`diff`的结果是一个二维数组`[FLAG, CONTENT][]`。
 
@@ -55,7 +55,102 @@ const target = "Hello Diff";
 console.log(fastDiff(origin, target)); // [[0, "Hello "], [-1, "World"], [1, "Diff"]]
 ```
 
+那么我们接下来就需要构造字符串了，`quill-delta`的数据格式在上边以及提到过了，那么构造起来也很简单了，并且我们需要先构造一个`Delta`对象来承载我们对于`delta`的`diff`结果。
 
+```js
+export const diffOps = (ops1: Op[], ops2: Op[]) => {
+  const group = [ops1, ops2].map((delta) =>
+    delta.map((op) => op.insert).join(""),
+  );
+  const result = diff(group[0], group[1]);
+
+  const target = new Delta();
+  const iter1 = new Iterator(ops1);
+  const iter2 = new Iterator(ops2);
+  // ...
+}
+```
+
+这其中的`Iterator`是我们接下来要进行迭代取块结构的迭代器，我们可以试想一下，因为我们`diff`的结果是`N`个字的内容，而我们的`Delta`中`insert`块也是`N`个字，在`diff`之后就需要对这两个字符串的子字符串进行处理，所以我们需要对整个`Delta`取`N`个字的子字符串迭代处理，这部分数据处理方法我们就封装在`Iterator`对象当中，我们需要先看一下整个迭代器的处理方法。
+
+```js
+export class Iterator {
+  // 存储`delta`中所有`ops`
+  ops: Op[];
+  // 当前要处理的`ops index`
+  index: number;
+  // 当前`insert`字符串偏移量
+  offset: number;
+
+  constructor(ops: Op[]) {
+    this.ops = ops;
+    this.index = 0;
+    this.offset = 0;
+  }
+
+  hasNext(): boolean {
+    // 通过剩余可处理长度来判断是否可以继续处理
+    return this.peekLength() < Infinity;
+  }
+
+  next(length?: number): Op {
+    if (!length) {
+      // 这里并不是不符合规则的数据要跳过迭代
+      // 而是需要将当前`index`的`op insert`迭代完
+      length = Infinity;
+    }
+    // 这里命名为`nextOp`实际指向的还是当前`index`的`op`
+    const nextOp = this.ops[this.index];
+    if (nextOp) {
+      // 暂存当前要处理的`insert`偏移量
+      const offset = this.offset;
+      // 我们是纯文档表达的`InsertOp` 所以就是`insert`字符串的长度
+      const opLength = Op.length(nextOp);
+      // 这里表示将要取`next`的长度要比当前`insert`剩余的长度要长
+      if (length >= opLength - offset) {
+        // 处理剩余所有的`insert`的长度
+        length = opLength - offset;
+        // 此时需要迭代到下一个`op`
+        this.index += 1;
+        // 重置`insert`索引偏移量
+        this.offset = 0;
+      } else {
+        // 处理传入的`length`长度的`insert`
+        this.offset += length;
+      }
+      // 这里是当前`op`携带的属性
+      const retOp: Op = {};
+      if (nextOp.attributes) {
+        // 如果存在的话 需要将其一并放置于`retOp`中
+        retOp.attributes = nextOp.attributes;
+      }
+      // 通过之前暂存的`offset`以及计算的`length`截取`insert`字符串并构造`retOp`
+      retOp.insert = (nextOp.insert as string).substr(offset, length);
+      // 返回`retOp`
+      return retOp;
+    } else {
+      // 如果`index`已经超出了`ops`的长度则返回空`insert`
+      return { insert: "" };
+    }
+  }
+
+  peek(): Op {
+    // 取的当前要处理的`op`
+    return this.ops[this.index];
+  }
+
+  peekLength(): number {
+    if (this.ops[this.index]) {
+      // 返回当前`op`剩余可以迭代的`insert`长度
+      // 这里如果我们的索引管理正确 则永远不应该返回`0`
+      return Op.length(this.ops[this.index]) - this.offset;
+    } else {
+      // 返回最大值
+      return Infinity;
+    }
+  }
+}
+```
 
 
 ## 对比视图
