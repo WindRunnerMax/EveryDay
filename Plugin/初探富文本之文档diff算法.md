@@ -71,7 +71,7 @@ export const diffOps = (ops1: Op[], ops2: Op[]) => {
 }
 ```
 
-这其中的`Iterator`是我们接下来要进行迭代取块结构的迭代器，我们可以试想一下，因为我们`diff`的结果是`N`个字的内容，而我们的`Delta`中`insert`块也是`N`个字，在`diff`之后就需要对这两个字符串的子字符串进行处理，所以我们需要对整个`Delta`取`N`个字的子字符串迭代处理，这部分数据处理方法我们就封装在`Iterator`对象当中，我们需要先看一下整个迭代器的处理方法。
+这其中的`Iterator`是我们接下来要进行迭代取块结构的迭代器，我们可以试想一下，因为我们`diff`的结果是`N`个字的内容，而我们的`Delta`中`insert`块也是`N`个字，在`diff`之后就需要对这两个字符串的子字符串进行处理，所以我们需要对整个`Delta`取`N`个字的子字符串迭代处理，这部分数据处理方法我们就封装在`Iterator`对象当中，我们需要先来整体看一下整代器的处理方法。
 
 ```js
 export class Iterator {
@@ -94,44 +94,7 @@ export class Iterator {
   }
 
   next(length?: number): Op {
-    if (!length) {
-      // 这里并不是不符合规则的数据要跳过迭代
-      // 而是需要将当前`index`的`op insert`迭代完
-      length = Infinity;
-    }
-    // 这里命名为`nextOp`实际指向的还是当前`index`的`op`
-    const nextOp = this.ops[this.index];
-    if (nextOp) {
-      // 暂存当前要处理的`insert`偏移量
-      const offset = this.offset;
-      // 我们是纯文档表达的`InsertOp` 所以就是`insert`字符串的长度
-      const opLength = Op.length(nextOp);
-      // 这里表示将要取`next`的长度要比当前`insert`剩余的长度要长
-      if (length >= opLength - offset) {
-        // 处理剩余所有的`insert`的长度
-        length = opLength - offset;
-        // 此时需要迭代到下一个`op`
-        this.index += 1;
-        // 重置`insert`索引偏移量
-        this.offset = 0;
-      } else {
-        // 处理传入的`length`长度的`insert`
-        this.offset += length;
-      }
-      // 这里是当前`op`携带的属性
-      const retOp: Op = {};
-      if (nextOp.attributes) {
-        // 如果存在的话 需要将其一并放置于`retOp`中
-        retOp.attributes = nextOp.attributes;
-      }
-      // 通过之前暂存的`offset`以及计算的`length`截取`insert`字符串并构造`retOp`
-      retOp.insert = (nextOp.insert as string).substr(offset, length);
-      // 返回`retOp`
-      return retOp;
-    } else {
-      // 如果`index`已经超出了`ops`的长度则返回空`insert`
-      return { insert: "" };
-    }
+    // ...
   }
 
   peek(): Op {
@@ -151,6 +114,74 @@ export class Iterator {
   }
 }
 ```
+
+这其中`next`方法的处理方式要复杂一些，在`next`方法中我们的目标主要就是取`insert`的部分内容，注意我们每次调用`insert`是不会跨`op`的，也就是说每次`next`最多取当前`index`的`op`所存储的`insert`长度，因为如果取的内容超过了单个`op`的长度，其`attributes`的对应属性是不一致的，所以不能直接合并，那么此时我们就需要考虑到如果`diff`的结果比`insert`长的情况，也就是是需要将`attributes`这部分兼容，其实就是将`diff`结果同样分块处理。
+
+```js
+next(length?: number): Op {
+  if (!length) {
+    // 这里并不是不符合规则的数据要跳过迭代
+    // 而是需要将当前`index`的`op insert`迭代完
+    length = Infinity;
+  }
+  // 这里命名为`nextOp`实际指向的还是当前`index`的`op`
+  const nextOp = this.ops[this.index];
+  if (nextOp) {
+    // 暂存当前要处理的`insert`偏移量
+    const offset = this.offset;
+    // 我们是纯文档表达的`InsertOp` 所以就是`insert`字符串的长度
+    const opLength = Op.length(nextOp);
+    // 这里表示将要取`next`的长度要比当前`insert`剩余的长度要长
+    if (length >= opLength - offset) {
+      // 处理剩余所有的`insert`的长度
+      length = opLength - offset;
+      // 此时需要迭代到下一个`op`
+      this.index += 1;
+      // 重置`insert`索引偏移量
+      this.offset = 0;
+    } else {
+      // 处理传入的`length`长度的`insert`
+      this.offset += length;
+    }
+    // 这里是当前`op`携带的属性
+    const retOp: Op = {};
+    if (nextOp.attributes) {
+      // 如果存在的话 需要将其一并放置于`retOp`中
+      retOp.attributes = nextOp.attributes;
+    }
+    // 通过之前暂存的`offset`以及计算的`length`截取`insert`字符串并构造`retOp`
+    retOp.insert = (nextOp.insert as string).substr(offset, length);
+    // 返回`retOp`
+    return retOp;
+  } else {
+    // 如果`index`已经超出了`ops`的长度则返回空`insert`
+    return { insert: "" };
+  }
+}
+```
+
+当前我们已经可以通过`Iterator`更细粒度地截取`op`的`insert`部分，接下来我们就回到我们对于`diff`的处理上，首先我们先来看看`attributes`的`diff`，简单来看我们假设目前的数据结构就是`Record<string, string>`，这样的话我们可以直接比较两个`attributes`即可，`diff`的本质上是`a`经过一定计算使其可以变成`b`，这部分的计算就是`diff`的结果即`a + diff = b`，所以我们可以直接将全量的`key`迭代一下，如果两个`attrs`的值不相同则通过判断`b`的值来赋给目标`attrs`即可。
+
+```js
+export const diffAttributes = (
+  a: AttributeMap = {},
+  b: AttributeMap = {},
+): AttributeMap | undefined => {
+  if (typeof a !== "object") a = {};
+  if (typeof b !== "object") b = {};
+  const attributes = Object.keys(a)
+    .concat(Object.keys(b))
+    .reduce<AttributeMap>((attrs, key) => {
+      if (a[key] !== b[key]) {
+        attrs[key] = b[key] === undefined ? "" : b[key];
+      }
+      return attrs;
+    }, {});
+  return Object.keys(attributes).length > 0 ? attributes : undefined;
+};
+```
+
+
 
 
 ## 对比视图
