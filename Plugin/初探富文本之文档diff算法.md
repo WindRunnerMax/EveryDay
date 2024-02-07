@@ -181,8 +181,94 @@ export const diffAttributes = (
 };
 ```
 
+因为前边我们实际上已经拆的比较细了，所以最后的环节并不会很复杂，我们的目标是构造`a + diff = b`中`diff`的部分，所以在构造`diff`的过程中要应用的目标是`a`，我们需要带着这个目的去看整个流程，否则容易不理解对于`delta`的操作。在`diff`的整体流程中我们主要有三部分需要处理，分别是`iter1`、`iter2`、`text diff`，而我们需要根据`diff`出的类型分别处理，整体遵循的原则就是取其中较小长度作为块处理，在`diff.INSERT`的部分是从`iter2`的`insert`置入`delta`，在`diff.DELETE`部分是从`iter1`取`delete`的长度应用到`delta`，在`diff.EQUAL`的部分我们需要从`iter1`和`iter2`分别取得`op`来处理`attributes`的`diff`或`op`兜底替换。
 
+```js
+// `diff`的结果 使用`delta`描述
+const target = new Delta();
+const iter1 = new Iterator(ops1);
+const iter2 = new Iterator(ops2);
 
+// 迭代`diff`结果
+result.forEach((item) => {
+  let op1: Op;
+  let op2: Op;
+  // 取出当前`diff`块的类型和内容
+  const [type, content] = item;
+  // 当前`diff`块长度
+  let length = content.length; 
+  while (length > 0) {
+    // 本次循环将要处理的长度
+    let opLength = 0; 
+    switch (type) {
+      // 标识为插入的内容
+      case diff.INSERT: 
+        // 取 `iter2`当前`op`剩下可以处理的长度 `diff`块还未处理的长度 中的较小值
+        opLength = Math.min(iter2.peekLength(), length); 
+        // 取出`opLength`长度的`op`并置入目标`delta` `iter2`移动`offset/index`指针
+        target.push(iter2.next(opLength));
+        break;
+      // 标识为删除的内容
+      case diff.DELETE: 
+        // 取 `diff`块还未处理的长度 `iter1`当前`op`剩下可以处理的长度 中的较小值
+        opLength = Math.min(length, iter1.peekLength());
+        // `iter1`移动`offset/index`指针
+        iter1.next(opLength);
+        // 目标`delta`需要得到要删除的长度
+        target.delete(opLength);
+        break;
+      // 标识为相同的内容
+      case diff.EQUAL:
+        // 取 `diff`块还未处理的长度 `iter1`当前`op`剩下可以处理的长度 `iter2`当前`op`剩下可以处理的长度 中的较小值
+        opLength = Math.min(iter1.peekLength(), iter2.peekLength(), length);
+        // 取出`opLength`长度的`op1` `iter1`移动`offset/index`指针
+        op1 = iter1.next(opLength);
+        // 取出`opLength`长度的`op2` `iter2`移动`offset/index`指针
+        op2 = iter2.next(opLength);
+        // 如果两个`op`的`insert`相同
+        if (op1.insert === op2.insert) {
+          // 直接将`opLength`长度的`attributes diff`置入
+          target.retain(
+            opLength,
+            diffAttributes(op1.attributes, op2.attributes),
+          );
+        } else {
+          // 直接将`op2`置入目标`delta`并删除`op1` 兜底策略
+          target.push(op2).delete(opLength);
+        }
+        break;
+      default:
+        break;
+    }
+    // 当前`diff`块剩余长度 = 当前`diff`块长度 - 本次循环处理的长度
+    length = length - opLength; 
+  }
+});
+// 去掉尾部的空`retain`
+return target.chop();
+```
+
+在这里我们可以举个例子来看一下`diff`的效果，具体效果可以从`https://codesandbox.io/p/devbox/z9l5sl`的`src/index.ts`中打开控制台看到效果，主要是演示了对于`DELETE EQUAL INSERT`的三种`diff`类型以及生成的`delta`结果，在此处是`ops1 + result = ops2`。
+
+```js
+const ops1: Op[] = [{ insert: "1234567890\n" }];
+const ops2: Op[] = [
+  { attributes: { bold: "true" }, insert: "45678" },
+  { insert: "90123\n" },
+];
+const result = diffOps(ops1, ops2);
+console.log(result);
+
+// 1234567890 4567890123
+// DELETE:-1 EQUAL:0 INSERT:1
+// [[-1,"123"], [0,"4567890"], [1,"123"], [0,"\n"]]
+// [
+//   { delete: 3 }, // DELETE 123 
+//   { retain: 5, attributes: { bold: "true" } }, // BOLD 45678
+//   { retain: 2 }, // RETAIN 90 
+//   { insert: "123" } // INSERT 123 
+// ];
+```
 
 ## 对比视图
 
