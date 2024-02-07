@@ -271,8 +271,31 @@ console.log(result);
 ```
 
 ## 对比视图
+现在我们的文档`diff`算法已经有了，接下来我们就需要切入正题，思考如何将其应用到具体的文档上。我们可以先从简单的方式开始，试想一下我们现在是对文档`A`与`B`进行了`diff`得到了`patch`，那么我们就可以直接对`diff`进行修改，构造成我们想要的结构，然后将其应用到`A`中就可以得到对比视图了。
 
-写入文档内容
+依照这个思路实现的核心算法非常简单，在这里我们先不处理对于格式的修改，通过将`DELETE`的内容换成`RETAIN`并且附带红色的`attributes`，在`INSERT`的类型上加入绿色的`attributes`，并且将修改后的这部分`patch`组装到`A`的`delta`上，然后将整个`delta`应用到新的对比视图当中就可以了，完整`DEMO`可以参考`https://codepen.io/percipient24/pen/eEBOjG`。
+
+```js
+const findDiff = () => {
+  const oldContent = quillLeft.getContents();
+  const newContent = quillRight.getContents();
+  const diff = oldContent.diff(newContent);
+  for (let i = 0; i < diff.ops.length; i++) {
+    const op = diff.ops[i];
+    if (op.insert) {
+      op.attributes = { background: "#cce8cc", color: "#003700" };
+    }
+    if (op.delete) {
+      op.retain = op.delete;
+      delete op.delete;
+      op.attributes = { background: "#e8cccc", color: "#370000",  };
+    }
+  }
+  const adjusted = oldContent.compose(diff);
+  quillDiff.setContents(adjusted);
+}
+```
+
 
 虚拟图层
 
