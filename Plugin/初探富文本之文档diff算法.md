@@ -301,7 +301,7 @@ const findDiff = () => {
 如果说上述的场景只是在基本功能上提出的进阶能力，那么在搜索/查找的场景下，直接将高亮应用到富文本内容上似乎并不是一个可行的选择，试想一下如果我们直接将在数据层面上搜索出的内容应用到富文本上来实现高亮，我们就需要承受上边提到的所有问题，频繁地更改内容造成的性能损耗也是我们不能接受的。在`slate`中存在`decorate`的概念，可以通过构造`Range`来消费`attributes`但不会改变文档内容，这就很符合我们的需求。所以我们同样需要一种能够在不修改富文本内容的情况下高亮部分内容，但是我们又不容易像`slate`一样在编辑器底层渲染时实现这个能力，那么其实我们可以换个思路，我们直接在相关位置上加入一个半透明的高亮蒙层就可以了，这样看起来就简单很多了，在这里我们将之称为虚拟图层。
 
 理论上实现虚拟图层很简单无非是加一层`DOM`而已，但是这其中有很多细节需要考虑。首先我们考虑一个问题，如果我们将蒙层放在富文本正上方，也就是`z-index`是高于富文本层级的话，如果此时我们点击蒙层，富文本会直接失去焦点，固然我们可以使用`event.preventDefault`来阻止焦点转移的默认行为，但是其他的行为例如点击事件等等同样会造成类似的问题，例如此时富文本中某个按钮的点击行为是用户自定义的，我们遮挡住按钮之后点击事件会被应用到我们的蒙层上，而蒙层并不会是嵌套在按钮之中的不会触发冒泡的行为，所以此时按钮的点击事件是不会触发的，这样并不符合我们的预期。那么我们转变一个思路，如果我们将`z-index`调整到低于富文本层级的话，事件的问题是可以解决的，但是又造成了新的问题，如果此时富文本的内容本身是带有背景色的，此时我们再加入蒙层，那么我们蒙层的颜色是会被原本的背景色遮挡的，而因为我们的富文本能力通常是插件化的，我们不能控制用户实现的背景色插件
-必须要带一个透明度，我们的蒙层也需要是一个通用的能力，所以这个方案也有局限性。其实解决这个问题的方法很简单，在`CSS`中有一个名为`pointer-events`的属性，当将其值设置为`none`时元素永远不会成为鼠标事件的目标，这样我们就可以解决方案一造成的问题，由此实现比较我们最基本的虚拟图层样式与事件处理。
+必须要带一个透明度，我们的蒙层也需要是一个通用的能力，所以这个方案也有局限性。其实解决这个问题的方法很简单，在`CSS`中有一个名为`pointer-events`的属性，当将其值设置为`none`时元素永远不会成为鼠标事件的目标，这样我们就可以解决方案一造成的问题，由此实现比较我们最基本的虚拟图层样式与事件处理，此外使用这个属性会有一个比较有意思的现象，右击蒙层在控制台中是无法直接检查到节点的，必须通过`Elements`面板才能选中`DOM`节点而不能反选。
 
 ```html
 <div style="pointer-events: none;"></div>
@@ -335,231 +335,167 @@ console.log(rect);
 
 在这里假设上边的内容就是`diff`出的结果，至于究竟是`INSERT/DELETE/RETAIN`的类型我们暂时不作关注，我们当前的目标是实现高亮，那么在这两种情况下，如果直接通过`getBounds`获取的`rect`矩形范围作高亮的话，很明显是会有大量的非文本内容即空白区域被高亮的，在这里我们的表现会是会取的最大范围的高亮覆盖，实际上如果只是空白区域覆盖我们还是可以接受的，但是试想一个情况，如果我们只是其中部分内容做了更改，例如第`N`行是完整的插入内容，在`N+1`行的行首同样插入了一个字，此时由于我们`N+1`行的`width`被第`N`行影响，导致我们的高亮覆盖了整个行，此时我们的`diff`高亮结果是不准确的，无论是折行还是跨行的情况下都存在这样的情况，这样的表现就是不能接受的了。
 
-那么接下来我们就需要解决这两个问题，对于跨行的问题，我们只需要明确地知道究竟在哪里出现了行的分割，在此处需要将`diff`的结果进行分割，也就是我们处理的粒度从文档级别变化到了行级别。
+那么接下来我们就需要解决这两个问题，对于跨行位置计算的问题，在这里可以采取较为简单的思路，我们只需要明确地知道究竟在哪里出现了行的分割，在此处需要将`diff`的结果进行分割，也就是我们处理的粒度从文档级别变化到了行级别。只不过在`Quill`中并没有直接提供基于行`Range`级别的操作，所以我们需要自行维护行级别的`index-length`，在这里我们简单地通过`delta insert`来全量分割`index-length`，在这里同样也可以`editor.scroll.lines`来计算，当文档内容改变时我们同样也可以基于`delta-changes`维护索引值。此外如果我们的管理方式是通过多`Quill`实例来实现`Blocks`的话，这样就是天然的`Line`级别管理，维护索引的能力实现起来会简单很多，只不过`diff`的时候就需要一个`Block`树级别的`diff`实现，想比较完整地实现可能会更加复杂。
 
-
-解决line问题 Line级别 Blocks 性能
-Quill没有提供Line级别的能力，需要自己构造，但是如果我们的管理方式是通过多Quill实例来实现Blocks的话，这样就是天然的Line级别管理，实现起来会简单很多，只不过diff的时候就需要一个Block树级别的diff算法。
-
-解决内容太长出现折行问题
-
-
-实际上想要做好整个能力还是比较复杂的，特别是有很多边界`case`需要处理，完整的`DEMO`如下所示，也可以直接打开`https://codesandbox.io/p/sandbox/quill-diff-view-369jt6`。 
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>quill-diff</title>
-    <link
-      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-      rel="stylesheet"
-    />
-    <style>
-      body,
-      html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        overflow: hidden;
-      }
-      .container {
-        display: flex;
-        height: calc(100% - 43px);
-      }
-      .container > div {
-        width: 50%;
-        margin: 5px;
-      }
-      .ql-editor {
-        padding: 5px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div><div id="prev"></div></div>
-      <div><div id="next"></div></div>
-    </div>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script
-      src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-y/lodash.js/4.17.21/lodash.min.js"
-      type="application/javascript"
-    ></script>
-    <script>
-      const prevEditorDOM = document.getElementById("prev");
-      const nextEditorDOM = document.getElementById("next");
-      const prev = new Quill(prevEditorDOM, { theme: "snow" });
-      prev.setContents([
-        // 设置内容
-        { insert: "insert\ncontent\nheading line" },
-        { insert: "\n", attributes: { header: 1 } },
-        { insert: "end\n" },
-      ]);
-      window.prev = prev;
-      const next = new Quill(nextEditorDOM, { theme: "snow" });
-      next.setContents([
-        // 设置内容
-        { insert: "content", attributes: { italic: true } },
-        { insert: "\nformat " },
-        { insert: "bold", attributes: { bold: true } },
-        { insert: "\nheading line\nend\n\n" },
-      ]);
-      window.next = next;
-      // 创建`VirtualLayer`图层`DOM`
-      const deleteRangeDOM = document.createElement("div");
-      deleteRangeDOM.className = "ql-range diff-delete";
-      const insertRangeDOM = document.createElement("div");
-      insertRangeDOM.className = "ql-range diff-insert";
-      const retainRangeDOM = document.createElement("div");
-      retainRangeDOM.className = "ql-range diff-retain";
-      prevEditorDOM.appendChild(deleteRangeDOM);
-      nextEditorDOM.appendChild(insertRangeDOM);
-      nextEditorDOM.appendChild(retainRangeDOM);
-      // 在`VirtualLayer`图层中渲染内容
-      const buildLayerDOM = (editor, dom, ranges, color) => {
-        dom.innerText = ""; // 清理`DOM`
-        ranges.forEach((range) => {
-          // 获取边界位置
-          const startRect = editor.getBounds(range.index, 0);
-          const endRect = editor.getBounds(range.index + range.length, 0);
-          // 单行的块容器
-          const block = document.createElement("div");
-          block.style.position = "absolute";
-          block.style.width = "100%";
-          block.style.height = "0";
-          block.style.top = startRect.top + "px";
-          block.style.pointerEvents = "none";
-          const head = document.createElement("div");
-          const body = document.createElement("div");
-          const tail = document.createElement("div");
-          // 依据不同情况渲染
-          if (startRect.top === endRect.top) {
-            head.style.marginLeft = startRect.left + "px";
-            head.style.height = startRect.height + "px";
-            head.style.width = endRect.right - startRect.left + "px";
-            head.style.backgroundColor = color;
-          } else if (endRect.top - startRect.bottom < startRect.height) {
-            head.style.marginLeft = startRect.left + "px";
-            head.style.height = startRect.height + "px";
-            head.style.width = startRect.width - startRect.left + "px";
-            head.style.backgroundColor = color;
-            body.style.height = endRect.top - startRect.bottom + "px";
-            tail.style.width = endRect.right + "px";
-            tail.style.height = endRect.height + "px";
-            tail.style.backgroundColor = color;
-          } else {
-            head.style.marginLeft = startRect.left + "px";
-            head.style.height = startRect.height + "px";
-            head.style.width = startRect.width - startRect.left + "px";
-            head.style.backgroundColor = color;
-            body.style.width = "100%";
-            body.style.height = endRect.top - startRect.bottom + "px";
-            body.style.backgroundColor = color;
-            tail.style.marginLeft = 0;
-            tail.style.height = endRect.height + "px";
-            tail.style.width = endRect.right + "px";
-            tail.style.backgroundColor = color;
-          }
-          block.appendChild(head);
-          block.appendChild(body);
-          block.appendChild(tail);
-          dom.appendChild(block);
-        });
-      };
-      // `diff`计算
-      const diffDelta = () => {
-        const prevContent = prev.getContents();
-        const nextContent = next.getContents();
-        // 按行计算索引位置
-        const buildLines = (content) => {
-          const text = content.ops.map((op) => op.insert || "").join("");
-          let index = 0;
-          const lines = text.split("\n").map((str) => {
-            const length = str.length + 1;
-            const line = { start: index, length };
-            index = index + length;
-            return line;
-          });
-          return (index, length, ignoreLineMarker = true) => {
-            const ranges = [];
-            let traceLength = length;
-            // 可以用二分搜索优化
-            for (const line of lines) {
-              if (length === 1 && index + length === line.start + line.length) {
-                if (ignoreLineMarker) break;
-                // 行标识符
-                const payload = { index: line.start, length: line.length - 1 };
-                !ignoreLineMarker && payload.length > 0 && ranges.push(payload);
-                break;
-              }
-              // 迭代行 通过行索引构造`Range`
-              if (
-                index < line.start + line.length &&
-                line.start <= index + traceLength
-              ) {
-                const nextIndex = Math.max(line.start, index);
-                const nextLength = Math.min(
-                  traceLength,
-                  line.length - 1,
-                  line.start + line.length - nextIndex
-                );
-                traceLength = traceLength - nextLength;
-                const payload = { index: nextIndex, length: nextLength };
-                if (nextIndex + nextLength === line.start + line.length) {
-                  // 边界`\n`的情况
-                  payload.length--;
-                }
-                payload.length > 0 && ranges.push(payload);
-              } else if (line.start > index + length || traceLength <= 0) {
-                break;
-              }
-            }
-            return ranges;
-          };
-        };
-        // 构造基本数据
-        const toPrevRanges = buildLines(prevContent);
-        const toNextRanges = buildLines(nextContent);
-        const diff = prevContent.diff(nextContent);
-        const inserts = [];
-        const retains = [];
-        const deletes = [];
-        let prevIndex = 0;
-        let nextIndex = 0;
-        // console.log("diff.ops :>> ", diff.ops);
-        // 迭代`diff`结果并进行转换
-        for (const op of diff.ops) {
-          if (op.delete !== undefined) {
-            deletes.push(...toPrevRanges(prevIndex, op.delete));
-            prevIndex = prevIndex + op.delete;
-          } else if (op.retain !== undefined) {
-            if (op.attributes) {
-              retains.push(...toNextRanges(nextIndex, op.retain, false));
-            }
-            prevIndex = prevIndex + op.retain;
-            nextIndex = nextIndex + op.retain;
-          } else if (op.insert !== undefined) {
-            inserts.push(...toNextRanges(nextIndex, op.insert.length));
-            nextIndex = nextIndex + op.insert.length;
-          }
-        }
-        // console.log("op - results :>> ", inserts, deletes, retains);
-        // 根据转换的结果渲染`DOM`
-        buildLayerDOM(prev, deleteRangeDOM, deletes, "rgba(245, 63, 63, 0.3)");
-        buildLayerDOM(next, insertRangeDOM, inserts, "rgba(0, 180, 42, 0.3)");
-        buildLayerDOM(next, retainRangeDOM, retains, "rgba(114, 46, 209, 0.3)");
-      };
-      // `diff`渲染时机
-      prev.on("text-change", _.debounce(diffDelta, 300));
-      next.on("text-change", _.debounce(diffDelta, 300));
-      window.onload = diffDelta;
-    </script>
-  </body>
-</html>
+```js
+const buildLines = (content) => {
+  const text = content.ops.map((op) => op.insert || "").join("");
+  let index = 0;
+  const lines = text.split("\n").map((str) => {
+    // 需要注意我们的`length`是包含了`\n`的
+    const length = str.length + 1;
+    const line = { start: index, length };
+    index = index + length;
+    return line;
+  });
+  return lines;
+}
 ```
+
+当我们有行的`index-length`索引分割之后，接下来就是将原来的完整`diff-index-length`分割成`Line`级别的内容，在这里需要注意的是行标识节点也就是`\n`的`attributes`需要特殊处理，因为这个节点的所有修改都是直接应用到整个行上的，例如当某行从二级标题变成一级标题时就需要将整个行都高亮标记为样式变更，当然本身标题可能也会存在内容增删，这部分高亮是可以叠加不同颜色显示的，这也是我们需要维护行粒度`Range`的原因之一。
+
+```js
+return (index, length, ignoreLineMarker = true) => {
+  const ranges = [];
+  // 跟踪
+  let traceLength = length;
+  // 可以用二分搜索查找索引首尾 `body`则直接取`lines` 查找结果则需要增加`line`标识
+  for (const line of lines) {
+    // 当前处理的节点只有`\n`的情况 标识为行尾并且有独立的`attributes`
+    if (length === 1 && index + length === line.start + line.length) {
+      // 如果忽略行标识则直接结束查找
+      if (ignoreLineMarker) break;
+      // 需要构造整个行内容的`range`
+      const payload = { index: line.start, length: line.length - 1 };
+      !ignoreLineMarker && payload.length > 0 && ranges.push(payload);
+      break;
+    }
+    // 迭代行 通过行索引构造`range`
+    // 判断当前是否还存在需要分割的内容 需要保证剩余`range`在`line`的范围内
+    if (
+      index < line.start + line.length &&
+      line.start <= index + traceLength
+    ) {
+      const nextIndex = Math.max(line.start, index);
+      // 需要比较 追踪长度/行长度/剩余行长度
+      const nextLength = Math.min(
+        traceLength,
+        line.length - 1,
+        line.start + line.length - nextIndex
+      );
+      traceLength = traceLength - nextLength;
+      // 构造行内`range`
+      const payload = { index: nextIndex, length: nextLength };
+      if (nextIndex + nextLength === line.start + line.length) {
+        // 需要排除边界恰好为`\n`的情况
+        payload.length--;
+      }
+      payload.length > 0 && ranges.push(payload);
+    } else if (line.start > index + length || traceLength <= 0) {
+      // 当前行已经超出范围或者追踪长度已经为`0` 则直接结束查找
+      break;
+    }
+  }
+  return ranges;
+};
+```
+
+那么紧接着我们需要解决下一个问题，对于单行内容较长引起折行的问题，因为在上边我们已经将`diff`结果按行粒度划分好了，所以我们可以主要关注于如何渲染高亮的问题上。在前边我们提到过了，我们不能直接将调用`getBounds`得到的`rect`直接绘制到文本上，那么我们仔细思考一下，一段文本实际上是不是可以拆为三段，即首行`head`、内容`body`、尾行`tail`，然后我们就可以用三个`rect`来表示单行内容的高亮就足够了，而实际上`getBounds`返回的数据是足够支撑我们分三段处理单行内容的，我们只需要取得首尾的`rect`，并且借助两个`rect`来计算第三个`rect`就足够了。
+
+```js
+// 获取边界位置
+const startRect = editor.getBounds(range.index, 0);
+const endRect = editor.getBounds(range.index + range.length, 0);
+// 单行的块容器
+const block = document.createElement("div");
+block.style.position = "absolute";
+block.style.width = "100%";
+block.style.height = "0";
+block.style.top = startRect.top + "px";
+block.style.pointerEvents = "none";
+const head = document.createElement("div");
+const body = document.createElement("div");
+const tail = document.createElement("div");
+// 依据不同情况渲染
+if (startRect.top === endRect.top) {
+  // 单行(非折行)的情况 `head`
+  head.style.marginLeft = startRect.left + "px";
+  head.style.height = startRect.height + "px";
+  head.style.width = endRect.right - startRect.left + "px";
+  head.style.backgroundColor = color;
+} else if (endRect.top - startRect.bottom < startRect.height) {
+  // 两行(折单次)的情况 `head + tail` `body`占位
+  head.style.marginLeft = startRect.left + "px";
+  head.style.height = startRect.height + "px";
+  head.style.width = startRect.width - startRect.left + "px";
+  head.style.backgroundColor = color;
+  body.style.height = endRect.top - startRect.bottom + "px";
+  tail.style.width = endRect.right + "px";
+  tail.style.height = endRect.height + "px";
+  tail.style.backgroundColor = color;
+} else {
+  // 多行(折多次)的情况 `head + body + tail`
+  head.style.marginLeft = startRect.left + "px";
+  head.style.height = startRect.height + "px";
+  head.style.width = startRect.width - startRect.left + "px";
+  head.style.backgroundColor = color;
+  body.style.width = "100%";
+  body.style.height = endRect.top - startRect.bottom + "px";
+  body.style.backgroundColor = color;
+  tail.style.marginLeft = 0;
+  tail.style.height = endRect.height + "px";
+  tail.style.width = endRect.right + "px";
+  tail.style.backgroundColor = color;
+}
+```
+
+解决了上述两个问题之后，我们就可以将`delta`应用到`diff`算法获取结果，并且将其按行划分构造出新的`Range`，在这里我们想要实现的是左视图体现`DELETE`内容，右视图体现`INSERT + RETAIN`的内容，在这里我们只需要根据`diff`的不同类型，分别将构造出的`Range`存储到不同的数组中，最后在根据`Range`借助`editor.getBounds`获取位置信息，构造新的图层`DOM`在相关位置实现高亮即可。
+
+```js
+const diffDelta = () => {
+  const prevContent = prev.getContents();
+  const nextContent = next.getContents();
+  // ...
+  // 构造基本数据
+  const toPrevRanges = buildLines(prevContent);
+  const toNextRanges = buildLines(nextContent);
+  const diff = prevContent.diff(nextContent);
+  const inserts = [];
+  const retains = [];
+  const deletes = [];
+  let prevIndex = 0;
+  let nextIndex = 0;
+  // 迭代`diff`结果并进行转换
+  for (const op of diff.ops) {
+    if (op.delete !== undefined) {
+      // `DELETE`的内容需要置于左视图 红色高亮
+      deletes.push(...toPrevRanges(prevIndex, op.delete));
+      prevIndex = prevIndex + op.delete;
+    } else if (op.retain !== undefined) {
+      if (op.attributes) {
+        // `RETAIN`的内容需要置于右视图 紫色高亮
+        retains.push(...toNextRanges(nextIndex, op.retain, false));
+      }
+      prevIndex = prevIndex + op.retain;
+      nextIndex = nextIndex + op.retain;
+    } else if (op.insert !== undefined) {
+      // `INSERT`的内容需要置于右视图 绿色高亮
+      inserts.push(...toNextRanges(nextIndex, op.insert.length));
+      nextIndex = nextIndex + op.insert.length;
+    }
+  }
+  // 根据转换的结果渲染`DOM`
+  buildLayerDOM(prev, deleteRangeDOM, deletes, "rgba(245, 63, 63, 0.3)");
+  buildLayerDOM(next, insertRangeDOM, inserts, "rgba(0, 180, 42, 0.3)");
+  buildLayerDOM(next, retainRangeDOM, retains, "rgba(114, 46, 209, 0.3)");
+};
+// `diff`渲染时机
+prev.on("text-change", _.debounce(diffDelta, 300));
+next.on("text-change", _.debounce(diffDelta, 300));
+window.onload = diffDelta;
+```
+
+实际上想要做好整个能力还是比较复杂的，特别是有很多边界`case`需要处理，完整的`DEMO`可以直接访问`https://codesandbox.io/p/sandbox/quill-diff-view-369jt6`查看。 
 
 ## 每日一题
 
