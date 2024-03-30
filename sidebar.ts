@@ -298,6 +298,7 @@ export const sidebar: Sidebar = {
         "Plugin/初探webpack之单应用多端构建",
         "Plugin/基于WebRTC的局域网文件传输",
         "Plugin/初探富文本之文档diff算法",
+        "Plugin/初探富文本之在线文档交付"
       ],
     },
     {
