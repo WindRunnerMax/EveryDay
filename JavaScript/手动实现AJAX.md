@@ -36,7 +36,7 @@ abort()
 ```
 
 ##### ajax的简单实现
-由于浏览器的同源策略(协议、`域名`、端口号任一不同都算为跨域请求)，于是此代码需要打开百度的首页，在开发者工具的`Console`直接执行，在`Network`查看效果。
+由于浏览器的同源策略(协议、域名、端口号任一不同都算为跨域请求)，于是此代码需要打开百度的首页，在开发者工具的`Console`直接执行，在`Network`查看效果。
 
 ```javascript
     function ajax(url,method="GET",data=null,async=true) {
