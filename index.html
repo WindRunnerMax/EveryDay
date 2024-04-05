@@ -1,92 +1,108 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>WindrunnerMax</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
     <meta name="baidu-site-verification" content="codeva-VBBBn6hyor" />
-    <link rel="stylesheet" href="./Static/vue.css">
-    <link rel="stylesheet" href="./Static/gitalk.css">
+    <link rel="stylesheet" href="./Static/vue.css" />
+    <link rel="stylesheet" href="./Static/gitalk.css" />
     <!-- <meta name="referrer" content="no-referrer"> -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"></script>
+    <script
+      async
+      src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"
+    ></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag("js", new Date());
-        gtag("config", "G-57PHBXT1C5");
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-57PHBXT1C5");
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="app">Please wait...</div>
     <script>
-        window.$docsify = {
-            name: "WindrunnerMax",
-            repo: "https://github.com/WindrunnerMax",
-            loadSidebar: true,
-            auto2top: true,
-            themeColor: "#4C98F7",
-            // subMaxLevel: 3,
-            search: {
-                paths: "auto",
-                placeholder: "Type to search",
-                noData: "No Results",
-                depth: 1,
-            },
-            // basePath:"https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@gh-pages/",
-            alias: {
-                "/.*/_sidebar.md": "/_sidebar.md"
-            },
-            plugins: [],
-            requestHeaders: {
-                // "cache-control": "no-cache",
-            },
-            count: {
-                position: "bottom",
-            }
-        }
+      window.$docsify = {
+        name: "WindrunnerMax",
+        repo: "https://github.com/WindrunnerMax",
+        loadSidebar: true,
+        auto2top: true,
+        themeColor: "#4C98F7",
+        // subMaxLevel: 3,
+        search: {
+          paths: "auto",
+          placeholder: "Type to search",
+          noData: "No Results",
+          depth: 1,
+        },
+        // basePath:"https://cdn.jsdelivr.net/gh/WindrunnerMax/EveryDay@gh-pages/",
+        alias: {
+          "/.*/_sidebar.md": "/_sidebar.md",
+        },
+        plugins: [],
+        requestHeaders: {
+          // "cache-control": "no-cache",
+        },
+        count: {
+          position: "bottom",
+        },
+      };
     </script>
-    <script src="./Static/docsify.min.js"></script>
-    <script src="./Static/search.min.js"></script>
-    <script src="./Static/catalog.js"></script>
-    <script src="./Static/sidebar.js"></script>
-    <script src="./Static/docsify-copy-code@2.1.1.js"></script>
-    <script src="./Static/docsify-pagination.min.js"></script>
-    <script src="./Static/countable.js"></script>
-    <script src="./Static/gitalk.min.js"></script>
-    <script src="./Static/blueimp-md5@2.19.0.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/docsify.min.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/search.min.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/catalog.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/sidebar.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/docsify-copy-code@2.1.1.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/docsify-pagination.min.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/countable.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/gitalk.min.js"></script>
+    <script src="https://unpkg.com/docsify-dist@4.11.6/blueimp-md5@2.19.0.js"></script>
     <script>
-        window.$docsify.plugins = [].concat(function(hook, vm) {
-            const dom = Docsify.dom;
-            hook.mounted(function() {
-                const div = dom.create("div");
-                div.id = "gitalk-container";
-                const main = dom.getNode("#main");
-                div.style = "width: " + main.clientWidth + "px; margin: 0 auto 20px;padding-bottom: 50px;";
-                dom.appendTo(dom.find(".content"), div);
-            });
-            hook.doneEach(function() {
-                let title = decodeURIComponent(vm.route.path.split("/").slice(-1).pop());
-                if(!title) title = window.$docsify.name;
-                document.title = title;
-                for(let n = document.getElementById("gitalk-container"); n.hasChildNodes();) n.removeChild(n.firstChild);
-                new Gitalk({
-                    clientID: "09c0f64ed0786ea33509",
-                    clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
-                    repo: "GitTalks",
-                    owner: "touchczy",
-                    title: title,
-                    body: `[${title}](${location.href})`,
-                    admin: ["touchczy", "WindrunnerMax"],
-                    id: md5("blog" + title),
-                    distractionFreeMode: false
-                }).render("gitalk-container");
-            });
-        }, $docsify.plugins);
+      window.$docsify.plugins = [].concat(function (hook, vm) {
+        const dom = Docsify.dom;
+        hook.mounted(function () {
+          const div = dom.create("div");
+          div.id = "gitalk-container";
+          const main = dom.getNode("#main");
+          div.style =
+            "width: " +
+            main.clientWidth +
+            "px; margin: 0 auto 20px;padding-bottom: 50px;";
+          dom.appendTo(dom.find(".content"), div);
+        });
+        hook.doneEach(function () {
+          let title = decodeURIComponent(
+            vm.route.path.split("/").slice(-1).pop()
+          );
+          if (!title) title = window.$docsify.name;
+          document.title = title;
+          for (
+            let n = document.getElementById("gitalk-container");
+            n.hasChildNodes();
+          ) {
+            n.removeChild(n.firstChild);
+          }
+          new Gitalk({
+            clientID: "09c0f64ed0786ea33509",
+            clientSecret: "849d94f67bb8e90f65e0990585a78bc710013963",
+            repo: "GitTalks",
+            owner: "touchczy",
+            title: title,
+            body: `[${title}](${location.href})`,
+            admin: ["touchczy", "WindrunnerMax"],
+            id: md5("blog" + title),
+            distractionFreeMode: false,
+          }).render("gitalk-container");
+        });
+      }, $docsify.plugins);
     </script>
-</body>
-
+  </body>
 </html>
