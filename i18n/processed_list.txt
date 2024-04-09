@@ -364,6 +364,13 @@ Widget模式.md
 迭代器模式.md
 适配器模式.md
 防抖节流模式.md
+链模式.md
+od命令.md
+rm命令.md
+split命令.md
+grep命令.md
+tr命令.md
+组合.md
 ThinkPHP5.0漏洞测试.md
 Git与SVN对比.md
 Git常用命令.md
