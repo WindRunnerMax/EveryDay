@@ -63,6 +63,10 @@ export default defineConfig({
         },
         {
           tag: "script",
+          children: "location.pathname === '/zh-cn' && location.replace('/zh-cn/')"
+        },
+        {
+          tag: "script",
           attrs: {
             async: true,
             src: "https://www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5",
