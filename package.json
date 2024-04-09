@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "rspress dev",
     "build": "rspress build",
-    "preview": "rspress preview"
+    "preview": "rspress preview",
+    "sitemap": "ts-node ./script/sitemap.ts"
   },
   "devDependencies": {
     "rspress": "^1.5.0",
