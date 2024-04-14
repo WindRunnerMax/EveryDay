@@ -327,7 +327,7 @@ if (isIntersecting) {
 }
 ```
 
-在最后，因为这个状态很难控制的比较完善，我们还需要为其做兜底处理，防止页面上遗留过多节点。当然实际上即使遗留了节点也没有问题，相当于降级到了我们上边提到的占位方案，实际上并不会出现大量的节点，相当于在这里实现的是懒加载的占位节点。不过我们在这里依然给予了处理方案，可以通过节点状态来标识节点是否是作为分界线需要实际处理。
+在最后，因为这个状态很难控制的比较完善，我们还需要为其做兜底处理，防止页面上遗留过多节点。当然实际上即使遗留了节点也没有问题，相当于降级到了我们上边提到的占位方案，实际上并不会出现大量的节点，相当于在这里实现的是懒加载的占位节点。不过我们在这里依然给予了处理方案，可以通过节点状态来标识节点是否是作为分界线需要实际处理为首尾游标边界。
 
 ```js
 public prevNode = (): Node | null => {
@@ -350,7 +350,130 @@ if (isActualLastNode) {
 ```
 
 ### OnScroll滚动事件监听
+那么实现动态高度的虚拟滚动，我们也不能忘记常用的`OnScroll`方案，实际上相对于使用`IntersectionObserver`来说，单纯的虚拟滚动`OnScroll`方案更加简单，当然同样的也更加容易出现性能问题。使用`OnScroll`的核心思路同样是需要一个滚动容器，然后我们需要监听滚动事件，当滚动事件触发时，我们需要根据滚动的位置来计算当前视口内的节点，然后根据节点的高度来计算实际需要渲染的节点，从而实现虚拟滚动。
 
+那么动态高度的虚拟滚动与最开始我们实现的固定高度的虚拟滚动区别在哪，首先是滚动容器的高度，我们在最开始不能够知道滚动容器实际有多高，而是在不断渲染的过程中才能知道实际高度；其次我们不能直接根据滚动的高度计算出当前需要渲染的节点，在之前我们渲染的起始`index`游标是直接根据滚动容器高度和列表所有节点总高度算出来的，而在动态高度的虚拟滚动中，我们无法获得总高度，同样的渲染节点的长度也是如此，我们无法得知本次渲染究竟需要渲染多少节点；再有我们不容易判断节点距离滚动容器顶部的高度，也就是之前我们提到的`translateY`，我们需要使用这个高度来撑起滚动的区域，从而让我们能够实际做到滚动。
+
+那么我们说的这些数值都是无法计算的嘛，显然不是这样的，在我们没有任何优化的情况下，这些数据都是可以强行遍历计算的，而实际上对于现代浏览器来说，执行加法计算需要的性能消耗并不是很高，例如我们实现`1`万次加法运算，实际上的时间消耗也只有不到`1ms`。
+
+```js
+console.time("addition time");
+let count = 0;
+for (let i = 0; i < 10000; i++) {
+  count = count + i;
+}
+console.log(count);
+console.timeEnd("addition time"); // 0.64306640625 ms
+```
+
+那么接下来我们就以遍历的方式粗暴地计算我们所需要的数据，在最后我们会聊一聊基本的优化方案。首先我们仍然需要记录高度，因为节点并不一定会存在视图中，所以最开始我们以基本占位高度存储，当节点实际渲染之后，我们再更新节点高度。
+
+```js
+// packages/dynamic-height-scroll/src/index.tsx
+const heightTable = useMemo(() => {
+  return Array.from({ length: list.length }, () => DEFAULT_HEIGHT);
+}, [list]);
+
+componentDidMount(): void {
+  const el = this.ref.current;
+  if (!el) return void 0;
+  const rect = el.getBoundingClientRect();
+  this.props.heightTable[this.props.index] = rect.height;
+}
+```
+
+还记得之前我们聊到的`buffer`嘛，在`IntersectionObserver`中提供了`rootMargin`配置来维护视口的`buffer`，而在`OnScroll`中我们需要自行维护，所以在这里我们需要设置一个`buffer`变量，当滚动容器被实际创建之后我们来更新这个`buffer`的值以及滚动容器。
+
+```js
+const [scroll, setScroll] = useState<HTMLDivElement | null>(null);
+const buffer = useRef(0);
+
+const onUpdateInformation = (el: HTMLDivElement) => {
+  if (!el) return void 0;
+  buffer.current = el.clientHeight / 2;
+  setScroll(el);
+  Promise.resolve().then(onScroll.run);
+};
+
+return (
+<div
+  style={{ height: 500, border: "1px solid #aaa", overflow: "auto", overflowAnchor: "none" }}
+  ref={onUpdateInformation}
+>
+  {/* ... */}
+</div>
+);
+```
+
+接下来我们来处理两个占位块，在这里没有使用`translateY`来做整体偏移，而是直接使用占位块的方式来撑起滚动区域，那么此时我们就需要根据首尾游标来计算具体占位，实际上这里就是之前我们说的万次加法计算的时间消耗问题，在这里我们直接遍历计算高度。
+
+```js
+const startPlaceHolderHeight = useMemo(() => {
+  return heightTable.slice(0, start).reduce((a, b) => a + b, 0);
+}, [heightTable, start]);
+
+const endPlaceHolderHeight = useMemo(() => {
+  return heightTable.slice(end, heightTable.length).reduce((a, b) => a + b, 0);
+}, [end, heightTable]);
+
+return (
+  <div
+    style={{ height: 500, border: "1px solid #aaa", overflow: "auto", overflowAnchor: "none" }}
+    onScroll={onScroll.run}
+    ref={onUpdateInformation}
+  >
+    <div data-index={`0-${start}`} style={{ height: startPlaceHolderHeight }}></div>
+    {/* ... */}
+    <div data-index={`${end}-${list.length}`} style={{ height: endPlaceHolderHeight }}></div>
+  </div>
+);
+```
+
+那么接下来就需要我们在`OnScroll`事件中处理我们需要渲染的节点内容，实际上主要是处理首尾的游标位置，对于首部游标我们直接根据滚动的高度来计算即可，遍历到首个节点的高度大于滚动高度时，我们就可以认为此时的游标就是我们需要渲染的首个节点，而对于尾部游标我们需要根据首部游标以及滚动容器的高度来计算，同样也是遍历到超出滚动容器高度的节点时，我们就可以认为此时的游标就是我们需要渲染的尾部节点。当然，在这游标的计算中别忘了我们的`buffer`数据，这是尽量避免滚动时出现空白区域的关键。
+
+```js
+const getStartIndex = (top: number) => {
+  const topStart = top - buffer.current;
+  let count = 0;
+  let index = 0;
+  while (count < topStart) {
+    count = count + heightTable[index];
+    index++;
+  }
+  return index;
+};
+
+const getEndIndex = (clientHeight: number, startIndex: number) => {
+  const topEnd = clientHeight + buffer.current;
+  let count = 0;
+  let index = startIndex;
+  while (count < topEnd) {
+    count = count + heightTable[index];
+    index++;
+  }
+  return index;
+};
+
+const onScroll = useThrottleFn(
+  () => {
+    if (!scroll) return void 0;
+    const scrollTop = scroll.scrollTop;
+    const clientHeight = scroll.clientHeight;
+    const startIndex = getStartIndex(scrollTop);
+    const endIndex = getEndIndex(clientHeight, startIndex);
+    setStart(startIndex);
+    setEnd(endIndex);
+  },
+  { wait: 17 }
+);
+```
+
+因为我想聊的是虚拟滚动最基本的原理，所以在这里的示例中基本没有什么优化，显而易见的是我们对于高度的遍历处理是比较低效的，即使进行万次加法计算的消耗并不大，但是在大型应用中还是应该尽量避免做如此大量的计算。那么显而易见的一个优化方向是我们可以实现高度的缓存，简单来说就是对于已经计算过的高度我们可以缓存下来，这样在下次计算时就可以直接使用缓存的高度，而不需要再次遍历计算，而出现高度变化需要更新时，我们可以从当前节点到最新的缓存节点之间，重新计算缓存高度。而且这种方式相当于是递增的有序数组，还可以通过二分等方式解决查找的问题，这样就可以避免大量的遍历计算。
+
+```
+height: 10 20 30 40  50  60  ...
+cache:  10 30 60 100 150 210 ...
+```
 
 ## 每日一题
 
