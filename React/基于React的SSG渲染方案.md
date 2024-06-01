@@ -1,7 +1,6 @@
 # 基于React的SSG渲染方案
 静态站点生成`SSG - Static Site Generation`是一种在构建时生成静态`HTML`文件资源的方法，其可以完全不需要服务端的运行，通过预先生成静态文件，实现快速的内容加载和高度的安全性。由于其生成的是纯静态资源，便可以利用`CDN`等方案以更低的成本和更高的效率来构建和发布网站，在博客、知识库、`API`文档等场景有着广泛应用。
 
-
 ## 描述
 在前段时间遇到了一个比较麻烦的问题，我们是主要做文档业务的团队，而由于对外的产品文档涉及到全球很多地域的用户，因此在`CN`以外地域的网站访问速度就成了比较大的问题。虽然我们有多区域部署的机房，但是每个地域机房的数据都是相互隔离的，而实际上很多产品并不会做很多特异化的定制，因此文档实际上是可以通用的，特别是提供了多语言文档支持的情况下，各地域共用一份文档也变得合理了起来。而即使对于`CN`和海外地区有着特异化的定制，但在海外本身的访问也会有比较大的局限，例如假设机房部署在`US`，那么在`SG`的访问速度同样也会成为一件棘手的事情。
 
@@ -23,20 +22,104 @@
 * 实时性不强: 由于静态站点需要提前生成，因此就无法像动态网站一样根据实时的请求生成对应的内容，例如当我们发布了新文档之后，就必须要重新进行增量编译甚至是全站全量编译，那么在编译期间就无法访问到最新的内容。
 * 不支持动态交互: 静态站点通常只是静态资源的集合，因此在一些动态交互的场景下就无法实现，例如用户登录、评论等功能，当然这些功能可以通过客户端渲染时动态支持，那么这种情况就不再是纯粹的静态站点，通常是借助`SSG`来实现更好的首屏和`SEO`效果。
 
-综上所述，`SSG`更适用于生成内容较为固定、不需要频繁更新、且对于数据延迟敏感较低的的项目，并且实际上我们可能也只是选取部分能力来优化首屏等场景，最终还是会落到`CSR`来实现服务能力。当我们要选择渲染方式的时候，还是要充分考虑到业务场景，由此来确定究竟是`CSR - Client Side Render`、`SSR - Server Side Render`、`SSG - Static Site Generation`更适合我们的业务场景，甚至在一些需要额外优化的场景下，`ISR - Incremental Static Regeneration`、`DPR - Distributed Persistent Rendering`、`ESR - Edge Side Rendering`等也可以考虑作为业务上的选择。 
+综上所述，`SSG`更适用于生成内容较为固定、不需要频繁更新、且对于数据延迟敏感较低的的项目，并且实际上我们可能也只是选取部分能力来优化首屏等场景，最终还是会落到`CSR`来实现服务能力。因此当我们要选择渲染方式的时候，还是要充分考虑到业务场景，由此来确定究竟是`CSR - Client Side Render`、`SSR - Server Side Render`、`SSG - Static Site Generation`更适合我们的业务场景，甚至在一些需要额外优化的场景下，`ISR - Incremental Static Regeneration`、`DPR - Distributed Persistent Rendering`、`ESR - Edge Side Rendering`等也可以考虑作为业务上的选择。 
 
-当然，回到最初我们提到的问题上，假如我们只是为了静态资源的同步，通过`CDN`来解决全球跨地域访问的问题，那么实际上并不是一定需要完全的`SSG`来解决问题。将`CSR`完全转变为`SSR`毕竟是一件改造范围比较大的事情，而我们的目标仅仅是一处生产、多处消费，因此我们可以转过来想一想实际上`JSON`文件也是属于静态资源的一种类型，我们可以直接在前端发起请求将`JSON`文件作为静态资源请求到浏览器并且借助`SDK`渲染即可，至于一些交互行为例如点赞等功能的速度问题我们也是可以接受的，文档站最的主要行为还是阅读文档。此外对于`md`文件我们同样可以如此处理，例如`docsify`就是通过动态请求，但是同样的对于搜索引擎来说这些需要执行`Js`来动态请求的内容并没有那么容易抓取，所以如果想比较好地实现这部分能力还是需要不断优化迭代。
+当然，回到最初我们提到的问题上，假如我们只是为了静态资源的同步，通过`CDN`来解决全球跨地域访问的问题，那么实际上并不是一定需要完全的`SSG`来解决问题。将`CSR`完全转变为`SSR`毕竟是一件改造范围比较大的事情，而我们的目标仅仅是一处生产、多处消费，因此我们可以转过来想一想实际上`JSON`文件也是属于静态资源的一种类型，我们可以直接在前端发起请求将`JSON`文件作为静态资源请求到浏览器并且借助`SDK`渲染即可，至于一些交互行为例如点赞等功能的速度问题我们也是可以接受的，文档站最的主要行为还是阅读文档。此外对于`md`文件我们同样可以如此处理，例如`docsify`就是通过动态请求，但是同样的对于搜索引擎来说这些需要执行`Js`来动态请求的内容并没有那么容易抓取，所以如果想比较好地实现这部分能力还是需要不断优化迭代。文中内容相关的`DEMO`地址为`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/react-render-ssg`，相关`API`的调用基于`React`的`17.0.2`版本实现。
 
 ## 基本原理
-通常当我们使用`React`进行客户端渲染`CSR - Client Side Render`时，只需要在入口的`index.html`文件中置入`<div id="root"></div>`的独立`DOM`节点，然后在引入的`xxx.js`文件中通过`ReactDOM.render`方法将`React`组件渲染到这个`DOM`节点上即可。
+通常当我们使用`React`进行客户端渲染`CSR`时，只需要在入口的`index.html`文件中置入`<div id="root"></div>`的独立`DOM`节点，然后在引入的`xxx.js`文件中通过`ReactDOM.render`方法将`React`组件渲染到这个`DOM`节点上即可。将内容渲染完成之后，我们就会在某些生命周期或者`Hooks`中发起请求，用以动态请求数据并且渲染到页面上，此时便完成了组件的渲染流程。
 
+那么在前边我们已经聊了比较多的`SSG`内容，那么可以明确对于渲染的主要内容而言我们需要将其离线化，因此在这里就需要先解决第一个问题，如何将数据离线化，而不是在浏览器渲染页面之后再动态获取。很明显在前边我们提到的将数据从数据库请求出来之后写入`json`文件就是个可选的方式，我们可以在代码构建的时候请求数据，在此时将其写入文件，在最后一并上传到`CDN`即可。
 
+在我们的离线数据请求问题解决后，我们就需要来看渲染问题了，前边也提到了类似的问题，如果依旧按照之前的渲染思路，而仅仅是将数据请求的地址从服务端接口替换成了静态资源地址，那么我们就无法做到`SEO`以及更快的首屏体验。其实说到这里还有一个比较有趣的事情，当我们用`SSR`的时候，假如我们的组件是`dynamic`引用的，那么`Next`在输出`HTML`的时候会将数据打到`HTML`的`<script />`标签里，在这种情况下实际上首屏的效率还是不错的，并且`Google`进行索引的时候是能够正常将动态执行`Js`渲染后的数据抓取，对于我们来说也可以算作一种离线化的渲染方案。
 
-MarkDown MDX
+那么这种方式虽然可行但是并不是很好的方案，我们依然需要继续解决问题，那么接下来我们需要正常地来渲染完整的`HTML`结构。在`ReactDOM`的`Server API`中存在存在两个相关的`API`，分别是`renderToStaticMarkup`与`renderToString`，这两个`API`都可以将`React`组件输出`HTML`标签的结构，只是区别是`renderToStaticMarkup`渲染的是不带`data-reactid`的纯`HTML`结构，当客户端进行`React`渲染时会完全重建`DOM`结构，因此可能会存在闪烁的情况，`renderToString`则渲染了带标记的`HTML`结构，`React`在客户端不会重新渲染`DOM`结构，那么在我们的场景下时需要通过`renderToString`来输出`HTML`结构的。
 
+```js
+// packages/react-render-ssg/src/basic/index.ts
+import ReactDOMServer from "react-dom/server";
+
+const App = React.createElement(
+  React.Fragment,
+  null,
+  React.createElement("div", null, "React HTML Render"),
+  React.createElement(
+    "button",
+    {
+      onClick: () => alert("On Click"),
+    },
+    "Button"
+  )
+);
+
+const HTML = ReactDOMServer.renderToString(App);
+// <div data-reactroot="">React HTML Render</div><button data-reactroot="">Button</button>
+```
+
+当前我们已经得到组件渲染过后的完整`HTML`结构，紧接着从输出的内容我们可以看出来一个问题，我们定义的`onClick`函数并没有在渲染过后的`HTML`结构中体现出来，此时在我们的`HTML`结构中只是一些完整的标签，并没有任何事件的处理。当然这也是很合理的情况，我们是用`React`框架实现的事件处理，其并不太可能直接完整地映射到输出的`HTML`中，特别是在复杂应用中我们还是需要通过`React`来做后续事件交互处理的，那么很显然我们依旧需要在客户端处理相关的事件。
+
+那么在`React`中我们常用的处理客户端渲染函数就是`ReactDOM.render`，那么当前我们实际上已经处理好了`HTML`结构，而并不需要再次将内容完整地渲染出来，或者换句话说我们现在需要的是将事件挂在相关`DOM`上来处理交互行为，将`React`附加到在服务端环境中已经由`React`渲染的现有`HTML`上，由`React`来接管有关的`DOM`的处理。那么对于我们来说，我们需要将同样的`React`组件在客户端一并定义，然后将其输出到页面的`Js`中，也就是说这部分内容是需要在客户端中执行的。
+
+```js
+// packages/react-render-ssg/src/basic/index.ts
+const PRESET = `
+const App = React.createElement(
+  React.Fragment,
+  null,
+  React.createElement("div", null, "React HTML Render"),
+  React.createElement(
+    "button",
+    {
+      onClick: () => alert("On Click"),
+    },
+    "Button"
+  )
+);
+const _default = App;
+ReactDOM.hydrate(_default, document.getElementById("root"));
+`;
+
+await fs.writeFile(`dist/${jsPathName}`, PRESET);
+```
+
+实际上这部分代码都是在服务端生成的，我们此时并没有在客户端运行的内容，或者说这是我们的编译过程，还没有到达运行时，所以我们生成的一系列内容都是在服务端执行的，那么很明显我们是需要拼装`HTML`等静态资源文件的。因此在这里我们可以通过预先定义一个`HTML`文件的模版，然后将构建过程中产生的内容放到模版以及新生成的文件里，产生的所有内容都将随着构建一并上传到`CDN`上并分发。
+
+```html
+<!-- packages/react-render-ssg/public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- ... Meta -->
+    <title>Template</title>
+    <!-- INJECT STYLE -->
+  </head>
+  <body>
+    <div id="root">
+      <!-- INJECT HTML -->
+    </div>
+    <!-- ... React Library  -->
+    <!-- INJECT SCRIPT -->
+  </body>
+</html>
+```
+
+```js
+// packages/react-render-ssg/src/basic/index.ts
+const template = await fs.readFile("./public/index.html", "utf-8");
+await fs.mkdir("dist", { recursive: true });
+const random = Math.random().toString(16).substring(7);
+const jsPathName = `${random}.js`;
+const html = template
+.replace(/<!-- INJECT HTML -->/, HTML)
+.replace(/<!-- INJECT SCRIPT -->/, `<script src="${jsPathName}"></script>`);
+await fs.writeFile(`dist/${jsPathName}`, PRESET);
+await fs.writeFile(`dist/index.html`, html);
+```
+
+至此我们完成了最基本的`SSG`构建流程，接下来就可以通过静态服务器访问资源了，在这部分`DEMO`可以直接通过`ts-node`构建以及`anywhere`预览静态资源地址。实际上当前很多开源的静态站点搭建框架例如`VitePress`、`RsPress`等等都是采用类似的原理，都是在服务端生成`HTML`、`Js`、`CSS`等等静态文件，然后在客户端由各自的框架重新接管`DOM`的行为，当然这些框架的集成度很高，对于相关库的复用程度也更高。而针对于更复杂的应用场景，还可以考虑`Next`、`Gatsby`等框架实现，这些框架在`SSG`的基础上还提供了更多的能力，对于更复杂的应用场景也有着更好的支持。
 
 ## 组件编译
-
+虽然在前边我们已经实现了最基本的`SSG`原理，但是很明显我们为了最简化地实现原理人工处理了很多方面的内容。
 
 
 ## 双端渲染
@@ -53,5 +136,6 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://www.sanity.io/ssr-vs-ssg-guide
+https://react.docschina.org/reference/react-dom
 https://www.theanshuman.dev/articles/what-the-heck-is-ssg-static-site-generation-explained-with-nextjs-5cja
 ```
