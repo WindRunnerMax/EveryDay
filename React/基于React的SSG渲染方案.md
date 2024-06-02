@@ -24,7 +24,9 @@
 
 综上所述，`SSG`更适用于生成内容较为固定、不需要频繁更新、且对于数据延迟敏感较低的的项目，并且实际上我们可能也只是选取部分能力来优化首屏等场景，最终还是会落到`CSR`来实现服务能力。因此当我们要选择渲染方式的时候，还是要充分考虑到业务场景，由此来确定究竟是`CSR - Client Side Render`、`SSR - Server Side Render`、`SSG - Static Site Generation`更适合我们的业务场景，甚至在一些需要额外优化的场景下，`ISR - Incremental Static Regeneration`、`DPR - Distributed Persistent Rendering`、`ESR - Edge Side Rendering`等也可以考虑作为业务上的选择。 
 
-当然，回到最初我们提到的问题上，假如我们只是为了静态资源的同步，通过`CDN`来解决全球跨地域访问的问题，那么实际上并不是一定需要完全的`SSG`来解决问题。将`CSR`完全转变为`SSR`毕竟是一件改造范围比较大的事情，而我们的目标仅仅是一处生产、多处消费，因此我们可以转过来想一想实际上`JSON`文件也是属于静态资源的一种类型，我们可以直接在前端发起请求将`JSON`文件作为静态资源请求到浏览器并且借助`SDK`渲染即可，至于一些交互行为例如点赞等功能的速度问题我们也是可以接受的，文档站最的主要行为还是阅读文档。此外对于`md`文件我们同样可以如此处理，例如`docsify`就是通过动态请求，但是同样的对于搜索引擎来说这些需要执行`Js`来动态请求的内容并没有那么容易抓取，所以如果想比较好地实现这部分能力还是需要不断优化迭代。文中内容相关的`DEMO`地址为`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/react-render-ssg`，相关`API`的调用基于`React`的`17.0.2`版本实现。
+当然，回到最初我们提到的问题上，假如我们只是为了静态资源的同步，通过`CDN`来解决全球跨地域访问的问题，那么实际上并不是一定需要完全的`SSG`来解决问题。将`CSR`完全转变为`SSR`毕竟是一件改造范围比较大的事情，而我们的目标仅仅是一处生产、多处消费，因此我们可以转过来想一想实际上`JSON`文件也是属于静态资源的一种类型，我们可以直接在前端发起请求将`JSON`文件作为静态资源请求到浏览器并且借助`SDK`渲染即可，至于一些交互行为例如点赞等功能的速度问题我们也是可以接受的，文档站最的主要行为还是阅读文档。此外对于`md`文件我们同样可以如此处理，例如`docsify`就是通过动态请求，但是同样的对于搜索引擎来说这些需要执行`Js`来动态请求的内容并没有那么容易抓取，所以如果想比较好地实现这部分能力还是需要不断优化迭代。
+
+那么接下来我们就从基本原理开始，优化组件编译的方式，进而基于模版渲染生成`SSG`，文中相关`API`的调用基于`React`的`17.0.2`版本实现，内容相关的`DEMO`地址为`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/react-render-ssg`。
 
 ## 基本原理
 通常当我们使用`React`进行客户端渲染`CSR`时，只需要在入口的`index.html`文件中置入`<div id="root"></div>`的独立`DOM`节点，然后在引入的`xxx.js`文件中通过`ReactDOM.render`方法将`React`组件渲染到这个`DOM`节点上即可。将内容渲染完成之后，我们就会在某些生命周期或者`Hooks`中发起请求，用以动态请求数据并且渲染到页面上，此时便完成了组件的渲染流程。
@@ -119,10 +121,57 @@ await fs.writeFile(`dist/index.html`, html);
 至此我们完成了最基本的`SSG`构建流程，接下来就可以通过静态服务器访问资源了，在这部分`DEMO`可以直接通过`ts-node`构建以及`anywhere`预览静态资源地址。实际上当前很多开源的静态站点搭建框架例如`VitePress`、`RsPress`等等都是采用类似的原理，都是在服务端生成`HTML`、`Js`、`CSS`等等静态文件，然后在客户端由各自的框架重新接管`DOM`的行为，当然这些框架的集成度很高，对于相关库的复用程度也更高。而针对于更复杂的应用场景，还可以考虑`Next`、`Gatsby`等框架实现，这些框架在`SSG`的基础上还提供了更多的能力，对于更复杂的应用场景也有着更好的支持。
 
 ## 组件编译
-虽然在前边我们已经实现了最基本的`SSG`原理，但是很明显我们为了最简化地实现原理人工处理了很多方面的内容。
+虽然在前边我们已经实现了最基本的`SSG`原理，但是很明显我们为了最简化地实现原理人工处理了很多方面的内容，例如在上述我们输出到`Js`文件的代码中是通过`PRESET`变量定义的纯字符串实现的代码，而且我们对于同一个组件定义了两遍，相当于在服务端和客户端分开定义了运行的代码，那么很明显这样的方式并不太合理，接下来我们就需要解决这个问题。
+
+那么我们首先需要定义一个公共的`App`组件，在该组件的代码实现中与前边的基本原理中一致，这个组件会共享在服务端的`HTML`生成和客户端的`React Hydrate`，而且为了方便外部的模块导入组件，我们通常都是通过`export default`的方式默认导出整个组件。
+
+```js
+// packages/react-render-ssg/src/rollup/app.tsx
+import React from "react";
+
+const App = () => (
+  <React.Fragment>
+    <div>React Render SSG</div>
+    <button onClick={() => alert("On Click")}>Button</button>
+  </React.Fragment>
+);
+
+export default App;
+```
+
+紧接着我们先来处理客户端的`React Hydrate`，在先前我们是通过人工维护的编辑的字符串来定义的，而实际上我们同样可以打包工具在`Node`端将组建编译出来，以此来输出`Js`代码文件。在这里我们选择使用`Rollup`来打包`Hydrate`内容，我们以`app.tsx`作为入口，将整个组件作为`iife`打包，然后将输出的内容写入`APP_NAME`，然后将实际的`hydrate`置入`footer`，就可以完成在客户端的`React`接管`DOM`执行了。
 
 
-## 双端渲染
+```js
+const APP_NAME = "ReactSSG";
+const random = Math.random().toString(16).substring(7);
+
+export default async () => {
+  return {
+    input: "./src/rollup/app.tsx",
+    output: {
+      name: APP_NAME,
+      file: `./dist/${random}.js`,
+      format: "iife",
+      globals: {
+        "react": "React",
+        "react-dom": "ReactDOM",
+      },
+      footer: `ReactDOM.hydrate(React.createElement(${APP_NAME}), document.getElementById("root"));`,
+    },
+    plugins: [
+      // ...
+    ],
+    external: ["react", "react-dom"],
+  };
+};
+
+```
+
+接下来我们来处理服务端的`HTML`文件生成与资源的引用，这里的逻辑与先前的逻辑差别并不大，
+
+
+## 模版渲染
 
 MiniCssExtractPlugin
 
