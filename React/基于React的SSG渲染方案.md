@@ -143,6 +143,7 @@ export default App;
 
 
 ```js
+// packages/react-render-ssg/rollup.config.js
 const APP_NAME = "ReactSSG";
 const random = Math.random().toString(16).substring(7);
 
@@ -168,12 +169,140 @@ export default async () => {
 
 ```
 
-接下来我们来处理服务端的`HTML`文件生成与资源的引用，这里的逻辑与先前的逻辑差别并不大，
+接下来我们来处理服务端的`HTML`文件生成与资源的引用，这里的逻辑与先前的基本原理中服务端生成逻辑差别并不大，只是多了通过终端调用`Rollup`打包的逻辑，同样也是将`HTML`输出，并且将`Js`文件引入到`HTML`中，这里需要特殊关注的是我们的`Rollup`打包时的输出文件路径是在这里由`--file`参数覆盖原本的`rollup.config.js`内置的配置。
 
+```js
+// packages/react-render-ssg/src/rollup/index.ts
+const exec = promisify(child.exec);
+
+(async () => {
+  const HTML = ReactDOMServer.renderToString(React.createElement(App));
+  const template = await fs.readFile("./public/index.html", "utf-8");
+
+  const random = Math.random().toString(16).substring(7);
+  const path = "./dist/";
+  const { stdout } = await exec(`npx rollup -c --file=${path + random}.js`);
+  console.log("Client Compile Complete", stdout);
+
+  const jsFileName = `${random}.js`;
+  const html = template
+    .replace(/<!-- INJECT HTML -->/, HTML)
+    .replace(/<!-- INJECT SCRIPT -->/, `<script src="${jsFileName}"></script>`);
+  await fs.writeFile(`${path}index.html`, html);
+})();
+```
 
 ## 模版渲染
+当前我们已经复用了组件的定义，并且通过`Rollup`打包了需要在客户端运行的`Js`文件，不需要再人工维护输出到客户端的内容。那么场景再复杂一些，假如此时我们的组件有着更加复杂的内容，例如引用了组件库来构建视图，以及引用了一些`CSS`样式预处理器来构建样式，那么我们的服务端输出`HTML`的程序就会变得更加复杂。
 
-MiniCssExtractPlugin
+继续沿着前边的处理思路，我们在服务端的处理程序仅仅是需要将`App`组件的`HTML`内容渲染出来，那么假设此时我们的组件引用了`@arco-design`组件库，并且通常我们还需要引用其中的`less`文件或者`css`文件。
+
+```js
+import "@arco-design/web-react/dist/css/arco.css";
+import { Button } from "@arco-design/web-react";
+// OR
+import "@arco-design/web-react/es/Button/style/index";
+import { Button } from "@arco-design/web-react/es/Button";
+```
+
+那么需要关注的是，当前我们运行组件的时候是在服务端环境中，那么在`Node`环境中显然我们是不认识`.less`文件以及`.css`文件的，实际上先不说这些样式文件，`import`语法本身在`Node`环境中也是不支持的，只不过我们通常是使用`ts-node`来执行整个运行程序，暂时这点不需要关注，那么对于样式文件我们在这里实际上是不需要的，所以我们就需要配置`Node`环境来处理这些样式文件的引用。
+
+```js
+require.extensions[".css"] = () => undefined;
+require.extensions[".less"] = () => undefined;
+```
+
+但是即使这样问题显然没有结束，熟悉`arco-design`的打包同学可能会清楚，当我们引入的样式文件是`Button/style/index`时，实际上是引入了一个`js`文件而不是`.less`文件，如果需要明确引入`.less`文件的话是需要明确`Button/style/index.less`文件指向的。那么此时如果我们是引入的`.less`文件，那么并不会出现什么问题，但是此时我们引用的是`.js`文件，而这个`.js`文件中内部的引用方式是`import`，因为此时我们是通过`es`而不是`lib`部分明确引用的，即使在`tsconfig`中配置了相关解析方式为`commonjs`也是没有用的。
+
+```js
+{
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true
+    }
+  }
+}
+```
+
+因此我们可以看到，如果仅仅用`ts-node`来解析或者说执行服务端的数据生成是不够的，会导致我们平时实现组件的时候有着诸多限制，例如我们不能随便引用`es`的实现而需要借助包本身的`package.json`声明的内容来引入内容，如果包不能处理`commonjs`的引用那么还会束手无策。那么在这种情况下我们还是需要引入打包工具来打包`commonjs`的代码，然后再通过`Node`来执行输出`HTML`。通过打包工具，我们能够做的事情就很多了，在这里我们将资源文件例如`.less`、`.svg`都通过`null-loader`加载，且相关的配置输出都以`commonjs`为基准，此时我们输出的文件为`node-side-entry.js`。
+
+```js
+// packages/react-render-ssg/rspack.server.ts
+const config: Configuration = {
+  context: __dirname,
+  entry: {
+    index: "./src/rspack/app.tsx",
+  },
+  externals: externals,
+  externalsType: "commonjs",
+  externalsPresets: {
+    node: true,
+  },
+  // ...
+  module: {
+    rules: [
+      { test: /\.svg$/, use: "null-loader" },
+      { test: /\.less$/, use: "null-loader" },
+    ],
+  },
+  devtool: false,
+  output: {
+    iife: false,
+    libraryTarget: "commonjs",
+    publicPath: isDev ? "" : "./",
+    path: path.resolve(__dirname, ".temp"),
+    filename: "node-side-entry.js",
+  },
+};
+```
+
+当前我们已经得到了可以在`Node`环境中运行的组件，那么紧接着，考虑到输出`SSG`时我们通常都需要预置静态数据，例如我们要渲染文档的话就需要首先在数据库中将相关数据表达查询出来，然后作为静态数据传入到组件中，然后在预输出的`HTML`中将内容直接渲染出来，那么此时我们的`App`组件的定义就需要多一个`getStaticProps`函数声明，并且我们还引用了一些样式文件。
+
+```js
+// packages/react-render-ssg/src/rspack/app.tsx
+import "./app.less";
+import { Button } from "@arco-design/web-react";
+import React from "react";
+
+const App: React.FC<{ name: string }> = props => (
+  <React.Fragment>
+    <div>React Render SSG With {props.name}</div>
+    <Button style={{ marginTop: 10 }} type="primary" onClick={() => alert("On Click")}>
+      Button
+    </Button>
+  </React.Fragment>
+);
+
+export const getStaticProps = () => {
+  return Promise.resolve({
+    name: "Static Props",
+  });
+};
+
+export default App;
+```
+
+```css
+/* packages/react-render-ssg/src/rspack/app.less */
+body {
+  padding: 20px;
+}
+```
+
+同样的，我们也需要为客户端运行的`Js`文件打包，只不过在这里由于我们需要处理预置的静态数据，我们在打包的时候同样就需要预先生成模版代码，当我们在服务端执行打包功能的时候，就需要将从数据库查询或者从文件读取的数据放置于生成的模版文件中，然后以该文件为入口去再打包客户端执行的`React Hydrate`能力。在这里因为希望将模版文件看起来更加清晰，我们使用了`JSON.parse`来处理预置数据，实际上这里只需要将占位预留好，数据在编译的时候经过`stringify`直接写入到模版文件中即可。
+
+```js
+// packages/react-render-ssg/src/rspack/entry.tsx
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const Index = require(`<index placeholder>`);
+const props = JSON.parse(`<props placeholder>`);
+ReactDOM.hydrate(React.createElement(Index.default, { ...props }), document.getElementById("root"));
+```
+
+那么此时
+
 
 ## 每日一题
 
