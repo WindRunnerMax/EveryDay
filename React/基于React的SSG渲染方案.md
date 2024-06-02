@@ -301,8 +301,50 @@ const props = JSON.parse(`<props placeholder>`);
 ReactDOM.hydrate(React.createElement(Index.default, { ...props }), document.getElementById("root"));
 ```
 
-那么此时
+那么此时我们就需要调度打包过程了，首先我们需要创建需要的输出和临时文件夹，然后启动服务端`commonjs`打包的流程，输出`node-side-entry.js`文件，并且读取其中定义的`App`组件以及预设数据读取方法，紧接着我们需要创建客户端入口的模版文件，并且通过调度预设数据读取方法将数据写入到入口模版文件中，此时我们就可以通过打包的`commonjs`组件执行并且输出`HTML`了，并且客户端运行的`React Hydrate`代码也可以在这里一并打包出来，最后将各类资源文件的引入一并在`HTML`中替换并且写入到输出文件中就可以了。至此当我们打包完成输出文件后，就可以使用静态资源服务器启动`SSG`的页面预览了。
 
+```js
+const appPath = path.resolve(__dirname, "./app.tsx");
+const entryPath = path.resolve(__dirname, "./entry.tsx");
+require.extensions[".less"] = () => undefined;
+
+(async () => {
+  const distPath = path.resolve("./dist");
+  const tempPath = path.resolve("./.temp");
+  await fs.mkdir(distPath, { recursive: true });
+  await fs.mkdir(tempPath, { recursive: true });
+
+  const { stdout: serverStdout } = await exec(`npx rspack -c ./rspack.server.ts`);
+  console.log("Server Compile", serverStdout);
+  const nodeSideAppPath = path.resolve(tempPath, "node-side-entry.js");
+  const nodeSideApp = require(nodeSideAppPath);
+  const App = nodeSideApp.default;
+  const getStaticProps = nodeSideApp.getStaticProps;
+  let defaultProps = {};
+  if (getStaticProps) {
+    defaultProps = await getStaticProps();
+  }
+
+  const entry = await fs.readFile(entryPath, "utf-8");
+  const tempEntry = entry
+    .replace("<props placeholder>", JSON.stringify(defaultProps))
+    .replace("<index placeholder>", appPath);
+  await fs.writeFile(path.resolve(tempPath, "client-side-entry.tsx"), tempEntry);
+
+  const HTML = ReactDOMServer.renderToString(React.createElement(App, defaultProps));
+  const template = await fs.readFile("./public/index.html", "utf-8");
+  const random = Math.random().toString(16).substring(7);
+  const { stdout: clientStdout } = await exec(`npx rspack build -- --output-filename=${random}`);
+  console.log("Client Compile", clientStdout);
+
+  const jsFileName = `${random}.js`;
+  const html = template
+    .replace(/<!-- INJECT HTML -->/, HTML)
+    .replace(/<!-- INJECT STYLE -->/, `<link rel="stylesheet" href="${random}.css">`)
+    .replace(/<!-- INJECT SCRIPT -->/, `<script src="${jsFileName}"></script>`);
+  await fs.writeFile(path.resolve(distPath, "index.html"), html);
+})();
+```
 
 ## 每日一题
 
