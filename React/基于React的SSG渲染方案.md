@@ -301,7 +301,60 @@ const props = JSON.parse(`<props placeholder>`);
 ReactDOM.hydrate(React.createElement(Index.default, { ...props }), document.getElementById("root"));
 ```
 
-那么此时我们就需要调度打包过程了，首先我们需要创建需要的输出和临时文件夹，然后启动服务端`commonjs`打包的流程，输出`node-side-entry.js`文件，并且读取其中定义的`App`组件以及预设数据读取方法，紧接着我们需要创建客户端入口的模版文件，并且通过调度预设数据读取方法将数据写入到入口模版文件中，此时我们就可以通过打包的`commonjs`组件执行并且输出`HTML`了，并且客户端运行的`React Hydrate`代码也可以在这里一并打包出来，最后将各类资源文件的引入一并在`HTML`中替换并且写入到输出文件中就可以了。至此当我们打包完成输出文件后，就可以使用静态资源服务器启动`SSG`的页面预览了。
+在模版文件生成好之后，我们就需要以这个文件作为入口调度客户端资源文件的打包了，这里由于我们还引用了组件库，输出的内容自然不光是`Js`文件，还需要将`CSS`文件一并输出，并且我们还需要配置一些通过参数名可以控制的文件名生成、`externals`等等。这里需要注意的是，此处我们不需要使用`html-plugin`将`HTML`文件输出，这部分调度我们会在最后统一处理。
+
+```js
+// packages/react-render-ssg/rspack.config.ts
+const args = process.argv.slice(2);
+const map = args.reduce((acc, arg) => {
+  const [key, value] = arg.split("=");
+  acc[key] = value || "";
+  return acc;
+}, {} as Record<string, string>);
+const outputFileName = map["--output-filename"];
+
+const config: Configuration = {
+  context: __dirname,
+  entry: {
+    index: "./.temp/client-side-entry.tsx",
+  },
+  externals: {
+    "react": "React",
+    "react-dom": "ReactDOM",
+  },
+  // ...
+  builtins: {
+    // ...
+    pluginImport: [
+      {
+        libraryName: "@arco-design/web-react",
+        customName: "@arco-design/web-react/es/{{ member }}",
+        style: true,
+      },
+      {
+        libraryName: "@arco-design/web-react/icon",
+        customName: "@arco-design/web-react/icon/react-icon/{{ member }}",
+        style: false,
+      },
+    ],
+  },
+  // ...
+  output: {
+    chunkLoading: "jsonp",
+    chunkFormat: "array-push",
+    publicPath: isDev ? "" : "./",
+    path: path.resolve(__dirname, "dist"),
+    filename: isDev
+      ? "[name].bundle.js"
+      : outputFileName
+      ? `${outputFileName}.js`
+      : "[name].[contenthash].js",
+    // ...
+  },
+};
+```
+
+那么此时我们就需要调度所有文件的打包过程了，首先我们需要创建需要的输出和临时文件夹，然后启动服务端`commonjs`打包的流程，输出`node-side-entry.js`文件，并且读取其中定义的`App`组件以及预设数据读取方法，紧接着我们需要创建客户端入口的模版文件，并且通过调度预设数据读取方法将数据写入到入口模版文件中，此时我们就可以通过打包的`commonjs`组件执行并且输出`HTML`了，并且客户端运行的`React Hydrate`代码也可以在这里一并打包出来，最后将各类资源文件的引入一并在`HTML`中替换并且写入到输出文件中就可以了。至此当我们打包完成输出文件后，就可以使用静态资源服务器启动`SSG`的页面预览了。
 
 ```js
 const appPath = path.resolve(__dirname, "./app.tsx");
