@@ -267,6 +267,7 @@ export const sidebar: Sidebar = {
         "React/Hooks与事件绑定",
         "React/React闭包陷阱",
         "React/ReactPortals传送门",
+        "React/基于React的SSG渲染方案",
       ],
     },
     {
