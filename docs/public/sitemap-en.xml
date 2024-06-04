@@ -1378,6 +1378,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/React/基于React的SSG渲染方案.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Git常用命令.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-11T08:01:40.000Z</lastmod>
@@ -1542,6 +1547,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探富文本之文档虚拟滚动.html</loc>
   <priority>1.0</priority>
+  <lastmod>2024-05-14T14:22:06.000Z</lastmod>
 </url>
 
 <url>
