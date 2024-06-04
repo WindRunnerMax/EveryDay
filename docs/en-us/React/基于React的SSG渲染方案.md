@@ -1,4 +1,4 @@
-## React-based SSG Rendering Solution
+# React-based SSG Rendering Solution
 
 Static Site Generation `(SSG - Static Site Generation)` is a method that generates static resources such as `HTML` files during building, eliminating the need for server-side processing. By pre-generating static files, it enables fast content loading and high security without the need for server runtime. Since it generates pure static resources, leveraging solutions like `CDN` allows for building and deploying websites at lower costs and higher efficiency, widely applicable in scenarios such as blogs, knowledge bases, and `API` documentation.
 
