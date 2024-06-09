@@ -4,13 +4,23 @@ sidebar: true
 
 # BLOG
 
-[Github](https://github.com/WindrunnerMax/EveryDay) ｜ [Timeline](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md) ｜ [Blog](https://blog.touchczy.top/) ｜ [Blog-SSG](https://blog-ssg.touchczy.top/)
+<p>
+<a href="https://github.com/WindrunnerMax/EveryDay">Github</a>
+<span>｜</span>
+<a href="https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md">Timeline</a>
+<span>｜</span>
+<a href="https://blog.touchczy.top/">Blog</a>
+<span>｜</span>
+<a href="https://blog-ssg.touchczy.top/">Blog-SSG</a>
+</p>
 
 ## Hi ~
 
-If you find it helpful, please give it a `star` on the [repository](https://github.com/WindrunnerMax/EveryDay) 😁   
-
-This is the learning journey of a frontend beginner. If you only learn without recording anything, it's basically equivalent to learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to study every day. The `gh-pages` branch of the repository is my personal blog. It is built as a pure static webpage hosted on Git Pages. I use `jsdelivr` and `cloudflare` as caches to alleviate the speed issues for accessing the website from within China. However, it may still be slow when the Great Firewall is acting up. The blog contains various content, including learning notes for daily coding challenges, project records, and encountered issues. Most of the technical articles are written based on references from many sources, and they cover topics such as basic HTML, CSS, JavaScript fundamentals and extensions, browser-related information, Vue usage and analysis, React usage and analysis, plugin-related topics, design patterns, Linux commands, MiniProgram (WeChat mini program) development, app development, PHP, Java, security-related topics, environment setup, image processing, LeetCode solutions, interview-related information, and personal life-related topics. The content is mostly beginner-friendly, as I am still a beginner myself. Furthermore, almost every code example is designed to be runnable immediately. You can create a new HTML file, copy the code, and run it in the browser or directly in the console. If you want to read the daily coding challenges in the order I wrote them, you can check the [CATALOG](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md). If you find `HXDM` helpful, please give it a `star`. It means a lot to me.
+If you like it, give a `star` on this [EveryDay](https://github.com/WindrunnerMax/EveryDay) 😁
+﻿
+This is a learning journey of a frontend newbie,If you only learn without recording anything, it's basically equivalent to learning in vain. The name of this repository `EveryDay` hopes to inspire me to learn every day. The `gh-pages` branch of the repository is my blog site, the content in the blog is relatively extensive, including study notes of the daily question, records of working on projects, and problems encountered, etc. For technical related articles are written mainly based on summarizing and learning from various articles, the content includes`HTML` basics, `CSS` basics, `JavaScript` basics and extension, `Browser` related, `Vue` usage and analysis, `React` usage and analysis, `Plugin` related, `Patterns` design patterns, `Linux` commands, `MiniProgram` related, `App` related, `PHP` related, `Java` related, `Security` related, `Environment` setup, `IMGProcess` image processing, `LeetCode` solutions, `Interview` related, `MyLife` related, etc. The content is relatively basic and is written with the goal of being able to run immediately. 
+﻿
+You can [Timeline](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md) if you want to read the articles in the order I wrote them. If you want a neat view, visit [Blog](https://blog.touchczy.top/). The blog is also the `gh-pages` branch of this repository, which was built on `Git Pages` as a static page and uses `jsdelivr` and `cloudflare` for cache to alleviate access speed problems in China. Later, an `SSG` version of the [Blog-SSG](https://blog-ssg.touchczy.top/) was deployed on the `gh-pages-ssg` branch, and provided an English translation version with the help of `ChatGPT`. The branch is deployed on `Vercel` to alleviate access speed problems in China. There is more content in my blog, besides study notes there are project work records and problems encountered, etc. `HXDM` if you like it. give a `star`. This is really important to me.
 
 ## Hello World
 
