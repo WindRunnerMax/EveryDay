@@ -3,6 +3,8 @@
 ## 描述
 前段时间
 
+为了方便处理演示`DEMO`，我们的事件触发全部都是`DOM0`级的事件绑定形式。
+
 ## JavaScript事件 
 
 OnCopy
@@ -34,7 +36,7 @@ OnCopy
 
 
 
-在具体研究`OnPaste`之前，我们可以延续之前的代码在`debugger`中执行`document.execCommand("paste")`。
+那么同样的我们接下来就研究下`OnPaste`事件，那么首先我们并不在权限清单中声明`clipboardRead`权限，紧接着我们延续之前的代码在`debugger`中执行`document.execCommand("paste")`，发现执行的结果是`false`，这表示即使在可信的条件下，执行`paste`仍然是无法取得结果的。那么如果我们在`permissions`中声明了`clipboardRead`，可以发现仍然是`false`，这说明在用户脚本`Inject Script`下执行`document.execCommand("paste")`是无法取得效果的。
 
 ```js
 chrome.debugger
@@ -56,7 +58,49 @@ chrome.debugger
   });
 ```
 
-`clipboardRead` 权限 `navigator.clipboard.read`有限的剪贴板内容读取 让用户点击授权在某些情况下可能并不是很现实
+那么我们继续保持不在清单中声明`clipboardRead`权限，尝试用`DevToolsProtocol`的方式执行`document.execCommand("paste")`，此时是可以正常触发事件的，这里实际上就表明了通过`CDP`协议直接执行事件是完全以用户主动触发的形式来进行的，其本身就是可信的事件源。
+
+```js
+chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", {
+  type: "keyDown",
+  modifiers: 4,
+  keyCode: 86,
+  key: "v",
+  code: "KeyV",
+  windowsVirtualKeyCode: 86,
+  nativeVirtualKeyCode: 86,
+  isSystemKey: true,
+  commands: ["selectAll"],
+});
+```
+
+紧接着我们简单更改一下先前在用户态执行的`Js`事件操作，将执行的`copy`命令改为`paste`命令，也就是在`Content Script`执行`document.execCommand("paste")`，此时仍然是会返回`false`。那么别忘了此时我们还没有声明清单中的`clipboardRead`权限，那么当我们声明权限之后，再次执行`document.execCommand("paste")`，发现此时的结果是`true`并且可以正常触发事件。
+
+```js
+case PCBridge.REQUEST.COPY_ALL: {
+  document.onpaste = console.log;
+  console.log(document.execCommand("paste"));
+  break;
+}
+```
+
+而如果我们更进一步，继续保持清单中的`clipboardRead`权限声明，将事件传递到`Inject Script`中执行，可以发现即使是在声明了权限的情况下，`document.execCommand("paste")`返回的结果仍然是`false`且无法触发事件，这也印证了之前我们说的在`Inject Script`下执行`paste`命令是无法正常触发的，进而我们可以明确`clipboardRead`权限是需要我们在`Content Script`中使用的。
+
+```js
+// Content Script
+case PCBridge.REQUEST.COPY_ALL: {
+  document.dispatchEvent(new CustomEvent("custom-event"));
+  break;
+}
+
+// Inject Script
+document.addEventListener("custom-event", () => {
+  document.onpaste = console.log;
+  console.log(document.execCommand("paste"));
+});
+```
+
+实际上在现代浏览器中我们还有`navigator.clipboard API`来操作剪贴板，`navigator.clipboard.read`有限的剪贴板内容读取 让用户点击授权在某些情况下可能并不是很现实
 
 ```js
 setTimeout(() => {
@@ -113,3 +157,18 @@ document.body.appendChild(input);
 
 图片无法选择 目录大纲
 
+
+
+## 每日一题
+
+```
+https://github.com/WindrunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://chromedevtools.github.io/devtools-protocol/
+https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
+https://developer.chrome.google.cn/docs/extensions/reference/api/debugger?hl=zh-cn
+```
