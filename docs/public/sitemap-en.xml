@@ -14,7 +14,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/index.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-12T05:33:10.000Z</lastmod>
+  <lastmod>2024-06-09T03:56:54.000Z</lastmod>
 </url>
 
 <url>
@@ -1380,6 +1380,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/React/基于React的SSG渲染方案.html</loc>
   <priority>1.0</priority>
+  <lastmod>2024-06-04T01:06:21.000Z</lastmod>
 </url>
 
 <url>
@@ -2877,6 +2878,11 @@
   <loc>https://blog-ssg.touchczy.top/MyLife/2022字节实习实录.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-11T04:12:26.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/MyLife/从大学开始搞的开源项目.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
