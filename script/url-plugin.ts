@@ -18,12 +18,12 @@ class AssertPlugin {
             // 修改`source`
             compilation.assets[key] = {
               source() {
-                  return source;
+                return source;
               },
               size() {
-                  return this.source().length;
+                return this.source().length;
               },
-          };
+            };
           })
         ).finally(() => {
           resolve();

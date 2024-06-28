@@ -14,14 +14,14 @@ function AssetLoader(source) {
       let line = item;
       if (line.startsWith("<img")) {
         const result = /src="(.*?)"/.exec(line);
-        if(result && result[1] && result[1].endsWith(".png")) {
+        if (result && result[1] && result[1].endsWith(".png")) {
           line = `![IMG](${result[1]})`;
         }
       }
       const regexp = /^\!\[(.*)\]\((.+)\)/;
       if (regexp.test(line)) {
         const result = regexp.exec(line);
-        if (!result || !result[2]) return line;
+        if (!result || !result[2] || result[2].startsWith("http")) return line;
         const fileName = result[2].slice(result[2].lastIndexOf("/") + 1);
         const filePath = path.join(
           "..",
