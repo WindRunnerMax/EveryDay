@@ -589,6 +589,7 @@ export const sidebar: Sidebar = {
         "MyLife/记2022年秋招历程",
         "MyLife/致我三年的研究生生活",
         "MyLife/2022字节实习实录",
+        "MyLife/从大学开始搞的开源项目",
         "MyLife/记一些日常的想法与思考",
       ],
     },
