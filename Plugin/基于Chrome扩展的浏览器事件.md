@@ -168,13 +168,56 @@ document.body.appendChild(input);
 ```
 
 ## DevToolsProtocol
-在前边我们抛出了需要用户主动激活触发的可信事件问题，
+在前边我们抛出了需要用户主动激活触发的可信事件问题，那么在部分我们就需要解决这个问题。首先我们需要解决的问题是如何将代码注入到页面中，当然这个问题我们已经说过多次了，就是借助于`Chrome`扩展将脚本注入即可。那么即使我们能够注入脚本，执行的代码仍然不是用户主动激活的事件，无法突破浏览器的安全限制，那么这时候就需要请出我们的`Chrome DevTools Protocol`协议了。
 
-OnCopy
+熟悉`E2E`的同学都知道，`DevToolsProtocol`协议是`Chrome`浏览器提供的一套与浏览器进行交互的`API`，无论是`Selenium`、`Puppeteer`、`Playwright`都是基于这个协议来实现的。我们甚至可以基于这个协议主动实现`F12`的调试面板，也就是说当前在`F12`开发者工具能够实现的功能我们都可以基于这个协议实现，而且其`API`也不仅仅只有调试面板的功能实现，并且诸如`chrome://inspect`等调试程序也可以通过这个协议来完成。
 
+那么在这里就有新的问题了，如果我们采用`Selenium`、`Puppeteer`等方案就需要用户安装`WebDriver`或者`Node`等依赖项，不能做到让用户开箱即用，那么在这个时候我们就需要将目光转向`chrome.debugger`了。`Chrome.debugger API`可以作为`Chrome`的远程调试协议的另一种传输方式，使用`chrome.debugger`可以连接到一个或多个标签页来监控网络交互、调试`JavaScript`、修改`DOM`和`CSS`等等，对我们来说最重要的是这个`API`是可以在`Chrome`扩展中调用的，这样我们就可以做到开箱即用的应用程序。
 
+那么接下来我们就来处理`OnCopy`的事件，因为`chrome.debugger`必须要在`worker`中进行，而我们的控制启动的按钮则是定义在`Popup`中的，所以我们就需要进行`Popup -> Worker`的事件通信，关于`Chrome`扩展的通信方案可以在之前的文章中找到，也可以在前边提到的仓库中找到，在这里就不过多叙述了。那么此时我们就需要在扩展中查询当前活跃的标签页，然后需要过滤下当前活跃标签的协议，例如`chrome://`协议的连接我们不会进行处理，然后在符合条件的情况下我们将`tabId`传递下去。
 
-那么同样的我们接下来就研究下`OnPaste`事件，那么首先我们并不在权限清单中声明`clipboardRead`权限，紧接着我们延续之前的代码在`debugger`中执行`document.execCommand("paste")`，发现执行的结果是`false`，这表示即使在可信的条件下，执行`paste`仍然是无法取得结果的。那么如果我们在`permissions`中声明了`clipboardRead`，可以发现仍然是`false`，这说明在用户脚本`Inject Script`下执行`document.execCommand("paste")`是无法取得效果的。
+```js
+cross.tabs
+  .query({ active: true, currentWindow: true })
+  .then(tabs => {
+    const tab = tabs[0];
+    const tabId = tab && tab.id;
+    const tabURL = tab && tab.url;
+    if (tabURL && !URL_MATCH.some(match => new RegExp(match).test(tabURL))) {
+      return void 0;
+    }
+    return tabId;
+  })
+```
+
+那么接下来我们就需要将协议控制持续挂载到当前活跃的`Tab`页上，当我们将扩展挂载`debugger`之后，会在用户的界面上提示我们的扩展已经开始调试此浏览器，这其实也是浏览器的一种安全策略，因为`debugger`的权限实在是太高了，给予用户可取消的操作还是非常有必要的。那么当挂载之后，我们就可以通过`chrome.debugger.sendCommand`来发送命令，例如我们可以通过`Input.dispatchKeyEvent`来模拟按键事件，在这里我们就需要借助按键的事件来发送`selectAll`命令，实际上发送命令这一环节是可以通过任何按键的发送来实现的，只不过为了符合实际操作我们选择了`Ctrl+A`的组合键。
+
+```js
+chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", {
+  type: "keyDown",
+  modifiers: 4,
+  keyCode: 65,
+  key: "a",
+  code: "KeyA",
+  windowsVirtualKeyCode: 65,
+  nativeVirtualKeyCode: 65,
+  isSystemKey: true,
+  commands: ["selectAll"],
+});
+```
+
+需要注意的是经过前边的按键事件发送之后，我们此时执行的事件就会是可信的，通过`DevToolsProtocol`的模拟按键事件对于浏览器来说是完全可信的，等同于用户主动触发的事件。那么接下来就可以直接通过`Eval`执行`document.execCommand("copy")`命令了，这里我们可以通过`Runtime.evaluate`来执行`Js`代码，当执行完毕后，我们就需要将`debugger`卸载出当前活跃的标签页。在我们提供的`DEMO`中，为了对齐之前直接用`Js`执行的操作，我们同样也会延时`5s`再执行操作，此时可以发现我们的代码是可以正常将内容写到剪贴板里的，也就是我们成功执行了`Copy`命令。
+
+```js
+chrome.debugger.sendCommand({ tabId }, "Runtime.evaluate", {
+  expression: "const res = document.execCommand('copy'); console.log(res);",
+})
+.then(() => {
+  chrome.debugger.detach({ tabId });
+});
+```
+
+那么同样的接下来我们就研究在`DevToolsProtocol`中的`OnPaste`事件，那么首先我们并不在权限清单中声明`clipboardRead`权限，这是在`Chrome`扩展程序权限清单中的读剪贴板权限，紧接着我们延续之前的代码在`debugger`中执行`document.execCommand("paste")`，可以发现执行的结果是`false`，这表示即使在可信的条件下，执行`paste`仍然是无法取得结果的。那么如果我们在`permissions`中声明了`clipboardRead`，会可以发现仍然是`false`，这说明在用户脚本`Inject Script`下执行`document.execCommand("paste")`是无法取得效果的。
 
 ```js
 chrome.debugger
@@ -187,16 +230,16 @@ chrome.debugger
   )
   .then(() => {
     return chrome.debugger.sendCommand({ tabId }, "Runtime.evaluate", {
-    expression:
-        "document.onpaste = console.log;" + "console.log(document.execCommand('paste'))",
-    });
+      expression:
+        "document.onpaste = console.log; const res = document.execCommand('paste'); console.log(res);",
+      });
   })
   .finally(() => {
     chrome.debugger.detach({ tabId });
   });
 ```
 
-那么我们继续保持不在清单中声明`clipboardRead`权限，尝试用`DevToolsProtocol`的方式执行`document.execCommand("paste")`，此时是可以正常触发事件的，这里实际上就表明了通过`CDP`协议直接执行事件是完全以用户主动触发的形式来进行的，其本身就是可信的事件源。
+那么我们继续保持不在清单中声明`clipboardRead`权限，尝试用`DevToolsProtocol`的方式执行`document.execCommand("paste")`，也就是在模拟按键时将命令发送出去。此时我们可以发现是可以正常触发事件的，这里实际上就同样表明了通过`DevToolsProtocol`协议直接执行事件是完全以用户主动触发的形式来进行的，其本身就是可信的事件源。
 
 ```js
 chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", {
@@ -208,21 +251,22 @@ chrome.debugger.sendCommand({ tabId }, "Input.dispatchKeyEvent", {
   windowsVirtualKeyCode: 86,
   nativeVirtualKeyCode: 86,
   isSystemKey: true,
-  commands: ["selectAll"],
+  commands: ["paste"],
 });
 ```
 
-紧接着我们简单更改一下先前在用户态执行的`Js`事件操作，将执行的`copy`命令改为`paste`命令，也就是在`Content Script`执行`document.execCommand("paste")`，此时仍然是会返回`false`。那么别忘了此时我们还没有声明清单中的`clipboardRead`权限，那么当我们声明权限之后，再次执行`document.execCommand("paste")`，发现此时的结果是`true`并且可以正常触发事件。
+紧接着我们简单更改一下先前在用户态执行的`Js`事件操作，将执行的`copy`命令改为`paste`命令，也就是在`Content Script`部分执行`document.execCommand("paste")`，此时仍然是会返回`false`，说明我们的命令执行并没有成功。那么别忘了此时我们还没有声明清单中的`clipboardRead`权限，而当我们在清单中声明权限之后，再次执行`document.execCommand("paste")`，发现此时的结果是`true`并且可以正常触发事件。
 
 ```js
+document.onpaste = console.log;
 case PCBridge.REQUEST.COPY_ALL: {
-  document.onpaste = console.log;
-  console.log(document.execCommand("paste"));
+  const res = document.execCommand("paste");
+  console.log(res);
   break;
 }
 ```
 
-而如果我们更进一步，继续保持清单中的`clipboardRead`权限声明，将事件传递到`Inject Script`中执行，可以发现即使是在声明了权限的情况下，`document.execCommand("paste")`返回的结果仍然是`false`且无法触发事件，这也印证了之前我们说的在`Inject Script`下执行`paste`命令是无法正常触发的，进而我们可以明确`clipboardRead`权限是需要我们在`Content Script`中使用的。
+而如果我们更进一步，继续保持清单中的`clipboardRead`权限声明，将事件传递到`Inject Script`中执行，可以发现即使是在声明了权限的情况下，`document.execCommand("paste")`返回的结果仍然是`false`，并且无法触发我们绑定的事件，这也印证了之前我们说的在`Inject Script`下执行`paste`命令是无法正常触发的，进而我们可以明确`clipboardRead`权限是需要我们在`Content Script`中使用的。而对于`navigator.clipboard API`即使在权限清单中声明权限的情况下 仍然还需要主动授权。
 
 ```js
 // Content Script
@@ -232,14 +276,12 @@ case PCBridge.REQUEST.COPY_ALL: {
 }
 
 // Inject Script
+document.onpaste = console.log;
 document.addEventListener("custom-event", () => {
-  document.onpaste = console.log;
-  console.log(document.execCommand("paste"));
+  const res = document.execCommand("paste");
+  console.log(res);
 });
 ```
-
-即使声明权限的情况下 navigator.clipboard API仍然还需要主动授权
-
 
 ## 网页离线PDF导出
 在前段时间刷社区的时候发现有不少用户希望能够将网页保存为`PDF`文件，方便作为快照保存以供离线阅读，因此在这里也顺便聊一下相关实现方案，而实际上在这里也属于`Web`页面内容的提取，与我们上文聊的剪贴板操作本质上是类似的功能。
