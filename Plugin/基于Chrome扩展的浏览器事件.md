@@ -58,17 +58,48 @@
 ## JavaScript事件 
 既然我们的目标是自动操作浏览器执行复制操作，那么可供自动化操作的选择有很多例如`Selenium`、`Puppeteer`，都是可以考虑的方案。在这里我们考虑比较轻量的解决方案，不需要安装`WebDriver`等依赖环境，并且可以直接安装在用户本身的浏览器中开箱即用，基于这些考虑则使用`Chrome`扩展来帮我们实现目标是比较好的选择。并且`Chrome`扩展程序可以帮我们在`Web`页面中直接注入脚本，实现相关功能也会更加方便，关于使用扩展程序实现复杂的功能注入可以参考之前的文章，在这里就不重复叙述了。
 
-那么接下来我们就需要考虑一下如何触发页面的`OnCopy`事件，
+那么接下来我们就需要考虑一下如何触发页面的`OnCopy`事件，试想一下此时我们的目的有两个，首先是让编辑器本身提取内容并规范化，其次是让转换后的内容写入剪贴板，那么实现的方式就很明确了，我们只需要主动在页面上触发`SelectAll`与`Copy`命令即可，那么接下来我们就可以在控制台中测试这两个命令的使用。
 
-OnPaste
-那么既然都聊到了`OnCopy`的事件，我们同样也需要聊一下`OnPaste`的事件，因为当我们执行了`OnCopy`提取内容之后，这部分内容实际上还是存在于剪贴板之中的，我们还需要将其提取出来。
+```js
+document.execCommand("selectAll");
+const res = document.execCommand("copy");
+console.log(res); // true
+```
+
+当我们手动在控制台执行命令的时候，可以发现页面上的内容已经被选中并且复制到了剪贴板中，那么接下来我们就可以将这两个命令封装到一个函数中，然后通过`Content Script`注入到页面中，这样我们就可以在页面上直接调用这个函数就可以了。然而当我们真正借助`Chrome`扩展实现这个功能的时候，会发现页面能够正常全部选中，但是剪贴板的内容却是上次的内容，也就是本次复制并没有真正执行成功。
+
+这实际上是由于浏览器的安全策略导致的，由于浏览器为了加强安全性，限制了一些可能会影响用户隐私的`API`，只有在用户的直接操作下才能运行，也就是相当于执行`Copy`命令只有在用户主动激活上下文中才可以正常触发，与之类似的就是当我们在`Js`中主动执行点击事件例如`Node.click()`时，其对于浏览器来说是不可信的，在事件触发时会携带`isTrusted`属性，只有用户主动触发的事件才会为`true`。因此我们在控制台中执行的命令被认为是浏览器的可信命令，是用户主动触发的事件，而在扩展中执行的不是用户主动触发的事件，进而命令执行失败。
+
+那么为什么我们在控制台的命令就可以正常执行呢，实际上这是因为我们在执行控制台的命令时，会需要点击回车键来执行代码，注意这个回车键是我们主动触发的，因此浏览器会将我们执行的`Js`代码认为是可信的，所以我们可以正常执行`Copy`命令。而如果我们在执行代码时将其加入延时，例如我们延时`5s`再执行命令，此时我们就可以发现即使是同样的代码同样在控制台执行就无法写入剪贴板，`document.execCommand("copy")`的返回值就是命令是否执行成功，在`5s`的延时下我们得到的返回值就是`false`，我们可以同样在控制台中执行代码来获取命令执行状态，在这里也可以不断调整延时的时间来观察执行结果，例如将其设置为`2s`就可以获得`true`的返回值。
+
+```js
+setTimeout(() => {
+  document.execCommand("selectAll");
+  const res = document.execCommand("copy");
+  console.log(res); // false
+}, 5000);
+```
+
+我们暂且先放开需要用户主动激活的可信事件问题不谈，到后边再继续聊这个问题的解决方案。那么我们除了需要测试`OnCopy`事件之外，同样需要测试一下`OnPaste`的事件，不要忘记当我们执行了`OnCopy`提取内容之后，这部分内容实际上还是存在于剪贴板之中的，我们还需要将其提取出来。那么在执行下面的代码之后，我们可以发现`OnPaste`和`OnCopy`的策略还是不一样，即使是在用户的主动操作下，并且我们此时并没有延时执行，但是其结果依然是`false`，并且`document`绑定的事件也没有触发。
 
 ```js
 document.onpaste = console.log;
-console.log(document.execCommand("paste"));
+const res = document.execCommand("paste");
+console.log(res); // false
 ```
 
-在这`2s`的延时需要我们将焦点移动到`document`上，也就是需要点击`body`中任意元素，当然直接点击`input`也是可行的。实际上在前边我们经过`OnCopy`部分的测试，可以得知在用户主动触发可信事件之后一段时间内的事件都是可信的，但是浏览器的安全策略中还有焦点方面的考量。在某些操作中焦点必须要在`document`上，否则操作不会正常执行，与之对应的异常就是`DOMException: Document is not focused.`，而此时我们的焦点是在控制台`Console`面板上的，这里同样可能存在不可控的问题，因此我们需要延时执行以便转移焦点到`document`上。
+那么会不会是因为我们没有在`input`或者`textarea`中执行`paste`命令的原因，我们同样可以测试下这个问题。我们可以通过创建一个`input`元素，然后将其插入到`body`中，然后将焦点移动到这个`input`元素上，然后执行`paste`命令，然而我们仍然无法成功执行命令，而且我们执行`focus`的时候会发现并没有光标的出现，
+
+```js
+const input = document.createElement("input");
+input.setAttribute("style", "position:fixed; top:0; right: 0");
+document.body.appendChild(input);
+input.focus();
+const res = document.execCommand("paste");
+console.log(res); // false
+```
+
+那么是不是还有其他原因会造成这个问题呢，在前边我们经过`OnCopy`部分的测试，可以得知在用户主动触发可信事件之后一段时间内的事件都是可信的，但是浏览器的安全策略中还有焦点方面的考量。在某些操作中焦点必须要在`document`上，否则操作不会正常执行，与之对应的异常就是`DOMException: Document is not focused.`，而此时我们的焦点是在控制台`Console`面板上的，这里同样可能存在不可控的问题。因此我们需要在这`2s`的执行延时中将焦点转移到`document`上，也就是需要点击`body`中任意元素，当然直接点击`input`也是可行的，然而即使这样我们也没有办法执行`paste`。
 
 ```js
 const input = document.createElement("input");
@@ -76,12 +107,68 @@ input.setAttribute("style", "position:fixed; top:0; right: 0");
 document.body.appendChild(input);
 setTimeout(() => {
   input.focus();
-  console.log(document.execCommand("paste"));
+  const res = document.execCommand("paste");
+  console.log(res); // false
 }, 2000);
 ```
 
-## DevToolsProtocol
+实际上在经过查阅文档可以知道`document.execCommand("paste")`在`Web Content`中实际上已经是被禁用的，然而这个命令还是可以执行的，我们后边会继续聊到。在现代浏览器中我们还有`navigator.clipboard API`来操作剪贴板，`navigator.clipboard.read`可以实现有限的剪贴板内容读取，调用这个`API`时会出现明确的调用授权提示，主动授权对于用户隐私是没有问题的，只是在自动化场景下可能需要多出一步授权操作。
 
+此外，我们提到了`navigator.clipboard`是有限的剪贴板内容读取，那么这个有限是指什么呢，实际上这个有限是指只能读取特定的类型，例如`text/plain`、`text/html`、`image/png`等常见的类型，而对于私有类型的数据则是无法读取的，例如我们在语雀中复制的`text/ne-inode Fragment`数据，这部分数据是无法通过`navigator.clipboard.read`来读取的，通过执行下面的代码并授权之后可以发现并没有任何输出。
+
+```js
+setTimeout(() => {
+  navigator.clipboard.read().then(res => {
+    for (const item of res) {
+      item.getType("text/ne-inode").then(console.log).catch(() => null)
+    }
+  });
+}, 2000);
+```
+
+我们实际上也可以通过遍历`navigator.clipboard`的内容来获得剪贴板的内容，同样的我们也只能获取`text/plain`、`text/html`、`image/png`等常见的规范`MIME-Type`类型。而这`2s`的耗时则是之前提到过的另一个限制，我们必须要在执行下面的代码之后将焦点移动到`document`上，否则控制台则会抛出`DOMException: Document is not focused.`异常，同样也不会出现授权弹窗。
+
+```js
+setTimeout(() => {
+  navigator.clipboard.read().then(res => {
+    for (const item of res) {
+      const types = item.types;
+      for (const type of types) {
+        item.getType(type).then(data => {
+          const reader = new FileReader();
+          reader.readAsText(data, "utf-8");
+          reader.onload = () => {
+            console.info(type, reader.result);
+          };
+        });
+      }
+    }
+  });
+}, 2000);
+```
+
+那么我们可以设想一个问题，富文本编辑器中如果只是写数据的时候写入了自定义的`MIME-Type`类型，那么我们在剪贴板中应该如何读取呢。实际上这还是得回归到我们的`OnPaste`事件上，我们借助于`navigator.clipboard API`是无法读取这部分自定义`key`值的，虽然我们可以将其写入到复制出的`HTML`的某个节点作为`attributes`然后再读取，这样是可以但是没必要，我们可以直接在`OnPaste`事件中通过`clipboardData`获取更加完整的相关数据，我们可以获取比较完整的类型了，这个方法同样也可以用于在浏览器中方便地调试剪贴板的内容。
+
+```js
+const input = document.createElement("input");
+input.style.position = "fixed";
+input.style.top = "100px";
+input.style.right = "10px";
+input.style.zIndex = "999999";
+input.style.width = "200px";
+input.placeholder = "Read Clipboard On Paste";
+input.addEventListener("paste", event => {
+  const clipboardData = event.clipboardData || window.clipboardData;
+  for (const item of clipboardData.items) {
+    console.log(`%c${item.type}`, "background-color: #165DFF; color: #fff; padding: 3px 5px;");
+    console.log(item.kind === "file" ? item.getAsFile() : clipboardData.getData(item.type));
+  }
+});
+document.body.appendChild(input);
+```
+
+## DevToolsProtocol
+在前边我们抛出了需要用户主动激活触发的可信事件问题，
 
 OnCopy
 
@@ -151,60 +238,11 @@ document.addEventListener("custom-event", () => {
 });
 ```
 
-实际上在现代浏览器中我们还有`navigator.clipboard API`来操作剪贴板，`navigator.clipboard.read`有限的剪贴板内容读取 让用户点击授权在某些情况下可能并不是很现实
-
-```js
-setTimeout(() => {
-  navigator.clipboard.read().then(res => {
-    for (const item of res) {
-      const types = item.types;
-      for (const type of types) {
-        item.getType(type).then(data => {
-          const reader = new FileReader();
-          reader.readAsText(data, "utf-8");
-          reader.onload = () => {
-            console.info(type, reader.result);
-          };
-        });
-      }
-    }
-  });
-}, 2000);
-```
-
-`text/plain`、`text/html`、`image/png`等常见的
-
-```js
-setTimeout(() => {
-  navigator.clipboard.read().then(res => {
-    for (const item of res) {
-      item.getType("application/x-slate-fragment").then(console.log).catch()
-    }
-  });
-}, 2000);
-```
-
-```js
-const input = document.createElement("input");
-input.style.position = "fixed";
-input.style.top = "100px";
-input.style.right = "10px";
-input.style.zIndex = "999999";
-input.style.width = "200px";
-input.placeholder = "Read Clipboard On Paste";
-input.addEventListener("paste", event => {
-  const clipboardData = event.clipboardData || window.clipboardData;
-  for (const item of clipboardData.items) {
-    console.log(`%c${item.type}`, "background-color: #165DFF; color: #fff; padding: 3px 5px;");
-    console.log(item.kind === "file" ? item.getAsFile() : clipboardData.getData(item.type));
-  }
-});
-document.body.appendChild(input);
-```
+即使声明权限的情况下 navigator.clipboard API仍然还需要主动授权
 
 
 ## 网页离线PDF导出
-在前段时间刷社区的时候发现有不少用户希望能够将网页保存为`PDF`文件，方便作为快照保存以供离线阅读。
+在前段时间刷社区的时候发现有不少用户希望能够将网页保存为`PDF`文件，方便作为快照保存以供离线阅读，因此在这里也顺便聊一下相关实现方案，而实际上在这里也属于`Web`页面内容的提取，与我们上文聊的剪贴板操作本质上是类似的功能。
 
 图片无法选择 目录大纲
 
