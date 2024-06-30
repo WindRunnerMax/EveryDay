@@ -1,16 +1,16 @@
-# Slate文档编辑器-数据结构设计与操作变换
+# Slate文档编辑器-WrapNode数据结构与操作变换
 
 在之前我们聊到了一些关于`slate`富文本引擎的基本概念，并且对基于`slate`实现文档编辑器的一些插件化能力设计、类型拓展、具体方案等作了探讨，那么接下来我们更专注于文档编辑器的细节，由浅入深聊聊文档编辑器的相关能力设计。
 
-* 在线编辑: https://windrunnermax.github.io/DocEditor/
+* 在线编辑: https://windrunnermax.github.io/DocEditor
 * 开源地址: https://github.com/WindrunnerMax/DocEditor
 
 关于`slate`文档编辑器项目的相关文章:
 
 * [基于Slate构建文档编辑器](https://juejin.cn/post/7265516410490830883)
-* [Slate文档编辑器-数据结构设计与操作变换]()
+* [Slate文档编辑器-WrapNode数据结构与操作变换]()
 
-## Wrap Normalize
+## Normalize
 在`slate`中数据结构的规整是比较麻烦的事情，特别是对于需要嵌套的结构来说，例如在本项目中存在的`Quote`和`List`，那么在规整数据结构的时候就有着多种方案，同样以这两组数据结构为例，每个`Wrap`必须有相应的`Pair`的结构嵌套，那么对于数据结构就有如下的方案。实际上我觉得对于这类问题是很难解决的，嵌套的数据结构对于增删改查都没有那么高效，因此在缺乏最佳实践相关的输入情况下，也只能不断摸索。
 
 首先是复用当前的块结构，也就是说`Quote Key`和`List Key`都是平级的，同样的其`Pair Key`也都复用起来，这样的好处是不会出现太多的层级嵌套关系，对于内容的查找和相关处理会简单很多。但是同样也会出现问题，如果在`Quote`和`List`不配齐的情况下，也就是说其并不是完全等同关系的情况下，就会需要存在`Pair`不对应`Wrap`的情况，此时就很难保证`Normalize`，因为我们是需要可预测的结构。
@@ -62,8 +62,40 @@
             children: [
                 { "list-pair": 1, children: [/* ... */] },
                 { "list-pair": 2, children: [/* ... */] },
+                { "list-pair": 3, children: [/* ... */] },
             ]
         },
+        { "quote-pair": true,  children: [/* ... */] },
+        { "quote-pair": true,  children: [/* ... */] },
+        { "quote-pair": true,  children: [/* ... */] },
+    ]
+}
+```
+
+那么为什么说数据结构会变得复杂了起来，就以上述的结构为例，假如我们将`list-pair: 2`这个节点解除了`list-wrap`节点的嵌套结构，那么我们就需要将节点变为如下的类型，我们可以发现这里的结构差别会比较大，除了除了将`list-wrap`分割成了两份之外，我们还需要处理其他`list-pair`的有序列表索引值更新，这里要做的操作就比较多了，因此我们如果想实现比较通用的`Schema`就需要更多的设计和规范。
+
+而在这里最容易忽略的一点是，我们需要为原本的`list-pair: 2`这个节点加入`"quote-pair": true`，因为此时该行变成了`quote-wrap`的子元素，总结起来也就是我们需要将原本在`list-wrap`的属性再复制一份给到`list-pair: 2`中来保持正确的嵌套结构。那么为什么不是借助`normalize`来被动添加而是要主动复制呢，原因很简单，如果是`quote-pair`的话还好，如果是被动处理则直接设置为`true`就可以了，但是如果是`list-pair`来实现的话，我们无法得知这个值的数据结构应该是什么样子的，这个实现则只能归于插件的`normalize`来实现了。
+
+```js
+{
+    "quote-wrap": true,
+    children: [
+        {
+            "list-wrap": true,
+            "quote-pair": true,
+            children: [
+                { "list-pair": 1, children: [/* ... */] },
+            ]
+        },
+        { "quote-pair": true,  children: [/* ... */] },
+        {
+            "list-wrap": true,
+            "quote-pair": true,
+            children: [
+                { "list-pair": 1, children: [/* ... */] },
+            ]
+        },
+        { "quote-pair": true,  children: [/* ... */] },
         { "quote-pair": true,  children: [/* ... */] },
         { "quote-pair": true,  children: [/* ... */] },
     ]
@@ -81,7 +113,6 @@
 [9, 1]      List
 [9, 1, 9]   Line
 [9, 1, 0]   Text
-
 ```
 
 实际上在这种情况下如果按照原本的`Path.equals(path, at)`是不会出现问题的，在这里就是之前太依赖其默认行为了，这也就导致了对于数据的精确性把控太差，我们对数据的处理应该是需要有可预期性的，而不是依赖默认行为。此外，`slate`的文档还是太过于简练了，很多细节都没有提及，在这种情况下还是需要去阅读源码才会对数据处理有更好的理解，例如在这里看源码让我了解到了每次做操作都会取`Range`所有符合条件的元素进行`match`，在一次调用中可能会发生多次`Op`调度。
@@ -111,5 +142,13 @@ unwrapNodes(editor, { match: (_, p) => Path.equals(p, [3, 1, 0]), at: [3, 1, 0, 
 }
 ```
 
-## 最后
+此外，在线上已有页面中调试代码可能是个难题，特别是在`editor`并没有暴露给`window`的情况下，想要直接获得编辑器实例则需要在本地复现线上环境，在这种情况下我们可以借助`React`会将`Fiber`实际写在`DOM`节点的特性，通过`DOM`节点直接取得`Editor`实例，不过原生的`slate`使用了大量的`WeakMap`来存储数据，在这种情况下暂时没有很好的解决办法，除非`editor`实际引用了此类对象或者拥有其实例，否则就只能通过`debug`打断点，然后将对象在调试的过程中暂储为全局变量使用了。
 
+```js
+const el = document.querySelector(`[data-slate-editor="true"]`);
+const key = Object.keys(el).find(it => it.startsWith("__react"));
+const editor = el[key].child.memoizedProps.node;
+```
+
+## 最后
+在这里我们聊到了`WrapNode`数据结构与操作变换，主要是对于嵌套类型的数据结构需要关注的内容，而实际上节点的类型还可以分为很多种，我们在大范围上可以有`BlockNode`、`TextBlockNode`、`TextNode`，在`BlockNode`中我们又可以划分出`BaseNode`、`WrapNode`、`PairNode`、`InlineBlockNode`、`VoidNode`、`InstanceNode`等，因此文中叙述的内容还是属于比较基本的，在`slate`中还有很多额外的概念和操作需要关注，例如`Range`、`Operation`、`Editor`、`Element`、`Path`等。那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的。
