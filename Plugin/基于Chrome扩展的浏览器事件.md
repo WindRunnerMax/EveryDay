@@ -284,11 +284,70 @@ document.addEventListener("custom-event", () => {
 ```
 
 ## 网页离线PDF导出
-在前段时间刷社区的时候发现有不少用户希望能够将网页保存为`PDF`文件，方便作为快照保存以供离线阅读，因此在这里也顺便聊一下相关实现方案，而实际上在这里也属于`Web`页面内容的提取，与我们上文聊的剪贴板操作本质上是类似的功能。
+在前段时间刷社区的时候发现有不少用户希望能够将网页保存为`PDF`文件，方便作为快照保存以供离线阅读，因此在这里也顺便聊一下相关实现方案，而实际上在这里也属于`Web`页面内容的提取，与我们上文聊的剪贴板操作本质上是类似的功能。那么在浏览器中我们当然可以通过`Ctrl + P`将`PDF`打印出来，然而通过打印的方式或者生成图片的方式导出的`PDF`文件就存在一些问题:
 
-图片无法选择 目录大纲
+* 导出的`PDF`必须指定纸张大小，不能随意设定纸张大小，例如当想将页面导出为单页`PDF`的情况下就难以实现。
+* 导出`PDF`时必须要弹出选择对话框，不能够静默导出并自动下载，这对于想要同时导出多个`Tab`页的批量场景不够友好。
+* 导出的`PDF`不会自动携带`Outline`，也就是`PDF`的目录书签大纲，需要后续主动使用`pdf-lib`等工具来生成。
+* 导出时必须要全页面打印，页面本身可能没有定义`@media print`样式预设，希望实现局部打印时会有些困难。
+* 如果想在打印`PDF`前批量自定义样式，则需要为每个页面单独注入样式，这样的操作显然不适用于批量场景。
+* 如果通过类似于`HTML2Canvas`的方式将页面转换为图片再转换为`PDF`，则会导致图片体积过大且文本不能选中的问题。
 
+那么在这里我们可以借助`Chrome DevTools Protocol`协议来实现这个功能，实际上`DevTools Protocol`协议中有一个`Page.printToPDF`方法，这也是常用的`Node`服务端将`HTML`转换为`PDF`的常用方法，当然借助`PDFKit`等工具直接绘制生成`PDF`也是可行的，只不过成本很高。`Page.printToPDF`方法可以将当前页面导出为`PDF`文件，并且可以实现静默导出并自动下载，也可以实现自定义纸张大小，同时也可以实现`Outline`的生成，这个方法的使用也是非常简单的，只需要传递一个`PDF`的配置对象即可。
 
+那么在调用方法之前，我们同样需要查询当前活跃的活动窗口，当然直接选择当前`Window`下的所有窗口也是可行的，此时需要注意权限清单中的`tabs`与`activeTab`权限的声明，同样的在这里我们仍然需要过滤`chrome://`等协议，只处理`http://`、`https://`、`file://`协议的内容。
+
+```js
+cross.tabs
+  .query({ active: true, currentWindow: true })
+  .then(tabs => {
+    const tab = tabs[0];
+    const tabId = tab && tab.id;
+    const tabURL = tab && tab.url;
+    if (tabURL && !URL_MATCH.some(match => new RegExp(match).test(tabURL))) {
+      return void 0;
+    }
+    return tabId;
+  })
+```
+
+接下来我们就可以根据`TabId`挂载`debugger`，前边提到了我们是希望将页面导出为单页`PDF`的，因此我们就需要将页面的高度和宽度取得，此时我们可以通过`Page.getLayoutMetrics`方法来获取页面的布局信息，这个方法会返回一个`LayoutMetrics`对象，其中包含了页面的宽度、高度、滚动高度等信息。然而当然我们也可以通过通信的方式将消息传递到`Content Script`中得到页面的宽高信息，在这里我们采用更加简单的方式，通过执行`Runtime.evaluate`的方式，获取得到的返回值，这样我们可以灵活地取得更多的数据，当然也可以灵活地控制页面内容，例如在滚动容器不是`window`的情况下就需要我们注入代码获取宽高以及控制打印范围。
+
+```js
+chrome.debugger
+  .attach({ tabId }, "1.3")
+  .then(() => {
+    return chrome.debugger.sendCommand({ tabId }, "Runtime.evaluate", {
+      expression:
+        "JSON.stringify({width: document.body.clientWidth, height: document.body.scrollHeight})",
+    });
+  })
+```
+
+那么接下来我们就需要根据页面的宽高信息来设置`PDF`的配置对象，在这里需要注意的是我们通过`document`取得的宽高信息是像素大小，而在`Page.printToPDF`中的`paperWidth`和`paperHeight`是以`inch`为单位的，因此我们需要将其转换为`inch`单位，根据`CSS`规范`1px = 1/96th of 1 inch`，我们通常可以认为`1px = 1/96 inch`而不受设备物理像素的影响。此外，我们可以指定一些配置，当前我们输出的`PDF`只会包含第一页的内容，同时会包含背景颜色、生成文档大纲的配置，并且还有`Header`、`Footer`等配置选项，我们可以根据实际需求来设置输出格式，需要注意的是`generateDocumentOutline`是实验性的配置，在比较新的`Chrome`版本中才被支持。
+
+```js
+const value = res.result.value as string;
+const rect = TSON.parse<{ width: number; height: number }>(value);
+return chrome.debugger.sendCommand({ tabId }, "Page.printToPDF", {
+  paperHeight: rect ? rect.height / 96 : undefined,
+  paperWidth: rect ? rect.width / 96 : undefined,
+  pageRanges: "1",
+  printBackground: true,
+  generateDocumentOutline: true,
+});
+```
+
+那么在生成完毕后，我们接下来就需要将其下载到设备中，触发下载的方法又很多，例如可以将数据传递到页面中通过`a`标签触发下载。在扩展程序中实际上提供了`chrome.downloads.download`方法，这个方法可以直接下载文件到设备中，并且虽然传递数据参数名字为`url`，但是实际上并不会受到链接长度/字符数的限制，通过传递`Base64`编码的数据可以实现大量数据下载，只要注意在权限清单中声明权限即可。那么在下载完成之后，我们同样就可以将`debugger`分离当前`Tab`页，这样就完成了整个`PDF`导出的过程。
+
+```js
+const base64 = res.data as string;
+chrome.downloads
+  .download({ url: `data:application/pdf;base64,${base64}` })
+  .finally(() => {
+    chrome.debugger.detach({ tabId });
+  });
+```
 
 ## 每日一题
 
@@ -300,6 +359,9 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://chromedevtools.github.io/devtools-protocol/
+https://github.com/microsoft/playwright/issues/29417
 https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
 https://developer.chrome.google.cn/docs/extensions/reference/api/debugger?hl=zh-cn
+https://stackoverflow.com/questions/71005817/how-does-pixels-relate-to-screen-size-in-css
+https://chromewebstore.google.com/detail/just-one-page-pdf/fgbhbfdgdlojklkbhdoilkdlomoilbpl
 ```
