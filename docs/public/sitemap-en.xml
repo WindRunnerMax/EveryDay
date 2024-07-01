@@ -1552,6 +1552,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/Plugin/基于Chrome扩展的浏览器事件.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/Patterns/简单工厂模式.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-11T04:12:26.000Z</lastmod>
@@ -2883,6 +2888,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/MyLife/从大学开始搞的开源项目.html</loc>
   <priority>1.0</priority>
+  <lastmod>2024-06-28T15:12:19.000Z</lastmod>
 </url>
 
 <url>
