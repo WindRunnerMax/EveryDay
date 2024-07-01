@@ -1,5 +1,10 @@
 # Catalog
 
+**2024-07-01**
+> 第414题：[基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md)
+
+<br>
+
 **2024-06-04**
 > 第413题：[基于React的SSG渲染方案](React/基于React的SSG渲染方案.md)
 
