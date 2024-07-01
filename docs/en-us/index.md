@@ -4,15 +4,7 @@ sidebar: true
 
 # BLOG
 
-<p>
-<a href="https://github.com/WindrunnerMax/EveryDay">GitHub</a>
-<span>｜</span>
-<a href="https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md">Timeline</a>
-<span>｜</span>
-<a href="https://blog.touchczy.top/">Blog</a>
-<span>｜</span>
-<a href="https://blog-ssg.touchczy.top/">Blog-SSG</a>
-</p>
+[GitHub](https://github.com/WindrunnerMax/EveryDay) ｜ [Timeline](https://github.com/WindrunnerMax/EveryDay/blob/master/CATALOG.md) ｜ [Blog](https://blog.touchczy.top/) ｜ [Blog-SSG](https://blog-ssg.touchczy.top/)
 
 ## Hi ~
 
