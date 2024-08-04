@@ -48,7 +48,7 @@ module.exports = function (source) {
 理论上这个方式是没有问题的，但是在实际使用的过程中发现依然存在报错的情况，只不过报错的文件发生了改变。经过分析之后发现这是因为在`.less`文件中内部的样式引用是由`less-loader`处理的，而我们编写的`loader`只是针对于入口的`.less`文件做了处理，深层次的`.less`文件并没有经过我们的预处理，依然会抛出找不到模块的异常。实际上在这里也发现了之前使用`less`的误区，如果我们在`.less`文件中随意引用样式的话，即使没有被使用，也会被重复打包出来的，因为独立的`.less`入口最终是会生成单个`.css`再交予后续的`loader`处理。
 
 ```css
-/* index.js ok */
+/* index.ts ok */
 /* import "./index.less"; */
 
 /* index.less ok */
@@ -128,7 +128,80 @@ module.exports = {
 至此我们使用`less-loader`的`loader`解决了样式引用的解析问题，实际上如果我们不借助`less-loader`的话依然可以继续延续`webpack-loader`的思路来解决问题，当我们发现样式引用的问题时，我们可以实现`loader`避免其内部深层次的调用，再将其交予项目的根目录中将样式引用出来，这样同样可以解决问题，但是需要我们手动分析依赖并且引入，需要一定的时间成本。
 
 ## WebpackLoader
+当解决了`less-loader`的适配问题之后，项目已然能够成功运行起来了，但是在调试的过程中又发现了新的问题。通常我们的项目通常都是直接引入`ArcoDesign`作为组件库使用的，而内部后期推出了统一的设计规范，这个新的规范是在`ArcoDesign`的基础上对组件进行了调整，我们就姑且将其命名为`web-react-pro`，并且引入了一套新的样式设计，那么这就造成了新的问题，如果在项目中引用的顺序不正确，就会导致样式的覆盖问题。
 
+```js
+// ok
+import "@arco-design/web-react/es/style/index.less";
+import "@arco-design/web-react-pro/es/style/index.less";
+
+// error
+import "@arco-design/web-react-pro/es/style/index.less";
+import "@arco-design/web-react/es/style/index.less";
+```
+
+实际上`web-react-pro`内部已经帮我们实际引用了`web-react`的样式，原本是不需要我们主动引入的，然而由于先前提到的并不是所有的项目都遵循了新的设计规范，特别是很多历史三方库的样式引用，这就导致了我们整个引入的顺序是不可控的，这就导致了样式覆盖问题，特别是由于我们的项目通常会配置按需引用，这就会导致部分组件设计规范是新的，部分组件的样式是旧的，在主体页面还是新的样式，打开表单之后就发现组件风格明显发生了变化，整体`UI`会显得比较混乱。
+
+在这里最开始的思路是想查找出究竟是哪个三方库导致的这个问题，然而由于项目引用关系太复杂，约定式路由的扫描还会导致实际未引用的组件依然被编译，二分排除法查找的过程耗费了不少时间，当然最终还是定位到了问题表单引擎组件。那么继续设想一下，现在的问题无非就是样式加载顺序的问题，如果我们主动控制引用到`web-react`的样式是不是就能解决这个问题，除了控制`import`的顺序之外，我们还可以通过`lazy-load`的形式将相关组件库引用到项目中，也就是使原有组件先加载，之后再加载新增的组件就可以避免新样式覆盖。
+
+```js
+import App from "...";
+import React, { Suspense, lazy } from "react";
+
+const Next = lazy(() => import("./component/next"));
+export const LazyNextMain = (
+  <Suspense fallback={<React.Fragment></React.Fragment>}>
+    <Next />
+  </Suspense>
+);
+```
+
+然而很明显这样只是能够暂时解决问题，如果后续需要直接在新增的组件中引入`web-react`的样式，例如需要继续基于表单引擎扩展功能，或者引入文档预览组件，都会需要间接地引入`web-react`的样式，如果依旧按照这个模式来处理的话就需要不断`lazy`组件。那么转换下思路，我们是不是可以直接在`Webpack`的层面上直接处理这些问题，如果我们能够直接将`web-react`的样式`resolve`到空的文件中，那么就可以解决这个问题了。
+
+实际上由于这个问题普遍存在，内部是存在`Webpack`的插件来处理这个问题的，但是在我们的项目中引用会对`mini-css-extract-plugin`产生影响，造成一个很奇怪的异常抛出，同样也是经过了一段时间的排查无果之后放弃了这个方案。说到处理引用我们可能首先想到的就是`babel-import-plugin`这个插件，那么我们同样可以实现`babel`的插件来处理这个问题，而且由于场景简单，不需要太复杂的处理逻辑。
+
+```js
+// packages/webpack-resolver/src/loader/babel-import.js
+/**
+ * @param {import("@babel/core") babel}
+ * @returns {import("@babel/core").PluginObj<{}>}
+ */
+module.exports = function (babel) {
+  const { types: t } = babel;
+  return {
+    visitor: {
+      ImportDeclaration(path) {
+        const { node } = path;
+        if (!node) return;
+        if (node.source.value === "@arco-design/web-react/dist/css/index.less") {
+          node.source = t.stringLiteral(require.resolve("./index.less"));
+        }
+      },
+      CallExpression(path) {
+        if (
+          path.node.callee.name === "require" &&
+          path.node.arguments.length === 1 &&
+          t.isStringLiteral(path.node.arguments[0]) &&
+          path.node.arguments[0].value === "@arco-design/web-react/dist/css/index.less"
+        ) {
+          path.node.arguments[0] = t.stringLiteral(require.resolve("./index.less"));
+        }
+      },
+    },
+  };
+};
+```
+
+在这里我们只需要处理`import`语句对应的`ImportDeclaration`以及`require`语句的`CallExpression`即可，当我们匹配到相关的插件时将其替换到目标的空样式文件中即可，这样就相当于抹除了所有的`web-react`的样式引用，以此来解决样式覆盖问题。而将这个插件加入`babel`也只需要在`.babelrc`文件中配置下`plugin`引用即可。
+
+```js
+// packages/webpack-resolver/.babelrc
+{
+  "plugins": ["./src/loader/babel-import.js"]
+}
+```
+
+那么我们还有没有别的思路能够解决类似的问题，假如此时我们的项目不是使用`babel`，而是通过`ESBuild`或者`SWC`来编译的`js`文件，那么又该如何处理。按照我们现在的思路，究其本质是将目标的`.less`文件引用重定向到空的样式文件中，
 
 ## WebpackResolver
 
