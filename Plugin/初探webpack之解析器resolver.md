@@ -396,6 +396,15 @@ module.exports = class ImportResolver {
       });
   }
 };
+
+// packages/webpack-resolver/webpack.config.js
+module.exports = {
+  // ...
+  resolve: {
+    plugins: [new ImportResolver()],
+  },
+  // ...
+}
 ```
 
 因为其对`less-loader`同样也会生效，我们同样也可以匹配解析内容，将其处理为正确的引用地址，这样就不用实现`less-loader`的`loader`来处理这个问题了，也就是说我们可以通过一个插件来同时解决两个问题。并且前边提到的差异化解析问题也可以通过`request`与`resolveContext`参数来确定来源，由此来处理特定条件下的引用或者幽灵依赖带来的编译问题等等。
