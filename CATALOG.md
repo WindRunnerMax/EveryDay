@@ -1,5 +1,10 @@
 # Catalog
 
+**2024-08-06**
+> 第415题：[初探webpack之解析器resolver](Plugin/初探webpack之解析器resolver.md)
+
+<br>
+
 **2024-07-01**
 > 第414题：[基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md)
 
