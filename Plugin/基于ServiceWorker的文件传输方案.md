@@ -36,9 +36,103 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 
 浏览器实现的`Stream API`中存在`ReadableStream`、`WritableStream`、`TransformStream`三种流类型，其中`ReadableStream`用以表示可读的流，`WritableStream`用以表示可写的流，而`TransformStream`用以表示可读写的流。由于在浏览器中`Stream`的实现时间与机制并不相同，`ReadableStream`的兼容性与`Fetch API`基本一致，而`WritableStream`和`TransformStream`的兼容性则相对稍差一点。
 
-在最开始接触`Stream API`的时候，
+在最开始接触`Stream API`的时候，我难以理解整个管道的数据流，针对于缓冲区以及背压等问题本身是不难理解的，但是在实际将`Stream`应用的时候，我发现并不能理解整个流的模型的数据流动方向。在我的理解中，整个管道应该是以`WritableStream`起始用以写入/生产数据，而后继的管道则应该使用`ReadableStream`来读取/消费数据，而整个连接过程则可以通过`pipeTo`链接起来。
+
+```js
+const writable = new WritableStream();
+const readable = new ReadableStream();
+writable.pipeTo(readable); // TypeError: writable.pipeTo is not a function
+const writer = writable.getWriter();
+const reader = readable.getReader();
+// ...
+writer.write("xxx");
+reader.read().then(({ value, done }) => {
+  console.log(value, done);
+});
+```
+
+当然这是个错误的示例，针对于流的理解我们应该参考`Node.js`的`Stream`模块，以`node:fs`的`createReadStream`与`createWriteStream`为例，我们会更容易理解整个模型。我们的`Stream`模型是以`ReadableStream`为起始，即数据生产是以`Node.js`本身的`IO`为基础的读取文件，将内容写入到`ReadableStream`中，而我们作为数据处理者，则是在其本身的事件中进行数据处理，进而将处理后的数据写入`WritableStream`来消费，即后继的管道是以`WritableStream`为终点。
+
+```js
+const fs = require("node:fs");
+const path = require("node:path");
+
+const sourceFilePath = path.resolve("./source.txt");
+const destFilePath = path.join("./destination.txt");
+const readStream = fs.createReadStream(sourceFilePath, { encoding: "UTF-8" });
+const writeStream = fs.createWriteStream(destFilePath, { encoding: "UTF-8" });
+
+readStream.on("data", chunk => {
+  writeStream.write(chunk);
+});
+readStream.on("end", () => {
+  writeStream.end();
+});
+```
+
+那么在浏览器中，我们的`Stream API`同样是以`ReadableStream`为起始，`Fetch API`的`Response.body`就是很好的示例，数据的起始同样是以`IO`为基础的网络请求。在浏览器中我们的`ReadableStream`的`API`与`Node.js`本身还是有些不同的，例如在浏览器`ReadableStream`的`Reader`并不存在类似`on("data", () => null)`的事件监听，而前边的例子只是为了让我们更好地理解整个流模型，在这里我们当然是以浏览器的`API`为主。
+
+聊了这么多关于`Stream API`的问题，我们回到针对于`WebRTC`传递的数据实现，针对于类似`Fetch`的数据传输，是借助浏览器本身的`IO`来控制`ReadableStream`的数据生产，而我们的`WebRTC`仅仅是传输通道，因此在管道的初始数据生产时，`ReadableStream`是需要我们自己来控制的，因此我们最开始想到的`Writable -> Readable`方式，则是为了适应这部分实现。而实际上这种方式实际上更契合于`TransformStream`的模型，其本身的能力是对数据流进行转换，而我们同样可以借助`TransformStream`来实现流的读写。
+
+```js
+const transformStream = new TransformStream<number, number>({
+  transform(chunk, controller) {
+    controller.enqueue(chunk + 1);
+  },
+});
+const writer = transformStream.writable.getWriter();
+const reader = transformStream.readable.getReader();
+const process = (res: { value?: number; done: boolean }) => {
+  const { value, done } = res;
+  console.log(value, done);
+  if (done) return;
+  reader.read().then(process);
+};
+reader.read().then(process);
+writer.write(1);
+writer.write(2);
+writer.close();
+```
+
+那么在这里我们就可以实现对于`ReadableStream`的数据处理，在基于`WebRTC`的数据传输实现中，我们可以获取到`DataChannel`的数据流本身，那么此时我们就可以通过`ReadableStream`的`Controller`来向缓冲队列中置入数据，以此来实现数据的写入，而后续的数据消费则可以使用`ReadableStream`的`Reader`来实现，这样我们就可以借助缓冲队列实现流式的数据传输。
+
+```js
+const readable = new ReadableStream<number>({
+  start(controller) {
+    controller.enqueue(1);
+    controller.enqueue(2);
+    controller.close();
+  },
+});
+const reader = readable.getReader();
+const process = (res: { value?: number; done: boolean }) => {
+  const { value, done } = res;
+  console.log(value, done);
+  if (done) return;
+  reader.read().then(process);
+};
+reader.read().then(process);
+```
+
+那么在这里我们可以思考一个问题，如果此时我们的`DataChannel`的数据流的传输速度非常快，也就是不断地将数据`enqueue`到队列当中，而假如此时我们的消费速度非常慢，例如我们的硬盘写入速度比较慢，那么数据的队列就会不断增长，那么就可能导致内存溢出。实际上这个问题有专业的术语来描述，即`Back Pressure`背压问题，在`ReadableStream`中我们可以通过`controller.desiredSize`来获取当前队列的大小，以此来控制数据的生产速度，以此来避免数据的积压。
+
+```js
+const readable = new ReadableStream<number>({
+  start(controller) {
+    console.log(controller.desiredSize); // 1
+    controller.enqueue(1);
+    console.log(controller.desiredSize); // 0
+    controller.enqueue(2);
+    console.log(controller.desiredSize); // -1
+    controller.close();
+  }
+});
+```
+
+
 
 Channel Transferable_objects
+
 
 ## Service Worker
 
@@ -48,8 +142,11 @@ return ;
 
 HTML HTML Worker
 
+BASE64 Uint8Array Uint32Array 体积问题
+
 ## Fetch
 
+ReadableStream
 
 ## 每日一题
 
@@ -65,6 +162,7 @@ https://github.com/jimmywarting/StreamSaver.js
 https://github.com/jimmywarting/native-file-system-adapter
 https://developer.mozilla.org/zh-CN/docs/Web/API/FetchEvent
 https://developer.mozilla.org/en-US/docs/Web/API/Streams_API
+https://nodejs.org/docs/latest/api/stream.html#types-of-streams
 https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
 https://help.aliyun.com/zh/oss/user-guide/map-custom-domain-names-5
 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a#download
