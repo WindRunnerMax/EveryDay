@@ -27,7 +27,7 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 1. 跨域资源的下载，通过劫持请求并增加相应头的方式，解决了跨域资源的重命名问题，并以此来直接调度浏览器`IO`来实现下载。
 2. 避免内存溢出问题，通过`Stream API`将`fetch`请求的数据分片写入文件，以此来做到流式下载，避免将文件全部写入到内存中。
 
-那么除了在对象存储下载文件之外，这种数据处理方式还有很多应用场景，例如我们需要批量下载文件并且压缩时，可以主动`fetch`后通过`ReadableStream`读，并且`pipe`到类似压缩的实现中，例如`zlib.createDeflateRaw`的浏览器方案，再`pipe`到`WritableStream`中配合`File System Access API`以此来实时写入文件，这样就可以做到高效的文件读写，而不需要将其全部持有在内存中。
+那么除了在对象存储下载文件之外，这种数据处理方式还有很多应用场景，例如我们需要批量下载文件并且压缩时，可以主动`fetch`后通过`ReadableStream`读，并且`pipe`到类似压缩的实现中，例如`zlib.createDeflateRaw`的浏览器方案，再`pipe`到`WritableStream`中类似`FileSystemFileHandle.createWritable`以此来实时写入文件，这样就可以做到高效的文件读写，而不需要将其全部持有在内存中。
 
 恰好在先前我们基于`WebRTC`实现了局域网文件传输，而通过`WebRTC`传输的文件也会同样需要面对大文件传输的问题，并且由于其本身并不是`HTTP`协议，自然就不可能携带`Content-Disposition`等响应头。这样我们的大文件传输就必须要借助中间人的方式进行拦截，此时我们通过模拟`HTTP`请求的方式来生成虚拟的下载链接，并且由于本身就是分片传输，我们可以很轻松地借助`Stream API`来实现流式下载能力。那么本文就以`WebRTC`的文件传输为基础，来实现基于`Service Worker`的大文件传输方案，文中的相关实现都在`https://github.com/WindrunnerMax/FileTransfer`中。
 
@@ -129,10 +129,60 @@ const readable = new ReadableStream<number>({
 });
 ```
 
+而对于背压问题， 我们可以很简单地理解到，当我们的数据生产速度大于数据消费速度时，就会导致数据的积压，那么针对于`ReadableStream`与`WritableStream`，我们可以分别得到相关的排队策略。
 
+* 对于`ReadableStream`，背压来自于已入队但尚未读取的块。
+* 对于`WritableStream`，背压来自于已写入但尚未由底层接收器处理的块。
 
-Channel Transferable_objects
+而在先前的`ReadableStream`实现中，我们可以很明显地看到其本身并没有携带背压的默认处理机制，即使我们可以通过`desiredSize`来判断当前内置队列的压力，但是我们并不能很明确地反馈数据的生产速度，当然我们也可以通过`pull`方法来被动控制队列的数据量。而在`WritableStream`中则存在内置的背压处理方法即`writer.ready`，通过这个方法我们可以判断当前队列的压力，以此来控制数据的生产速度。
 
+```js
+(async () => {
+  const writable = new WritableStream();
+  const writer = writable.getWriter();
+  await writer.write(1);
+  await writer.write(1);
+  await writer.write(1);
+  console.log("written"); // written
+  await writer.ready;
+  await writer.write(1);
+  console.log("written"); // Nil
+})();
+```
+
+因此在我们的`WebRTC`数据传输中，为了方便地处理背压问题，我们是通过`TransformStream`的`writable`端来实现数据的写入，而消费则是通过`readable`端来实现的，这样我们就可以很好地控制数据的生产速度，并且可以在主线程中将`TransformStream`定义后，将`readable`端通过`postMessage`将其作为`Transferable Object`传递到`Service Worker`中消费即可。
+
+```js
+export class WorkerEvent {
+  public static start(fileId: string, fileName: string, fileSize: number, fileTotal: number) {
+    const ts = new TransformStream();
+    WorkerEvent.channel.port1.postMessage(
+      {
+        key: MESSAGE_TYPE.TRANSFER_START,
+        id: fileId,
+        readable: ts.readable,
+      } as MessageType,
+      [ts.readable]
+    );
+  }
+
+  public static async post(fileId: string, data: ArrayBuffer) {
+    const writer = WorkerEvent.writer.get(fileId);
+    if (!writer) return void 0;
+    await writer.ready;
+    return writer.write(new Uint8Array(data));
+  }
+
+  public static close(fileId: string) {
+    WorkerEvent.channel?.port1.postMessage({
+      key: MESSAGE_TYPE.TRANSFER_CLOSE,
+      id: fileId,
+    } as MessageType);
+    const writer = WorkerEvent.writer.get(fileId);
+    writer?.close();
+  }
+}
+```
 
 ## Service Worker
 
@@ -142,11 +192,23 @@ return ;
 
 HTML HTML Worker
 
+Channel Transferable_objects
+
 BASE64 Uint8Array Uint32Array 体积问题
 
 ## Fetch
+针对于`Fetch`方法，在接触`Stream API`之前我们可能主要的处理方式是调用`res.json()`等方法来读取数据，实际上这些方法同样会在其内部实现中隐式调用`ReadableStream.getReader()`来读取数据。而在`Stream API`出现之前，如果我们想要处理某种资源例如视频、文本文件等，我们必须下载整个文件，等待它反序列化为合适的格式，然后直接处理所有数据。
 
-ReadableStream
+因此在先前调研`StreamSaver.js`时，我比较费解的一个问题就是，既然我们请求的数据依然是需要从全部下载到内存中，那么在这种情况下我们使用`StreamSaver.js`依然无法做到流式地将数据写入硬盘，依然会存在浏览器`Tab`页的内存溢出问题。而在了解到`Fetch API`的`Response.body`属性后，关于整个流的处理方式就变得清晰了，我们可以不断地调用`read()`方法将数据传递到`Service Worker`调度下载即可。
+
+因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可。
+
+fetch下载方式ReadableStream
+
+```js
+
+```
+
 
 ## 每日一题
 
@@ -161,11 +223,11 @@ https://juejin.cn/post/6844904029244358670
 https://github.com/jimmywarting/StreamSaver.js
 https://github.com/jimmywarting/native-file-system-adapter
 https://developer.mozilla.org/zh-CN/docs/Web/API/FetchEvent
-https://developer.mozilla.org/en-US/docs/Web/API/Streams_API
 https://nodejs.org/docs/latest/api/stream.html#types-of-streams
 https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
 https://help.aliyun.com/zh/oss/user-guide/map-custom-domain-names-5
 https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a#download
 https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition
+https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Concepts#backpressure
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects
 ```
