@@ -16,7 +16,7 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 
 1. 如果直接打开的资源是图片、视频等浏览器能够直接解析的资源，那么此时浏览器不会触发下载行为，而是会直接在浏览器中预览打开的资源，即默认的`Content-Disposition`值是`inline`，不会触发值为`attachment`的下载行为。当然，使用`<a />`标签的`download`可以解决这个问题，然而这个属性只有在同源`URL`、`blob:`和`data:`协议下才会生效。
 2. 如果我们上传到对象存储的文件存在重名资源的问题，那么为了防止文件被覆盖，我们可能会随机生成资源名或者在资源后面加上时间戳，甚至直接将文件名生成不带扩展名的`HASH`值。那么在文件下载的时候，我们就需要将文件名实际还原回来，然而这个过程仍然需要依赖响应的`attachment; filename=`，或者`<a />`标签的`download`属性来重命名文件。
-3. 如果我们请求的资源是需要校验权限才能正常下载，那么直接使用`<a />`标签进行资源请求的时候则仅仅是发起了`GET`请求，而且将密钥放置于请求的链接地址上显然是做不到真正的权限校验的。当然通过签发临时的`Token`并返回`GET`请求地址当然是可行的，但如果涉及到更复杂一些的权限控制以及审计追踪时，生成临时下载链接可能并不足以做到高安全性的要求。
+3. 如果我们请求的资源是需要校验权限才能正常下载，那么直接使用`<a />`标签进行资源请求的时候则仅仅是发起了`GET`请求，而且将密钥放置于请求的链接地址上显然是做不到真正的权限校验的。当然通过签发临时的`Token`并返回`GET`请求地址当然是可行的，但如果涉及到更复杂一些的权限控制以及审计追踪时，生成临时下载链接可能并不足以做到高安全性的要求，类似的问题在`EventSource`对象实现的`SSE`中更加明显。
 
 而在我们的项目中，恰好存在这样的历史遗留问题，我们的资源文件都会存储在`OSS-Object Storage Service`对象存储中，并且为了防止资源重名的问题，默认的资源策略是完全不携带文件的扩展名，而是直接将文件名生成`HASH`值，而且由于域名是基建自带的`CDN`加速域名，不能通过配置`CNAME`来定义为我们站点的域名，也就是说我们的资源必然存在跨域的问题，这就相当于把所有的限制都触及到了。
 
@@ -32,13 +32,19 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 恰好在先前我们基于`WebRTC`实现了局域网文件传输，而通过`WebRTC`传输的文件也会同样需要面对大文件传输的问题，并且由于其本身并不是`HTTP`协议，自然就不可能携带`Content-Disposition`等响应头。这样我们的大文件传输就必须要借助中间人的方式进行拦截，此时我们通过模拟`HTTP`请求的方式来生成虚拟的下载链接，并且由于本身就是分片传输，我们可以很轻松地借助`Stream API`来实现流式下载能力。那么本文就以`WebRTC`的文件传输为基础，来实现基于`Service Worker`的大文件传输方案，文中的相关实现都在`https://github.com/WindrunnerMax/FileTransfer`中。
 
 ## Stream API
-ReadableStream WritableStream TransformStream
+在`Fetch API`的`Response`对象中，存在`Response.body`属性用以获取响应的`ReadableStream`，而`ReadableStream`是`Stream API`中的一个接口，用以表示一个可读的流。通过这个接口我们可以实现流式的读取数据，而不需要一次性将所有数据读取到内存中，以此来渐进式地处理数据，例如在使用`fetch`实现`SSE - Server-Sent Events`的响应时，便可以通过维持长链接配合`ReadableStream`来实现数据的响应。
 
-Channel
+浏览器实现的`Stream API`中存在`ReadableStream`、`WritableStream`、`TransformStream`三种流类型，其中`ReadableStream`用以表示可读的流，`WritableStream`用以表示可写的流，而`TransformStream`用以表示可读写的流。由于在浏览器中`Stream`的实现时间与机制并不相同，`ReadableStream`的兼容性与`Fetch API`基本一致，而`WritableStream`和`TransformStream`的兼容性则相对稍差一点。
+
+在最开始接触`Stream API`的时候，
+
+Channel Transferable_objects
 
 ## Service Worker
 
 拦截 fetch
+
+return ;
 
 HTML HTML Worker
 
