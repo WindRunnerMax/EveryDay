@@ -194,10 +194,38 @@ export class WorkerEvent {
 
 因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可，此外我们还可以实现一些诸如下载进度之类的效果。
 
-========================================= fetch下载方式ReadableStream =========================================
 
 ```js
-
+const fileId = "xxxxxx";
+const worker = await navigator.serviceWorker.getRegistration("./");
+const channel = new MessageChannel();
+worker.active.postMessage({ type: "INIT_CHANNEL" }, [channel.port2]);
+const ts = new TransformStream();
+channel.port1.postMessage(
+  { key: "TRANSFER_START", id: fileId, readable: ts.readable, },
+  [ts.readable]
+);
+ const src = `/${fileId}` + `?X-File-Id=${fileId}` +
+      `&X-File-Size=42373` + `&X-File-Total=1` + `&X-File-Name=favicon.ico`;
+const iframe = document.createElement("iframe");
+iframe.hidden = true;
+iframe.src = src;
+iframe.id = fileId;
+document.body.appendChild(iframe);
+const writer = ts.writable.getWriter();
+fetch("./favicon.ico").then(res => {
+  const reader = res.body.getReader();
+  const process = (res) => {
+    const { value, done } = res;
+    if (done) {
+      writer.close();
+      return;
+    }
+    writer.write(value);
+    reader.read().then(process);
+  };
+  reader.read().then(process);
+});
 ```
 
 ## Service Worker
@@ -359,9 +387,6 @@ document.body.appendChild(iframe);
 此外实际上如果我们在浏览器的地址栏中直接打开`http://localhost:9001/ping`也是同样可以得到`pong`的响应的，也就是说`Service Worker`的拦截范围是在注册的`scope`范围内，那么实际上如果有必要的话，我们则完全可以基于`SW`来实现离线的`PWA`应用，而不需要依赖于服务器响应的路由以及接口。此外，这个效果在我们的`WebRTC`实现的`SW`中也是存在的，而当我们再次点击下载链接无法得到响应，是由于我们检查到`transfer`不存在，直接响应了`404`。
 
 ```js
-if (!fileId || !fileName || !fileSize || !fileTotal) {
-  return void 0;
-}
 const transfer = map.get(fileId);
 if (!transfer) {
   return event.respondWith(new Response(null, { status: 404 }));
@@ -369,19 +394,348 @@ if (!transfer) {
 ```
 
 ### 数据通信
-言归正传，接下来我们就需要实现与`Service Worker`的通信方案了，这里的实现就比较常规了
+言归正传，接下来我们就需要实现与`Service Worker`的通信方案了，这里的实现就比较常规了。首先我们要注册`Service Worker`，在同一个`Scope`下只能注册一个`Service Worker`，如果在同一个作用域内注册多个`Service Worker`，那么后注册的`Service Worker`会覆盖先注册的`Service Worker`，当然这个问题不存在`WebWorker`中。在这里我们借助`getRegistration`与`register`分别来获取当前活跃的`Service Worker`以及注册新的`Service Worker`。
 
-Channel Transferable_objects
+```js
+// packages/webrtc/client/worker/event.ts
+if (!navigator.serviceWorker) {
+  console.warn("Service Worker Not Supported");
+  return Promise.resolve(null);
+}
+try {
+  const serviceWorker = await navigator.serviceWorker.getRegistration("./");
+  if (serviceWorker) {
+    WorkerEvent.worker = serviceWorker;
+    return Promise.resolve(serviceWorker);
+  }
+  const worker = await navigator.serviceWorker.register(
+    process.env.PUBLIC_PATH + "worker.js?" + process.env.RANDOM_ID,
+    { scope: "./" }
+  );
+  WorkerEvent.worker = worker;
+  return worker;
+} catch (error) {
+  console.warn("Service Worker Register Error", error);
+  return Promise.resolve(null);
+}
+```
 
+在与`Service Worker`数据通信方面，我们可以借助`MessageChannel`来实现。`MessageChannel`是一个双向通信的通道，可以在两个不同的`Context`中传递消息，例如在主线程与`Worker`线程之间进行数据通信。我们只需要在主线程中创建一个`MessageChannel`，然后将其`port2`端口通过`postMessage`传递给`Service Worker`，而`Service Worker`则可以通过`event.ports[0]`获取到这个`port2`，此后我们就可以借助这两个`port`直接通信了。
+
+或许我们会思考一个问题，为什么我们可以将`port2`传递到`Service Worker`中，理论上而言我们的`postMessage`只能传递可序列化`Structured Clone`的对象，例如字符串、数字等数据类型，而`port2`本身是作为不可序列化的对象存在的。那么这里就涉及到了`Transferable objects`的概念，可转移的对象是拥有属于自己的资源的对象，这些资源可以从一个上下文转移到另一个，确保资源一次仅在一个上下文中可用，在传输后原始对象不再可用，其不再指向转移后的资源，并且任何读取或者写入该对象的尝试都将抛出异常。
+
+```js
+// packages/webrtc/client/worker/event.ts
+if (!WorkerEvent.channel) {
+  WorkerEvent.channel = new MessageChannel();
+  WorkerEvent.channel.port1.onmessage = event => {
+    console.log("WorkerEvent", event.data);
+  };
+  WorkerEvent.worker?.active?.postMessage({ type: MESSAGE_TYPE.INIT_CHANNEL }, [
+    WorkerEvent.channel.port2,
+  ]);
+}
+```
+
+因为在这里我们暂时不需要接收来自`Service Worker`的消息，因此在这里我们对于`port1`接收的消息只是简单地打印了出来。而在初始化`CHANNEL`的时候，我们将`port2`作为可转移对象放置到了第二个参数中，以此在`Service Worker`中便可以接收到这个`port2`，由于我们以后的信息传递都是由`MessageChannel`进行，因此这里的`onmessage`作用就是很单纯的接收`port2`对象端口。
+
+```js
+// packages/webrtc/client/worker/index.ts
+self.onmessage = event => {
+  const port = event.ports[0];
+  if (!port) return void 0;
+};
+```
+
+那么紧接着我们就需要使用`TransformStream`进行数据的读写了，由于`TransformStream`本身同样是可转移对象，因此我们可以将其直接定义在主线程中，然后在初始化文件下载时，将`readable`端传递到`Service Worker`中，并将其作为下载的`ReadableStream`实例构造`Response`对象。那么接下来在主线程创建`iframe`触发下载行为之后，我们就可以在`Fetch Event`中从`map`中读取`readable`了。
+
+```js
+// packages/webrtc/client/worker/event.ts
+const ts = new TransformStream();
+WorkerEvent.channel.port1.postMessage(
+  {
+    key: MESSAGE_TYPE.TRANSFER_START,
+    id: fileId,
+    readable: ts.readable,
+  } as MessageType,
+  [ts.readable]
+);
+WorkerEvent.writer.set(fileId, ts.writable.getWriter());
+// 构造 iframe 触发下载行为
+// ...
+
+// packages/webrtc/client/worker/index.ts
+port.onmessage = event => {
+  const payload = event.data as MessageType;
+  if (!payload) return void 0;
+  if (payload.key === MESSAGE_TYPE.TRANSFER_START) {
+    const { id, readable } = payload;
+    map.set(id, [readable]);
+  }
+};
+// 在触发下载行为后 从 map 中读取 readable
+// ...
+```
+
+在主线程中，我们关注的是内容的写入，以及内置的背压控制，由于`TransformStream`本身内部实现的队列以及背压控制，我们就不需要太过于关注数据生产造成的问题，因为在先前我们实现的`WebRTC`下载的反馈链路是完善的，我们在这里只需要借助`await`控制写入速度即可。在这里有趣的是，即使`TransformStream`的`readable`与`writable`两端现在是运行在两个上下文环境中，其依然能够进行数据读写以及背压控制。
+
+```js
+// packages/webrtc/client/worker/event.ts
+const writer = WorkerEvent.writer.get(fileId);
+if (!writer) return void 0;
+// 感知 BackPressure 需要主动 await ready
+await writer.ready;
+return writer.write(new Uint8Array(data));
+```
+
+那么在数据块的数量即`total`的最后一个块完成传输后，我们就需要将整个传输行为进行回收。首先是`TransformStream`的`writable`端需要关闭，这个`Writer`必须主动调度关闭方法，否则浏览器无法感知下载完成，会一直处于等待下载完成的状态，其次就是我们需要将创建的`iframe`从`body`上回收，在`Service Worker`中我们也需要将`map`中的数据进行清理，避免先前的链接还能够响应等问题。
+
+```js
+// packages/webrtc/client/worker/event.ts
+const iframe = document.getElementById(fileId);
+iframe && iframe.remove();
+WorkerEvent.channel?.port1.postMessage({
+  key: MESSAGE_TYPE.TRANSFER_CLOSE,
+  id: fileId,
+} as MessageType);
+const writer = WorkerEvent.writer.get(fileId);
+writer?.close();
+WorkerEvent.writer.delete(fileId);
+
+// packages/webrtc/client/worker/index.ts
+port.onmessage = event => {
+  const payload = event.data as MessageType;
+  if (!payload) return void 0;
+  if (payload.key === MESSAGE_TYPE.TRANSFER_CLOSE) {
+    const { id } = payload;
+    map.delete(id);
+  }
+};
+```
 
 ### 兼容考量
-* 足够大的缓冲区
-* 基于pull实现
+在现代浏览器中`Service Worker`、`Fetch API`、`Stream API`都已经得到了比较良好的支持，在这里我们使用到的相对最新特性`TransformStream`的兼容性也是不错的，在`2022`年后发布的浏览器版本基本得到了支持，然而如果我们在`MDN`的`TransformStream`兼容性中仔细观察一下，则会发现`TransformStream`作为`transferable`在`Safari`中至今还未支持。
 
-BASE64 Uint8Array Uint32Array 体积问题
+那么在这里会造成什么问题呢，我们可以注意到在先前`TRANSFER_START`的时候，我们是将`TransformStream`的`readable`端作为`Transferable Object`传递到`Service Worker`中，那么此时由于`Safari`不支持这个行为，我们的`ReadableStream`自然就无法传递到`Service Worker`中，因此我们后续的下载行为就无法继续了，因此如果需要兼容`Safari`的情况下，我们需要处理这个问题。
 
+这个问题的原因是我们无法将`ReadableStream`转移所有权到`Service Worker`中，因此可以想到的比较简单的办法就是直接在`Service Worker`中定义`ReadableStream`即可。也就是说，当传输开始时，我们实例化`ReadableStream`并且保存其控制器对象，当数据传递的时候，我们直接将数据块`enqueue`到缓冲队列中，而在传输结束时，我们直接调用`controller.close()`方法即可，而这个`readable`对象我们就可以直接作为请求拦截的`Response`响应为下载内容。
 
+```js
+let controller: ReadableStreamDefaultController | null = null;
+const readable = new ReadableStream({
+  start(ctr) {
+    controller = ctr;
+  },
+  cancel(reason) {
+    console.log("ReadableStream Aborted", reason);
+  },
+});
+map.set(fileId, [readable, controller!, Number(fileTotal)]);
 
+self.onmessage = event => {
+  const data = event.data as BufferType;
+  destructureChunk(data).then(({ id, series, data }) => {
+    const stream = map.get(id);
+    if (!stream) return void 0;
+    const [, controller, size] = stream;
+    controller.enqueue(new Uint8Array(data));
+    if (series === size - 1) {
+      controller.close();
+      map.delete(id);
+    }
+  });
+};
+```
+
+那么在这里我们就会意识到先前我们聊到的背压问题，由于在这里我们没有任何背压的反馈机制，而是仅仅将主线程的数据块全部接收并且`enqueue`到`ReadableStream`中，那么在数据传输速度比浏览器控制的下载`IO`速度快的情况下，很容易就会出现数据积压的情况。因此我们就需要想办法实现背压的控制，那么我们就可以比较容易地想到下面的方式。
+
+* 在实例化`ReadableStream`对象的时候，我们借助`CountQueuingStrategy`创建足够大的缓冲区，因为本身在传输的过程中我们已经得知了整个文件的大小以及分块的数量等信息，因此创建足够大的缓冲区是可行的。当然我们可能也没必要创建等同于分块数量大小的缓冲区，我们可以将其除`2`取整或者取对数都可以，毕竟下载的时候也通过写硬盘在不断消费的。
+* 在实例化`ReadableStream`时传递的`underlyingSource`对象中，除了`start`方法外实际上还有`pull`方法，当流的内部数据块队列未满时将会被反复调用，直到达到其高水印，我们则可以通过这个方法的调用作为事件驱动的机制来控制流的频率，需要注意的是只有在其至少入队一个数据块才会被反复调用，如果在`pull`函数调用的时候没有实际入队块，则不会被重复调用。
+
+我们在这里首先来看一下分配足够大的缓冲队列的问题，如果深入思考一下，即使分配了足够大的缓冲区，我们实际上并没有实现任何反馈机制去控制减缓数据的生产环节，那么这个缓冲区即使足够大也并没有解决我们的内存溢出问题，虽然即使实例化时分配了足够大的缓冲，也不会立即分配这么大的内存。那么此时即使我们不分配那么大的缓冲区，以默认模式实现的队列也是完全一样的，只是其内部的`desiredSize`会变成比较大的负值，而数据也并没有实际丢失，因为此时浏览器的流实现会将数据存储在内存中，直到消费方读取为止。
+
+那么我们再来看一下第二个实现，通过`pull`方法我们确实可以获得来自`ReadableStream`的缓冲队列反馈，那么我们就可以简单实现一个控制流的方式，考虑到我们会有两种状态，即生产大于消费以及消费大于生产，那么我们就不能单纯的在`pull`的时候再拉取数据，我们应该在内部再实现一个缓冲队列，而我们的事件驱动置入数据应该有两部分，分别是缓冲队列置入数据时需要检查是否上次拉取的数据没有成功而是在等待，此时需要调度上次`pull`时未完成的`Promise`，也就是消费大于生产的情况，还有一个事件是`pull`时直接检查缓冲队列是否有数据，如果有则直接置入数据，也就是生产大于消费的情况。
+
+```js
+const pending = new WeakMap<ReadableStream, (stream: string) => void>();
+const queue = ["1", "2", "3", "4"];
+const strategy = new CountQueuingStrategy({ highWaterMark: 3 });
+
+const underlyingSource: UnderlyingDefaultSource<string> = {
+  pull(controller) {
+    if (!queue.length) {
+      console.log("Pull Pending");
+      return new Promise<void>(resolve => {
+        const handler = (stream: string) => {
+          controller.enqueue(stream);
+          pending.delete(readable);
+          console.log("Pull Restore", stream);
+          resolve();
+        };
+        pending.set(readable, handler);
+      });
+    }
+    const next = queue.shift();
+    controller.enqueue(next);
+    console.log("Pull", next);
+    return void 0;
+  },
+};
+
+const readable = new ReadableStream<string>(underlyingSource, strategy);
+const write = (stream: string) => {
+  if (pending.has(readable)) {
+    console.log("Write Pending Pull", stream);
+    pending.get(readable)!(stream);
+  } else {
+    console.log("Write Queue", stream);
+    queue.push(stream);
+  }
+};
+
+// 使得读取任务后置 先让 pull 将 Readable 缓冲队列拉满
+setTimeout(async () => {
+  // 此时 queue 队列中还存在数据 生产大于消费
+  const reader = readable.getReader();
+  console.log("Read Twice");
+  // 读取后 queue 队列中数据已经读取完毕 消费等于生产
+  console.log("Read", await reader.read());
+  // 读取后 queue 队列为空 Readable 缓冲队列未满
+  // 之后 Readable 仍然发起 pull 事件 消费大于生产
+  console.log("Read", await reader.read());
+  console.log("Write Twice");
+  // 写入挂起的 pull 任务 消费等于生产
+  write("5");
+  // 写入 queue 队列 生产大于消费
+  write("6");
+}, 100);
+
+// Pull 1
+// Pull 2
+// Pull 3
+// Read Twice
+// Pull 4
+// Read {value: '1', done: false}
+// Pull Pending
+// Read {value: '2', done: false}
+// Write Twice
+// Write Pending Pull 5
+// Pull Restore 5
+// Write Queue 6
+```
+
+看起来我们实现了非常棒的基于`pull`的缓冲队列控制，但是我们仔细研究一下会发现我们似乎忽略了什么，我们是不是仅仅是将`ReadableStream`内置的缓冲队列提出来到了外边，实际上我们还是会面临内存压力，只不过这里的数据积压的位置从`ReadableStream`转移到了我们自己定义的数组之后，我们似乎完全没有解决问题。
+
+那么我们再来思考一下问题到底是出在哪里，当我们使用`TransformStream`的时候我们的背压控制似乎仅仅是`await writer.ready`就实现了，那么这里究竟意味着什么，我们可以很明显地思考出来这里是携带者反馈机制的，也就是说当其认为内部的队列承压之后，会主动阻塞生产者的数据生产，而我们的实现中似乎并没有从`Service Worker`到主线程的反馈机制，因此我们才没有办法处理背压问题。
+
+那么我们再看得本质一些，我们的通信方式是`postMessage`，那么在这里的问题是什么呢，或者是说如果我们想在主线程使用`await`的方式直接控制背压的话，我们缺乏的是什么，很明显是因为我们没有办法获得传输后事件的响应，那么在这里因为`postMessage`是单向通信的，我们没有办法做到`postMessage().then()`这样的操作，甚至于我们可以在`postMessage`之后立即置`ready`为挂起的`Promise`，等待响应数据的`resolve`，由此就可以做到类似的操作了。
+
+这个操作并不复杂，那么我们可不可以将其做的更通用一些，类似于`fetch`的实现，当我们发起一个请求/推送后，我们可以借助`Promise`在一定时间内甚至一直等待其对应的响应，而由于我们的`postMessage`是单向的数据传输，我们就需要在数据的层面上增加`id`标识，以便于我们可以得知当前的响应究竟应该`resolve`哪个`Promise`。
+
+考虑到这里，我们就需要处理数据的传输问题，也就是说由于我们需要对原始的数据中追加标识信息并不是一件容易的事，在`postMessage`中如果是字符串数据我们可以直接再构造一层对象，然而如果是`ArrayBuffer`数据的话，我们就需要操作其本身的`Buffer`，这显然是有些费劲的。因此我希望能够有一些简单的办法将其序列化，然后就可以以字符串的形式进行传输了，在这里我考虑了`BASE64`、`Uint8Array`、`Uint32Array`的序列化方式。
+
+我们就以最简单的`8`个字节为例，分别计算一下序列化之后的`BASE64`、`Uint8Array`、`Uint32Array`体积问题。如果我们此时数据的每位都是`0`的话，分别计算出的编码结果为`AAAAAAAAAAA=`、`[0,0,0,0,0,0,0,0]`、`[0,0]`，占用了`12`字符、`17`字符、`5`字符的体积。
+
+```js
+const buffer = new ArrayBuffer(8);
+const input = new Uint8Array(buffer);
+input.fill(0);
+
+const binaryStr = String.fromCharCode.apply(null, input);
+console.log("BASE64", btoa(binaryStr)) ; // AAAAAAAAAAA=
+const uint8Array = new Uint8Array(input);
+console.log("Uint8Array", uint8Array); // Uint8Array(8) [0, 0, 0, 0, 0, 0, 0, 0]
+const uint32Array = new Uint32Array(input.buffer);
+console.log("Uint32Array", uint32Array); // Uint32Array(2) [0, 0]
+```
+
+在上边的结果中我们看起来是`Uint32Array`的序列化结果最好，然而这是我们上述所有位都填充为`0`的情况，然而在实际的传输过程中肯定是没有这么理想的，那么我们再举反例，将其全部填充为`1`来测试效果。此时的结果就变得不一样了，分别计算出的编码结果为`//////////8=`、`[255,255,255,255,255,255,255,255]`、`[4294967295,4294967295]`，占用了`12`字符、`33`字符、`23`字符的体积。
+
+```js
+const buffer = new ArrayBuffer(8);
+const input = new Uint8Array(buffer);
+input.fill(0);
+
+const binaryStr = String.fromCharCode.apply(null, input);
+console.log("BASE64", btoa(binaryStr)) ; // //////////8=
+const uint8Array = new Uint8Array(input);
+console.log("Uint8Array", uint8Array); // Uint8Array(8) [255, 255, 255, 255, 255, 255, 255, 255]
+const uint32Array = new Uint32Array(input.buffer);
+console.log("Uint32Array", uint32Array); // Uint32Array(2) [4294967295, 4294967295]
+```
+
+这么看起来，还是`BASE64`的序列化结果比较稳重，因为其本身就是按位的编码方式，其会将每`6 bits`编码共`64`按照索引取数组中的字符，这样就变成了每`3`个字节即`24 bits`会编码为`4`个字符变成`32 bits`，而此时我们有`8`个字节也就是`64 bits`，不能够被`24 bits`完全整除，那么此时我们先处理前`6`个字节，如果全位都是`0`的话，那么前`8`个字符就全部是`A`，而此时我们还剩下`16 bits`，那么我们就填充`8 bits`将其凑为`24 bits`，然后再编码为`4`个字符(最后`6 bits`由`=`填充)，因此最终的结果就是`12`个字符。
+
+然而在这里我发现是我想多了，实际上我们并不需要考虑序列化的编码问题，在我们的`RTC DataChannel`确实是必须要纯字符串或者是`ArrayBuffer`等数据，不能直接传输对象，但是在`postMessage`中我们可以传递的数据是由`The Structured Clone Algorithm`算法控制的，而`ArrayBuffer`对象也是赫然在列的，而且也不需要借助`transfer`能力来实现所有权问题，其会实际执行内置的序列化方法。在我的实际测试中`Chrome`、`Firefox`、`Safari`都是支持这种直接的数据传输的，这里的传输毕竟都是在同一浏览器中进行的，其数据传输可以更加宽松一些。
+
+```html
+<!-- index.html -->
+ <script>
+    navigator.serviceWorker.register("./sw.js", { scope: "./" }).then(res => {
+        window.sw = res;
+    })
+</script>
+```
+
+```js
+// sw.js
+self.onmessage = (event) => {
+  console.log("Message", event);
+  self.message = event;
+};
+
+// 控制台执行 观察 SW 的数据响应以及值
+const buffer = new ArrayBuffer(8);
+const input = new Uint8Array(buffer);
+input.fill(255);
+sw.active.postMessage({ id: "test", buffer })
+```
+
+那么我们对于需要从`Service Worker`响应的数据实现就简单很多了，毕竟我们现在只需要将其当作普通的对象处理就可以了，也不需要考虑任何序列化的问题。此时我们就利用好`Promise`的特性，当接收到`postMessage`响应的时候，从全局的存储中查找当前`id`对应的`resolve`，并且将携带的数据作为参数执行即可，至此我们就可以很方便地进行背压的反馈了，我们同样也可以加入一些超时机制等避免`resolve`的积压。
+
+```js
+// 模拟 onMessage 方法
+let onMainMessage: ((event: { id: string; payload: string }) => void) | null = null;
+let onWorkerMessage: ((event: { id: string; payload: string }) => void) | null = null;
+
+// 模拟 postMessage 方法
+const postToWorker = (id: string, payload: string) => {
+  onWorkerMessage?.({ id, payload });
+};
+const postToMain = (id: string, payload: string) => {
+  onMainMessage?.({ id, payload });
+};
+
+// Worker
+(() => {
+  onWorkerMessage = ({ id, payload }) => {
+    console.log("Worker Receive", id, payload);
+    setTimeout(() => {
+      postToMain(id, "pong");
+    }, 1000);
+  };
+})();
+
+// Main
+(() => {
+  const map = new Map<string, (value: { id: string; payload: string }) => void>();
+  onMainMessage = ({ id, payload }) => {
+    const resolve = map.get(id);
+    resolve?.({ id, payload });
+    map.delete(id);
+  };
+  const post = (payload: string) => {
+    const id = Math.random().toString(36).slice(2);
+    return new Promise<{ id: string; payload: string }>(resolve => {
+      map.set(id, resolve);
+      postToWorker(id, payload);
+    });
+  };
+  post("ping").then(res => {
+    console.log("Main Receive", res.id, res.payload);
+  });
+})();
+```
 
 ## 每日一题
 
@@ -403,4 +757,5 @@ https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a#download
 https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition
 https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Concepts#backpressure
 https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects
+https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
 ```
