@@ -1,5 +1,5 @@
 # 基于ServiceWorker的文件传输方案
-`Service Worker`是一种驻留在用户浏览器后台的脚本，能够拦截和处理网络请求，从而实现丰富的离线体验、缓存管理和网络效率优化。请求拦截是其关键功能之一，通过监听 `fetch` 事件，`Service Worker`可以捕获所有向网络发出的请求，并有选择地处理这些请求，例如从缓存中读取响应，或者对请求进行修改和重定向，进而实现可靠的离线浏览和更快速的内容加载。
+`Service Worker`是一种驻留在用户浏览器后台的脚本，能够拦截和处理网络请求，从而实现丰富的离线体验、缓存管理和网络效率优化。请求拦截是其关键功能之一，通过监听`fetch`事件，`Service Worker`可以捕获所有向网络发出的请求，并有选择地处理这些请求，例如从缓存中读取响应，或者对请求进行修改和重定向，进而实现可靠的离线浏览和更快速的内容加载。
 
 ## 描述
 在前段时间，在群里看到有人提了一个问题，在从对象存储下载文件的时候，为什么实现了携带了一个`GitHub Pages`的地址，理论上而言我们从对象存储下载内容直接点连接就好了，然而这里竟然看起来似乎还有一个中间环节，像是需要被`GitHub Pages`拦截并中转才下载到本地，链接地址类似于下面的内容。此时如果我们在下载页面点击下载后，再打开浏览器的下载管理功能，可以发现下载地址实际上会变成一个更加奇怪的地址，而这个地址我们实际上直接在浏览器打开会响应`404`。
@@ -32,10 +32,9 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 恰好在先前我们基于`WebRTC`实现了局域网文件传输，而通过`WebRTC`传输的文件也会同样需要面对大文件传输的问题，并且由于其本身并不是`HTTP`协议，自然就不可能携带`Content-Disposition`等响应头。这样我们的大文件传输就必须要借助中间人的方式进行拦截，此时我们通过模拟`HTTP`请求的方式来生成虚拟的下载链接，并且由于本身就是分片传输，我们可以很轻松地借助`Stream API`来实现流式下载能力。那么本文就以`WebRTC`的文件传输为基础，来实现基于`Service Worker`的大文件传输方案，文中的相关实现都在`https://github.com/WindrunnerMax/FileTransfer`中。
 
 ## Stream API
-在`Fetch API`的`Response`对象中，存在`Response.body`属性用以获取响应的`ReadableStream`，而`ReadableStream`是`Stream API`中的一个接口，用以表示一个可读的流。通过这个接口我们可以实现流式的读取数据，而不需要一次性将所有数据读取到内存中，以此来渐进式地处理数据，例如在使用`fetch`实现`SSE - Server-Sent Events`的响应时，便可以通过维持长链接配合`ReadableStream`来实现数据的响应。
-
 浏览器实现的`Stream API`中存在`ReadableStream`、`WritableStream`、`TransformStream`三种流类型，其中`ReadableStream`用以表示可读的流，`WritableStream`用以表示可写的流，而`TransformStream`用以表示可读写的流。由于在浏览器中`Stream`的实现时间与机制并不相同，`ReadableStream`的兼容性与`Fetch API`基本一致，而`WritableStream`和`TransformStream`的兼容性则相对稍差一点。
 
+### 数据流动
 在最开始接触`Stream API`的时候，我难以理解整个管道的数据流，针对于缓冲区以及背压等问题本身是不难理解的，但是在实际将`Stream`应用的时候，我发现并不能理解整个流的模型的数据流动方向。在我的理解中，整个管道应该是以`WritableStream`起始用以写入/生产数据，而后继的管道则应该使用`ReadableStream`来读取/消费数据，而整个连接过程则可以通过`pipeTo`链接起来。
 
 ```js
@@ -114,6 +113,7 @@ const process = (res: { value?: number; done: boolean }) => {
 reader.read().then(process);
 ```
 
+### 背压问题
 那么在这里我们可以思考一个问题，如果此时我们的`DataChannel`的数据流的传输速度非常快，也就是不断地将数据`enqueue`到队列当中，而假如此时我们的消费速度非常慢，例如我们的硬盘写入速度比较慢，那么数据的队列就会不断增长，那么就可能导致内存溢出。实际上这个问题有专业的术语来描述，即`Back Pressure`背压问题，在`ReadableStream`中我们可以通过`controller.desiredSize`来获取当前队列的大小，以此来控制数据的生产速度，以此来避免数据的积压。
 
 ```js
@@ -153,6 +153,7 @@ const readable = new ReadableStream<number>({
 因此在我们的`WebRTC`数据传输中，为了方便地处理背压问题，我们是通过`TransformStream`的`writable`端来实现数据的写入，而消费则是通过`readable`端来实现的，这样我们就可以很好地控制数据的生产速度，并且可以在主线程中将`TransformStream`定义后，将`readable`端通过`postMessage`将其作为`Transferable Object`传递到`Service Worker`中消费即可。
 
 ```js
+// packages/webrtc/client/worker/event.ts
 export class WorkerEvent {
   public static start(fileId: string, fileName: string, fileSize: number, fileTotal: number) {
     const ts = new TransformStream();
@@ -184,10 +185,29 @@ export class WorkerEvent {
 }
 ```
 
+### Fetch
+在`Fetch API`的`Response`对象中，存在`Response.body`属性用以获取响应的`ReadableStream`，与上述对象一致同样用以表示可读的流。通过这个接口我们可以实现流式的读取数据，而不需要一次性将所有数据读取到内存中，以此来渐进式地处理数据，例如在使用`fetch`实现`SSE - Server-Sent Events`的响应时，便可以通过维持长链接配合`ReadableStream`来实现数据的响应。
+
+针对于`Fetch`方法，在接触`Stream API`之前我们可能主要的处理方式是调用`res.json()`等方法来读取数据，实际上这些方法同样会在其内部实现中隐式调用`ReadableStream.getReader()`来读取数据。而在`Stream API`出现之前，如果我们想要处理某种资源例如视频、文本文件等，我们必须下载整个文件，等待它反序列化为合适的格式，然后直接处理所有数据。
+
+因此在先前调研`StreamSaver.js`时，我比较费解的一个问题就是，既然我们请求的数据依然是需要从全部下载到内存中，那么在这种情况下我们使用`StreamSaver.js`依然无法做到流式地将数据写入硬盘，依然会存在浏览器`Tab`页的内存溢出问题。而在了解到`Fetch API`的`Response.body`属性后，关于整个流的处理方式就变得清晰了，我们可以不断地调用`read()`方法将数据传递到`Service Worker`调度下载即可。
+
+因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可，此外我们还可以实现一些诸如下载进度之类的效果。
+
+========================================= fetch下载方式ReadableStream =========================================
+
+```js
+
+```
+
 ## Service Worker
+`Service Worker`作为一种运行在后台的独立线程，具备充当网络请求中间人的能力，能够拦截、修改甚至完全替换网络请求和响应，从而实现高级功能如缓存管理、提升性能、离线访问、以及对请求进行细粒度的控制和优化。在这里我们就可以借助`Service Worker`为我们的请求响应加入`Content-Disposition`等响应头，以此来触发浏览器的下载能力，借助浏览器的`IO`实现大文件的下载。
+
+### 环境搭建
 在通过`Service Worker`实现中间人拦截网络请求之前，我们可以先看一下在`Service Worker`中搭建`TS`环境以及`Webpack`的配置。我们平时`TS`开发的环境的`lib`主要是`dom`、`dom.iterable`、`esnext`，而由于`Worker`中的全局变量以及持有的方法并不相同，因此其本身的`lib`环境需要改为`WebWorker`、`ESNext`，且如果不主动引入或者导出模块，`TS`会认为其是作为`d.ts`使用，因此即使我们在没有默认导入导出的情况下也要默认导出个空对象，而在有导入的情况下则需要注意将其在`tsconfig`中`include`相关模块。
 
 ```js
+// packages/webrtc/client/worker/index.ts
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 declare let self: ServiceWorkerGlobalScope;
@@ -197,6 +217,7 @@ export {};
 `Service Worker`本身作为独立的`Js`文件，其必须要在同源策略下运行，这里如果需要关注部署环境的路由环境的话，需要将其配置为独立的路由加载路径。而对于我们的静态资源本身来说则需要将我们实现的独立`Worker`作为入口文件配置到打包工具中，并且为了方便处理`SW`是否注册以及缓存更新，通常我们都是将其固定为确定的文件名，以此来保证其在缓存中的唯一性。
 
 ```js
+// packages/webrtc/rspack.client.js
 /**
  * @type {import("@rspack/cli").Configuration}
  */
@@ -219,6 +240,7 @@ module.exports = [/** ... */, Worker];
 在`Service Worker`中，我们可以在其`install`事件和`activate`事件中分别处理其安装与激活的逻辑，通常新的`Service Worker`安装完成后会进入等待阶段，直到旧的`Service Worker`被完全卸载后再进行激活，因此我们可以直接在`onInstall`时`skipWaiting`，在`onActive`事件中，我们可以通过`clients.claim`在激活后立即接管所有的客户端页面，无需等待页面刷新，这对于我们调试`SW`的时候非常有用。
 
 ```js
+// packages/webrtc/client/worker/index.ts
 self.addEventListener("install", () => {
   self.skipWaiting();
   console.log("Service Worker Installed");
@@ -230,9 +252,11 @@ self.addEventListener("activate", event => {
 });
 ```
 
+### 请求拦截
 接下来我们就要来研究一下`Service Worker`的拦截网络请求能力了，在`MDN`中存在对于`Fetch Event`的详细描述，而且`Fetch Event`是仅能够在`Service Worker`中使用的。而在这里我们的拦截请求与响应则非常简单，我们只需要从请求的地址中获取相关信息，即`id`、`name`、`size`、`total`，然后通过`ReadableStream`构造`Response`作为响应即可，这里主要需要关注的是`Content-Disposition`与`Content-Length`两个响应头，这是我们触发下载的关键配置。
 
 ```js
+// packages/webrtc/client/worker/index.ts
 self.onfetch = event => {
   const url = new URL(event.request.url);
   const search = url.searchParams;
@@ -282,9 +306,10 @@ return event.respondWith(fetch(event.request));
 return ;
 ```
 
-那么我们需要接着思考一个问题，应该如何触发下载，这里的`Service Worker`仅仅是拦截了请求，而在`WebRTC`的传输中并不会实际发起任何`HTTP`请求，因此我们需要主动触发这个请求，得益于`Service Worker`可以拦截几乎所有的请求，包括静态资源、网络请求等，因此我们可以直接借助创建`Iframe`的方式配合约定好的字段名来实现下载。
+那么我们需要接着思考一个问题，应该如何触发下载，这里的`Service Worker`仅仅是拦截了请求，而在`WebRTC`的传输中并不会实际发起任何`HTTP`请求，因此我们需要主动触发这个请求，得益于`Service Worker`可以拦截几乎所有的请求，包括静态资源、网络请求等，因此我们可以直接借助创建`Iframe`的方式配合约定好的字段名来实现下载，在这里实际上就是我们最开始提到的那个比较奇怪的链接地址了。
 
 ```js
+// packages/webrtc/client/worker/event.ts
 const src =
   `/${fileId}` +
   `?${HEADER_KEY.FILE_ID}=${fileId}` +
@@ -300,27 +325,62 @@ document.body.appendChild(iframe);
 
 在这里我们可能会好奇一个问题，为什么我们的请求信息是从`URL`上获取，而不是直接在原始请求的时候就构造完成相关的`Header`信息，在`Service Worker`中直接将约定的响应头直接转发即可，也就是说为什么要用`Iframe`而不是`fetch`请求并且携带请求头的方式来实现下载。实际上这是因为即使存在了`"Content-Disposition": "attachment; xxx"`响应头，`fetch`请求也不支持直接发起下载能力。
 
-HTML HTML Worker
+实际上在这里我还研究了一下`StreamSaver.js`的实现，这同样是个很有趣的事情，`StreamSaver.js`的运行环境本身就是个`Iframe`即`mitm.html`，那么我们姑且将其称为`B.html`，那么此时我们的主线程称其为`A.html`。此时我们在`B`中注册名为`B.js`的`Service Worker`，之后我们通过`python3 -m http.server 9000`等方式作为服务资源打开`A`的地址，新器端口`9001`打开`B`的地址，保证其存在跨域的情况。
+
+```html
+<!-- A.html -->
+<iframe src="http://localhost:9001/B.html" hidden></iframe>
+
+<!-- B.html -->
+<script>
+    navigator.serviceWorker.register("./B.js", { scope: "./" });
+</script>
+```
+
+```js
+// B.js
+self.onfetch = (e) => {
+  console.log(e.request.url);
+  if (e.request.url.includes("ping")) {
+    e.respondWith(new Response("pong"));
+  }
+};
+```
+
+此时我们在`A.html`中创建新的`iframe`地址`localhost:9001/ping`，也就是类似于在`StreamSaver.js`创建出的临时下载地址那种，我们可以发现这个地址竟然可以被监听到，即`Service Worker`可以拦截到这个请求，当时觉得这件事很神奇因为在不同域名的情况下理论上不可能被拦截的，本来以为发现了什么`iframe`的特性，最后发现我们访问的是`9001`的源地址，也就是相当于还是在`B.html`源下的资源，如果此时我们访问的是`9000`的资源则不会有这个效果了。
+
+```js
+const iframe = document.createElement("iframe");
+iframe.hidden = true;
+iframe.src = "http://localhost:9001/ping";
+document.body.appendChild(iframe);
+```
+
+此外实际上如果我们在浏览器的地址栏中直接打开`http://localhost:9001/ping`也是同样可以得到`pong`的响应的，也就是说`Service Worker`的拦截范围是在注册的`scope`范围内，那么实际上如果有必要的话，我们则完全可以基于`SW`来实现离线的`PWA`应用，而不需要依赖于服务器响应的路由以及接口。此外，这个效果在我们的`WebRTC`实现的`SW`中也是存在的，而当我们再次点击下载链接无法得到响应，是由于我们检查到`transfer`不存在，直接响应了`404`。
+
+```js
+if (!fileId || !fileName || !fileSize || !fileTotal) {
+  return void 0;
+}
+const transfer = map.get(fileId);
+if (!transfer) {
+  return event.respondWith(new Response(null, { status: 404 }));
+}
+```
+
+### 数据通信
+言归正传，接下来我们就需要实现与`Service Worker`的通信方案了，这里的实现就比较常规了
 
 Channel Transferable_objects
 
+
+### 兼容考量
 * 足够大的缓冲区
 * 基于pull实现
 
 BASE64 Uint8Array Uint32Array 体积问题
 
-## Fetch
-针对于`Fetch`方法，在接触`Stream API`之前我们可能主要的处理方式是调用`res.json()`等方法来读取数据，实际上这些方法同样会在其内部实现中隐式调用`ReadableStream.getReader()`来读取数据。而在`Stream API`出现之前，如果我们想要处理某种资源例如视频、文本文件等，我们必须下载整个文件，等待它反序列化为合适的格式，然后直接处理所有数据。
 
-因此在先前调研`StreamSaver.js`时，我比较费解的一个问题就是，既然我们请求的数据依然是需要从全部下载到内存中，那么在这种情况下我们使用`StreamSaver.js`依然无法做到流式地将数据写入硬盘，依然会存在浏览器`Tab`页的内存溢出问题。而在了解到`Fetch API`的`Response.body`属性后，关于整个流的处理方式就变得清晰了，我们可以不断地调用`read()`方法将数据传递到`Service Worker`调度下载即可。
-
-因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可，此外我们还可以实现一些诸如下载进度之类的效果。
-
-fetch下载方式ReadableStream
-
-```js
-
-```
 
 
 ## 每日一题
