@@ -14,9 +14,9 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 
 从链接中我们可以明显地看出这里是使用了`StreamSaver.js`来作为下载文件的中间环节，从`README`中我们可以看出`StreamSaver.js`是基于`ServiceWorker`的大文件下载方案。于是前段时间有时间将其实现研究了一番，通常我们需要调度文件下载时，可能会直接通过`<a />`标签在浏览器中直接打开目标链接便可以开始下载，然而这种方式有比较明显的三个问题: 
 
-1. 如果直接打开的资源是图片、视频等浏览器能够直接解析的资源，那么此时浏览器不会触发下载行为，而是会直接在浏览器中预览打开的资源，即默认的`Content-Disposition`值是`inline`，不会触发值为`attachment`的下载行为。当然，使用`<a />`标签的`download`可以解决这个问题，然而这个属性只有在同源`URL`、`blob:`和`data:`协议下才会生效。
-2. 如果我们上传到对象存储的文件存在重名资源的问题，那么为了防止文件被覆盖，我们可能会随机生成资源名或者在资源后面加上时间戳，甚至直接将文件名生成不带扩展名的`HASH`值。那么在文件下载的时候，我们就需要将文件名实际还原回来，然而这个过程仍然需要依赖响应的`attachment; filename=`，或者`<a />`标签的`download`属性来重命名文件。
-3. 如果我们请求的资源是需要校验权限才能正常下载，那么直接使用`<a />`标签进行资源请求的时候则仅仅是发起了`GET`请求，而且将密钥放置于请求的链接地址上显然是做不到真正的权限校验的。当然通过签发临时的`Token`并返回`GET`请求地址当然是可行的，但如果涉及到更复杂一些的权限控制以及审计追踪时，生成临时下载链接可能并不足以做到高安全性的要求，类似的问题在`EventSource`对象实现的`SSE`中更加明显。
+* 如果直接打开的资源是图片、视频等浏览器能够直接解析的资源，那么此时浏览器不会触发下载行为，而是会直接在浏览器中预览打开的资源，即默认的`Content-Disposition`值是`inline`，不会触发值为`attachment`的下载行为。当然，使用`<a />`标签的`download`可以解决这个问题，然而这个属性只有在同源`URL`、`blob:`和`data:`协议下才会生效。
+* 如果我们上传到对象存储的文件存在重名资源的问题，那么为了防止文件被覆盖，我们可能会随机生成资源名或者在资源后面加上时间戳，甚至直接将文件名生成不带扩展名的`HASH`值。那么在文件下载的时候，我们就需要将文件名实际还原回来，然而这个过程仍然需要依赖响应的`attachment; filename=`，或者`<a />`标签的`download`属性来重命名文件。
+* 如果我们请求的资源是需要校验权限才能正常下载，那么直接使用`<a />`标签进行资源请求的时候则仅仅是发起了`GET`请求，而且将密钥放置于请求的链接地址上显然是做不到真正的权限校验的。当然通过签发临时的`Token`并返回`GET`请求地址当然是可行的，但如果涉及到更复杂一些的权限控制以及审计追踪时，生成临时下载链接可能并不足以做到高安全性的要求，类似的问题在`EventSource`对象实现的`SSE`中更加明显。
 
 而在我们的项目中，恰好存在这样的历史遗留问题，我们的资源文件都会存储在`OSS-Object Storage Service`对象存储中，并且为了防止资源重名的问题，默认的资源策略是完全不携带文件的扩展名，而是直接将文件名生成`HASH`值，而且由于域名是基建自带的`CDN`加速域名，不能通过配置`CNAME`来定义为我们站点的域名，也就是说我们的资源必然存在跨域的问题，这就相当于把所有的限制都触及到了。
 
@@ -24,8 +24,8 @@ https://jimmywarting.github.io/StreamSaver.js/jimmywarting.github.io/712864/samp
 
 通过这种方式下载文件则又出现了另一个问题，将文件全部下载后都存在内存中可能会存在`OOM`的现象，对于现代浏览器来说并没有非常明确的单个`Tab`页的内存限制，而是根据系统资源动态分配的，但是只要在内存中下载足够大的文件，还是会触发`OOM`导致浏览器页面崩溃。那么在这种情况下，通过将`Service Worker`作为中间人拦截下载请求，并且在响应的`Header`中加入`Content-Disposition`来支持文件重命名，并且可以通过`Stream API`来实现流式的下载行为，由此避免全部将文件下载到内存当中。总结来说，在这里我们通过这种方式解决了两个问题: 
 
-1. 跨域资源的下载，通过劫持请求并增加相应头的方式，解决了跨域资源的重命名问题，并以此来直接调度浏览器`IO`来实现下载。
-2. 避免内存溢出问题，通过`Stream API`将`fetch`请求的数据分片写入文件，以此来做到流式下载，避免将文件全部写入到内存中。
+* 跨域资源的下载，通过劫持请求并增加相应头的方式，解决了跨域资源的重命名问题，并以此来直接调度浏览器`IO`来实现下载。
+* 避免内存溢出问题，通过`Stream API`将`fetch`请求的数据分片写入文件，以此来做到流式下载，避免将文件全部写入到内存中。
 
 那么除了在对象存储下载文件之外，这种数据处理方式还有很多应用场景，例如我们需要批量下载文件并且压缩时，可以主动`fetch`后通过`ReadableStream`读，并且`pipe`到类似压缩的实现中，例如`zlib.createDeflateRaw`的浏览器方案，再`pipe`到`WritableStream`中类似`FileSystemFileHandle.createWritable`以此来实时写入文件，这样就可以做到高效的文件读写，而不需要将其全部持有在内存中。
 
@@ -129,12 +129,12 @@ const readable = new ReadableStream<number>({
 });
 ```
 
-而对于背压问题， 我们可以很简单地理解到，当我们的数据生产速度大于数据消费速度时，就会导致数据的积压，那么针对于`ReadableStream`与`WritableStream`，我们可以分别得到相关的排队策略。
+而对于背压问题， 我们可以很简单地理解到，当我们的数据生产速度大于数据消费速度时，就会导致数据的积压，那么针对于`ReadableStream`与`WritableStream`，我们可以分别得到相关的排队策略，实际上我们也能够很容易理解到背压所谓的压力都是来自于缓冲队列中未消费的块，当然我们也可以预设比较大的缓冲队列长度，只不过这样虽然避免了`desiredSize`为负值，但是并不能解决背压问题。
 
 * 对于`ReadableStream`，背压来自于已入队但尚未读取的块。
 * 对于`WritableStream`，背压来自于已写入但尚未由底层接收器处理的块。
 
-而在先前的`ReadableStream`实现中，我们可以很明显地看到其本身并没有携带背压的默认处理机制，即使我们可以通过`desiredSize`来判断当前内置队列的压力，但是我们并不能很明确地反馈数据的生产速度，当然我们也可以通过`pull`方法来被动控制队列的数据量。而在`WritableStream`中则存在内置的背压处理方法即`writer.ready`，通过这个方法我们可以判断当前队列的压力，以此来控制数据的生产速度。
+而在先前的`ReadableStream`实现中，我们可以很明显地看到其本身并没有携带背压的默认处理机制，即使我们可以通过`desiredSize`来判断当前内置队列的压力，但是我们并不能很明确地反馈数据的生产速度，我们更希望基于事件驱动来控制而不是类似于`setTimeout`来轮训检查，当然我们也可以通过`pull`方法来被动控制队列的数据量。而在`WritableStream`中则存在内置的背压处理方法即`writer.ready`，通过这个方法我们可以判断当前队列的压力，以此来控制数据的生产速度。
 
 ```js
 (async () => {
@@ -185,14 +185,127 @@ export class WorkerEvent {
 ```
 
 ## Service Worker
+在通过`Service Worker`实现中间人拦截网络请求之前，我们可以先看一下在`Service Worker`中搭建`TS`环境以及`Webpack`的配置。我们平时`TS`开发的环境的`lib`主要是`dom`、`dom.iterable`、`esnext`，而由于`Worker`中的全局变量以及持有的方法并不相同，因此其本身的`lib`环境需要改为`WebWorker`、`ESNext`，且如果不主动引入或者导出模块，`TS`会认为其是作为`d.ts`使用，因此即使我们在没有默认导入导出的情况下也要默认导出个空对象，而在有导入的情况下则需要注意将其在`tsconfig`中`include`相关模块。
 
-拦截 fetch
+```js
+/// <reference lib="esnext" />
+/// <reference lib="webworker" />
+declare let self: ServiceWorkerGlobalScope;
+export {};
+```
 
+`Service Worker`本身作为独立的`Js`文件，其必须要在同源策略下运行，这里如果需要关注部署环境的路由环境的话，需要将其配置为独立的路由加载路径。而对于我们的静态资源本身来说则需要将我们实现的独立`Worker`作为入口文件配置到打包工具中，并且为了方便处理`SW`是否注册以及缓存更新，通常我们都是将其固定为确定的文件名，以此来保证其在缓存中的唯一性。
+
+```js
+/**
+ * @type {import("@rspack/cli").Configuration}
+ */
+const Worker = {
+  context: __dirname,
+  entry: {
+    worker: "./client/worker/index.ts",
+  },
+  devtool: isDev ? "source-map" : false,
+  output: {
+    clean: true,
+    filename: "[name].js",
+    path: path.resolve(__dirname, "build/static"),
+  },
+};
+
+module.exports = [/** ... */, Worker];
+```
+
+在`Service Worker`中，我们可以在其`install`事件和`activate`事件中分别处理其安装与激活的逻辑，通常新的`Service Worker`安装完成后会进入等待阶段，直到旧的`Service Worker`被完全卸载后再进行激活，因此我们可以直接在`onInstall`时`skipWaiting`，在`onActive`事件中，我们可以通过`clients.claim`在激活后立即接管所有的客户端页面，无需等待页面刷新，这对于我们调试`SW`的时候非常有用。
+
+```js
+self.addEventListener("install", () => {
+  self.skipWaiting();
+  console.log("Service Worker Installed");
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(self.clients.claim());
+  console.log("Service Worker Activate");
+});
+```
+
+接下来我们就要来研究一下`Service Worker`的拦截网络请求能力了，在`MDN`中存在对于`Fetch Event`的详细描述，而且`Fetch Event`是仅能够在`Service Worker`中使用的。而在这里我们的拦截请求与响应则非常简单，我们只需要从请求的地址中获取相关信息，即`id`、`name`、`size`、`total`，然后通过`ReadableStream`构造`Response`作为响应即可，这里主要需要关注的是`Content-Disposition`与`Content-Length`两个响应头，这是我们触发下载的关键配置。
+
+```js
+self.onfetch = event => {
+  const url = new URL(event.request.url);
+  const search = url.searchParams;
+  const fileId = search.get(HEADER_KEY.FILE_ID);
+  const fileName = search.get(HEADER_KEY.FILE_NAME);
+  const fileSize = search.get(HEADER_KEY.FILE_SIZE);
+  const fileTotal = search.get(HEADER_KEY.FILE_TOTAL);
+  if (!fileId || !fileName || !fileSize || !fileTotal) {
+    return void 0;
+  }
+  const transfer = map.get(fileId);
+  if (!transfer) {
+    return event.respondWith(new Response(null, { status: 404 }));
+  }
+  const [readable] = transfer;
+  const newFileName = encodeURIComponent(fileName).replace(/['()]/g, escape).replace(/\*/g, "%2A");
+  const responseHeader = new Headers({
+    [HEADER_KEY.FILE_ID]: fileId,
+    [HEADER_KEY.FILE_SIZE]: fileSize,
+    [HEADER_KEY.FILE_NAME]: newFileName,
+    "Content-Type": "application/octet-stream; charset=utf-8",
+    "Content-Security-Policy": "default-src 'none'",
+    "X-Content-Security-Policy": "default-src 'none'",
+    "X-WebKit-CSP": "default-src 'none'",
+    "X-XSS-Protection": "1; mode=block",
+    "Cross-Origin-Embedder-Policy": "require-corp",
+    "Content-Disposition": "attachment; filename*=UTF-8''" + newFileName,
+    "Content-Length": fileSize,
+  });
+  const response = new Response(readable, {
+    headers: responseHeader,
+  });
+  return event.respondWith(response);
+}
+```
+
+在这里还有一件有趣的事情，在上面的实现中我们可以看到对于从请求地址中取得相关信息的检查，如果检查不通过则返回`undefined`。这实际上是个很常见的拦截`Case`，即不符合条件的请求我们直接放行即可，而在之前我一直比较纳闷的问题是，任何经过`Service Worker`拦截的请求都会在我们的`Network`控制台面板中出现带着齿轮符号的请求，也就是从`Service Worker`中发起的请求，这样在调试的时候会显得非常混乱。
+
+实际上这就单纯是我们使用出现了问题，从提示信息能够明显地看出来这是从`Service Worker`中发起的请求，而实际上这个请求我们直接让其通过原本的链路请求即可，不需要从`Service Worker`中实际代理，而触发这个请求条目的主要原因是我们调用了`fetch`方法，而无论是直接返回`fetch`还是通过`event.respondWith(fetch)`都会触发这个请求条目，因此我们在拦截请求的时候，如果不符合条件则直接返回`undefined`即可。
+
+```js
+// 会再次发起请求
+return fetch(event.request);
+return event.respondWith(fetch(event.request));
+
+// 不会再次发起请求
 return ;
+```
+
+那么我们需要接着思考一个问题，应该如何触发下载，这里的`Service Worker`仅仅是拦截了请求，而在`WebRTC`的传输中并不会实际发起任何`HTTP`请求，因此我们需要主动触发这个请求，得益于`Service Worker`可以拦截几乎所有的请求，包括静态资源、网络请求等，因此我们可以直接借助创建`Iframe`的方式配合约定好的字段名来实现下载。
+
+```js
+const src =
+  `/${fileId}` +
+  `?${HEADER_KEY.FILE_ID}=${fileId}` +
+  `&${HEADER_KEY.FILE_SIZE}=${fileSize}` +
+  `&${HEADER_KEY.FILE_TOTAL}=${fileTotal}` +
+  `&${HEADER_KEY.FILE_NAME}=${fileName}`;
+const iframe = document.createElement("iframe");
+iframe.hidden = true;
+iframe.src = src;
+iframe.id = fileId;
+document.body.appendChild(iframe);
+```
+
+在这里我们可能会好奇一个问题，为什么我们的请求信息是从`URL`上获取，而不是直接在原始请求的时候就构造完成相关的`Header`信息，在`Service Worker`中直接将约定的响应头直接转发即可，也就是说为什么要用`Iframe`而不是`fetch`请求并且携带请求头的方式来实现下载。实际上这是因为即使存在了`"Content-Disposition": "attachment; xxx"`响应头，`fetch`请求也不支持直接发起下载能力。
 
 HTML HTML Worker
 
 Channel Transferable_objects
+
+* 足够大的缓冲区
+* 基于pull实现
 
 BASE64 Uint8Array Uint32Array 体积问题
 
@@ -201,7 +314,7 @@ BASE64 Uint8Array Uint32Array 体积问题
 
 因此在先前调研`StreamSaver.js`时，我比较费解的一个问题就是，既然我们请求的数据依然是需要从全部下载到内存中，那么在这种情况下我们使用`StreamSaver.js`依然无法做到流式地将数据写入硬盘，依然会存在浏览器`Tab`页的内存溢出问题。而在了解到`Fetch API`的`Response.body`属性后，关于整个流的处理方式就变得清晰了，我们可以不断地调用`read()`方法将数据传递到`Service Worker`调度下载即可。
 
-因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可。
+因此调度文件下载的方式大概与上述的`WebRTC`传输方式类似，在我们已经完成劫持数据请求的中间人`Service Worker`之后，我们只需要在主线程部分发起`fetch`请求，然后在响应数据时通过`Iframe`发起劫持的下载请求，然后通过`Response.body.getReader()`分片读取数据，并且不断将其写入到`TransformStream`的`Writer`中即可，此外我们还可以实现一些诸如下载进度之类的效果。
 
 fetch下载方式ReadableStream
 
