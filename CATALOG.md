@@ -1,5 +1,10 @@
 # Catalog
 
+**2024-09-09**
+> 第416题：[基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
+
+<br>
+
 **2024-08-06**
 > 第415题：[初探webpack之解析器resolver](Plugin/初探webpack之解析器resolver.md)
 
