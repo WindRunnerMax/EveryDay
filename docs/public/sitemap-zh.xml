@@ -1524,7 +1524,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于WebRTC的局域网文件传输.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-01-01T02:40:04.000Z</lastmod>
+  <lastmod>2024-08-31T13:23:40.000Z</lastmod>
 </url>
 
 <url>
@@ -1548,7 +1548,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探富文本之文档虚拟滚动.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-05-14T14:22:06.000Z</lastmod>
+  <lastmod>2024-08-31T13:23:40.000Z</lastmod>
 </url>
 
 <url>
@@ -1559,6 +1559,12 @@
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探webpack之解析器resolver.html</loc>
+  <priority>1.0</priority>
+  <lastmod>2024-08-06T14:38:23.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于ServiceWorker的文件传输方案.html</loc>
   <priority>1.0</priority>
 </url>
 
@@ -2900,7 +2906,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-03-22T12:47:52.000Z</lastmod>
+  <lastmod>2024-08-31T13:23:40.000Z</lastmod>
 </url>
 
 </urlset>

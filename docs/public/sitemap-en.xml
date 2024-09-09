@@ -1560,6 +1560,12 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之解析器resolver.html</loc>
   <priority>1.0</priority>
+  <lastmod>2024-08-06T14:38:23.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/Plugin/基于ServiceWorker的文件传输方案.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
@@ -2900,7 +2906,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T09:41:40.000Z</lastmod>
+  <lastmod>2024-08-31T13:23:40.000Z</lastmod>
 </url>
 
 </urlset>

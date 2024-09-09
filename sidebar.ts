@@ -304,6 +304,7 @@ export const sidebar: Sidebar = {
         "Plugin/初探富文本之文档虚拟滚动",
         "Plugin/基于Chrome扩展的浏览器事件",
         "Plugin/初探webpack之解析器resolver",
+        "Plugin/基于ServiceWorker的文件传输方案",
       ],
     },
     {
