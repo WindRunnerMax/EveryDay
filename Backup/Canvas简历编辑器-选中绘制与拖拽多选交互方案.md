@@ -1,9 +1,9 @@
 # Canvas简历编辑器-选中绘制与拖拽多选交互方案
 
-在之前我们聊了聊如何基于`Canvas`与基本事件组合实现了轻量级`DOM`，并且在此基础上实现了如何进行管理事件以及多层级渲染的能力设计。那么此时我们就依然在轻量级`DOM`的基础上，关注于实现选中绘制与拖拽多选交互设计。
+在之前我们聊了聊如何基于`Canvas`与基本事件组合实现了轻量级`DOM`，并且在此基础上实现了如何进行管理事件以及多层级渲染的能力设计。那么此时我们就依然在轻量级`DOM`的基础上，关注于实现选中绘制与拖拽多选交互方案。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 
@@ -13,7 +13,7 @@
 * [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](https://juejin.cn/spost/7354986873733333055)
 * [Canvas简历编辑器-Monorepo+Rspack工程实践](https://juejin.cn/spost/7357349281885503500)
 * [Canvas简历编辑器-层级渲染与事件管理能力设计](https://juejin.cn/spost/7376197082203684873)
-* [Canvas简历编辑器-选中绘制与拖拽多选交互方案]()
+* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](https://juejin.cn/post/7415654362972585984)
 
 ## 选中绘制
 我们先来聊一聊最基本的节点点击选中以及拖拽的交互，而在聊具体的代码实现之前，我们先来看一下对于图形的绘制问题。在`Canvas`中我们绘制路径的话，我们可以通过`fill`来填充路径，也可以通过`stroke`来描边路径，而在我们描边的时候，如果不注意的话可能会陷入一些绘制的问题。假如此时我们要绘制一条线，我们可以分别来看下使用`stroke`和`fill`的绘制方法实现，此时如果在高清`ctx.scale(devicePixel, devicePixel)`情况下，则能明显地看出来绘制位置差`0.5px`，而如果基准为`1px`的话则会出现`1px`的差值以及色值偏差。
@@ -438,4 +438,4 @@ export class SelectNode extends Node {
 ```
 
 ## 最后
-在这里我们就依然在轻量级`DOM`的基础上，讨论了`Canvas`中描边与填充的绘制问题，以及`inside stroke`的实现方式，然后我们实现了基本的选中绘制以及拖拽多选的交互设计，并且实现了`Hover`的效果，以及拖拽节点的移动。那么在后边我们可以聊一下`fillRule`规则设计、按需绘制图形节点，也可以聊到更多的交互设计，例如`Resize`的交互设计、参考线能力的实现、富文本的绘制方案等等。
+在这里我们就依然在轻量级`DOM`的基础上，讨论了`Canvas`中描边与填充的绘制问题，以及`inside stroke`的实现方式，然后我们实现了基本的选中绘制以及拖拽多选的交互方案，并且实现了`Hover`的效果，以及拖拽节点的移动。那么在后边我们可以聊一下`fillRule`规则设计、按需绘制图形节点，也可以聊到更多的交互方案，例如`Resize`的交互方案、参考线能力的实现、富文本的绘制方案等等。
