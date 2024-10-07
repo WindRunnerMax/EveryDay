@@ -133,8 +133,13 @@
           let title = decodeURIComponent(
             vm.route.path.split("/").slice(-1).pop()
           );
-          if (!title) title = window.$docsify.name;
+          if (!title) {
+            title = window.$docsify.name;
+          }
           document.title = title;
+          if (title === "WindRunnerMax") {
+            title = "WindrunnerMax";
+          }
           for (
             let n = document.getElementById("gitalk-container");
             n.hasChildNodes();
