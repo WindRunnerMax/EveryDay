@@ -168,4 +168,4 @@ export const isTextBlock = (editor: Editor, node: Node): node is TextBlockElemen
 ```
 
 ## 最后
-在这里我们更专注于文档编辑器的数据结构设计，聊聊基于`slate`实现的文档编辑器类型系统。在`slate`中还有很多额外的概念和操作需要关注，例如`Range`、`Operation`、`Editor`、`Element`、`Path`等，那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的，并且我们还可以聊一聊表格模块的设计与实现。
+在这里我们更专注于文档编辑器的数据结构设计，聊了聊基于`slate`实现的文档编辑器类型系统。在`slate`中还有很多额外的概念和操作需要关注，例如`Range`、`Operation`、`Editor`、`Element`、`Path`等，那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的，并且我们还可以聊一聊表格模块的设计与实现。
