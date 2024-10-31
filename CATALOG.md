@@ -1,5 +1,10 @@
 # Catalog
 
+**2024-10-31**
+> 第417题：[初探富文本之搜索替换算法](Plugin/初探富文本之搜索替换算法.md)
+
+<br>
+
 **2024-09-09**
 > 第416题：[基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
 

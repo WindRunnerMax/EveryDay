@@ -290,6 +290,7 @@
 * [基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md)
 * [初探webpack之解析器resolver](Plugin/初探webpack之解析器resolver.md)
 * [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
+* [初探富文本之搜索替换算法](Plugin/初探富文本之搜索替换算法.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
