@@ -1081,7 +1081,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Vue/Vue中虚拟DOM的理解.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2024-09-19T08:54:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1565,6 +1565,12 @@
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于ServiceWorker的文件传输方案.html</loc>
+  <priority>1.0</priority>
+  <lastmod>2024-09-09T15:09:46.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探富文本之搜索替换算法.html</loc>
   <priority>1.0</priority>
 </url>
 
@@ -2906,7 +2912,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-08-31T13:23:40.000Z</lastmod>
+  <lastmod>2024-09-27T11:46:32.000Z</lastmod>
 </url>
 
 </urlset>
