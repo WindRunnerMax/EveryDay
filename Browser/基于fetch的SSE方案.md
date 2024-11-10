@@ -204,22 +204,7 @@ export class StreamParser {
 
 ```js
 // packages/fetch-sse/server/utils/steam-parser.ts
-export type Message = {
-  event: string;
-  data: string;
-  id?: string;
-};
-
 export class StreamParser {
-  private buffer: Uint8Array;
-  private message: Partial<Message>;
-  public onMessage?: (message: Message) => void;
-
-  constructor() {
-    this.message = {};
-    this.buffer = new Uint8Array();
-  }
-
   private onLine(bytes: Uint8Array) {
     if (bytes.length === 0) {
       if (this.onMessage && this.message.event) {
@@ -254,6 +239,7 @@ export class StreamParser {
 这里需要注意的是，在`Node`中的`ReadableStream`与浏览器实现的`ReadableStream`函数签名是不一样的，因此这里我们直接方便地使用`await`迭代数据即可，当然使用`on("data") on("end")`来接收数据与结束响应即可。我们还需要绑定`onMessage`事件来接收解析好的数据，并且将数据响应到目标客户端即可。
 
 ```js
+// packages/fetch-sse/server/utils/steam-parser.ts
 const parser = new StreamParser();
 parser.onMessage = message => {
   res.write(`event: ${message.event}\n`);
@@ -271,28 +257,231 @@ res.end();
 
 
 ### 请求代理
+当不需要进行数据预处理的情况下，我们可以直接将请求作为`HTTP`长连接代理到目标的请求地址，而不需要实际实现接收响应后再转发到客户端。在这里我们可以直接借助`http`模块来实现转发，首先需要`node:url`模块来解析目标地址，然后就可以通过`http.request`来发起请求，当建立连接之后就可以直接将数据`pipe`到目标的`Response`对象中，当然使用`proxyRes.on("data") + res.write`也是可以的。
 
+```js
+// packages/fetch-sse/server/modules/proxy.ts
+const targetUrl = new URL("http://127.0.0.1:8800/stream");
+const options: http.RequestOptions = {
+  hostname: targetUrl.hostname,
+  port: targetUrl.port,
+  path: targetUrl.pathname,
+  method: req.method,
+  headers: req.headers,
+};
+const proxyReq = http.request(options, proxyRes => {
+  res.writeHead(proxyRes.statusCode || 404, proxyRes.headers);
+  proxyRes.pipe(res);
+});
+```
 
-req.on("close")+req.on("data") 
+这里我们自然还需要处理一些特殊情况，首先是对于`POST`请求的`body`数据处理，我们需要将请求的所有数据同样转发到新的请求上，这里同样也可以使用`req.on("data") + proxyReq.write`来实现。而对异常处理我们也需要将响应错误信息传递到客户端，这里的错误码响应还是比较重要的，并且将对目标的请求关闭。当客户端的请求关闭之后，同样需要关闭目标的请求，以及结束响应。
+
+```js
+req.pipe(proxyReq);
+
+proxyReq.on("error", error => {
+  console.log("proxy error", error);
+  res.writeHead(502, { "Content-Type": "text/plain" });
+  res.end("Bad Gateway");
+});
+
+req.socket.on("close", () => {
+  console.log("[proxy] connection close");
+  res.end();
+  proxyReq.destroy();
+});
+```
+
+其实在这里还有个问题，如果使用`req.on("close")`来监听客户端的连接关闭，那么在`POST`请求中会出现问题。我们可以直接执行下面的`node`程序，然后就可以使用`curl`来发起请求，之后主动断开链接，然后就可以发现`req.on("close")`会触发地过早，而不是在我们主动断开请求之后才会执行。
 
 ```bash
-curl -X POST http://127.0.0.1:8800/proxy \
+echo "
+const http = require('http');
+const server = http.createServer((req, res) => {
+  req.on('close', () => {
+    console.log('close');
+  });
+  req.on('data', (chunk) => {
+    console.log('data:', new TextDecoder().decode(chunk));
+  });
+  setTimeout(() => res.end('end'), 10000);
+});
+server.listen(8001);
+" | node;
+```
+
+
+```bash
+curl -X POST http://127.0.0.1:8001 \
 -H "Content-Type: application/json"  \
 -d '{"key1":"value1", "key2":"value2"}'
 ```
 
-req.socket.on("close")/connection.on("close")
+实际上在这里我们的请求中存在`req.on("close")`、`res.on("close")`、`req.socket.on("close")`这三个事件，在`req`的事件会被上述携带`body`的数据所影响，因此此处可以使用`res`和`socket`上的事件来监听客户端的连接关闭，为了方便我们的事件触发，在此处我们直接使用`socket`上的事件来监听客户端的连接关闭，此外`socket`属性在`node16`前的属性名为`connection`。
 
+```bash
+echo "
+const http = require('http');
+const server = http.createServer((req, res) => {
+  res.on('close', () => {
+    console.log('res close');
+  });
+  req.socket.on('close', () => {
+    console.log('socket close');
+  });
+  req.on('data', (chunk) => {
+    console.log('data:', new TextDecoder().decode(chunk));
+  });
+  setTimeout(() => res.end('end'), 10000);
+});
+server.listen(8001);
+" | node;
+```
+
+
+```bash
+curl -X POST http://127.0.0.1:8001 \
+-H "Content-Type: application/json"  \
+-d '{"key1":"value1", "key2":"value2"}'
+```
 
 ## 客户端
+在客户端我们则需要基于`fetch`实现`SSE`，通过`fetch`可以传递请求头与请求体，并且可以发送`POST`等类型的请求，避免仅能发送`GET`请求而需要将所有内容编码到`URL`上的问题。如果连接中断，我们还可以控制重试策略，对于`EventSource对象`浏览器将默默地为您重试几次然后停止，这对于任何类型的强大应用程序来说都不够好。如果需要在解析事件源之前进行一些自定义验证与处理，也可以访问响应对象，这对于应用服务端程序前的`API`网关等设计非常有效。
 
 ### fetch实现
+基于`fetch`的实现实际上还是比较简单的，我们首先需要创建一个`AbortController`对象，以便在客户端关闭连接时及时终止请求，然后就可以通过`fetch`来发起请求，当请求成功后我们就可以通过`res.body`来读取`ReadableStream`。
 
-无法在控制台的面板显示
+```js
+// packages/fetch-sse/client/components/fetch.tsx
+const signal = new AbortController();
+fetch("/proxy", { method: "POST", signal: signal.signal })
+  .then(res => {
+    onOpen(res);
+    const body = res.body;
+    if (!body) return null;
+  })
+```
+
+对于数据的流式处理，与在服务端实现的`StreamParser`的方法是一致的，先前我们也提到了由于`ReadableStream`的函数签名不同，在这里我们就使用`Promise`的链式调用来处理，而对于`Uint8Array`数据的处理，则与先前保持一致。在这里实际上还有个有趣的事情，使用`EventSource`对象在浏览器控制台的`Network`中是可以看到`EventStream`的数据传输面板，而使用`fetch`的数据交换则是无法记录的。
+
+```js
+// packages/fetch-sse/client/components/fetch.tsx
+const reader = body.getReader();
+const parser = new StreamParser();
+parser.onMessage = onMessage;
+const process = (res: ReadableStreamReadResult<Uint8Array>) => {
+  if (res.done) return null;
+  parser.onBinary(res.value);
+  reader
+    .read()
+    .then(process)
+    .catch(() => null);
+};
+reader.read().then(process);
+```
 
 ### 流式交互
+当我们的数据传输方案实现之后，我们就可以在客户端实现流式的交互。当我们借助`StreamParser`方法来解析出行数据之后，就需要进行解码操作，这个方法与上述的编码方案是相反的，此处只需要将`\\n`替换为`\n`即可。然后在这里我们设置两种速度的输出交互，如果未输出的文本内容过多，则`10ms`来输出一个文字，否则就以`50ms`的速度输出文字。
 
+```js
+// packages/fetch-sse/client/components/stream.tsx
+const onMessage = useMemoFn((e: Message) => {
+  if (e.event !== "message") return null;
+  setPainting(true);
+  const data = e.data;
+  const text = data.replace(/\\n/g, "\n");
+  const start = currentIndex.current;
+  const len = text.length;
+  const delay = len - start > 50 ? 10 : 50;
+  const process = () => {
+    currentIndex.current++;
+    const end = currentIndex.current;
+    append(text.slice(0, end));
+    if (end < len) {
+      timer.current = setTimeout(process, delay);
+    }
+    if (!transmittingRef.current && end >= len) {
+      setPainting(false);
+    }
+  };
+  setTimeout(process, delay);
+});
+```
 
+当我们将数据解析出来后，就需要将其应用到`DOM`结构上，这里需要注意的一点是，如果我们全量刷新整个`DOM`内容的话，会导致我们无法选中先前输出的内容来复制，也就是说我们不能一边输出内容一边选中内容。因此在这里我们需要将更新的内容精细化，最简单的方案就是按行更新，我们可以记录上次渲染的行索引，更新范围则是上次索引到当前索引。
+
+```js
+// packages/fetch-sse/client/components/stream.tsx
+const append = (text: string) => {
+  const el = ref.current;
+  if (!el) return null;
+  const mdIt = MarkdownIt();
+  const textHTML = mdIt.render(text);
+  const dom = new DOMParser().parseFromString(textHTML, "text/html");
+  const current = currentDOMIndex.current;
+  const children = Array.from(el.children);
+  for (let i = current; i < children.length; i++) {
+    children[i] && children[i].remove();
+  }
+  const next = dom.body.children;
+  for (let i = current; i < next.length; i++) {
+    next[i] && el.appendChild(next[i].cloneNode(true));
+  }
+  currentDOMIndex.current = next.length - 1;
+};
+```
+
+在这里还有个滚动交互的问题需要处理，当用户自由滚动内容的时候，我们则不能将用户滚动的位置强制拉回到底部，因此我们需要记录用户是否滚动过，当用户滚动过的时候我们就不再自动滚动，如果`el.scrollHeight - el.scrollTop`与`el.clientHeight`的差值小于`1`的话，则认为应该自动滚动，此外这里还需要注意`scrollTo`不能使用`smooth`的滚动效果，这样会导致我们的`onScroll`滚动计算不准确。
+
+```js
+const append = (text: string) => {
+  isAutoScroll.current && el.scrollTo({ top: el.scrollHeight });
+};
+
+useEffect(() => {
+  const el = ref.current;
+  if (!el) return;
+  el.onscroll = () => {
+    if (el.scrollHeight - el.scrollTop - el.clientHeight <= 1) {
+      isAutoScroll.current = true;
+    } else {
+      isAutoScroll.current = false;
+    }
+  };
+  return () => {
+    el.onscroll = null;
+  };
+}, []);
+```
+
+在这里的流式输出中，我们还可以实现光标闪烁效果，这个效果比较简单，我们可以直接使用`CSS`的动画与伪类来实现，这里需要注意的是如果不使用伪类来实现的话，则会导致我们先前的`DOM`节点追加需要处理的问题则需要多一些。此外，由于处理`Markdown`实际上是会存在节点的嵌套的，因此对于节点的处理则需要`:not`来具体化处理。
+
+```scss
+// packages/fetch-sse/client/styles/stream.m.scss
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.textarea {
+  &.painting > *:last-child:not(ol):not(ul),
+  &.painting > ol:last-child > li:last-child,
+  &.painting > ul:last-child > li:last-child {
+    &::after {
+      animation: blink 1s infinite;
+      background-color: #000;
+      content: '';
+      display: inline-block;
+      height: 1em;
+      margin-top: -2px;
+      vertical-align: middle;
+      width: 1px;
+    }
+  }
+}
+```
 
 ## 每日一题
 
