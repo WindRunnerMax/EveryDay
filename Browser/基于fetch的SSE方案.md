@@ -22,11 +22,78 @@ const ping = (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingM
 }
 ```
 
+`SSE`实际上是一种协议，那么既然是协议自然就需要有固定的格式，在`text/event-stream`的响应格式中，每组数据都是以`\n\n`分隔的，而在组中的数据如果需要传递多种类型，则需要以`\n`分隔，例如我们需要同时传递`id`、`event`和`data`字段的数据:
 
+```plain
+id: 1
+event: message
+data: hello world
 
-自动重连与事件 ID 管理
+id: 2
+event: custom
+data: hello
+data: world
+```
 
+在`Server-Sent Events`事件中，自带了自动重连与事件`id`管理方法，当然这些处理都是在浏览器预设的`EventSource`来实现的，如果我们使用`fetch`来实现则需要自行管理。但是在我们当前的基本示例中是可以生效的，此外我们还可以通过自定义事件名来传递消息，因此我们在创建连接时可以声明相关信息:
 
+```js
+res.write("retry: 10000\n");
+res.write("id: -1\n");
+res.write("event: connect\n");
+res.write("data: " + new Date() + "\n\n");
+```
+
+那么在客户端则需要通过`EventSource`对象创建连接，然后通过自定义事件来接收上述服务端的数据，而实际上如果不指定具体的事件名，即上述的`connect`事件，则会默认缺省为`message`事件，也就是说这里的事件名并不是必须的。
+
+```js
+const onConnect = useMemoFn((e: MessageEvent<string>) => {
+  prepend("Start Time: " + e.data);
+});
+const source = new EventSource("/ping");
+source.addEventListener("connect", onConnect);
+```
+
+针对于默认的`message`事件，我们同样在服务端将其输出，我们先前也提到了只要我们不调用`res.end`则会导致整个连接处于挂起状态，那么在这里如果我们希望保持连接的话则只需要通过定时器不断地向客户端发送数据即可。
+
+```js
+let index = 0;
+const interval = setInterval(() => {
+  res.write("id: " + index++ + "\n");
+  res.write("data: " + new Date() + "\n\n");
+}, 1000);
+```
+
+而在客户端我们可以为`source`对象添加`onmessage`事件绑定，也可以直接`addEventListener(message)`来绑定事件。此外，当我们成功通过`EventSource`对象创建连接后，我们可以在浏览器控制台的`Network`面板看到`EventStream`的数据传输面板，我们定义的`id`、`type`、`data`、`time`都会在此处显示。
+
+```js
+const prepend = (text: string) => {
+  const el = ref.current;
+  if (!el) return;
+  const child = document.createElement("div");
+  child.textContent = text;
+  el.prepend(child);
+};
+
+const onMessage = (e: MessageEvent<string>) => {
+  prepend("Ping: " + e.data);
+};
+
+const source = new EventSource("/ping");
+source.onmessage = onMessage;
+```
+
+在服务端我们还需要注意的是，当用户的客户端连接关闭我们同样也需要关闭服务端的请求，以此来避免额外资源的占用，当然在我们这里的定时器中如果不关闭的话就是内存泄漏而不仅仅是额外的资源占用了。
+
+```js
+req.socket.on("close", () => {
+  console.log("[ping] connection close");
+  clearInterval(interval);
+  res.end();
+});
+```
+
+此外，当不通过`HTTP/2`建立连接时，`SSE`对于单个域名会受到最大连接数的限制，这在打开多个选项卡时会比较麻烦，该限制是浏览器针对数据请求设计的，并且被设置为一个非常低的`6`个连接数量。此限制是针对每个域的请求，因此这意味着我们可以跨所有选项卡打开`6`个`SSE`连接到`www.example1.com`，以及同时打开`6`个`SSE`连接到`www.example2.com`，而使用`HTTP/2`时，同一时间内`HTTP`最大连接数由服务器和客户端之间协商，默认为`100`。
 
 ## 服务端
 
@@ -51,6 +118,8 @@ req.socket.on("close")/connection.on("close")
 ## 客户端
 
 ### fetch实现
+
+无法在控制台的面板显示
 
 ### 流式交互
 
