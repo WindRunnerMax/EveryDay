@@ -195,6 +195,7 @@
 * [Event对象](Browser/Event对象.md)
 * [IntersectionObserver对象](Browser/IntersectionObserver对象.md)
 * [MutationObserver对象](Browser/MutationObserver对象.md)
+* [基于fetch的SSE方案](Browser/基于fetch的SSE方案.md)
 
 ## Vue
 * [Vue生命周期](Vue/Vue生命周期.md)
