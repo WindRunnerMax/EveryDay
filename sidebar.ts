@@ -195,6 +195,7 @@ export const sidebar: Sidebar = {
         "Browser/Event对象",
         "Browser/IntersectionObserver对象",
         "Browser/MutationObserver对象",
+        "Browser/基于fetch的SSE方案",
       ],
     },
     {

@@ -61,6 +61,7 @@ const getGitLastUpdatedTimeStamp = async (filePath: string) => {
 
     for (const item of allPath) {
       const file = path.join(docs, lang, item);
+      console.log('Process File:', file);
       const time = await getGitLastUpdatedTimeStamp(file + ".md");
       content.push(`<url>`);
       content.push(`  <loc>${domain}${path.join(base, item)}.html</loc>`);
