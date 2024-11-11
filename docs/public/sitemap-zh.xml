@@ -1021,6 +1021,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Browser/基于fetch的SSE方案.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Vue/Vue学习笔记.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-05T11:37:01.000Z</lastmod>
@@ -1572,6 +1577,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探富文本之搜索替换算法.html</loc>
   <priority>1.0</priority>
+  <lastmod>2024-10-31T14:05:48.000Z</lastmod>
 </url>
 
 <url>
