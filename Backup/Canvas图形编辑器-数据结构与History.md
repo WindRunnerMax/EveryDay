@@ -1,8 +1,8 @@
 # Canvas图形编辑器-数据结构与History(undo/redo)
 这是作为 [掘金老给我推Canvas，于是我也学习Canvas做了个简历编辑器](https://juejin.cn/post/7329799331216015395) 的后续内容，主要是介绍了对数据结构的设计以及`History`能力的实现。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 

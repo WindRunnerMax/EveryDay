@@ -2,8 +2,8 @@
 
 在之前我们聊到了一些关于`slate`富文本引擎的基本概念，并且对基于`slate`实现文档编辑器的一些插件化能力设计、类型拓展、具体方案等作了探讨，那么接下来我们更专注于文档编辑器的细节，由浅入深聊聊文档编辑器的相关能力设计。
 
-* 在线编辑: https://windrunnermax.github.io/DocEditor
-* 开源地址: https://github.com/WindrunnerMax/DocEditor
+* 在线编辑: <https://windrunnermax.github.io/DocEditor>
+* 开源地址: <https://github.com/WindrunnerMax/DocEditor>
 
 关于`slate`文档编辑器项目的相关文章:
 

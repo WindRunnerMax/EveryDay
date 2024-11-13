@@ -2,8 +2,8 @@
 
 在之前我们在`Canvas`相关能力设计之外聊了一下工程实践的内容，聊了聊如何设计项目的`Monorepo`架构，并且实践了较新的打包工具`Rspack`，以此来管理我们的整个项目与层级结构。现在我们重新回到`Canvas`相关的内容设计上，聊一聊在我们先前实现的轻量级`DOM`基础上如何管理事件以及多层级渲染的能力设计。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 

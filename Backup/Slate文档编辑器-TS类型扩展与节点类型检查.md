@@ -2,8 +2,8 @@
 
 在之前我们基于`slate`实现的文档编辑器探讨了`WrapNode`数据结构与操作变换，主要是对于嵌套类型的数据结构类型需要关注的`Normalize`与`Transformers`，那么接下来我们更专注于文档编辑器的数据结构设计，聊聊基于`slate`实现的文档编辑器类型系统。
 
-* 在线编辑: https://windrunnermax.github.io/DocEditor
-* 开源地址: https://github.com/WindrunnerMax/DocEditor
+* 在线编辑: <https://windrunnermax.github.io/DocEditor>
+* 开源地址: <https://github.com/WindrunnerMax/DocEditor>
 
 关于`slate`文档编辑器项目的相关文章:
 

@@ -2,8 +2,8 @@
 
 在前边我们聊了数据结构的设计和剪贴板的数据操作，那么这些操作都还是比较倾向于数据相关的操作，那么我们现在就来聊聊基本的图形绘制以及图形状态管理。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 

@@ -2,8 +2,8 @@
 
 在这里我们先来聊聊我们究竟应该如何操作剪贴板，也就是我们在浏览器的复制粘贴事件，并且在此基础上聊聊我们在`Canvas`图形编辑器中应该如何控制焦点以及如何实现复制粘贴行为。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 

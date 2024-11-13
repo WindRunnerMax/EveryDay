@@ -2,8 +2,8 @@
 
 在之前我们围绕`Canvas`聊了很多代码设计层面的东西，在这里我们聊一下工程实践。在之前的文中我也提到过，因为是本着学习的态度以及对技术的好奇心来做的，所以除了一些工具类的库例如 `ArcoDesign`、`ResizeObserve`、`Jest` 等包之外，关于 数据结构`packages/delta`、插件化`packages/plugin`、核心引擎`packages/core` 等都是手动实现的，所以在这里除了学习了`Canvas`之外，实际上还做了一些项目工程化的实践。
 
-* 在线编辑: https://windrunnermax.github.io/CanvasEditor
-* 开源地址: https://github.com/WindrunnerMax/CanvasEditor
+* 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
+* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 
