@@ -23,7 +23,7 @@ const ping = (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingM
 }
 ```
 
-`SSE`实际上是一种协议，那么既然是协议自然就需要有固定的格式，在`text/event-stream`的响应格式中，每组数据都是以`\n\n`分隔的，而在组中的数据如果需要传递多种类型，则需要以`\n`分隔，当然实际上这里的`\n\n`也可以看作独占空内容行且末尾为`\n`，因此内容组合而成为`\n\n`，例如我们需要同时传递`id`、`event`和`data`字段的数据:
+`SSE`实际上是一种协议，那么既然是协议自然就需要有固定的格式，在`text/event-stream`的响应格式中，每组数据都是以`\n\n`分隔的，而在组中的数据如果需要传递多种类型，则需要以`\n`分隔。当然实际上这里的`\n\n`也可以看作独占空内容行且末尾为`\n`，因此内容组合而成为`\n\n`，例如我们需要同时传递`id`、`event`和`data`字段的数据:
 
 ```plain
 id: 1
@@ -514,6 +514,7 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+https://github.com/EventSource/eventsource
 https://github.com/Azure/fetch-event-source
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource
 https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html

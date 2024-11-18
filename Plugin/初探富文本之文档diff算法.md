@@ -307,6 +307,7 @@ const findDiff = () => {
 <div style="pointer-events: none;"></div>
 <!-- 
   无法直接`inspect`相关元素 可以直接使用`DOM`操作来查找调试
+  document.querySelectorAll(`[style*="pointer-events: none;"]`);
   [...document.querySelectorAll("*")].filter(node => node.style.pointerEvents === "none"); 
 -->
 ```
