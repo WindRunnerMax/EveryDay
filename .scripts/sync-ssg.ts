@@ -13,8 +13,29 @@ const exec = promisify(aliasExec);
     const to = path.resolve(__dirname, `../../Blog-SSG/docs/zh-cn`);
     await exec(`cp -r ${from} ${to}`);
   }
+
   console.log("Processing", "I18N");
   const from = path.resolve(__dirname, `../i18n/`);
   const to = path.resolve(__dirname, `../../Blog-SSG/docs/en-us`);
   await exec(`cp -r ${from}/* ${to}`);
+
+  console.log("Processing", "sidebar.ts");
+  const footer = [
+    "type SidebarItem =",
+    "| {",
+    "   text: string;",
+    "   link: string;",
+    "    tag?: string;",
+    "  }",
+    "| string;",
+    "interface SidebarGroup {",
+    " text: string;",
+    "link?: string;",
+    "items: SidebarItem[];",
+    "collapsible?: boolean;",
+    "collapsed?: boolean;",
+    "tag?: string;",
+    "}",
+    "type Sidebar = Record<string, (SidebarGroup )[]>;",
+  ];
 })();

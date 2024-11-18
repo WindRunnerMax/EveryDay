@@ -2,10 +2,12 @@
   "scripts": {
     "sync:blog": "ts-node ./.scripts/sync-blog.ts",
     "sync:ssg": "ts-node ./.scripts/sync-ssg.ts",
-    "sync": "npm run sync:blog && npm run sync:ssg"
+    "sync": "npm run sync:blog && npm run sync:ssg",
+    "overview": "ts-node ./.scripts/generator.ts"
   },
   "devDependencies": {
-    "@types/node": "^22.9.0",
-    "ts-node": "10.9.1"
+    "@types/node": "18.19.61",
+    "ts-node": "10.9.1",
+    "glob": "10.3.10"
   }
 }
