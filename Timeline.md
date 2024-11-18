@@ -1,4 +1,4 @@
-# Catalog
+# Timeline
 
 **2024-11-11**
 > 第418题：[基于fetch的SSE方案](Browser/基于fetch的SSE方案.md)
