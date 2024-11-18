@@ -23,7 +23,7 @@ const ping = (req: http.IncomingMessage, res: http.ServerResponse<http.IncomingM
 }
 ```
 
-`SSE`实际上是一种协议，那么既然是协议自然就需要有固定的格式，在`text/event-stream`的响应格式中，每组数据都是以`\n\n`分隔的，而在组中的数据如果需要传递多种类型，则需要以`\n`分隔，例如我们需要同时传递`id`、`event`和`data`字段的数据:
+`SSE`实际上是一种协议，那么既然是协议自然就需要有固定的格式，在`text/event-stream`的响应格式中，每组数据都是以`\n\n`分隔的，而在组中的数据如果需要传递多种类型，则需要以`\n`分隔。当然实际上这里的`\n\n`也可以看作独占空内容行且末尾为`\n`，因此内容组合而成为`\n\n`，例如我们需要同时传递`id`、`event`和`data`字段的数据:
 
 ```plain
 id: 1
@@ -35,6 +35,28 @@ event: custom
 data: hello
 data: world
 ```
+
+虽然我们认为每组数据都是以`\n\n`分隔的，但是在实际的`text/event-stream`规范中，解析末尾字符的`\n`实际上可能存在三种情况，即`CR`、`LF`、`CRLF`，如果需要实现完备的解析器则需要注意这个问题。当然在我们的`DEMO`中是没有实际解析这块内容的，我们在这里认为所有的组`EOL`结尾的符号都是`\n`。
+
+```
+stream        = [ bom ] *event
+event         = *( comment / field ) end-of-line
+comment       = colon *any-char end-of-line
+field         = 1*name-char [ colon [ space ] *any-char ] end-of-line
+end-of-line   = ( cr lf / cr / lf )
+
+; characters
+lf            = %x000A ; U+000A LINE FEED (LF)
+cr            = %x000D ; U+000D CARRIAGE RETURN (CR)
+space         = %x0020 ; U+0020 SPACE
+colon         = %x003A ; U+003A COLON (:)
+bom           = %xFEFF ; U+FEFF BYTE ORDER MARK
+name-char     = %x0000-0009 / %x000B-000C / %x000E-0039 / %x003B-10FFFF
+                ; a scalar value other than U+000A LINE FEED (LF), U+000D CARRIAGE RETURN (CR), or U+003A COLON (:)
+any-char      = %x0000-0009 / %x000B-000C / %x000E-10FFFF
+                ; a scalar value other than U+000A LINE FEED (LF) or U+000D CARRIAGE RETURN (CR)
+```
+
 
 在`Server-Sent Events`事件中，自带了自动重连与事件`id`管理方法，当然这些处理都是在浏览器预设的`EventSource`来实现的，如果我们使用`fetch`来实现则需要自行管理。但是在我们当前的基本示例中是可以生效的，此外我们还可以通过自定义事件名来传递消息，如果仅传递`:xxx\n`的格式也可以作为注释使用，因此我们在创建连接时可以声明相关信息:
 
@@ -207,8 +229,8 @@ export class StreamParser {
 export class StreamParser {
   private onLine(bytes: Uint8Array) {
     if (bytes.length === 0) {
-      if (this.onMessage && this.message.event) {
-        this.message.data = this.message.data || "";
+      if (this.onMessage && this.message.data) {
+        this.message.event = this.message.event || "message";
         this.onMessage(this.message as Message);
       }
       this.message = {};
@@ -492,10 +514,12 @@ https://github.com/WindrunnerMax/EveryDay
 ## 参考
 
 ```
+https://github.com/EventSource/eventsource
 https://github.com/Azure/fetch-event-source
 https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource
 https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html
 https://nodejs.org/docs/latest-v20.x/api/http.html#messagesocket
+https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
 https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
 https://stackoverflow.com/questions/7348736/how-to-check-if-connection-was-aborted-in-node-js-server
 https://stackoverflow.com/questions/76115409/why-does-node-js-express-call-request-close-on-post-request-with-data-before-r
