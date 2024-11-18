@@ -48,7 +48,7 @@
 }
 ```
 
-在`Vue`中首先会解析`template`中定义的`HTML`节点以及组件节点，为`render`作准备，在解析的过程中会生成`_c()`、`_v()`等函数，其作为`renderHelpers`用以创建节点，`_v()`函数就是用以创建文本节点，而`_c()`函数就是用以创建`VNode`节点的，这个函数其实就是`Vue`中定义的`_createElement()`函数，通过这个函数来确定创建的是普通节点还是组件节点，具体可以在`Vue`源码中`/dev/src/core/vdom/create-element.js`以及`/dev/src/core/vdom/vnode.js`查阅，当解析完成之后，便能够生成`render`函数，而当`render`函数执行后便返回了`VNode`节点组成的虚拟`DOM`树，树中的每一颗节点都会存储渲染的时候需要的信息，之后便是通过`diff`算法以及`patch`过程的`createElm`或`patchVnode`渲染到真实`DOM`。
+在`Vue`中首先会解析`template`中定义的`HTML`节点以及组件节点，为`render`作准备，在解析的过程中会生成`_c()`、`_v()`等函数，其作为`renderHelpers`用以创建节点，`_v()`函数就是用以创建文本节点，而`_c()`函数就是用以创建`VNode`节点的，这个函数其实就是`Vue`中定义的`_createElement()`函数，通过这个函数来确定创建的是普通节点还是组件节点，具体可以在`Vue`源码中`/dev/src/core/vdom/create-element.js`以及`/dev/src/core/vdom/create-element.js`查阅，当解析完成之后，便能够生成`render`函数，而当`render`函数执行后便返回了`VNode`节点组成的虚拟`DOM`树，树中的每一颗节点都会存储渲染的时候需要的信息，之后便是通过`diff`算法以及`patch`过程的`createElm`或`patchVnode`渲染到真实`DOM`。
 
 ```javascript
 if (typeof tag === 'string') {
