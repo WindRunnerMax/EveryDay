@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "sync:blog": "ts-node ./.scripts/sync-blog.ts",
+    "sync:ssg": "ts-node ./.scripts/sync-ssg.ts",
+    "sync": "npm run sync:blog && npm run sync:ssg"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "ts-node": "10.9.1"
+  }
+}
