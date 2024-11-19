@@ -23,6 +23,7 @@ const ssg = path.resolve(root, `../Blog-SSG`);
   await exec(`cp -r ${from}/* ${to}`);
 
   console.log("Processing", "sidebar.ts");
+  const content = [];
   const footer = [
     "type SidebarItem =",
     "| {",
@@ -41,4 +42,5 @@ const ssg = path.resolve(root, `../Blog-SSG`);
     "}",
     "type Sidebar = Record<string, (SidebarGroup )[]>;",
   ];
+  
 })();
