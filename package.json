@@ -3,11 +3,12 @@
     "sync:blog": "ts-node ./.scripts/sync-blog.ts",
     "sync:ssg": "ts-node ./.scripts/sync-ssg.ts",
     "sync": "npm run sync:blog && npm run sync:ssg",
-    "overview": "ts-node ./.scripts/generator.ts"
+    "overview": "ts-node ./.scripts/overview.ts"
   },
   "devDependencies": {
     "@types/node": "18.19.61",
-    "ts-node": "10.9.1",
-    "glob": "10.3.10"
+    "alfaaz": "1.1.0",
+    "glob": "10.3.10",
+    "ts-node": "10.9.1"
   }
 }

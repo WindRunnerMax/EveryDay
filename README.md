@@ -15,11 +15,15 @@
  
 如果觉得还不错，点个`star`吧 😁   
 
+<!-- Summary Start -->
+版本库中共有`487`篇文章，总计`90629`行，`1071772`字，`2978599`字符。
+<!-- Summary End -->
+
 这是一个前端小白的学习历程，如果只学习而不记录点什么那基本就等于白学了。这个版本库的名字`EveryDay`就是希望激励我能够每天学习，下面的文章就是从`2020.02.25`开始积累的文章，都是参考众多文章归纳整理学习而写的，文章包括了`HTML`基础、`CSS`基础、`JavaScript`基础与拓展、`Browser`浏览器相关、`Vue`使用与分析、`React`使用与分析、`Plugin`插件相关、`Patterns`设计模式、`Linux`命令、`LeetCode`题解等类别，内容都是比较基础的，毕竟我也还是个小白，此外基本上每个示例都是本着能够即时运行为目标的，新建一个`HTML`文件复制之后即可在浏览器运行或者直接可以在`console`中运行。
 
 如果想按照笔记顺序进行阅读的话可以 [查看目录](./Timeline.md) ，另外如果想更条理地查看的话可以访问 [我的博客](https://blog.touchczy.top/)，博客同时也是本版本库的`gh-pages`分支，是作为纯静态页面搭建在`Git Pages`上的，使用`jsdelivr`以及`cloudflare`作为缓存缓解国内访问速度问题。后期还在`gh-pages-ssg`分支上部署了`SSG`版本的 [新版博客](https://blog-ssg.touchczy.top/)，并且借助`ChatGPT`提供了英文翻译版本，分支是部署在`Vercel`上来缓解国内访问速度问题。在博客中的内容就相对比较多了，除了学习笔记之外还有一些做项目时的记录以及遇到的坑等。`HXDM`如果觉得还不错，点个`star`吧，这个对我真的很重要。
 
-
+<!-- Content Start -->
 ## HTML
 * [DOCTYPE](HTML/DOCTYPE.md)
 * [HTML语义化](HTML/HTML语义化.md)
@@ -27,7 +31,7 @@
 * [LocalStorage与SessionStorage](HTML/LocalStorage与SessionStorage.md)
 * [Iframe框架及优缺点](HTML/Iframe框架及优缺点.md)
 * [HTML节点操作](HTML/HTML节点操作.md)
-* [手动实现轮播图](HTML/手动实现轮播图功能.md)
+* [手动实现轮播图功能](HTML/手动实现轮播图功能.md)
 * [Canvas基础](HTML/Canvas基础.md)
 * [前端性能优化方案](HTML/前端性能优化方案.md)
 * [HTML5新特性](HTML/HTML5新特性.md)
@@ -94,7 +98,7 @@
 * [new运算符](JavaScript/new运算符.md)
 * [Js遍历数组总结](JavaScript/Js遍历数组总结.md)
 * [Promise对象](JavaScript/Promise对象.md)
-* [async/await](JavaScript/async、await.md)
+* [async、await](JavaScript/async、await.md)
 * [Generator函数](JavaScript/Generator函数.md)
 * [Js中==与===](JavaScript/Js中==与===.md)
 * [JavaScript选择器](JavaScript/JavaScript选择器.md)
@@ -102,7 +106,7 @@
 * [Js模块化导入导出](JavaScript/Js模块化导入导出.md)
 * [let与const](JavaScript/let与const.md)
 * [作用域与作用域链](JavaScript/作用域与作用域链.md)
-* [Js异步机制](JavaScript/JavaScript异步机制.md)
+* [JavaScript异步机制](JavaScript/JavaScript异步机制.md)
 * [Js数组操作](JavaScript/Js数组操作.md)
 * [Js继承的实现方式](JavaScript/Js继承的实现方式.md)
 * [Function与Object](JavaScript/Function与Object.md)
@@ -130,7 +134,7 @@
 * [深入理解Js数组](JavaScript/深入理解Js数组.md)
 * [模板语法的简单实现](JavaScript/模板语法的简单实现.md)
 * [Thunk函数的使用](JavaScript/Thunk函数的使用.md)
-* [async/await剖析](JavaScript/async、await剖析.md)
+* [async、await剖析](JavaScript/async、await剖析.md)
 * [null和undefined的区别](JavaScript/null和undefined的区别.md)
 * [Js创建对象的方式](JavaScript/Js创建对象的方式.md)
 * [Js中RegExp对象](JavaScript/Js中RegExp对象.md)
@@ -155,10 +159,10 @@
 * [Js中的位操作符](JavaScript/Js中的位操作符.md)
 
 ## Browser
-* [跨域问题与解决方案](Browser/跨域问题.md)
+* [跨域问题](Browser/跨域问题.md)
 * [XSS跨站脚本攻击](Browser/XSS跨站脚本攻击.md)
 * [CSRF跨站请求伪造](Browser/CSRF跨站请求伪造.md)
-* [SQL注入攻击](Browser/SQL注入.md)
+* [SQL注入](Browser/SQL注入.md)
 * [浏览器渲染与内核](Browser/浏览器渲染与内核.md)
 * [浏览器重绘与回流](Browser/浏览器重绘与回流.md)
 * [HTTP协议概述](Browser/HTTP协议概述.md)
@@ -198,6 +202,8 @@
 * [基于fetch的SSE方案](Browser/基于fetch的SSE方案.md)
 
 ## Vue
+* [Vue学习笔记](Vue/Vue学习笔记.md)
+* [Vue-Cli4笔记](Vue/Vue-Cli4笔记.md)
 * [Vue生命周期](Vue/Vue生命周期.md)
 * [Vue中key的作用](Vue/Vue中key的作用.md)
 * [Vue数据双向绑定](Vue/Vue数据双向绑定.md)
@@ -229,6 +235,7 @@
 * [Vue为何采用异步渲染](Vue/Vue为何采用异步渲染.md)
 * [Vue中的三种Watcher](Vue/Vue中的三种Watcher.md)
 * [v-html可能导致的问题](Vue/v-html可能导致的问题.md)
+* [初探webpack之搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
 * [Vue首屏性能优化组件](Vue/Vue首屏性能优化组件.md)
 
 ## React
@@ -266,7 +273,7 @@
 * [Rollup的基本使用](Plugin/Rollup的基本使用.md)
 * [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md)
 * [初探webpack之编写plugin](Plugin/初探webpack之编写plugin.md)
-* [初探webpack之从零搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
+* [初探webpack之搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
 * [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
 * [初探webpack之编写loader](Plugin/初探webpack之编写loader.md)
 * [竞态问题与RxJs](Plugin/竞态问题与RxJs.md)
@@ -330,9 +337,12 @@
 * [异步模块模式](Patterns/异步模块模式.md)
 * [Widget模式](Patterns/Widget模式.md)
 * [MVC模式](Patterns/MVC模式.md)
+* [MVP模式](Patterns/MVP模式.md)
 * [MVVM模式](Patterns/MVVM模式.md)
 
 ## Linux
+* [简单安全防护](Security/简单安全防护.md)
+* [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
 * [cat命令](Linux/cat命令.md)
 * [chmod命令](Linux/chmod命令.md)
 * [chown命令](Linux/chown命令.md)
@@ -399,6 +409,53 @@
 * [curl命令](Linux/curl命令.md)
 * [top命令](Linux/top命令.md)
 
+## MiniProgram
+* [山科小站小程序](MiniProgram/山科小站小程序.md)
+* [QQ小程序支付](Java/QQ小程序支付.md)
+* [支付宝小程序user_id](MiniProgram/支付宝小程序user_id.md)
+* [微信小程序校历组件](MiniProgram/微信小程序校历组件.md)
+* [uniapp小程序迁移到TS](MiniProgram/uniapp小程序迁移到TS.md)
+
+## App
+* [NvueWeex](App/NvueWeex.md)
+
+## PHP
+* [ThinkPHP5.0漏洞测试](PHP/ThinkPHP5.0漏洞测试.md)
+* [PHP验证码识别实例](IMGProcess/PHP验证码识别实例.md)
+
+## Java
+* [QQ小程序支付](Java/QQ小程序支付.md)
+
+## Security
+* [简单安全防护](Security/简单安全防护.md)
+* [OD反汇编EXE添加一个启动时的消息框](Security/OD反汇编EXE添加一个启动时的消息框.md)
+* [IDA反汇编EXE添加一个启动时的消息框](Security/IDA反汇编EXE添加一个启动时的消息框.md)
+* [XSS跨站脚本攻击](Browser/XSS跨站脚本攻击.md)
+* [CSRF跨站请求伪造](Browser/CSRF跨站请求伪造.md)
+* [SQL注入](Browser/SQL注入.md)
+* [CSS劫持攻击](Browser/CSS劫持攻击.md)
+* [ThinkPHP5.0漏洞测试](PHP/ThinkPHP5.0漏洞测试.md)
+* [SSRF服务器端请求伪造](Browser/SSRF服务器端请求伪造.md)
+* [记ByteCTF中的Node题](Security/记ByteCTF中的Node题.md)
+
+## Environment
+* [VScode配置CMD本地运行环境(2.0)](Environment/VScode配置CMD本地运行环境(2.0).md)
+* [Recover刷机简介](Environment/Recover刷机简介.md)
+* [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
+* [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单.md)
+* [手机抓包HTTPS](Environment/手机抓包HTTPS.md)
+* [文本选中复制](Environment/文本选中复制.md)
+* [发布Npm包到GitHub Packages](Environment/发布Npm包到GitHub%20Packages.md)
+* [斐讯K3C改散热](Environment/斐讯K3C改散热.md)
+* [解决ufw下pptp客户端连接问题](Environment/解决ufw下pptp客户端连接问题.md)
+* [建立DNS隧道绕过校园网认证](Environment/建立DNS隧道绕过校园网认证.md)
+
+## IMGProcess
+* [强智教务系统验证码识别OpenCV](IMGProcess/强智教务系统验证码识别OpenCV.md)
+* [强智教务系统验证码识别TensorflowCNN](IMGProcess/强智教务系统验证码识别TensorflowCNN.md)
+* [YOLOV3目标检测](IMGProcess/YOLOV3目标检测.md)
+* [PHP验证码识别实例](IMGProcess/PHP验证码识别实例.md)
+
 ## LeetCode
 * [全排列](LeetCode/全排列.md)
 * [括号生成](LeetCode/括号生成.md)
@@ -456,3 +513,39 @@
 * [滑动窗口最大值](LeetCode/滑动窗口最大值.md)
 * [汇总区间](LeetCode/汇总区间.md)
 * [替换后的最长重复字符](LeetCode/替换后的最长重复字符.md)
+
+## Interview
+* [百度实习生前端面试](Interview/百度实习生前端面试.md)
+* [腾讯暑期日常实习前端面试](Interview/腾讯暑期日常实习前端面试.md)
+* [美团暑期日常实习前端面试](Interview/美团暑期日常实习前端面试.md)
+* [字节跳动暑期日常实习前端面试](Interview/字节跳动暑期日常实习前端面试.md)
+* [记2021年实习春招历程](MyLife/记2021年实习春招历程.md)
+* [字节跳动暑期实习前端面试](Interview/字节跳动暑期实习前端面试.md)
+* [美团暑期实习前端面试](Interview/美团暑期实习前端面试.md)
+* [蚂蚁暑期实习前端面试](Interview/蚂蚁暑期实习前端面试.md)
+* [记2022年实习春招历程](MyLife/记2022年实习春招历程.md)
+* [百度秋招提前批前端面试](Interview/百度秋招提前批前端面试.md)
+* [大疆秋招提前批前端面试](Interview/大疆秋招提前批前端面试.md)
+* [360秋招正式批前端面试](Interview/360秋招正式批前端面试.md)
+* [联想秋招正式批前端面试](Interview/联想秋招正式批前端面试.md)
+* [京东秋招正式批前端面试](Interview/京东秋招正式批前端面试.md)
+* [顺丰秋招正式批前端面试](Interview/顺丰秋招正式批前端面试.md)
+* [拼多多秋招正式批前端面试](Interview/拼多多秋招正式批前端面试.md)
+* [携程秋招正式批前端面试](Interview/携程秋招正式批前端面试.md)
+* [腾讯秋招正式批前端面试](Interview/腾讯秋招正式批前端面试.md)
+* [记2022年秋招历程](MyLife/记2022年秋招历程.md)
+
+## MyLife
+* [记一次有意思的种树比赛](MyLife/记一次有意思的种树比赛.md)
+* [记2021年实习春招历程](MyLife/记2021年实习春招历程.md)
+* [2021腾讯实习实录](MyLife/2021腾讯实习实录.md)
+* [记ByteCTF中的Node题](Security/记ByteCTF中的Node题.md)
+* [记2022年实习春招历程](MyLife/记2022年实习春招历程.md)
+* [致我四年的大学生活](MyLife/致我四年的大学生活.md)
+* [记2022年秋招历程](MyLife/记2022年秋招历程.md)
+* [致我三年的研究生生活](MyLife/致我三年的研究生生活.md)
+* [2022字节实习实录](MyLife/2022字节实习实录.md)
+* [从大学开始搞的开源项目](MyLife/从大学开始搞的开源项目.md)
+* [记一些日常的想法与思考](MyLife/记一些日常的想法与思考.md)
+
+<!-- Content End -->

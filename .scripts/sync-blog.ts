@@ -2,23 +2,20 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { exec as aliasExec } from "node:child_process";
 import { promisify } from "node:util";
-import { DOCS_GROUP } from "./constant";
 import { docs } from "./docs";
 
-const root = path.resolve(__dirname, `..`);
 const exec = promisify(aliasExec);
+const root = path.resolve(__dirname, `..`);
+const blog = path.resolve(root, `../Blog`);
 
 (async () => {
   console.log("Syncing Blog...");
+  const DOCS_GROUP = Object.keys(docs);
   for (const group of DOCS_GROUP) {
     console.log("Processing", group);
     const from = path.resolve(root, group);
-    const to = path.resolve(root, `../Blog/`);
-    await exec(`cp -r ${from} ${to}`);
+    await exec(`cp -r ${from} ${blog}`);
   }
-  const from = path.join(root, "Overview.md");
-  const to = path.join(root, "../Blog/");
-  await exec(`cp -r ${from} ${to}`);
   
   console.log("Processing _sidebar.md");
   const body: string[] = [];
@@ -32,5 +29,5 @@ const exec = promisify(aliasExec);
     body.push("");
   }
   const content = body.join("\n");
-  await fs.writeFile(path.join(root, "../Blog/_sidebar.md"), content);
+  await fs.writeFile(path.join(blog, "_sidebar.md"), content);
 })();
