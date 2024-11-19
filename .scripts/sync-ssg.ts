@@ -1,6 +1,7 @@
 import path from "node:path";
-import { exec as aliasExec } from "node:child_process";
+import { exec as aliasExec, spawn } from "node:child_process";
 import { promisify } from "node:util";
+import fs from "node:fs/promises";
 import { docs } from "./docs";
 
 const exec = promisify(aliasExec);
@@ -23,7 +24,13 @@ const ssg = path.resolve(root, `../Blog-SSG`);
   await exec(`cp -r ${from}/* ${to}`);
 
   console.log("Processing", "sidebar.ts");
-  const content = [];
+  const inside: any[] = [{ text: "BLOG", link: "index" }];
+  for (const [key, value] of Object.entries(docs)) {
+    inside.push({ text: key, collapsed: true, items: value });
+  }
+  const content = { "/": inside };
+  const header = "export const sidebar: Sidebar = ";
+  const body = JSON.stringify(content, null, 2);
   const footer = [
     "type SidebarItem =",
     "| {",
@@ -33,14 +40,27 @@ const ssg = path.resolve(root, `../Blog-SSG`);
     "  }",
     "| string;",
     "interface SidebarGroup {",
-    " text: string;",
-    "link?: string;",
-    "items: SidebarItem[];",
-    "collapsible?: boolean;",
-    "collapsed?: boolean;",
-    "tag?: string;",
+    "  text: string;",
+    "  link?: string;",
+    "  items?: SidebarItem[];",
+    "  collapsible?: boolean;",
+    "  collapsed?: boolean;",
+    "  tag?: string;",
     "}",
     "type Sidebar = Record<string, (SidebarGroup )[]>;",
   ];
-  
+  fs.writeFile(
+    path.join(ssg, "sidebar.ts"),
+    header + body + "\n" + footer.join("\n")
+  );
+
+  console.log("Processing", "sitemap");
+  const command = `cd ${ssg} && npm run sitemap`;
+  const child = spawn(command, { shell: true });
+  child.stdout.on("data", (data) => {
+    process.stdout.write(`stdout: ${data}`);
+  });
+  child.stderr.on("data", (data) => {
+    process.stderr.write(`stderr: ${data}`);
+  });
 })();
