@@ -1,14 +1,13 @@
 export const sidebar: Sidebar = {
   "/": [
-    // @ts-ignore
     {
-      text: "BLOG",
-      link: "index",
+      "text": "BLOG",
+      "link": "index"
     },
     {
-      text: "HTML",
-      collapsed: true,
-      items: [
+      "text": "HTML",
+      "collapsed": true,
+      "items": [
         "HTML/DOCTYPE",
         "HTML/HTML语义化",
         "HTML/Cookie与Session",
@@ -38,13 +37,13 @@ export const sidebar: Sidebar = {
         "HTML/Shadow DOM的理解",
         "HTML/Service Worker的应用",
         "HTML/蒙层禁止页面滚动的方案",
-        "HTML/SVG与foreignObject元素",
-      ],
+        "HTML/SVG与foreignObject元素"
+      ]
     },
     {
-      text: "CSS",
-      collapsed: true,
-      items: [
+      "text": "CSS",
+      "collapsed": true,
+      "items": [
         "CSS/布局垂直居中",
         "CSS/伪类与伪元素",
         "CSS/CSS盒子模型",
@@ -69,13 +68,13 @@ export const sidebar: Sidebar = {
         "CSS/CSS实现图形效果",
         "CSS/实现文字滚动播放",
         "CSS/CSS实现展开动画",
-        "CSS/CSS实现渐隐渐现效果",
-      ],
+        "CSS/CSS实现渐隐渐现效果"
+      ]
     },
     {
-      text: "JavaScript",
-      collapsed: true,
-      items: [
+      "text": "JavaScript",
+      "collapsed": true,
+      "items": [
         "JavaScript/手动实现AJAX",
         "JavaScript/ES6新特性",
         "JavaScript/原型与原型链",
@@ -148,13 +147,13 @@ export const sidebar: Sidebar = {
         "JavaScript/函数式编程的理解",
         "JavaScript/Js实用小技巧",
         "JavaScript/深入理解Js中的this",
-        "JavaScript/Js中的位操作符",
-      ],
+        "JavaScript/Js中的位操作符"
+      ]
     },
     {
-      text: "Browser",
-      collapsed: true,
-      items: [
+      "text": "Browser",
+      "collapsed": true,
+      "items": [
         "Browser/跨域问题",
         "Browser/XSS跨站脚本攻击",
         "Browser/CSRF跨站请求伪造",
@@ -195,13 +194,13 @@ export const sidebar: Sidebar = {
         "Browser/Event对象",
         "Browser/IntersectionObserver对象",
         "Browser/MutationObserver对象",
-        "Browser/基于fetch的SSE方案",
-      ],
+        "Browser/基于fetch的SSE方案"
+      ]
     },
     {
-      text: "Vue",
-      collapsed: true,
-      items: [
+      "text": "Vue",
+      "collapsed": true,
+      "items": [
         "Vue/Vue学习笔记",
         "Vue/Vue-Cli4笔记",
         "Vue/Vue生命周期",
@@ -236,13 +235,13 @@ export const sidebar: Sidebar = {
         "Vue/Vue中的三种Watcher",
         "Vue/v-html可能导致的问题",
         "Plugin/初探webpack之搭建Vue开发环境",
-        "Vue/Vue首屏性能优化组件",
-      ],
+        "Vue/Vue首屏性能优化组件"
+      ]
     },
     {
-      text: "React",
-      collapsed: true,
-      items: [
+      "text": "React",
+      "collapsed": true,
+      "items": [
         "React/React生命周期",
         "React/React虚拟DOM的理解",
         "React/React中JSX的理解",
@@ -268,13 +267,13 @@ export const sidebar: Sidebar = {
         "React/Hooks与事件绑定",
         "React/React闭包陷阱",
         "React/ReactPortals传送门",
-        "React/基于React的SSG渲染方案",
-      ],
+        "React/基于React的SSG渲染方案"
+      ]
     },
     {
-      text: "Plugin",
-      collapsed: true,
-      items: [
+      "text": "Plugin",
+      "collapsed": true,
+      "items": [
         "Plugin/Git常用命令",
         "Plugin/Git与SVN对比",
         "Plugin/Nginx常用配置",
@@ -306,13 +305,13 @@ export const sidebar: Sidebar = {
         "Plugin/基于Chrome扩展的浏览器事件",
         "Plugin/初探webpack之解析器resolver",
         "Plugin/基于ServiceWorker的文件传输方案",
-        "Plugin/初探富文本之搜索替换算法",
-      ],
+        "Plugin/初探富文本之搜索替换算法"
+      ]
     },
     {
-      text: "Patterns",
-      collapsed: true,
-      items: [
+      "text": "Patterns",
+      "collapsed": true,
+      "items": [
         "Patterns/简单工厂模式",
         "Patterns/工厂方法模式",
         "Patterns/抽象工厂模式",
@@ -350,13 +349,13 @@ export const sidebar: Sidebar = {
         "Patterns/Widget模式",
         "Patterns/MVC模式",
         "Patterns/MVP模式",
-        "Patterns/MVVM模式",
-      ],
+        "Patterns/MVVM模式"
+      ]
     },
     {
-      text: "Linux",
-      collapsed: true,
-      items: [
+      "text": "Linux",
+      "collapsed": true,
+      "items": [
         "Security/简单安全防护",
         "Linux/Ubuntu16.04安装QQ机器人",
         "Linux/cat命令",
@@ -423,39 +422,46 @@ export const sidebar: Sidebar = {
         "Linux/journalctl命令",
         "Linux/ip命令",
         "Linux/curl命令",
-        "Linux/top命令",
-      ],
+        "Linux/top命令"
+      ]
     },
     {
-      text: "MiniProgram",
-      collapsed: true,
-      items: [
+      "text": "MiniProgram",
+      "collapsed": true,
+      "items": [
         "MiniProgram/山科小站小程序",
         "Java/QQ小程序支付",
         "MiniProgram/支付宝小程序user_id",
         "MiniProgram/微信小程序校历组件",
-        "MiniProgram/uniapp小程序迁移到TS",
-      ],
+        "MiniProgram/uniapp小程序迁移到TS"
+      ]
     },
     {
-      text: "App",
-      collapsed: true,
-      items: ["App/NvueWeex"],
+      "text": "App",
+      "collapsed": true,
+      "items": [
+        "App/NvueWeex"
+      ]
     },
     {
-      text: "PHP",
-      collapsed: true,
-      items: ["PHP/ThinkPHP5.0漏洞测试", "IMGProcess/PHP验证码识别实例"],
+      "text": "PHP",
+      "collapsed": true,
+      "items": [
+        "PHP/ThinkPHP5.0漏洞测试",
+        "IMGProcess/PHP验证码识别实例"
+      ]
     },
     {
-      text: "Java",
-      collapsed: true,
-      items: ["Java/QQ小程序支付"],
+      "text": "Java",
+      "collapsed": true,
+      "items": [
+        "Java/QQ小程序支付"
+      ]
     },
     {
-      text: "Security",
-      collapsed: true,
-      items: [
+      "text": "Security",
+      "collapsed": true,
+      "items": [
         "Security/简单安全防护",
         "Security/OD反汇编EXE添加一个启动时的消息框",
         "Security/IDA反汇编EXE添加一个启动时的消息框",
@@ -465,13 +471,13 @@ export const sidebar: Sidebar = {
         "Browser/CSS劫持攻击",
         "PHP/ThinkPHP5.0漏洞测试",
         "Browser/SSRF服务器端请求伪造",
-        "Security/记ByteCTF中的Node题",
-      ],
+        "Security/记ByteCTF中的Node题"
+      ]
     },
     {
-      text: "Environment",
-      collapsed: true,
-      items: [
+      "text": "Environment",
+      "collapsed": true,
+      "items": [
         "Environment/VScode配置CMD本地运行环境(2.0)",
         "Environment/Recover刷机简介",
         "Linux/Ubuntu16.04安装QQ机器人",
@@ -481,23 +487,23 @@ export const sidebar: Sidebar = {
         "Environment/发布Npm包到GitHub Packages",
         "Environment/斐讯K3C改散热",
         "Environment/解决ufw下pptp客户端连接问题",
-        "Environment/建立DNS隧道绕过校园网认证",
-      ],
+        "Environment/建立DNS隧道绕过校园网认证"
+      ]
     },
     {
-      text: "IMGProcess",
-      collapsed: true,
-      items: [
+      "text": "IMGProcess",
+      "collapsed": true,
+      "items": [
         "IMGProcess/强智教务系统验证码识别OpenCV",
         "IMGProcess/强智教务系统验证码识别TensorflowCNN",
         "IMGProcess/YOLOV3目标检测",
-        "IMGProcess/PHP验证码识别实例",
-      ],
+        "IMGProcess/PHP验证码识别实例"
+      ]
     },
     {
-      text: "LeetCode",
-      collapsed: true,
-      items: [
+      "text": "LeetCode",
+      "collapsed": true,
+      "items": [
         "LeetCode/全排列",
         "LeetCode/括号生成",
         "LeetCode/二进制求和",
@@ -553,13 +559,13 @@ export const sidebar: Sidebar = {
         "LeetCode/种花问题",
         "LeetCode/滑动窗口最大值",
         "LeetCode/汇总区间",
-        "LeetCode/替换后的最长重复字符",
-      ],
+        "LeetCode/替换后的最长重复字符"
+      ]
     },
     {
-      text: "Interview",
-      collapsed: true,
-      items: [
+      "text": "Interview",
+      "collapsed": true,
+      "items": [
         "Interview/百度实习生前端面试",
         "Interview/腾讯暑期日常实习前端面试",
         "Interview/美团暑期日常实习前端面试",
@@ -578,13 +584,13 @@ export const sidebar: Sidebar = {
         "Interview/拼多多秋招正式批前端面试",
         "Interview/携程秋招正式批前端面试",
         "Interview/腾讯秋招正式批前端面试",
-        "MyLife/记2022年秋招历程",
-      ],
+        "MyLife/记2022年秋招历程"
+      ]
     },
     {
-      text: "MyLife",
-      collapsed: true,
-      items: [
+      "text": "MyLife",
+      "collapsed": true,
+      "items": [
         "MyLife/记一次有意思的种树比赛",
         "MyLife/记2021年实习春招历程",
         "MyLife/2021腾讯实习实录",
@@ -595,23 +601,22 @@ export const sidebar: Sidebar = {
         "MyLife/致我三年的研究生生活",
         "MyLife/2022字节实习实录",
         "MyLife/从大学开始搞的开源项目",
-        "MyLife/记一些日常的想法与思考",
-      ],
-    },
-  ],
-};
-
-type SidebarItem =
-  | {
-      text: string;
-      link: string;
-      tag?: string;
+        "MyLife/记一些日常的想法与思考"
+      ]
     }
-  | string;
+  ]
+}
+type SidebarItem =
+| {
+   text: string;
+   link: string;
+    tag?: string;
+  }
+| string;
 interface SidebarGroup {
   text: string;
   link?: string;
-  items: SidebarItem[];
+  items?: SidebarItem[];
   collapsible?: boolean;
   collapsed?: boolean;
   tag?: string;
