@@ -84,7 +84,7 @@ observer.observe(document, { childList: true, subtree: true });
 这个库中导出的组件用起来也很简单，在下面的例子中，`FocusLock`组件外的两个`input`我们没有办法将焦点移动上去，我们的焦点只能在`FocusLock`组件内部的`input`和`button`之间移动。
 
 ```js
-// packages/focus-fighting/src/modules/trap.tsx
+// packages/focus-fighting/src/modules/focus-trap.tsx
 import FocusLock from "react-focus-lock@2.13.2";
 <input type="text" />
 <FocusLock>
@@ -97,8 +97,8 @@ import FocusLock from "react-focus-lock@2.13.2";
 
 实际上实现相关交互的库也比较容易找到，例如 [focus-trap-react](https://github.com/focus-trap/focus-trap-react) 、[react-focus-trap](https://github.com/vigetlabs/react-focus-trap) 等，那么对于其基本原理我们可以概括为两种:
 
-* 受控模式: 这种方式通过添加全局键盘事件监听，当按下`Tab`键时，将收集所有可聚焦元素并手动将焦点从一个元素移动到另一个元素。这就是完全受控的实现方式，通过模拟键盘事件来完成，例如`react-focus-trap`的实现。
-* 非受控模式: 通过添加全局的`focusin`等事件监听，当焦点移动到某个元素时，检查当前焦点元素是否是允许聚焦的工作区域，如果不是的话则将焦点移动到工作区域的第一个元素。这就是非受控的实现方式，通过处理事件副作用来完成，例如`react-focus-lock`的实现。
+* 受控模式: 这种方式通过添加全局键盘事件监听，当按下`Tab`键时，将收集所有可聚焦元素并手动将焦点从一个元素移动到另一个元素。这就是完全受控的实现方式，通过模拟键盘事件来完成，例如`focus-trap-react`的实现。
+* 非受控模式: 通过添加全局的`focusin`等事件监听，当焦点移动到某个元素时，检查当前焦点元素是否是允许聚焦的工作区域，如果不是的话则将焦点移动到工作区域的第一个元素。这就是非受控的实现方式，通过处理事件副作用来完成，例如`react-focus-trap`的实现。
 
 说起来这跟富文本的受控和非受控输入也比较像，受控输入是通过监听`beforeinput`事件来控制输入的内容，非受控输入则是通过`MutationObserver`来观察`DOM`变化带来的副作用来处理输入的内容。说回焦点问题，我们要重点聊的 [react-focus-lock](https://github.com/theKashey/react-focus-lock) 则同样是非受控模式的实现。
 
@@ -158,7 +158,7 @@ export var tabbables = [
 ];
 ```
 
-在这里值的一提的是，在非`contenteditable`的情况下，如果我们选中文本的话，`document.activeElement`会是`body`元素。在默认情况下`FocusLock`组件会豁免对于`body`元素的焦点管理，这样我们就可以正常选中文本了。而如果想模拟先前我们提到的知乎专栏的效果，我们只需要将`persistentFocus`属性传入`FocusLock`组件即可，不过我觉得对于用户来说这并不是交互友好的表现。
+在这里值的一提的是，在非`contenteditable`的情况下，如果我们选中文本的话，`document.activeElement`通常会是`body`元素。在默认情况下`FocusLock`组件会豁免对于`body`元素的焦点管理，这样我们就可以正常选中文本了。而如果想模拟先前我们提到的知乎专栏的效果，我们只需要将`persistentFocus`属性传入`FocusLock`组件即可，不过我觉得对于用户来说这并不是交互友好的表现。
 
 ```js
 <FocusLock persistentFocus>
@@ -190,18 +190,156 @@ export var tabbables = [
 
 那么在实际的测试过程中，我们可以发现焦点是会被最新的工作区锁定，需要注意的是这里并不是发生了焦点的战争，焦点是锁定在最新的工作区，而不是两者发起战争进行抢占的死循环。这实际上在`Modal`模态框的场景中是比较合理的，通常情况下我们都是希望在最顶层的模态框中锁定焦点，而当我们关闭最外层的模态框时，焦点会自动回到上一层的模态框中。
 
+我们还可以关注非`<FocusLock />`组件的情况，也就是使用`input`主动设置焦点来进行焦点抢占。当`input`元素失去焦点的时候，我们就主动将焦点强行拉回到这个`input`焦点上，这就是我们要聊的真正的焦点抢占情况。在下面的例子中，当我们点击第`3`个`input`元素的时候(此时没有`auto-focus`)，焦点会被强行在两个`input`之间争夺。
 
+```js
+// src/modules/input-focus.tsx
+<Fragment>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>工作区 1</span>
+    <FocusLock>
+      <input type="text" onFocus={() => console.log("Lock input 1")} />
+      <input type="text" onFocus={() => console.log("Lock input 2")} />
+    </FocusLock>
+  </div>
+  <input
+    ref={ref}
+    onBlur={() => setTimeout(() => ref.current?.focus(), 1000)}
+    onFocus={() => console.log("Lock input 3")}
+  />
+</Fragment>
+```
 
-焦点陷阱+单焦点元素
-Free HOC 原理
+那么关于这个问题我们自然是有办法可以解决，并且`react-focus-lock`也直接提供了解决方案来处理。我们可以使用`<FreeFocusInside />`这个`HOC`组件来告诉`lock`组件不要抢夺焦点，其含义是隐藏`FocusLock`的内部结构，允许不受管理的焦点。那么在上述的`multi-lock`例子中，我们可以将`FreeFocusInside`组件引入。
+
+```js
+// src/modules/multi-lock-free.tsx
+<FocusLock>
+  <FreeFocusInside>
+    <input type="text" />
+    <input type="text" />
+  </FreeFocusInside>
+</FocusLock>
+```
+
+这里需要注意的是，如果`FreeFocusInside`在`FocusLock`外层的话，使用`tab`切换焦点时，由于我们通知了工作区不要抢占焦点，而此时由于先前提到的`guard`节点同样可以放置焦点，因此会导致看起来有次`tab`按键的响应无效。那么将`FreeFocusInside`放置于内层，在这里的表现就发生了变化，在非主焦点内部切换正常，当失去焦点时则会自动回到主工作区焦点内且正常步入陷阱。
+
+那么对于主动的`input`抢占问题，实际上是希望不要抢夺干净的`input`焦点，这里所谓的干净焦点指的是非主动抢夺的焦点情况，而对于上边例子中的焦点抢占情况，则只是不会由`FocusLock`组件来抢占外边的`input`焦点。如果此时焦点在`FocusLock`组件内部的话，还是会被我们的`input`组件抢占，在这里只是避免了两者的混战。
+
+```js
+// src/modules/input-focus-free.tsx
+<Fragment>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>工作区 1</span>
+    <FocusLock>
+      <input type="text" onFocus={() => console.log("Lock input 1")} />
+      <input type="text" onFocus={() => console.log("Lock input 2")} />
+    </FocusLock>
+  </div>
+  <FreeFocusInside>
+    <input
+      ref={ref}
+      onBlur={() => setTimeout(() => ref.current?.focus(), 1000)}
+      onFocus={() => console.log("Lock input 3")}
+    />
+  </FreeFocusInside>
+</Fragment>
+```
+
+我们可以看下`FreeFocusInside`的实现，[在这里](https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/FreeFocusInside.js)可以看到其只是简单地增加了`data-no-focus-lock`属性，从`package.json`可以看到`**/sidecar.js, **/index.js`是存在`sideEffects`的，那么也就是说假如直接从`dist/xxx/FreeFocusInside.js`引入的话是无效的，当然因为需要锁定焦点必须要引入`FocusLock`，所以直接引用倒是也不会有问题。
+
+那么这里的事件处理重点实际上是在`Trap.js`中，当发生焦点变动的时候，会进入`isFreeFocus`函数的判断条件，如果是处于`body`不必多说，如果是`focusIsHidden`判断条件则是查找当前所有允许聚焦即`data-no-focus-lock`属性的白名单节点，并且检查目标的`activeElement`节点是否属于白名单节点的子节点，如果是的话则不会抢占焦点。
+
+```js
+// https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/Trap.js
+const isFreeFocus = () => focusOnBody() || focusIsHidden();
+
+if (!isFreeFocus()) {
+  // ...
+}
+
+// https://github.com/theKashey/focus-lock/blob/e9025f/src/focusIsHidden.ts
+export const focusIsHidden = (inDocument: Document = document): boolean => {
+  const activeElement = getActiveElement(inDocument);
+
+  if (!activeElement) {
+    return false;
+  }
+
+  // this does not support setting FOCUS_ALLOW within shadow dom
+  return toArray(inDocument.querySelectorAll(`[${FOCUS_ALLOW}]`)).some((node) => contains(node, activeElement));
+};
+```
 
 ## 混合焦点管理
-不同版本焦点管理器 
+在同样的`FocusLock`锁定的多个工作区时，只会处理最新的工作区，这里是借助于`SideCar`来实现的。当`FocusLock`组件被挂载/卸载时，就可以触发`SideCar`的`Effect`执行[handleStateChangeOnClient](https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/Trap.js#L277)，此时就可以只处理最新的工作区事件处理。
 
-关于只处理最新的工作区的实现，这里是借助于`SideCar`来实现的，当`FocusLock`组件被挂载/卸载时，就可以触发`SideCar`的`Effect`执行[handleStateChangeOnClient](https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/Trap.js#L277)，此时就可以只处理最新的工作区事件处理。
+那么如果存在不同版本焦点管理器来管理多个工作区的话，会发生什么情况。依据我们先前的经验，这里大概率会出现焦点抢夺的情况，因为我们用来标记是否是最新工作区的方法是依赖`SideCar`，而不是某种属性，这种情况下是无法共享状态的。那么事实也确实如此，运行下面的例子后，我们可以看到控制台在不断打印焦点的战争。
 
-不同焦点管理器混合使用
-自行抢占焦点
+```js
+// src/modules/workspace-war.tsx
+<Fragment>
+  <FocusLockV9 autoFocus>
+    <span>react-focus-lock@2.9.1</span>
+    <input type="text" onFocus={() => console.log("focus input-1")} />
+    <input type="text" onFocus={() => console.log("focus input-2")} />
+  </FocusLockV9>
+  <FocusLockV13 autoFocus>
+    <span>react-focus-lock@2.13.2</span>
+    <input type="text" onFocus={() => console.log("focus input-3")} />
+    <input type="text" onFocus={() => console.log("focus input-4")} />
+  </FocusLockV13>
+</Fragment>
+```
+
+在这里我们的将不同版本的`npm`包引用的方式是借助`npm alias`的能力，在`package.json`中将包名命名为其他的名字，然后在实际构建依赖的时候包内容可以是我们指定的别名了。只不过这种方式可能会存在类型声明的些许问题，我们需要使用`declare module`来主动声明一下才可以。
+
+```js
+// package.json
+{
+  "dependencies": {
+    "react-focus-lock@2.13.2": "npm:react-focus-lock@2.13.2",
+    "react-focus-lock@2.9.1": "npm:react-focus-lock@2.9.1"
+  }
+}
+```
+
+```js
+// src/global.d.ts
+declare module "react-focus-lock@2.13.2" {
+  import ReactFocusLock from "react-focus-lock@2.13.2/dist/cjs/index.d.ts";
+  export * from "react-focus-lock@2.13.2/dist/cjs/index.d.ts";
+  export default ReactFocusLock;
+}
+```
+
+我们还可以再试一下不同焦点管理器混合使用，在这里我们将`react-focus-trap`和`focus-trap-react`同时在页面中引入。这种情况下其实必然会发生焦点抢占的情况，此外实际上我们自行抢占焦点的实现，也算是一种不同焦点管理器的混合使用模式。
+
+```js
+// src/modules/multi-lock-tools.tsx
+<Fragment>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>react-focus-lock</span>
+    <FocusLock>
+      <input type="text" onFocus={() => console.log("Lock input 1")} />
+    </FocusLock>
+  </div>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>focus-trap-react</span>
+    <FocusTrapReact>
+      <div>
+        <input type="text" onFocus={() => console.log("Lock input 2")} />
+      </div>
+    </FocusTrapReact>
+  </div>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>react-focus-trap</span>
+    <ReactFocusTrap>
+      <input type="text" onFocus={() => console.log("Lock input 3")} />
+    </ReactFocusTrap>
+  </div>
+</Fragment>
+```
 
 ## 焦点自动降级
 焦点陷阱+单焦点元素 
