@@ -117,7 +117,9 @@ import FocusLock from "react-focus-lock@2.13.2";
 </div>
 ```
 
-通过守卫节点实现的方式，则让焦点管理这件比较复杂的事情变得相对简单了不少。当然在这里即使不使用守卫节点`react-focus-lock`自然也会有兜底的焦点移动实现，也可以通过`noFocusGuards`属性将其主动关闭，但是将其关闭之后在`iframe`嵌套中可能会存在问题-[Stories](https://github.com/theKashey/react-focus-lock/blob/master/stories/Jump.js)。
+通过守卫节点实现的方式，则让焦点管理这件比较复杂的事情变得相对简单了不少。当然在这里即使不使用守卫节点`react-focus-lock`自然也会有兜底的焦点移动实现，也可以通过`noFocusGuards`属性将其主动关闭，但是将其关闭之后在`iframe`嵌套中可能会存在问题-[Stories](https://github.com/theKashey/react-focus-lock/blob/1ce25b/stories/Jump.js#L70)。
+
+关于管理焦点的方式可以参考下面的流程，这是`react-focus-lock`作者的 [文章](https://medium.com/@antonkorzunov/its-a-focus-trap-699a04d66fb5) 提到的实现思路:
 
 > 1. Remember the last focused item.
 > 2. On focusOut:
@@ -128,27 +130,84 @@ import FocusLock from "react-focus-lock@2.13.2";
 > 4. If diff(current-active)>1 -> return focus to the last node.
 > 5. If current < first node -> go to the last-by-order
 > 6. If current > last node -> go to the first-by-order
-> 7. If first < current < last -> move cursor to the nearest-in-dirrection
+> 7. If first < current < last -> move cursor to the nearest-in-direction
 
+此外需要提到的一点是，现在整个库的流程管理可能并没有这么简单了。在不断的迭代下导致现在查阅 [主要代码](https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/Trap.js#L98) 的部分非常艰难，主要原因是状态转移的逻辑不是很清晰，且我们很难理解这个状态所代表的意义，变量也没有类型声明就更加难以管理其赋值行为，当然这不影响其是对于焦点管理比较好的开源实现。
 
-文本元素 焦点 activeElement 对我们后续的研究也很有帮助
+在这里我们还需要考虑一下究竟哪些元素可以获得焦点，这对于我们后续的研究非常有帮助，特别是涉及到`activeElement`的时候。在 [W3C: focusable-area](https://html.spec.whatwg.org/multipage/interaction.html#focusable-area) 中描述了哪些元素可以获得焦点，这里我们直接从`focus-lock`中取出`tabble`的部分，`focus-lock`是`react-focus-lock`的通用方法依赖，下面列举的节点就是可以被赋值到`document.activeElement`属性的节点。
 
+```js
+export var tabbables = [
+    'button:enabled',
+    'select:enabled',
+    'textarea:enabled',
+    'input:enabled',
+    // elements with explicit roles will also use explicit tabindex
+    // '[role="button"]',
+    'a[href]',
+    'area[href]',
+    'summary',
+    'iframe',
+    'object',
+    'embed',
+    'audio[controls]',
+    'video[controls]',
+    '[tabindex]',
+    '[contenteditable]',
+    '[autofocus]',
+];
+```
+
+在这里值的一提的是，在非`contenteditable`的情况下，如果我们选中文本的话，`document.activeElement`会是`body`元素。在默认情况下`FocusLock`组件会豁免对于`body`元素的焦点管理，这样我们就可以正常选中文本了。而如果想模拟先前我们提到的知乎专栏的效果，我们只需要将`persistentFocus`属性传入`FocusLock`组件即可，不过我觉得对于用户来说这并不是交互友好的表现。
+
+```js
+<FocusLock persistentFocus>
+  <input type="text" />
+  <input type="text" />
+  <button>button</button>
+</FocusLock>
+```
 
 ## 多焦点区域
+那么爱思考的我们自然会想到一个问题，`react-focus-lock`会自动将焦点锁定到使用`<FocusLock />`组件的区域，那么如果页面中存在多个`FocusLock`组件的话，测试下会不会存在焦点抢占的问题。
+
+```js
+// src/modules/multi-lock.tsx
+<Fragment>
+  {new Array(len).fill(null).map((_, index) => (
+    <div key={index} style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+      <span>工作区 {index}</span>
+      <FocusLock>
+        <input type="text" />
+        <input type="text" />
+      </FocusLock>
+    </div>
+  ))}
+  <button onClick={() => setLen(p => p + 1)}>+</button>
+  <button onClick={() => setLen(p => Math.max(p - 1, 1))}>-</button>
+</Fragment>
+```
+
+那么在实际的测试过程中，我们可以发现焦点是会被最新的工作区锁定，需要注意的是这里并不是发生了焦点的战争，焦点是锁定在最新的工作区，而不是两者发起战争进行抢占的死循环。这实际上在`Modal`模态框的场景中是比较合理的，通常情况下我们都是希望在最顶层的模态框中锁定焦点，而当我们关闭最外层的模态框时，焦点会自动回到上一层的模态框中。
+
+
+
 焦点陷阱+单焦点元素
 Free HOC 原理
-多个lock陷阱
 
 ## 混合焦点管理
 不同版本焦点管理器 
+
+关于只处理最新的工作区的实现，这里是借助于`SideCar`来实现的，当`FocusLock`组件被挂载/卸载时，就可以触发`SideCar`的`Effect`执行[handleStateChangeOnClient](https://github.com/theKashey/react-focus-lock/blob/1ce25b/src/Trap.js#L277)，此时就可以只处理最新的工作区事件处理。
+
 不同焦点管理器混合使用
 自行抢占焦点
-外部焦点状态检查
 
 ## 焦点自动降级
 焦点陷阱+单焦点元素 
 事件同步执行
 异步降级方案
+外部焦点状态检查
 
 
 ## Iframe 争夺战
@@ -160,8 +219,11 @@ iframe 无法得知路径上的 DOM 属性
 ## 参考
 
 ```
+https://github.com/vigetlabs/react-focus-trap
 https://github.com/theKashey/react-focus-lock
+https://github.com/focus-trap/focus-trap-react
 https://medium.com/@antonkorzunov/its-a-focus-trap-699a04d66fb5 
+https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
 https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
 https://stackoverflow.com/questions/14572084/keep-tabbing-within-modal-pane-only/38865836
 ```
