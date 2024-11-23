@@ -95,10 +95,41 @@ import FocusLock from "react-focus-lock@2.13.2";
 <input type="text" />
 ```
 
+实际上实现相关交互的库也比较容易找到，例如 [focus-trap-react](https://github.com/focus-trap/focus-trap-react) 、[react-focus-trap](https://github.com/vigetlabs/react-focus-trap) 等，那么对于其基本原理我们可以概括为两种:
 
-受控/非受控管理 focus-trap-react/react-focus-trap
+* 受控模式: 这种方式通过添加全局键盘事件监听，当按下`Tab`键时，将收集所有可聚焦元素并手动将焦点从一个元素移动到另一个元素。这就是完全受控的实现方式，通过模拟键盘事件来完成，例如`react-focus-trap`的实现。
+* 非受控模式: 通过添加全局的`focusin`等事件监听，当焦点移动到某个元素时，检查当前焦点元素是否是允许聚焦的工作区域，如果不是的话则将焦点移动到工作区域的第一个元素。这就是非受控的实现方式，通过处理事件副作用来完成，例如`react-focus-lock`的实现。
 
-非受控的实现方式 guard
+说起来这跟富文本的受控和非受控输入也比较像，受控输入是通过监听`beforeinput`事件来控制输入的内容，非受控输入则是通过`MutationObserver`来观察`DOM`变化带来的副作用来处理输入的内容。说回焦点问题，我们要重点聊的 [react-focus-lock](https://github.com/theKashey/react-focus-lock) 则同样是非受控模式的实现。
+
+`react-focus-lock`默认模式下的焦点管理会在工作区的两侧增加增加守卫节点，当然工作区也会被包裹一层`data-focus-lock-disabled`节点，而`data-focus-guard`则是重要的守卫节点。当`div`节点被置于`tabindex`属性时，则可以将焦点放置到这个节点上，当焦点移动到守卫节点时，则可以自动将焦点移动到工作区的第一个元素上。
+
+```html
+<div style="background: rgb(238, 238, 238); padding: 10px;">
+  <span>工作区</span>
+  <div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+  <div data-focus-lock-disabled="false">
+    <input type="text">
+    <input type="text">
+    <button>button</button>
+  </div>
+  <div data-focus-guard="true" tabindex="0" style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"></div>
+</div>
+```
+
+通过守卫节点实现的方式，则让焦点管理这件比较复杂的事情变得相对简单了不少。当然在这里即使不使用守卫节点`react-focus-lock`自然也会有兜底的焦点移动实现，也可以通过`noFocusGuards`属性将其主动关闭，但是将其关闭之后在`iframe`嵌套中可能会存在问题-[Stories](https://github.com/theKashey/react-focus-lock/blob/master/stories/Jump.js)。
+
+> 1. Remember the last focused item.
+> 2. On focusOut:
+>    1. find common parent of modal and document.activeElement
+>    2. get all tabbable element inside common parent.
+>    3. get all tabbable elements inside the Modal
+> 3. Find the difference between last focused item and current.
+> 4. If diff(current-active)>1 -> return focus to the last node.
+> 5. If current < first node -> go to the last-by-order
+> 6. If current > last node -> go to the first-by-order
+> 7. If first < current < last -> move cursor to the nearest-in-dirrection
+
 
 文本元素 焦点 activeElement 对我们后续的研究也很有帮助
 
