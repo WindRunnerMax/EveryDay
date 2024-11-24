@@ -168,7 +168,7 @@ export var tabbables = [
 </FocusLock>
 ```
 
-## 多焦点区域
+## 多焦点工作区
 那么爱思考的我们自然会想到一个问题，`react-focus-lock`会自动将焦点锁定到使用`<FocusLock />`组件的区域，那么如果页面中存在多个`FocusLock`组件的话，测试下会不会存在焦点抢占的问题。
 
 ```js
@@ -342,11 +342,165 @@ declare module "react-focus-lock@2.13.2" {
 ```
 
 ## 焦点自动降级
-焦点陷阱+单焦点元素 
-事件同步执行
-异步降级方案
-外部焦点状态检查
+在`react-focus-lock`中提到了关于自动降级的问题，也就是发生焦点战争的时候，`FocusLock`会自动降级，使得其他的焦点管理器占据主导，从而避免无限循环的焦点抢占。
 
+> React-Focus-Lock will automatically surrender, letting another library to take the lead.
+
+那么我们就来实际测试一下如何触发焦点自动降级的情况。在下面的例子中我们部署了一个焦点陷阱工作区，以及一个自动抢占焦点的`input`元素，当进入页面时则会因为`autoFocus`的存在触发焦点战争。
+
+```js
+// focus-fighting/src/modules/auto-degrade.tsx
+<Fragment>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>工作区</span>
+    <FocusLock autoFocus>
+      <input type="text" onFocus={() => console.log("Lock input 1")} />
+      <input type="text" onFocus={() => console.log("Lock input 2")} />
+    </FocusLock>
+  </div>
+  <input
+    autoFocus
+    ref={ref}
+    onBlur={() => ref.current?.focus()}
+    onFocus={() => console.log("Lock input 3")}
+  />
+</Fragment>
+```
+
+在这个例子中，我们的表现是可以正常在`input 3`中输入内容，而无法在`input 1/2`中放置焦点，这就是`FocusLock`的自动降级策略。然而实际上这里存在一个问题，如果我们此时打开控制台的话，除了发现会有`FocusLock: focus-fighting detected.`触发的提示外，还会发现控制台的输出是一直不停歇的，也就是说焦点战争还是一直存在的。
+
+那么此时如果我们通过`IME`输入内容例如中文的话，则会发现输入的内容发生了偏差，这就是因为焦点实际还是被不断抢占的，只不过这个过程变成了异步因此看起来是可输入的而已。这其实是个`BUG`，在先前也提到了由于库实现的状态转移太过复杂，且用到了大量的`setTimeout`异步任务，这就导致管理起来更加困难。
+
+这里的主要问题则是由于 [moveFocusInside.ts](https://github.com/theKashey/focus-lock/blob/1b7ece/src/moveFocusInside.ts) 进行了检查，如果触发了焦点锁定则会在延时后的异步任务中将其重设，但是由于在`react-focus-lock`的实现中，其回调函数同样是`1ms`优先级的异步任务，因此造成了状态管理的不确定性。
+
+```js
+// https://github.com/theKashey/focus-lock/blob/1b7ece/src/moveFocusInside.ts
+if (lockDisabled) {
+  return;
+}
+if (focusable) {
+  /** +FOCUS-FIGHTING prevention **/
+  if (guardCount > 2) {
+    // we have recursive entered back the lock activation
+    console.error(
+      'FocusLock: focus-fighting detected. Only one focus management system could be active. ' +
+        'See https://github.com/theKashey/focus-lock/#focus-fighting'
+    );
+    lockDisabled = true;
+    setTimeout(() => {
+      lockDisabled = false;
+    }, 1);
+
+    return;
+  }
+  guardCount++;
+  focusOn(focusable.node, options.focusOptions);
+  guardCount--;
+}
+```
+
+针对这个问题顺便提了个`PR`，不过就改了一行代码就不献丑了。其实在这里还有个比较值得关注的事情，我们可以关注`guardCount`这个变量，在最后记录值的时候是连续的`+1`和`-1`，那么如果这段代码是同步执行到底的话，则实际上并没有什么意义。而在`focusOn`中实际上就是同步执行的，也不存在`await`的情况，那么这里只可能是递归的情况下才有效。
+
+```js
+// https://github.com/theKashey/focus-lock/blob/1b7ece/src/commands.ts
+export const focusOn = (
+  target: Element | HTMLFrameElement | HTMLElement | null,
+  focusOptions?: FocusOptions | undefined
+): void => {
+  if (!target) {
+    // not clear how, but is possible https://github.com/theKashey/focus-lock/issues/53
+    return;
+  }
+  if ('focus' in target) {
+    target.focus(focusOptions);
+  }
+  if ('contentWindow' in target && target.contentWindow) {
+    target.contentWindow.focus();
+  }
+};
+```
+
+那么实际上这里主要的问题是`focus event - move focus - focus on - focus event`的循环，而我们通常认为`focus`作为事件回调应该是异步执行的，而且是[宏任务队列](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide#tasks)。那么理论上如果是异步执行的话，那么上述的递归增加`guardCount`的值就不成立了，然而上述的实现在之前测试的过程中是可行的。
+
+实际上如果查阅 [MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop#adding_messages) 的话，单击具有单击事件处理程序的元素将添加一条`Message`，然而有些事件是同步发生的没有消息增加，例如通过`click`方法模拟点击触发回调。那么这样的话，我们就可以理解上述调用`.focus`方法的同步执行，因此可以递归地增加`guardCount`。
+
+```html
+<!DOCTYPE html>
+<html>
+  <body>
+    <input id="$1" type="text" />
+    <button id="$2">button</button>
+  </body>
+  <script>
+    document.addEventListener("focusin", () => {
+      console.log("on document focusin");
+    });
+    $2.onclick = () => {
+      console.log("button click");
+      $1.focus();
+      console.log("sync or async?");
+    };
+  </script>
+</html>
+```
+
+在上述的例子中，如果事件执行是同步的话，则会先执行`focusin`再执行`sync or async`，而如果是异步执行`focus in`的回调，那么这里的执行顺序就应该是`sync or async`在前。当点击按钮后，输出结果则可以明确，通过`.focus()`执行触发的事件回调是同步执行的。
+
+```
+on document focusin
+button click
+on document focusin
+sync or async?
+```
+
+那么依据这个情况，我们就可以理解上述的检查是在递归的情况下才可以生效的。那么我们可以思考另一个问题，在前边我们是直接通过`onBlur`回调执行了`ref.focus()`，那么如果这个回调是异步的话，那么焦点抢占的情况就会发生了，我们可以测试一下这个问题。此外以`react-focus-lock`为例，事件的触发都是`setTimeout`异步执行的，因此在不同焦点管理器甚至不同版本的情况下也会发生冲突。
+
+在下面的例子中，我们就可以焦点抢占的情况，打开控制台之后可以发现在不断打印内容。此时并没有触发`FocusLock: focus-fighting detected.`的提示，也就是并没有正常检查到抢占行为，且此时的表现与之前的效果并不太一样，焦点此时会在工作区显示，而不是像上述的自动降级情况下焦点会锁在`input`上。
+
+```js
+<Fragment>
+  <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
+    <span>工作区</span>
+    <FocusLock autoFocus>
+      <input type="text" onFocus={() => console.log("Lock input 1")} />
+      <input type="text" onFocus={() => console.log("Lock input 2")} />
+    </FocusLock>
+  </div>
+  <input
+    autoFocus
+    ref={ref}
+    onBlur={() => setTimeout(() => ref.current?.focus(), 0)}
+    onFocus={() => console.log("Lock input 3")}
+  />
+</Fragment>
+```
+
+关于这个问题，我们可能需要一些外部的方案来解决，因为这里并没有很好的办法来处理。我们可以在`window`上添加对于`onBlur`事件的监听，当在`10ms`内触发了多次`onBlur`事件的话，则可以认为是焦点抢占的情况，此时我们可以直接在捕获阶段阻止事件的传播，以此来避免焦点抢占的情况。这里的事件冒泡是观察相关源码得出的结论，不同的库实现也会不一样。
+
+```js
+// src/modules/fighting-check.tsx
+useEffect(() => {
+    let lastRecord: number = 0;
+    let execution: number = 0;
+    const cb = (e: FocusEvent) => {
+      const now = Date.now();
+      if (now - lastRecord >= 10) {
+        execution = 0;
+        lastRecord = now;
+      }
+      if (execution++ >= 4) {
+        console.error("Callback Exec Limit");
+        e.stopPropagation();
+      }
+    };
+    document.addEventListener("focusout", cb, true);
+    return () => {
+      document.removeEventListener("focusout", cb, true);
+    };
+  }, []);
+```
+
+但是在这种情况下我们虽然可以大概检查出存在焦点抢占的情况，但是却难以控制最后的落点，也就是说即使我们点击的是`input 3`，但是焦点可能会落在`input 1/2`上，我们无法准确地控制事件的传。因此我们应该尝试判断焦点的事件源，如果事件是从点击事件触发的，那么我们就避免焦点被抢夺，这样还可以避免`tab`按键的情况被处理。但是这里还没有想好该如何实现，在库外部实现这个方案有点难以控制，事件的触发次数太多导致无法准确感知事件源。
 
 ## Iframe 争夺战
 
@@ -357,11 +511,14 @@ iframe 无法得知路径上的 DOM 属性
 ## 参考
 
 ```
+https://www.w3.org/mission/accessibility/
 https://github.com/vigetlabs/react-focus-trap
 https://github.com/theKashey/react-focus-lock
 https://github.com/focus-trap/focus-trap-react
 https://medium.com/@antonkorzunov/its-a-focus-trap-699a04d66fb5 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop
 https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
+https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide
 https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
 https://stackoverflow.com/questions/14572084/keep-tabbing-within-modal-pane-only/38865836
 ```
