@@ -10,8 +10,7 @@
 
 那么我们主要关注于在键盘的焦点管理部分，因此我们必须要用`JavaScript`来主动管理焦点，对于这部分我们可以查到很多开源的实现，例如`react-focus-trap`等。`ArcoDesign`作为国际化的设计体系，在对话框/模态框类的实现中自然也会考虑到这个问题，例如在 [Drawer](https://github.com/arco-design/arco-design/blob/07fc25/components/Drawer/index.tsx#L10) 组件中我们可以看到是使用`react-focus-lock`来实现焦点管理的。
 
-那么在这里我们就以`react-focus-lock`为例，聊一聊在键盘焦点管理实现的过程中，可能存在的焦点抢占`FocusFighting`问题。特别是在微前端场景中，子应用无法由主应用完全控制的情况下，则更容易出现这个现象。
-
+那么在这里我们就以`react-focus-lock`为例，聊一聊在键盘焦点管理实现的过程中，可能存在的焦点抢占`FocusFighting`问题。特别是在微前端场景中，子应用无法由主应用完全控制的情况下，则更容易出现这个现象，文中相关`DEMO`实现都在 `https://codesandbox.io/p/devbox/dl5lpm`中。
 
 ## 奇怪的复制问题
 在聊焦点抢占问题之前，我们先来看一下早些时间在知乎的遇到的奇怪现象，也是与焦点有关的一件有趣的事情。在知乎的专栏页面，在未登录的情况下，我们是无法正常选中文本的，那么自然也不不能够正常复制。那么在防止文本选中这个行为中，我们通常能想到的是`user-select`样式属性，以及`select-start`事件来完成。
@@ -189,6 +188,8 @@ export var tabbables = [
 ```
 
 那么在实际的测试过程中，我们可以发现焦点是会被最新的工作区锁定，需要注意的是这里并不是发生了焦点的战争，焦点是锁定在最新的工作区，而不是两者发起战争进行抢占的死循环。这实际上在`Modal`模态框的场景中是比较合理的，通常情况下我们都是希望在最顶层的模态框中锁定焦点，而当我们关闭最外层的模态框时，焦点会自动回到上一层的模态框中。
+
+其实这种情况实际上还是存在问题的，特别是在模态框场景以及禁用`Mask`遮罩层的情况下，此时焦点是可以被主页面的元素获取的。那么主应用和模态框内部的焦点管理就会产生冲突，焦点管理自然只能被聚焦在模态框的工作区内，后续我们也会再聊到这个问题。
 
 我们还可以关注非`<FocusLock />`组件的情况，也就是使用`input`主动设置焦点来进行焦点抢占。当`input`元素失去焦点的时候，我们就主动将焦点强行拉回到这个`input`焦点上，这就是我们要聊的真正的焦点抢占情况。在下面的例子中，当我们点击第`3`个`input`元素的时候(此时没有`auto-focus`)，焦点会被强行在两个`input`之间争夺。
 
@@ -503,10 +504,73 @@ useEffect(() => {
 但是在这种情况下我们虽然可以大概检查出存在焦点抢占的情况，但是却难以控制最后的落点，也就是说即使我们点击的是`input 3`，但是焦点可能会落在`input 1/2`上，我们无法准确地控制事件的传。因此我们应该尝试判断焦点的事件源，如果事件是从点击事件触发的，那么我们就避免焦点被抢夺，这样还可以避免`tab`按键的情况被处理。但是这里还没有想好该如何实现，在库外部实现这个方案有点难以控制，事件的触发次数太多导致无法准确感知事件源。
 
 ## Iframe 争夺战
+在先前我们一直聊的是同一个页面中的焦点管理，而如果是在`iframe`中的话则会是比较特殊的情况。首先`iframe`整个作用域是完全独立的，那么`SideCar`维护的最新的工作区就无法正确获得。其次则是`iframe`无法得知路径上的`DOM`属性，那么先前我们提到的`FreeFocusInside`附加属性`data-no-focus-lock`则无法生效。
 
-iframe 无法得知路径上的 DOM 属性
-1. Iframe抢夺主页面焦点
-2. 主页面抢夺Iframe焦点
+在页面中嵌入`iframe`的情况下，基本上都可以概括为下面的两种情况，当然如果是主页面和`iframe`中不断进行焦点相互抢占的话，那么这种情况下就会是两种情况都会发生，并且不断循环执行。
+
+1. `iframe`触发事件主动抢夺主页面焦点。
+2. 主页面触发事件主动抢夺`iframe`焦点。
+
+首先来看`iframe`触发事件主动抢夺主页面焦点，通常这种情况下是自然会被外部的焦点管理器抢占的。因为对于外部的焦点管理器而言，`iframe`是一个黑盒，其无法感知到`iframe`内部的焦点管理情况，即使我们`iframe`内的焦点工作区是使用`FocusLock`组件来定义的。对于主应用上的焦点管理器而言，我们的`iframe`只是个普通的`input`可聚焦元素而已。
+
+这种情况实际上可能是比较常见的，在模态框中嵌入`iframe`来展示额外的内容。那么在这种情况下如果需要需要避免上述的问题，则只需要根据我们先前聊到的`FreeFocusInside`组件来处理即可，这与之前我们的对于普通`input`元素的处理是一致的。下面的例子中如果去掉`FreeFocusInside`则会导致`iframe`无法获得焦点，加入则可以聚焦，需要注意的是如果`FreeFocusInside`在`iframe`内部加载的话则是无效的。
+
+```js
+// src/modules/iframe-lock.tsx
+<Fragment>
+  <FocusLock>
+    <input type="text" />
+  </FocusLock>
+  <FreeFocusInside>
+    <iframe src="/?type=iframe-cross-v13" />
+  </FreeFocusInside>
+</Fragment>
+```
+
+紧接着是主页面触发事件主动抢夺`iframe`焦点，这里是个有趣的问题。在相对比较旧的版本中，例如我们测试的`react-focus-lock@2.9.1`版本中，`iframe`外的主应用是无法获取焦点的。在`code-sandbox`中会表现的特别明显，因为其本身就是使用`iframe`来展示内容的，在最开始提到的 [DEMO](https://codesandbox.io/p/sandbox/5wmrwlvxv4) 中就可以复现这个问题。
+
+实际上这是个`BUG`，在 [reach-ui#536](https://github.com/reach/reach-ui/issues/536#issuecomment-613129898) 中可以看到这个问题的讨论。作者的意图实际上是，当焦点从`iframe`移出时，`react-focus-lock`并不会阻止，而仅有当焦点从`iframe`外移入时，意味着我们重新激活了当前选项卡，并且必须恢复焦点。
+
+在这个问题上，由于存在的问题太久，于是加入了`crossFrame`参数，用开兼容性地控制表现。这个参数默认是`true`，也就是说默认会阻止`iframe`外的焦点抢占，而如果设置为`false`的话则会允许`iframe`外的焦点抢占，对于这个问题我们可以进行测试:
+
+```js
+// focus-fighting/src/modules/iframe-war.tsx
+export const IframeV9: FC = () => {
+  return (
+    <FocusLockV9 crossFrame={false} autoFocus={false}>
+      <span>react-focus-lock@2.9.1 no-cross-frame</span>
+      <input />
+    </FocusLockV9>
+  );
+};
+export const IframeV13: FC = () => {
+  return (
+    <FocusLockV13 crossFrame={false} autoFocus={false}>
+      <span>react-focus-lock@2.13.2 no-cross-frame</span>
+      <input />
+    </FocusLockV13>
+  );
+};
+export const IframeWar: FC = () => {
+  return (
+    <div>
+      <input type="text" />
+      <iframe src="/?type=iframe-cross-v9" />
+      <iframe src="/?type=iframe-cross-v13" />
+    </div>
+  );
+};
+```
+
+在这里的测试中，因为我们是设置的`autoFocus=false`，不会自动抢占焦点。因此需要我们手动聚焦，当我们主动聚焦`V9`工作区的时候，焦点则是无法被`iframe`外的元素抢占的。而当我们聚焦`V13`工作区的时候，焦点则是可以被`iframe`外的元素抢占的，这就是之前提到的低版本`BUG`表现，而在最新版本则不会发生外部焦点抢占的问题了。
+
+但是如果我们追根溯源多测试一下，将两个工作区的`crossFrame`都设置为`true`的话，我们会发现此时的表现仍然是一致的，也就是说`crossFrame`参数实际上变成了无效的配置。其实这个问题也就是我们先前提到的，状态管理的复杂性以及状态转移的不确定性导致的，这就特别依赖自动化测试了。而关于相关的`issue`，预计这个问题大概会如下流程引入的:
+
+* 最开始的时候，当将焦点移出页面时，`react-focus-lock`不会阻止它，当焦点返回时，意味着重新激活了当前选项卡，并且必须恢复焦点，这个流程自然是没问题的。
+* 根据 [reach-ui#536](https://github.com/reach/reach-ui/issues/536#issuecomment-613129898) 同步`document.onBlur`会设置`focusWasOutsideWindow`为`false`，状态控制是正常额。在后续的迭代中，由于将整个焦点事件做了`deferAction`来异步执行，而`trap.onBlur`异步工作后执行时机太晚，`focusWasOutsideWindow`设置的太晚让其以为此时是需要恢复焦点的状态。
+* 为了解决这个问题，于是引入了 [crossFrame](https://github.com/reach/reach-ui/issues/536#issuecomment-614981674) 参数来控制相关的行为，这在当时应该是解决了问题。
+* 然而后续更新中，异步事件状态转移的复杂性再次体现了出来，在上面我们提到的`2.9.1`版本中，如果我们将设置`focusWasOutsideWindow`的时机再延后`1ms`的话，就不会出现`iframe`抢夺外部焦点的问题了，并且此时`crossFrame`参数也是有效的，恰好这里也有 [react-focus-lock#249](https://github.com/theKashey/react-focus-lock/issues/249#issuecomment-1624636487) 讨论。
+* 再到当前的最新版本，`crossFrame`参数已经失效，造成这个原因的`pr`已经比较难以追溯，目测是其他的状态转移问题导致的。但是本质上主应用也不应该被`iframe`一直抢夺焦点，`2.13.2`版本的这个状态表现实际上才比较符合交互的合理性。
 
 ## 参考
 
