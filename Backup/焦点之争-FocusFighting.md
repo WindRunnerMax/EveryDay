@@ -1,9 +1,9 @@
 # 焦点之争-FocusFighting
 > The Web is fundamentally designed to work for all people, whatever their hardware, software, language, location, or ability. When the Web meets this goal, it is accessible to people with a diverse range of hearing, movement, sight, and cognitive ability. --- [W3C - Accessibility](https://www.w3.org/mission/accessibility/)
 
-在现代软件开发中，无障碍设计`Accessibility(a11y)`非常重要，在`W3C`使命中的无障碍部分，明确了网络是为所有人服务而设计的，无论他们的硬件、软件、语言、位置或能力如何。`WAI-ARIA`则是`W3C`编写的一项规范，定义了一组可应用于元素的附加`HTML`属性，以提供附加语义并改善缺乏的可访问性，而我们在`DOM`节点中经常见到的`aria-xxx`、`role`属性就是基于这里的规范定义。
+在现代软件开发中，无障碍设计`Accessibility(a11y)`非常重要。在`W3C`使命中的无障碍部分，明确了网络是为所有人服务而设计的，无论他们的硬件、软件、语言、位置或能力如何。而`WAI-ARIA`则是`W3C`编写的一项规范，定义了一组可应用于元素的附加`HTML`属性，以提供附加语义并改善缺乏的可访问性，而我们在`DOM`节点中经常见到的`aria-xxx`、`role`属性就是基于这里的规范定义。
 
-在这里我们主要聊的则是`WAI-ARIA`中的 [Dialog Role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role)，而在这里如果我们仅仅加入`role="dialog"`并不足以满足`Dialog Accessible`。而在`MDN`中解释了我们必须做什么，但却没有解释如何做，因此我们必须要主动完成下面两个要求:
+在这里我们主要聊的则是`WAI-ARIA`中的 [Dialog Role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role)，而在这里如果我们仅仅加入`role="dialog"`并不足以满足`Dialog Accessible`。在`MDN`中解释了我们必须做什么，但却没有解释如何做，因此我们必须要主动完成下面两个要求:
 
 * 对话框必须被正确标记: 每个对话框都需要有一个清晰易懂的标签，例如标题等，以便屏幕阅读器等辅助技术能够识别和传达对话框的内容。
 * 键盘焦点必须被正确管理: 当一个对话框出现时，键盘焦点应自动移动到对话框内的第一个可交互元素，以便使用键盘而非鼠标的用户能够直接与对话框内的内容进行交互。当关闭对话框时，键盘焦点应返回到触发对话框显示的元素，确保用户可以继续他们之前的操作。
@@ -171,7 +171,7 @@ export var tabbables = [
 那么爱思考的我们自然会想到一个问题，`react-focus-lock`会自动将焦点锁定到使用`<FocusLock />`组件的区域，那么如果页面中存在多个`FocusLock`组件的话，测试下会不会存在焦点抢占的问题。
 
 ```js
-// src/modules/multi-lock.tsx
+// packages/focus-fighting/src/modules/multi-lock.tsx
 <Fragment>
   {new Array(len).fill(null).map((_, index) => (
     <div key={index} style={{ background: "#eee", marginTop: 10, padding: 10 }}>
@@ -194,7 +194,7 @@ export var tabbables = [
 我们还可以关注非`<FocusLock />`组件的情况，也就是使用`input`主动设置焦点来进行焦点抢占。当`input`元素失去焦点的时候，我们就主动将焦点强行拉回到这个`input`焦点上，这就是我们要聊的真正的焦点抢占情况。在下面的例子中，当我们点击第`3`个`input`元素的时候(此时没有`auto-focus`)，焦点会被强行在两个`input`之间争夺。
 
 ```js
-// src/modules/input-focus.tsx
+// packages/focus-fighting/src/modules/input-focus.tsx
 <Fragment>
   <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
     <span>工作区 1</span>
@@ -214,7 +214,7 @@ export var tabbables = [
 那么关于这个问题我们自然是有办法可以解决，并且`react-focus-lock`也直接提供了解决方案来处理。我们可以使用`<FreeFocusInside />`这个`HOC`组件来告诉`lock`组件不要抢夺焦点，其含义是隐藏`FocusLock`的内部结构，允许不受管理的焦点。那么在上述的`multi-lock`例子中，我们可以将`FreeFocusInside`组件引入。
 
 ```js
-// src/modules/multi-lock-free.tsx
+// packages/focus-fighting/src/modules/multi-lock-free.tsx
 <FocusLock>
   <FreeFocusInside>
     <input type="text" />
@@ -228,7 +228,7 @@ export var tabbables = [
 那么对于主动的`input`抢占问题，实际上是希望不要抢夺干净的`input`焦点，这里所谓的干净焦点指的是非主动抢夺的焦点情况，而对于上边例子中的焦点抢占情况，则只是不会由`FocusLock`组件来抢占外边的`input`焦点。如果此时焦点在`FocusLock`组件内部的话，还是会被我们的`input`组件抢占，在这里只是避免了两者的混战。
 
 ```js
-// src/modules/input-focus-free.tsx
+// packages/focus-fighting/src/modules/input-focus-free.tsx
 <Fragment>
   <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
     <span>工作区 1</span>
@@ -278,7 +278,7 @@ export const focusIsHidden = (inDocument: Document = document): boolean => {
 那么如果存在不同版本焦点管理器来管理多个工作区的话，会发生什么情况。依据我们先前的经验，这里大概率会出现焦点抢夺的情况，因为我们用来标记是否是最新工作区的方法是依赖`SideCar`，而不是某种属性，这种情况下是无法共享状态的。那么事实也确实如此，运行下面的例子后，我们可以看到控制台在不断打印焦点的战争。
 
 ```js
-// src/modules/workspace-war.tsx
+// packages/focus-fighting/src/modules/workspace-war.tsx
 <Fragment>
   <FocusLockV9 autoFocus>
     <span>react-focus-lock@2.9.1</span>
@@ -317,7 +317,7 @@ declare module "react-focus-lock@2.13.2" {
 我们还可以再试一下不同焦点管理器混合使用，在这里我们将`react-focus-trap`和`focus-trap-react`同时在页面中引入。这种情况下其实必然会发生焦点抢占的情况，此外实际上我们自行抢占焦点的实现，也算是一种不同焦点管理器的混合使用模式。
 
 ```js
-// src/modules/multi-lock-tools.tsx
+// packages/focus-fighting/src/modules/multi-lock-tools.tsx
 <Fragment>
   <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
     <span>react-focus-lock</span>
@@ -350,7 +350,7 @@ declare module "react-focus-lock@2.13.2" {
 那么我们就来实际测试一下如何触发焦点自动降级的情况。在下面的例子中我们部署了一个焦点陷阱工作区，以及一个自动抢占焦点的`input`元素，当进入页面时则会因为`autoFocus`的存在触发焦点战争。
 
 ```js
-// focus-fighting/src/modules/auto-degrade.tsx
+// packages/focus-fighting/src/modules/auto-degrade.tsx
 <Fragment>
   <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
     <span>工作区</span>
@@ -459,6 +459,7 @@ sync or async?
 在下面的例子中，我们就可以焦点抢占的情况，打开控制台之后可以发现在不断打印内容。此时并没有触发`FocusLock: focus-fighting detected.`的提示，也就是并没有正常检查到抢占行为，且此时的表现与之前的效果并不太一样，焦点此时会在工作区显示，而不是像上述的自动降级情况下焦点会锁在`input`上。
 
 ```js
+// packages/focus-fighting/src/modules/async-fighting.tsx
 <Fragment>
   <div style={{ background: "#eee", marginTop: 10, padding: 10 }}>
     <span>工作区</span>
@@ -476,10 +477,10 @@ sync or async?
 </Fragment>
 ```
 
-关于这个问题，我们可能需要一些外部的方案来解决，因为这里并没有很好的办法来处理。我们可以在`window`上添加对于`onBlur`事件的监听，当在`10ms`内触发了多次`onBlur`事件的话，则可以认为是焦点抢占的情况，此时我们可以直接在捕获阶段阻止事件的传播，以此来避免焦点抢占的情况。这里的事件冒泡是观察相关源码得出的结论，不同的库实现也会不一样。
+关于这个问题，我们可能需要一些外部的方案来解决，因为这里并没有很好的办法来处理。我们可以在`window`上添加对于`onBlur`事件的监听，当在`10ms`内触发了多次`onBlur`事件的话，则可以认为是焦点抢占的情况，此时我们可以直接在捕获阶段阻止事件的传播，以此来避免焦点抢占的情况。这里的事件冒泡是观察相关源码得出的结论，不同的库实现也会不一样，此外不相互抢夺而自动降级的情况则更难以处理。
 
 ```js
-// src/modules/fighting-check.tsx
+// packages/focus-fighting/src/modules/fighting-check.tsx
 useEffect(() => {
     let lastRecord: number = 0;
     let execution: number = 0;
@@ -516,7 +517,7 @@ useEffect(() => {
 这种情况实际上可能是比较常见的，在模态框中嵌入`iframe`来展示额外的内容。那么在这种情况下如果需要需要避免上述的问题，则只需要根据我们先前聊到的`FreeFocusInside`组件来处理即可，这与之前我们的对于普通`input`元素的处理是一致的。下面的例子中如果去掉`FreeFocusInside`则会导致`iframe`无法获得焦点，加入则可以聚焦，需要注意的是如果`FreeFocusInside`在`iframe`内部加载的话则是无效的。
 
 ```js
-// src/modules/iframe-lock.tsx
+// packages/focus-fighting/src/modules/iframe-lock.tsx
 <Fragment>
   <FocusLock>
     <input type="text" />
@@ -534,7 +535,7 @@ useEffect(() => {
 在这个问题上，由于存在的问题太久，于是加入了`crossFrame`参数，用开兼容性地控制表现。这个参数默认是`true`，也就是说默认会阻止`iframe`外的焦点抢占，而如果设置为`false`的话则会允许`iframe`外的焦点抢占，对于这个问题我们可以进行测试:
 
 ```js
-// focus-fighting/src/modules/iframe-war.tsx
+// packages/focus-fighting/src/modules/iframe-war.tsx
 export const IframeV9: FC = () => {
   return (
     <FocusLockV9 crossFrame={false} autoFocus={false}>
