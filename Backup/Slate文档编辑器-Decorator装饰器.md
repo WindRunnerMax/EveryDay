@@ -131,3 +131,17 @@ for (let i = 0; i < leaves.length; i++) {
 
 ## 最后
 在这里我们主要讨论了`slate`中的`decoration`装饰器的实现，以及在实际使用中可能会遇到的问题，主要是在跨节点的情况下，我们需要将`range`拆分为多个`range`，然后分别进行处理，并且还分析了源码来探究了相关问题的实现。那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的方案。
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://docs.slatejs.org/
+https://github.com/ianstormtaylor/slate
+https://github.com/WindRunnerMax/DocEditor
+```

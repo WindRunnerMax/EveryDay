@@ -573,6 +573,13 @@ export const IframeWar: FC = () => {
 * 然而后续更新中，异步事件状态转移的复杂性再次体现了出来，在上面我们提到的`2.9.1`版本中，如果我们将设置`focusWasOutsideWindow`的时机再延后`1ms`的话，就不会出现`iframe`抢夺外部焦点的问题了，并且此时`crossFrame`参数也是有效的，恰好这里也有 [react-focus-lock#249](https://github.com/theKashey/react-focus-lock/issues/249#issuecomment-1624636487) 讨论。
 * 再到当前的最新版本，`crossFrame`参数已经失效，造成这个原因的`pr`已经比较难以追溯，目测是其他的状态转移问题导致的。但是本质上主应用也不应该被`iframe`一直抢夺焦点，`2.13.2`版本的这个状态表现实际上才比较符合交互的合理性。
 
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+
 ## 参考
 
 ```

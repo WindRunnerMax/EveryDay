@@ -209,3 +209,17 @@ export const WithContext: FC<{ editor: EditorKit }> = props => {
 
 ## 最后
 在这里我们主要讨论了`Node`节点与`Path`路径映射，即如何确定渲染出的节点处于文档数据定义中的位置，这是`slate`中实现数据变更时的重要表达，特别是在仅使用选区无法实现的复杂操作中，并且还分析了`slate`源码来探究了相关问题的实现。那么在后面的文章中，我们延续当前提到的表格但单元格位置的查找，来聊聊表格模块的设计及交互。
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://docs.slatejs.org/
+https://github.com/ianstormtaylor/slate
+https://github.com/WindRunnerMax/DocEditor
+```
