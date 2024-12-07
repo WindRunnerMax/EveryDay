@@ -439,3 +439,17 @@ export class SelectNode extends Node {
 
 ## 最后
 在这里我们就依然在轻量级`DOM`的基础上，讨论了`Canvas`中描边与填充的绘制问题，以及`inside stroke`的实现方式，然后我们实现了基本的选中绘制以及拖拽多选的交互方案，并且实现了`Hover`的效果，以及拖拽节点的移动。那么在后边我们可以聊一下`fillRule`规则设计、按需绘制图形节点，也可以聊到更多的交互方案，例如`Resize`的交互方案、参考线能力的实现、富文本的绘制方案等等。
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://github.com/WindRunnerMax/CanvasEditor
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+```

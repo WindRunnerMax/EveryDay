@@ -581,6 +581,23 @@ document.dispatchEvent(
 最终在这里我们可能已经明确了浏览器扩展的一些非常`Hack`能力的实现，同时可能也会发现浏览器扩展的权限是真的非常高，在`V2`版本中甚至连`HTTP Only`的`Cookie`都可以拿到，在`V3`中限制就多了起来，但是整体的权限还是非常高的，所以在选择浏览器扩展时还是需要谨慎，要不就选择用户比较多的，要不就选择开源的。不过之前类似`EDGE`扩展的事件还是不容易避免，简单来说就是`EDGE`开放了扩展，然后有些不怀好意的人将开源的扩展封装了广告代码然后提交到扩展市场，最终使用拓展的我们还是要关注一下这些问题的，最后提供一些脚本管理器可以参考学习。
 
 * [GreaseMonkey](https://github.com/greasemonkey/greasemonkey): 俗称油猴，最早的用户脚本管理器，为`Firefox`提供扩展能力，采用`MIT license`协议。
-* [TamperMonkey](https://github.com/Tampermonkey/tampermonkey): 俗称篡改猴，最受欢迎的用户脚本管理器，能够为当前主流浏览器提供扩展能力，开源版本采用`GPL-3.0 license`协议。
+* [TamperMonkey](https://github.com/Tampermonkey/tampermonkey): 俗称篡改猴，最受欢迎的用户脚本管理器，能够为当前主流浏览器提供扩展能力，开源版本(`2.9`版本前)采用`GPL-3.0 license`协议。
 * [ViolentMonkey](https://github.com/violentmonkey/violentmonkey): 俗称暴力猴，完全开源的用户脚本管理器，同样能够为当前主流浏览器提供扩展能力，采用`MIT license`协议。
 * [ScriptCat](https://github.com/scriptscat/scriptcat): 俗称脚本猫，完全开源的用户脚本管理器，同样能够为当前主流浏览器提供扩展能力，采用` GPL-3.0 license`协议。
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://github.com/scriptscat/scriptcat
+https://github.com/greasemonkey/greasemonkey
+https://github.com/Tampermonkey/tampermonkey
+https://github.com/violentmonkey/violentmonkey
+https://reorx.com/blog/understanding-chrome-manifest-v3/
+https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
+```

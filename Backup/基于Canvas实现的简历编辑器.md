@@ -80,3 +80,17 @@
 ## 最后
 这次对于`Canvas`的体验让我感觉还是不错的，后边我也会写一些在实现的时候碰到的问题以及如何解决问题的文章，不过我目前的主业还是还是写富文本编辑器，富文本编辑器也是天坑中的一员，后边也可能会先写编辑器相关的文章。
 
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://github.com/WindRunnerMax/CanvasEditor
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+```

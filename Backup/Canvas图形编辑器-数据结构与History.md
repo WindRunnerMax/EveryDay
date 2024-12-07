@@ -257,3 +257,17 @@ export class History {
 ## 最后
 本文我们介绍总结了我们的图形编辑器中数据结构的设计以及`History`模块的实现，虽然暂时不涉及到`Canvas`本身，但是这都是作为编辑器本身的基础能力，也是通用的能力可以学习。后边我们可以介绍的能力还有很多，例如复制粘贴模块、画布分层、事件管理、无限画布、按需绘制、性能优化、焦点控制、参考线、富文本、快捷键、层级控制、渲染顺序、事件模拟、`PDF`排版等等，整体来说还是比较有意思的，欢迎关注我并留意后续的文章。
 
+
+## 每日一题
+
+```
+https://github.com/WindRunnerMax/EveryDay
+```
+
+## 参考
+
+```
+https://github.com/WindRunnerMax/CanvasEditor
+https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
+https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
+```
