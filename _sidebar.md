@@ -273,6 +273,7 @@
   * [初探webpack之解析器resolver](Plugin/初探webpack之解析器resolver.md)
   * [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
   * [初探富文本之搜索替换算法](Plugin/初探富文本之搜索替换算法.md)
+  * [从脚本管理器的角度审视Chrome扩展](Plugin/从脚本管理器的角度审视Chrome扩展.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
