@@ -1,4 +1,4 @@
-# 从油猴脚本管理器的角度审视Chrome扩展
+# 从脚本管理器的角度审视Chrome扩展
 
 在之前一段时间，我需要借助Chrome扩展来完成一个需求，当时还在使用油猴脚本与浏览器扩展之间调研了一波，而此时恰好我又有一些做的还可以的油猴脚本[TKScript](https://github.com/WindrunnerMax/TKScript)，相对会比较熟悉脚本管理器的能力，预估是不太能完成需求的，所以趁着这个机会，我又学习了一波浏览器扩展的能力。那么在后来需求的开发过程中，因为有些能力是类似于脚本管理器提供的基础环境，致使我越来越好奇脚本管理器是怎么实现的，而实际上脚本管理器实际上还是一个浏览器扩展，浏览器也并没有给脚本管理器开后门来实现相关能力，而让我疑惑的三个问题是:
 
@@ -8,263 +8,12 @@
  
 因此，之后调研了一波浏览器扩展能力的开发之后，总结了脚本管理器的核心能力实现，同样也是解答了让我疑惑的这三个问题。
 
-## 从零开始浏览器扩展的开发
-`Chrome`扩展是一种可以在`Chrome`浏览器中添加新功能和修改浏览器行为的软件程序，例如我们常用的`TamperMonkey`、`Proxy SwitchyOmega`、`AdGuard`等等，这些拓展都是可以通过`WebExtensions API`来修改、增强浏览器的能力，用来提供一些浏览器本体没有的功能，从而实现一些有趣的事情。
-
-实际上`FireFox`是才第一个引入浏览器扩展/附加组件的主流浏览器，其在`2004`年发布了第一个版本的扩展系统，允许开发人员为`FireFox`编写自定义功能和修改浏览器行为的软件程序。而`Chrome`浏览器则在`2010`年支持了扩展系统，同样其也允许开发人员为`Chrome`编写自定义功能和修改浏览器行为的软件程序。
-
-虽然`FireFox`是第一个引入浏览器扩展的浏览器，但是`Chrome`的扩展系统得到了广泛的认可和使用，也已经成为了现代浏览器中最流行的扩展系统之一。目前用于构建`FireFox`扩展的技术在很大程度上与被基于`Chromium`内核的浏览器所支持的扩展`API`所兼容，例如`Chrome`、`Edge`、`Opera`等。在大多数情况下，为基于`Chromium`内核浏览器而写的插件只需要少许修改就可以在`FireFox`中运行，不过在实际测试中`FireFox`对于`V3`的扩展支持度可能并没有那么好，还是以`V2`为主。
-
-### Manifest
-我们可以先来想一下浏览器拓展到底是什么，浏览器本身是支持了非常完备的`Web`能力的，也就是同时拥有渲染引擎和`Js`解析引擎，那么浏览器拓展本身就不需要再去实现一套新的可执行能力了，完全复用`Web`引擎即可。那么问题来了，单纯凭借`Js`是没有办法做到一些能力的，比如拦截请求、修改请求头等等，这些`Native`的能力单凭`Js`肯定是做不到的，起码也得上`C++`直接运行在浏览器代码中才可以，实际上解决这个问题也很简单，直接通过类似于`Js Bridge`的方式暴露出一些接口就可以了，这样还可以更方便地做到权限控制，一定程度避免浏览器扩展执行一些恶意的行为导致用户受损。
-
-那么由此看来，浏览器扩展其实就是一个`Web`应用，只不过其运行在浏览器的上下文中，并且可以调用很多浏览器提供的特殊`API`来做到一些额外的功能。那么既然是一个`Web`应用，应该如何让浏览器知道这是一个拓展而非普通的`Web`应用，那么我们就需要标记和配置文件，这个文件就是`manifest.json`，通过这个文件我们可以来描述扩展的基本信息，例如扩展的名称、版本、描述、图标、权限等等。
-
-在`manifest.json`中有一个字段为`manifest_version`，这个字段标志着当前`Chrome`的插件版本，现在我们在浏览器安装的大部分都是`v2`版本的插件，`v1`版本的插件早已废弃，而`v3`版本的插件因为存在大量的`Breaking Changes`，以及诸多原本`v2`支持的`API`在`v3`被限制或移除，导致诸多插件无法无损过渡到`v3`版本。但是自`2022.01.17`起，`Chrome`网上应用店已停止接受新的`Manifest V2`扩展，所以对于要新开发的拓展来说，我们还是需要使用`v3`版本的受限能力，而且因为谷歌之前宣布`v2`版本将在`2023`初完全废弃，但是又因为不能做到完全兼容`v2`地能力，现在又延迟到了`2024`年初。但是无论如何，谷歌都准备逐步废弃`v2`而使用`v3`，那么我们在这里也是基于`v3`来实现`Chrome`扩展。
-
-那么构建一个扩展应用，你就需要在项目的根目录创建一个`manifest.json`文件，一个简单的`manifest.json`的结构如下所示，详细的配置文档可以参考`https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/manifest.json`:
-
-```json
-{
-    "manifest_version": 3,              // 插件版本
-    "name": "Extension",                // 插件名称
-    "version": "1.0.0",                 // 插件版本号
-    "description": "Chrome Extension",  // 插件描述信息
-    "icons": {                          // 插件在不同位置显示的图标 
-      "16": "icon16.png",               // `16x16`像素的图标
-      "32": "icon32.png",               // `32x32`像素的图标
-      "48": "icon48.png",               // `48x48`像素的图标
-      "128": "icon128.png"              // `128x128`像素的图标
-    },
-    "action": {                         // 单击浏览器工具栏按钮时的行为
-      "default_popup": "popup.html",    // 单击按钮时打开的默认弹出窗口
-      "default_icon": {                 // 弹出窗口按钮图标 // 可以直接配置为`string`
-        "16": "icon16.png",             // `16x16`像素的图标
-        "32": "icon32.png",             // `32x32`像素的图标
-        "48": "icon48.png",             // `48x48`像素的图标
-        "128": "icon128.png"            // `128x128`像素的图标
-      }
-    },
-    "background": {                     // 定义后台页面的文件和工作方式
-      "service_worker": "background.js" // 注册`Service Worker`文件
-    },
-    "permissions": [                    // 定义插件需要访问的`API`权限
-      "storage",                        // 存储访问权限
-      "activeTab",                      // 当前选项卡访问权限
-      "scripting"                       // 脚本访问权限
-    ]
-}
-```
-
-### Bundle
-既然在上边我们确定了`Chrome`扩展实际上还是`Web`技术，那么我们就完全可以利用`Web`的相关生态来完成插件的开发，当前实际上是有很多比较成熟的扩展框架的，其中也集合了相当一部分的能力，只不过我们在这里希望从零开始跑通一整套流程，那么我们就自行借助打包工具来完成产物的构建。在这里选用的是`Rspack`，`Rspack`是一个于`Rust`的高性能构建引擎，具备与`Webpack`生态系统的互操作性，可以被`Webpack`项目低成本集成，并提供更好的构建性能。选用`Rspack`的主要原因是其编译速度会快一些，特别是在复杂项目中`Webpack`特别是`CRA`创建的项目打包速度简直惨不忍睹，我这边有个项目改造前后的`dev`速度对比大概是`1min35s : 24s`，速度提升还是比较明显的，当然在我们这个简单的`Chrome`扩展场景下实际上是区别不大。
-
-那么现在我们先从`manifest.json`开始，目标是在右上角实现一个弹窗，当前很多扩展程序也都是基于右上角的小弹窗交互来控制相关能力的。首先我们需要在`manifest.json`配置`action`，`action`的配置就是控制单击浏览器工具栏按钮时的行为，因为实际上是`web`生态，所以我们应该为其配置一个`html`文件以及`icon`。
-
-```js
-"action": {
-  "default_popup": "popup.html",
-  "default_icon": "./static/favicon.png"
-}
-```
-
-已经有了配置文件，现在我们就需要将`HTML`生成出来，在这里就需要借助`rspack`来实现了，实际上跟`webpack`差不多，整体思路就是先配置一个`HTML`模版，然后从入口开始打包`Js`，最后将`Js`注入到`HTML`当中就可以了，在这里我们直接配置一个多入口的输出能力，通常一个扩展插件不会是只有一个`Js`和`HTML`文件的，所以我们需要配置一个多入口的能力。在这里我们还打包了两个文件，一个是`popup.html`作为入口，另一个是`worker.js`作为后台运行的`Service Worker`独立线程。
-
-```js
-entry: {
-    worker: "./src/worker/index.ts",
-    popup: "./src/popup/index.tsx",
-  },
-plugins: [
-  new HtmlPlugin({
-    filename: "popup.html",
-    template: "./public/popup.html",
-    inject: false,
-  }),
-],
-```
-
-实际上我们的`dev`模式生成的代码都是在内存当中的，而谷歌扩展是基于磁盘的文件的，所以我们需要将生成的相关文件写入到磁盘当中。在这里这个配置是比较简单的，直接在`devServer`中配置一下就好。
-
-```js
-devServer: {
-  devMiddleware: {
-    writeToDisk: true,
-  },
-},
-```
-
-但是实际上，如果我们是基于磁盘的文件来完成的扩展开发，那么`devServer`就显得没有那么必要了，我们直接可以通过`watch`来完成，也就是`build --watch`，这样就可以实现磁盘文件的实时更新了。我们使用`devServer`是更希望能够借助于`HMR`的能力，但是这个能力在`Chrome`扩展`v3`上的限制下目前表现的并不好，所以在这里这个能力先暂时放下，毕竟实际上`v3`当前还是在收集社区意见来更新的。不过我们可以有一些简单的方法，来缓解这个问题，我们在开发扩展的最大的一个问题是需要在更新的时候去手动点击刷新来加载插件，那么针对于这个问题，我们可以借助`chrome.runtime.reload()`来实现一个简单的插件重新加载能力，让我们在更新代码之后不必要去手动刷新。
-
-在这里主要提供一个思路，我们可以编写一个`rspack`插件，利用`ws.Server`启动一个`WebSocket`服务器，之后在`worker.js`也就是我们将要启动的`Service Worker`来链接`WebSocket`服务器，可以通过`new WebSocket`来链接并且在监听消息，当收到来自服务端的`reload`消息之后，我们就可以执行`chrome.runtime.reload()`来实现插件的重新加载了，那么在开启的`WebSocket`服务器中需要在每次编译完成之后例如`afterDone`这个`hook`向客户端发送`reload`消息，这样就可以实现一个简单的插件重新加载能力了。但是实际上这引入了另一个问题，在`v3`版本的`Service Worker`不会常驻，所以这个`WebSocket`链接也会随着`Service Worker`的销毁而销毁，是比较坑的一点，同样也是因为这一点大量的`Chrome`扩展无法从`v2`平滑过渡到`v3`，所以这个能力后续还有可能会被改善。
-
-接下来，开发插件我们肯定是需要使用`CSS`以及组件库的，在这里我们引入了`@arco-design/web-react`，并且配置了`scss`和`less`的相关样式处理。首先是`define`，这个能力可以帮助我们借助`TreeShaking`来在打包的时候将`dev`模式的代码删除，当然不光是`dev`模式，我们可以借助这个能力以及配置来区分任意场景的代码打包；接下来`pluginImport`这个处理引用路径的配置，实际上就相当于`babel-plugin-import`，用来实现按需加载；最后是`CSS`以及预处理器相关的配置，用来处理`scss module`以及组件库的`less`文件。
-
-```js
-builtins: {
-  define: {
-    "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-  },
-  pluginImport: [
-    {
-      libraryName: "@arco-design/web-react",
-      customName: "@arco-design/web-react/es/{{ member }}",
-      style: true,
-    },
-  ],
-},
-module: {
-  rules: [
-    {
-      test: /\.module.scss$/,
-      use: [{ loader: "sass-loader" }],
-      type: "css/module",
-    },
-    {
-      test: /\.less$/,
-      use: [
-        {
-          loader: "less-loader",
-          options: {
-            lessOptions: {
-              javascriptEnabled: true,
-              importLoaders: true,
-              localIdentName: "[name]__[hash:base64:5]",
-            },
-          },
-        },
-      ],
-      type: "css",
-    },
-  ],
-},
-```
-
-最后，我们需要处理一下资源文件，因为我们在代码中实际上是不会引用`manifest.json`以及我们配置的资源文件的，所以在这里我们需要通过一个`rspack`插件来完成相关的功能，因为`rspack`的相关接口是按照`webpack5`来做兼容的，所以在编写插件的时候实际跟编写`webpack`插件差不多。在这里主要是实现两个功能，一个是监听`manifest.json`配置文件以及资源目录`public/static`的变化，另一个是将`manifest.json`文件以及资源文件拷贝到打包目录中。
-
-```js
-const thread = require("child_process");
-const path = require("path");
-
-const exec = command => {
-  return new Promise((resolve, reject) => {
-    thread.exec(command, (err, stdout) => {
-      if (err) reject(err);
-      resolve(stdout);
-    });
-  });
-};
-
-class FilesPlugin {
-  apply(compiler) {
-    compiler.hooks.make.tap("FilePlugin", compilation => {
-      const manifest = path.join(__dirname, "../src/manifest.json");
-      const resources = path.join(__dirname, "../public/static");
-      !compilation.fileDependencies.has(manifest) && compilation.fileDependencies.add(manifest);
-      !compilation.contextDependencies.has(resources) &&
-        compilation.contextDependencies.add(resources);
-    });
-
-    compiler.hooks.done.tapPromise("FilePlugin", () => {
-      return Promise.all([
-        exec("cp ./src/manifest.json ./dist/"),
-        exec("cp -r ./public/static ./dist/static"),
-      ]);
-    });
-  }
-}
-
-module.exports = FilesPlugin;
-```
-
-当然如果有需要的话，通过`ts-node`来动态生成`manifest.json`也是不错的选择，因为这样我们就可以通过各种逻辑来动态地将配置文件写入了，比如拿来适配`Chromium`和`Gecko`内核的浏览器。
-
-
-```js
-apply(compiler) {
-    compiler.hooks.make.tap("ManifestPlugin", compilation => {
-      const manifest = this.manifest;
-      !compilation.fileDependencies.has(manifest) && compilation.fileDependencies.add(manifest);
-    });
-
-    compiler.hooks.done.tapPromise("ManifestPlugin", () => {
-      delete require.cache[require.resolve(this.manifest)];
-      const manifest = require(this.manifest);
-      const version = require(path.resolve("package.json")).version;
-      manifest.version = version;
-      const folder = isGecko ? "build-gecko" : "build-chromium";
-      return writeFile(path.resolve(`${folder}/manifest.json`), JSON.stringify(manifest, null, 2));
-    });
-  }
-```
-
-### Service Worker
-我们在`Chrome`浏览器中打开`chrome://extensions/`，可以看到我们浏览器中已经装载的插件，可以看到很多插件都会有一个类似于`background.html`的文件，这是`v2`版本的扩展独有的能力，是一个独立的线程，可以用来处理一些后台任务，比如网络请求、消息推送、定时任务等等。那么现在扩展已经发展到了`v3`版本，在`v3`版本中一个非常大的区别就是`Service Workers`不能保证常驻，需要主动唤醒，所以在`chrome://extensions/`中如果是`v3`版本的插件，我们会看到一个`Service Worker`的标识，那么在一段时间不动之后，这个`Service Worker`就会标记上`Idle`，在这个时候其就处于休眠状态了，而不再常驻于内存。
-
-对于这个`Service Worker`，`Chrome`会每`5`分钟清理所有扩展`Service Workers`，也就是说扩展的`Worker`最多存活`5`分钟，然后等待用户下次激活，但是激活方式没有明确的表述，那假如我们的拓展要做的工作没做完，要接上次的工作怎么办，`Google`答复是用`chrome.storage`类似存储来暂存工作任务，等待下次激活。为了对抗随机的清理事件，出现了很多肮脏的手段，甚至有的为了保持持续后台，做两个扩展然后相互唤醒。除了这方面还有一些类似于`webRequest -> declarativeNetRequest`、`setTimeout/setInterval`、`DOM`解析、`window/document`等等的限制，会影响大部分的插件能力。
-
-当然如果我们想在用户主观运行时实现相关能力的常驻，就可以直接`chrome.tabs.create`在浏览器`Tab`中打开扩展程序的`HTML`页面，这样就可以作为前台运行，同样这个扩展程序的代码就会一直运行着。
-
- `Chrome`官方博客发布了一个声明`More details on the transition to Manifest V3`，将`Manifest V2`的废除时间从`2023`年`1`月向后推迟了一年:
-
-```
-Starting in June in Chrome 115, Chrome may run experiments to turn off support for Manifest V2 extensions in all channels, including stable channel.
-
-In January 2024, following the expiration of the Manifest V2 enterprise policy, the Chrome Web Store will remove all remaining Manifest V2 items from the store.
-```
-
-再来看看两年前对废除`Manifest V2`的声明:
-
-```
-January 2023: The Chrome browser will no longer run Manifest V2 extensions. Developers may no longer push updates to existing Manifest V2 extensions.
-```
-从原本的斩钉截铁，变成现在的含糊和留有余地，看来强如`Google`想要执行一个影响全世界`65%`互联网用户的`Breaking Change`，也不是那么容易的。但`v3`实际上并不全是缺点，在用户隐私上面，`v3`绝对是一个提升，`v3`增加了很多在隐私方面的限制，非常重要的一点是不允许引用外部资源。`Chrome`扩展能做的东西实在是太多了，如果不了解或者不开源的话根本不敢安装，因为扩展权限太高可能会造成很严重的例如用户信息泄漏等问题，即使是比如像`Firefox`那样必须要上传源代码的方式来加强审核，也很难杜绝所有的隐患。
-
-### 通信方案
-`Chrome`扩展在设计上有非常多的模块和能力，我们常见的模块有`background/worker`、`popup`、`content`、`inject`、`devtools`等，不同的模块对应着不同的作用，协作构成了插件的扩展功能。
-
-* `background/worker`: 这个模块负责在后台运行扩展，可以实现一些需要长期运行的操作，例如与服务器通信、定时任务等。
-* `popup`: 这个模块是扩展的弹出层界面，可以通过点击扩展图标在浏览器中弹出，用于显示扩展的一些信息或操作界面。
-* `content`: 这个模块可以访问当前页面的`DOM`结构和样式，可以实现一些与页面交互的操作，但该模块的`window`与页面的`window`是隔离的。
-* `inject`: 这个模块可以向当前页面注入自定义的`JavaScript`或`CSS`代码，可以实现一些与页面交互的操作，例如修改页面行为、添加样式等。
-* `devtools`: 这个模块可以扩展`Chrome`开发者工具的功能，可以添加新的面板、修改现有面板的行为等。
-
-```
-https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/Content_scripts
-https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts
-https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/user_interface/Popups
-https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/user_interface/devtools_panels
-https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/manifest.json/web_accessible_resources
-```
-
-在插件的能力上，不同的模块也有着不同的区别，这个能力主要在于`Chrome API`、`DOM`访问、跨域访问、页面`Window`对象访问等。
-
-|  模块   | `Chrome API`  | `DOM`访问 | 跨域访问 | 页面`Window`对象访问 |
-|  ---  | --- | --- | --- | --- |
-| `background/worker`  | 绝大部分`API`，除了`devtools`系列  | 不可直接访问页面`DOM` | 可跨域访问 | 不可直接访问页面`Window` |
-| `popup`  | 绝大部分`API`，除了`devtools`系列 | 能直接访问自身的`DOM` | 可跨域访问 | 能直接访问自身的`Window` |
-| `content`  | 有限制，只能访问`runtime`和`extension`等部分`API` | 可以访问页面`DOM` | 不可跨域访问 | 不可直接访问页面`Window` |
-| `inject`  | 不能访问`Chrome API`  | 可以访问页面`DOM` | 不可跨域访问 | 可直接访问页面`Window` |
-| `devtools`  | 有限制，只能访问`devtools`、`runtime`和`extension`等部分`API` | 可以访问页面`DOM` | 不可跨域访问 | 可直接访问页面`Window` |
-
-对于消息通信，在不同的模块需要配合三种`API`来实现，短链接`chrome.runtime.onMessage + chrome.runtime/tabs.sendMessage`、长链接`chrome.runtime.connect + port.postMessage + port.onMessage + chrome.runtime/tabs.onConnect`，原生消息`window.postMessage + window.addEventListener`，下边的表格中展示的是直接通信的情况，我们可以根据实际的业务来完成间接通信方案，并且有些方法只能在`V2`中使用，可以酌情参考。
-
-
-| | `background/worker` | `popup` | `content` | `inject` | `devtools` |
-| --- | --- | --- | --- | --- | --- |
-| `background/worker` | `/` | `chrome.extension.getViews` | `chrome.tabs.sendMessage / chrome.tabs.connect` | `/` | `/`|
-| `popup` | `chrome.extension.getBackgroundPage` | `/` | `chrome.tabs.sendMessage / chrome.tabs.connect` | `/` | `/` |
-| `content` | `chrome.runtime.sendMessage / chrome.runtime.connect` | `chrome.runtime.sendMessage / chrome.runtime.connect` | `/`  | `window.postMessage` | `/` |
-| `inject` | `/` | `/` | `window.postMessage` | `/` | `/` |
-| `devtools` | `chrome.runtime.sendMessage` | `chrome.runtime.sendMessage` | `/`  | `chrome.devtools.inspectedWindow.eval` | `/` |
-
-
-## 脚本管理器核心能力的实现
+## 描述
 不知道大家是否有用过油猴脚本，因为实际上浏览器级别的扩展整体架构非常复杂，尽管当前有统一规范但不同浏览器的具体实现不尽相同，并且成为开发者并上架`Chrome`应用商店需要支付`5$`的注册费，如果我们只是希望在`Web`页面中进行一些轻量级的脚本编写，使用浏览器扩展级别的能力会显得成本略高，所以在没有特殊需求的情况，在浏览器中实现级别的轻量级脚本是很不错的选择。
 
-那么在简单了解了浏览器扩展的开发之后，我们回到开头提出的那三个问题，实际上这三个问题并没有那么独立，而是相辅相成的，为了清晰我们还是将其拆开来看，所以我们在看每个问题的时候都需要假设另一方面的实现，比如在解答第三个为什么能够跨域请求的问题时，我们就需要假设脚本实际是运行在`Inject`环境中的，因为如果脚本是运行在`Background`中的话，那么讨论跨域就没什么意义了。
+那么在简单了解了浏览器扩展的开发之后，我们回到开头提出的那三个问题，实际上这三个问题并没有那么独立，而是相辅相成的，为了清晰我们还是将其拆开来看，所以我们在看每个问题的时候都需要假设另一方面的实现。比如在解答第三个为什么能够跨域请求的问题时，我们就需要假设脚本实际是运行在`Inject`环境中的，因为如果脚本是运行在`Background`中的话，那么讨论跨域就没什么意义了。
 
-### document_start
+## document_start
 在油猴脚本管理器中有一个非常重要的实现是`@run-at: document-start/document-end/document-idle`，特别是`document-start`，试想一下如果我们能够在页面实际加载的时候就运行我们想执行的`JS`代码的话，岂不是可以对当前的页面“为所欲为了”。虽然我们不能够`Hook`自面量的创建，但是我们总得调用浏览器提供的`API`，只要用`API`的调用，我们就可以想办法来劫持掉函数的调用，从而拿到我们想要的数据，例如可以劫持`Function.prototype.call`函数的调用，而这个函数能够完成很大程度上就需要依赖我这个劫持函数在整个页面是要最先支持的，否则这个函数已经被调用过去了，那么再劫持就没有什么意义了。
 
 ```js
@@ -451,8 +200,62 @@ if (cross.scripting && cross.scripting.registerContentScripts) {
 
 在`Chrome V109`之后支持了`chrome.scripting.registerContentScripts`，`Chrome 111`支持了直接在`Manifest`中声明`world: 'MAIN'`的脚本，但是这其中的兼容性还是需要开发者来做，特别是如果原来的浏览器不支持`world: 'MAIN'`，那么这个脚本是会被当作`Content Script`处理的，关于这点我觉得还是有点难以处理。
 
+在高版本浏览器尚未普及的情况下，我们还是需要根据用户的页面实际情况，在`worker`中判断究竟是采用注册的方式还是直接执行的方式。但是在`worker`中执行就意味着我们必须要申请到`scripting`以及`host permissions`，这就意味着我们的扩展会有更高的权限，通常这样就要在扩展市场触发额外的审核环节。
 
-### unsafeWindow
+```js
+if (cross.scripting && cross.scripting.registerContentScripts) {
+  cross.scripting
+    .registerContentScripts([/* ... */]);
+} else {
+  cross.tabs.onUpdated.addListener((_, changeInfo, tab) => {
+    if (changeInfo.status == "loading") {
+      cross.scripting.executeScript(/* ... */);
+    }
+  });
+}
+```
+
+此外，在`Firefox`如果用户页面存在`CSP`策略的话，这里就会出现额外的问题。网站的`CSP`策略通常会限制`script-src`以及`unsafe-inline`，因此我们上述注入到`Inject Script`的策略就会失效。而直接使用`tabs.executeScript`注入的环境是`Content Script`，因此我们也不能直接通过这个方法注入，顺便提一下上述的`scripting.executeScript`的`World: MAIN`的`Chrome`兼容性也不是特别好。
+
+`scripting.executeScript`这个方法在`Firefox`虽然也可用，但是要`FF 128`才支持`World: MAIN`，那么在这种情况下我们只能通过一些策略来尝试绕过`CSP`的限制，或者采用兜底方案保证部分功能的正常运行。
+
+* 通过`webRequest.onHeadersReceived`修改响应头，阻止`CSP`策略的加载。
+  * 由于`CSP`不支持多个`nonce`声明, 但可以配置多个`sha-hash`，因此我们可以在响应头中加入`sha256-${CSP-HASH}`，在编译时计算并替换资源。但是处理不好就会导致问题，例如最初`'self'`是没问题的，但是`'self'+'hash'`就会导致宽松到严格结构问题。
+  * 修改响应头的方法虽然有效，但是很容易受到其他扩展的干扰，常见的广告拦截器都会修改响应头，而多个修改`CSP`的扩展同时运行时，浏览器会更倾向于更加严格的模式，实际同样会导致无法正常注入。
+  * 在实际的调用过程中只有完全移除，才可以避免扩展的冲突问题。浏览器扩展，例如脚本猫、篡改猴等，匹配到需要运行脚本时，会直接将响应头的`CSP`策略完全移除，暴力猴则会尝试在`Firefox`的情况中读取`nonce`来允许执行脚本。
+* 通过`webRequest.onResponseStarted`中读取响应头，读取`CSP`策略加载脚本。
+  * 通常`script-src`都会允许部分脚本的执行，例如我们上面提到的`nonce`。那么我们既然不能修改响应头，倒不如仅读取而不阻塞，然后读取到类似`nonce`、`blob`的值，基于这些特征创建脚本标签，然后插入到页面中。
+  * 如果最终都匹配不到相关的特征，我们就可以直接在`Content Script`中执行了。在`Content Script`中不会受到`CSP`策略的限制，并且共享`DOM`事件样式等，可以保证部分功能的正常运行。
+* 在`Content Script`中通过`wrappedJSObject`检查并兜底执行策略。
+  * `wrappedJSObject`是`Firefox`中的一个特性，可以让我们访问到页面的`Inject Script`中的`Window`对象。那么在上述的脚本执行没有成功时，在`window`上不会挂载我们的幂等执行的锁，那么我们就可以得知脚本没有成功执行。
+  * 在检查到脚本没有成功执行后，我们就通过`Blob`对象以及`URL.createObjectURL`方法，构造`blob:https://xxx`的同域`URL`，然后通过`script.src`的方式加载脚本。但是这里的问题与上边的问题类似，这会是异步的而不能完全保证`document_start`。
+  * 当上述脚本的`onload`后再次检查都无法成功执行后，我们同样只能兜底通过`Content Script`的方式执行脚本，以此保证`DOM`事件与样式部分功能的正常执行，此外在`Content Script`中通过`exportFunction`导出函数到页面也是可选的方案。
+
+```js
+cross.webRequest.onResponseStarted.addListener(
+  res => {
+    if (!res.responseHeaders) return void 0;
+    if (res.type !== "main_frame" && res.type !== "sub_frame")  return void 0;
+    for (let i = 0; i < res.responseHeaders.length; i++) {
+      const responseHeaderName = res.responseHeaders[i].name.toLowerCase();
+      if (responseHeaderName !== "content-security-policy") continue;
+      const value = res.responseHeaders[i].value || "";
+      let code = /* ... */
+      const onUpdate = (_: number, changeInfo: chrome.tabs.TabChangeInfo) => {
+        if (changeInfo.status !== "loading") return void 0;
+        cross.tabs
+          .executeScript(res.tabId, /* ... */)
+        cross.tabs.onUpdated.removeListener(onUpdate);
+      };
+      cross.tabs.onUpdated.addListener(onUpdate, { tabId: res.tabId });
+    }
+  },
+  { urls: URL_MATCH, types: ["main_frame", "sub_frame"] },
+  ["responseHeaders"]
+);
+```
+
+## unsafeWindow
 这个问题也是一个非常有意思的点，关于这个问题我还在群里提问过但是当时并没有得到一个答案，那么在这里我们就研究一下，首先我们要明确的是在脚本中是存在两个`window`的，也就是`window`以及`unsafeWindow`两个对象，`window`对象是一个隔离的安全`window`环境，而`unsafeWindow`就是用户页面中的`window`对象。
 
 曾经我很长一段时间都认为这些插件中可以访问的`window`对象实际上是浏览器拓展的`Content Scripts`提供的`window`对象，而`unsafeWindow`是用户页面中的`window`，以至于我用了比较长的时间在探寻如何直接在浏览器拓展中的`Content Scripts`直接获取用户页面的`window`对象，当然最终还是以失败告终，这其中比较有意思的是一个逃逸浏览器拓展的实现，因为在`Content Scripts`与`Inject Scripts`是共用`DOM`的，所以可以通过`DOM`来实现逃逸，当然这个方案早已失效。
@@ -543,7 +346,7 @@ script.apply(proxyContent, [ proxyContent, GM_info ]);
 那么现在到目前为止我们使用`Proxy`实现了`window`对象隔离的沙箱环境，总结起来我们的目标是实现一个干净的`window`沙箱环境，也就是说我们希望网站本身执行的任何不会影响到我们的`window`对象，比如网站本体在`window`上挂载了`$$`对象，我们本身不希望其能直接在开发者的脚本中访问到这个对象，我们的沙箱环境是完全隔离的，而用户脚本管理器的目标则是不同的，比如用户需要在`window`上挂载事件，那么我们就应该将这个事件处理函数挂载到原本的`window`对象上，那么我们就需要区分读或者写的属性是原本`window`上的还是`Web`页面新写入的属性，显然如果想解决这个问题就要在用户脚本执行之前将原本`window`对象上的`key`记录副本，相当于以白名单的形式操作沙箱。同样的相辅相成的，如果想要做到`window`沙箱那么就必须保证扩展的`Inject Script`是最先执行的也就是`document-start`，否则就很难保证用户原本是不是在`window`对象上挂载了内容，导致污染了沙箱环境。
 
 
-### xmlHttpRequest
+## xmlHttpRequest
 接着我们来聊最后一个问题，脚本管理器是如何做到的可以跨域请求，实际上因为在前边我们明确了用户脚本是在浏览器当前的页面执行的，那么理所当然的就会存在同源策略的问题，然后在脚本管理器中只要声明了链接的域名，就可以逃脱这个限制，这又是一件很神奇的事情。
 
 那么解决这个问题的方式也比较简单，很明显在这里发起的通信并不是直接从页面的`window`发起的，而是从浏览器扩展发出去的，所以在这里我们就需要讨论如何做到在用户页面与浏览器扩展之间进行通信的问题。在`Content Script`中的`DOM`和事件流是与`Inject Script`共享的，那么实际上我们就可以有两种方式实现通信，首先我们常用的方法是`window.addEventListener + window.postMessage`，只不过这种方式很明显的一个问题是在`Web`页面中也可以收到我们的消息，即使我们可以生成一些随机的`token`来验证消息的来源，但是这个方式毕竟能够非常简单地被页面本身截获不够安全，所以在这里通常是用的另一种方式，即`document.addEventListener + document.dispatchEvent + CustomEvent`自定义事件的方式，在这里我们需要注意的是事件名要随机，通过在注入框架时于`background`生成唯一的随机事件名，之后在`Content Script`与`Inject Script`都使用该事件名通信，就可以防止用户截获方法调用时产生的消息了。

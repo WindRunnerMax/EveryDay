@@ -161,7 +161,7 @@ const root = path.resolve(__dirname, `..`);
     record.forEach((item, index) => {
       target.push(`### ${item.date}`);
       const path = item.path.replace(/ /g, "%20");
-      target.push(`第 ${count - index} 题：[${item.name}](${path})`);
+      target.push(`第 ${count - index} 题：[${item.name.replace(/\.md$/, "")}](${path})`);
       target.push("");
     });
     await fs.writeFile(path.join(root, "Timeline.md"), target.join("\n"));
