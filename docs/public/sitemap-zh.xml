@@ -14,7 +14,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/index.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-07-01T14:55:06.000Z</lastmod>
+  <lastmod>2024-11-22T07:57:59.000Z</lastmod>
 </url>
 
 <url>
@@ -1579,6 +1579,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探富文本之搜索替换算法.html</loc>
   <priority>1.0</priority>
   <lastmod>2024-11-18T16:32:08.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/从脚本管理器的角度审视Chrome扩展.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
