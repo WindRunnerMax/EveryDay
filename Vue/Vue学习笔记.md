@@ -111,7 +111,9 @@ vue-cli
 
 ### 2. 生命周期
 
-![](screenshots/2023-04-14-21-09-50.png)
+<img src="https://v2.cn.vuejs.org/images/lifecycle.png" width="600px" referrerpolicy="no-referrer">
+
+<p></p>
 
 ### 3.过滤器
 过滤器可将数据进行过滤，例如可以在打印表格中将1显示为OK
