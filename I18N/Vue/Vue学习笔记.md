@@ -112,7 +112,7 @@ vue-cli
 
 ### 2. Lifecycle
 
-![](screenshots/2023-04-14-21-09-50.png)
+<img src="https://v2.cn.vuejs.org/images/lifecycle.png" width="600px" referrerpolicy="no-referrer">
 
 ### 3. Filters
 Filters can filter data, for example, displaying 1 as OK in a printed table.
