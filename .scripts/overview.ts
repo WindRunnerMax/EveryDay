@@ -86,6 +86,7 @@ const root = path.resolve(__dirname, `..`);
       "Vue",
       "React",
       "Plugin",
+      "RichText",
       "Patterns",
       "Linux",
       "LeetCode",
@@ -93,7 +94,6 @@ const root = path.resolve(__dirname, `..`);
     const LIMIT_MATCH = [
       "Vue/Vue学习笔记.md",
       "Vue/Vue-Cli4笔记.md",
-      "Linux/Ubuntu16.04安装QQ机器人.md",
     ];
     const matchedPaths: string[] = [];
     for (const file of all) {
