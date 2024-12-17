@@ -113,10 +113,11 @@ journalctl --since=today
 journalctl -f
 ```
 
-查看指定`Unit`的日志。
+查看指定`Unit`的日志，`-r`可以反转输出，优先显示最新的日志。
  
 ```shell
 journalctl -u nginx.service
+journalctl -r -u nginx.service --since=-1h
 ```
 
 查看日志占用的磁盘空间。

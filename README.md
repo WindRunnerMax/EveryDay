@@ -16,7 +16,7 @@
 如果觉得还不错，点个`star`吧 😁   
 
 <!-- Summary Start -->
-版本库中共有`489`篇文章，总计`92184`行，`1086842`字，`3030350`字符。
+版本库中共有`489`篇文章，总计`92185`行，`1086866`字，`3030415`字符。
 <!-- Summary End -->
 
 这是一个前端小白的学习历程，如果只学习而不记录点什么那基本就等于白学了。这个版本库的名字`EveryDay`就是希望激励我能够每天学习，下面的文章就是从`2020.02.25`开始积累的文章，都是参考众多文章归纳整理学习而写的，文章包括了`HTML`基础、`CSS`基础、`JavaScript`基础与拓展、`Browser`浏览器相关、`Vue`使用与分析、`React`使用与分析、`Plugin`插件相关、`Patterns`设计模式、`Linux`命令、`LeetCode`题解等类别，内容都是比较基础的，毕竟我也还是个小。此外基本上每个示例都是本着能够即时运行为目标的，新建一个`HTML`文件复制之后即可在浏览器运行或者直接可以在`console`中运行。
@@ -272,34 +272,36 @@
 * [Nginx常用配置](Plugin/Nginx常用配置.md)
 * [Rollup的基本使用](Plugin/Rollup的基本使用.md)
 * [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md)
+* [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
+* [竞态问题与RxJs](Plugin/竞态问题与RxJs.md)
+* [基于NoCode构建简历编辑器](Plugin/基于NoCode构建简历编辑器.md)
+* [基于drawio构建流程图编辑器](Plugin/基于drawio构建流程图编辑器.md)
 * [初探webpack之编写plugin](Plugin/初探webpack之编写plugin.md)
 * [初探webpack之搭建Vue开发环境](Plugin/初探webpack之搭建Vue开发环境.md)
-* [TS内置类型与拓展](Plugin/TS内置类型与拓展.md)
 * [初探webpack之编写loader](Plugin/初探webpack之编写loader.md)
-* [竞态问题与RxJs](Plugin/竞态问题与RxJs.md)
-* [基于slate构建文档编辑器](Plugin/基于slate构建文档编辑器.md)
-* [基于NoCode构建简历编辑器](Plugin/基于NoCode构建简历编辑器.md)
-* [初探富文本之富文本概述](Plugin/初探富文本之富文本概述.md)
-* [初探富文本之编辑器引擎](Plugin/初探富文本之编辑器引擎.md)
-* [初探富文本之OT协同算法](Plugin/初探富文本之OT协同算法.md)
-* [初探富文本之OT协同实例](Plugin/初探富文本之OT协同实例.md)
-* [初探富文本之CRDT协同算法](Plugin/初探富文本之CRDT协同算法.md)
-* [初探富文本之CRDT协同实例](Plugin/初探富文本之CRDT协同实例.md)
-* [基于drawio构建流程图编辑器](Plugin/基于drawio构建流程图编辑器.md)
-* [从零实现的Chrome扩展](Plugin/从零实现的Chrome扩展.md)
-* [初探富文本之React实时预览](Plugin/初探富文本之React实时预览.md)
-* [从零实现的浏览器Web脚本](Plugin/从零实现的浏览器Web脚本.md)
 * [初探webpack之单应用多端构建](Plugin/初探webpack之单应用多端构建.md)
-* [基于WebRTC的局域网文件传输](Plugin/基于WebRTC的局域网文件传输.md)
-* [初探富文本之文档diff算法](Plugin/初探富文本之文档diff算法.md)
-* [初探富文本之在线文档交付](Plugin/初探富文本之在线文档交付.md)
-* [初探富文本之划词评论能力](Plugin/初探富文本之划词评论能力.md)
-* [初探富文本之文档虚拟滚动](Plugin/初探富文本之文档虚拟滚动.md)
-* [基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md)
 * [初探webpack之解析器resolver](Plugin/初探webpack之解析器resolver.md)
-* [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
-* [初探富文本之搜索替换算法](Plugin/初探富文本之搜索替换算法.md)
+* [从零实现的Chrome扩展](Plugin/从零实现的Chrome扩展.md)
+* [从零实现的浏览器Web脚本](Plugin/从零实现的浏览器Web脚本.md)
+* [基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md)
 * [从脚本管理器的角度审视Chrome扩展](Plugin/从脚本管理器的角度审视Chrome扩展.md)
+* [基于WebRTC的局域网文件传输](Plugin/基于WebRTC的局域网文件传输.md)
+* [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
+
+## RichText
+* [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)
+* [初探富文本之编辑器引擎](RichText/初探富文本之编辑器引擎.md)
+* [初探富文本之OT协同算法](RichText/初探富文本之OT协同算法.md)
+* [初探富文本之OT协同实例](RichText/初探富文本之OT协同实例.md)
+* [初探富文本之CRDT协同算法](RichText/初探富文本之CRDT协同算法.md)
+* [初探富文本之CRDT协同实例](RichText/初探富文本之CRDT协同实例.md)
+* [初探富文本之React实时预览](RichText/初探富文本之React实时预览.md)
+* [初探富文本之文档diff算法](RichText/初探富文本之文档diff算法.md)
+* [初探富文本之在线文档交付](RichText/初探富文本之在线文档交付.md)
+* [初探富文本之划词评论能力](RichText/初探富文本之划词评论能力.md)
+* [初探富文本之文档虚拟滚动](RichText/初探富文本之文档虚拟滚动.md)
+* [初探富文本之搜索替换算法](RichText/初探富文本之搜索替换算法.md)
+* [基于slate构建文档编辑器](RichText/基于slate构建文档编辑器.md)
 
 ## Patterns
 * [简单工厂模式](Patterns/简单工厂模式.md)
@@ -342,8 +344,6 @@
 * [MVVM模式](Patterns/MVVM模式.md)
 
 ## Linux
-* [简单安全防护](Security/简单安全防护.md)
-* [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
 * [cat命令](Linux/cat命令.md)
 * [chmod命令](Linux/chmod命令.md)
 * [chown命令](Linux/chown命令.md)
@@ -442,7 +442,7 @@
 ## Environment
 * [VScode配置CMD本地运行环境(2.0)](Environment/VScode配置CMD本地运行环境(2.0).md)
 * [Recover刷机简介](Environment/Recover刷机简介.md)
-* [Ubuntu16.04安装QQ机器人](Linux/Ubuntu16.04安装QQ机器人.md)
+* [Ubuntu16.04安装QQ机器人](Environment/Ubuntu16.04安装QQ机器人.md)
 * [将SublimeText加入右键菜单](Environment/将SublimeText加入右键菜单.md)
 * [手机抓包HTTPS](Environment/手机抓包HTTPS.md)
 * [文本选中复制](Environment/文本选中复制.md)
