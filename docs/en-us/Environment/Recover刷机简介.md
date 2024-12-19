@@ -13,13 +13,13 @@ Third-party recoveries mainly include CWM and TWRP. CWM is now rarely seen, main
 
 ## CWM:
 
-![](screenshots/2023-04-14-20-28-42.png)
+![](screenshots/2023-04-14-20-28-42.jpg)
 
 1. CWM is commonly used for flashing firmware and clearing data, and cannot be operated via touch. It can only be operated using volume keys, thus having fewer functions compared to twrp recovery.
 
 ## TWRP 
 
-![](screenshots/2023-04-14-20-28-55.png)
+![](screenshots/2023-04-14-20-28-55.jpg)
 
 1. install
   Installation of third-party ROMs and patches, or switching to another storage under "install" -> "storage"

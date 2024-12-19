@@ -17,7 +17,7 @@ Czy:x:1001:1001::/home/Czy:/bin/bash
 
 I used MobaXterm for SSH software, which allows for a graphical interface for VirtualBox on the local machine. However, it's a bit slow and definitely not as fast as using a graphical interface directly. But it's only needed during the configuration process; when using Cuckoo, manual startup of the virtual machine environment is not required. If using Xbash, it's recommended to use Xmanager to launch VirtualBox's graphical interface locally. Additionally, I recommend installing WinSCP for file transfer. To make it convenient, you can log in as root to use WinSCP. However, be aware that files transferred after logging in as root will be owned by root, and changing permissions is necessary to modify these files.
 
-![](screenshots/2023-04-14-18-51-55.png)
+![](screenshots/2023-04-14-18-51-55.jpg)
 
 ## Installing Anaconda
 First, let's explain why we need to install Anaconda. Firstly, Cuckoo does not recommend using the main Python environment directly for configuration; it recommends using venv. Secondly, an even more important reason is that Ubuntu 20.04 no longer recommends using Python 2. Up to now, Cuckoo only supports Python 2. Previously, in 16.04, using Python was sufficient to launch the environment, but now Python 2 needs to be installed and the `python2` command must be used to start it. In order to avoid various problems, using Anaconda for environment configuration is a better choice.
@@ -85,7 +85,7 @@ sudo apt-get install virtualbox
 
 If, like me, you are using a server without physical hardware and your server is being managed by `VMware Workstation` on a physical machine, then this situation is essentially installing virtual machines within a virtual machine. Therefore, you need to modify the virtual machine configuration in `VMware Workstation` on the host physical machine to enable `VT-X` or `AMD-V` in the `Processors` section, which is essentially enabling virtualization.
 
-![](screenshots/2023-04-14-20-29-31.png)
+![](screenshots/2023-04-14-20-29-31.jpg)
 
 
 ### Installing tcpdump
@@ -161,23 +161,23 @@ This is a rather extensive undertaking, so to make things easier, we will comple
 First, you need to prepare a `Windows XP` image, which you will need to download yourself, perhaps from `MSDN`. Additionally, you'll need to prepare an activation key, which can be found through a quick search.  
 Click "New", name the machine `cuckoo1` (I used a `2` because I already have one with the same name, but be sure to use `cuckoo1`), and select `Windows XP 32-bit` as the operating system.
 
-![](screenshots/2023-04-14-20-29-41.png)
+![](screenshots/2023-04-14-20-29-41.jpg)
 
 Next, allocate memory and storage space, and proceed by clicking "Next". Then, you will need to start the installation image.
 
-![](screenshots/2023-04-14-20-29-47.png)
+![](screenshots/2023-04-14-20-29-47.jpg)
 
 Here, select the downloaded `XP` system image, and follow the system's installation process. After the installation is complete, shut down the virtual machine. In the `Settings` under `Storage`, remove the boot position of the disc shape to prevent the program from prompting you to boot from the CD every time you start the machine, as this would reinitiate the installation process.
 
-![](screenshots/2023-04-14-20-29-55.png)
+![](screenshots/2023-04-14-20-29-55.jpg)
 
 Next, we need to configure the network environment by creating a new virtual network card in the running `virtualbox` and setting the `ip` address as follows.
 
-![](screenshots/2023-04-14-20-30-02.png)
+![](screenshots/2023-04-14-20-30-02.jpg)
 
 Afterward, in our newly created `cuckoo1` virtual machine, we set the network as shown below, where `Host-only` means only allowing communication with the host machine. If access to the external network is required, please continue to review the network configuration below.
 
-![](screenshots/2023-04-14-20-30-10.png)
+![](screenshots/2023-04-14-20-30-10.jpg)
 
 Next, we need to configure the external network environment for the virtual machine. After creating the virtual network card earlier, in order to communicate, we also need to assign a fixed `ip` address within the virtual machine, which is within the subnet of the gateway of the virtual network card we just set. However, if we directly set the virtual machine's `ip` address in the `xp` system, it won't be able to access the internet. Therefore, in order to enable internet access, we need to configure network address translation (NAT) in `ubuntu`. Here, we will directly use `iptables` for network forwarding, which will reset each time the system is restarted. If automatic start on boot is desired, `systemctl` can be used for startup management, requiring the creation of a `UNIT`. However, we won't delve into this here. Instead, we will simply write the necessary commands into a `.sh` file and execute it when needed.  
 Please note that in the command below, `ens160` is my network card, you can use `ifconfig` to check the network card name, and `192.168.56.0/24` represents the subnet of the host and network number. If the `ip` configurations above are based on the provided article, then only the network card name needs to be modified.
@@ -213,15 +213,15 @@ Also, network configuration and the launch of `agent.py` need to be performed wi
 python3 -m http.server --bind 0.0.0.0 8088
 ```
 
-![](screenshots/2023-04-14-20-31-04.png)
+![](screenshots/2023-04-14-20-31-04.jpg)
 
 Afterwards, you can directly double-click to launch `agent.py`. Additionally, you can set it to start automatically at boot by going to `C:\Document and Settings\Administrator\start menu\program\start`, although this isn't really necessary because all we need to do is create a snapshot. After running `agent.py`, you can use the `netstat` command to check if port `8000` is in use. If it is, it means `agent.py` has been successfully started.
 
-![Screenshot](screenshots/2023-04-14-20-31-15.png)
+![Screenshot](screenshots/2023-04-14-20-31-15.jpg)
 
 Once all the environment is set up, we need to create a snapshot. It's important to name it `snapshot1`, with the default being `Snapshot 1`. Please note that the first letter should be capitalized and there should be a space before the `1`. Therefore, we should name it `snapshot1`.
 
-![Screenshot](screenshots/2023-04-14-20-31-22.png)
+![Screenshot](screenshots/2023-04-14-20-31-22.jpg)
 
 After that, you can close the virtual machine. There's no need to manually start the virtual machine during the `cuckoo` running process.
 
@@ -396,7 +396,7 @@ cuckoo
 cuckoo web runserver 0.0.0.0:8000
 ```
 
-![](screenshots/2023-04-14-20-31-43.png)
+![](screenshots/2023-04-14-20-31-43.jpg)
 
 ![](screenshots/2023-04-14-20-32-18.png)
 
@@ -406,7 +406,7 @@ Afterward, open the `web` service, the address in my server is `http://192.168.1
 
 Click on `Submit` in the upper right corner to submit a file, then click `Analyze`. Now you can monitor the analysis progress in the `cuckoo` terminal. You can oversee the overview in the `Dashboard` and view completed tasks in `Rencent`.
 
-![](screenshots/2023-04-14-20-32-01.png)
+![](screenshots/2023-04-14-20-32-01.jpg)
 
 In normal circumstances, when analyzing, there will be many `xxx.exe_` and `xxx.dmp` files in `$HOME/.cuckoo/storage/analyses` directory. You can use `crontab` to execute some scheduled tasks. For example, if I don't need them, I can directly delete those files that have been in existence for more than `6` minutes.
 
