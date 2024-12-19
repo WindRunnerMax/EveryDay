@@ -11,7 +11,7 @@ http://127.0.0.1/ThinkPHP/index.php?s=index/think\app/invokefunction&function=ca
 ```
 由于对控制器名没有明确的检测，在没有开启强制路由的情况下，直接就可以执行phpinfo()，如果服务器未限制shell等函数的执行，便可以直接执行shell提权
 
-![](screenshots/2023-04-14-20-50-36.png)
+![](screenshots/2023-04-14-20-50-36.jpg)
 
 详细的漏洞执行过程可以参考 [漏洞执行过程](https://www.cnblogs.com/st404/p/10245844.html)
 
@@ -45,7 +45,7 @@ _触发条件_
 
 利用`$_POST['_method']`变量来传递真实的请求方法，当`$_POST['_method']=__construct`时，Request类的method方法便会将该类的变量进行覆盖，利用该方式将filter变量覆盖为system等函数名，当内部进行参数过滤时便会进行执行任意命令
 
-![](screenshots/2023-04-14-20-50-45.png)
+![](screenshots/2023-04-14-20-50-45.jpg)
 
 基于此可以直接上传PHP文件 test.php
 ```xml

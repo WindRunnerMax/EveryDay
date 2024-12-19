@@ -5,7 +5,7 @@ There's been a need to modify a `PE` file recently, let's start with the `EXE` f
 ## Description
 First, prepare the tools needed, which are `OD` (ollydbg) and the Minesweeper software.
 
-![](screenshots/2023-04-14-21-05-32.png)
+![](screenshots/2023-04-14-21-05-32.jpg)
 
 Using `OD` to import Minesweeper, automatically locates the entry point.
 
@@ -15,7 +15,7 @@ Then select the first `2` lines and copy them with `Ctrl + C`. This is mainly to
 
 ![](screenshots/2023-04-14-21-06-24.png)
 
-![](screenshots/2023-04-14-21-06-29.png)
+![](screenshots/2023-04-14-21-06-29.jpg)
 
 Return to `OD`, we need to find the `HEX` data where it is `00`, which is usually the empty space at the end. Note that we cannot directly insert some instructions, we can only skip to execute the code we want and then jump back to execute the original code. We can use right-click - search - binary string, enter a few `0` and click search. Since there is a bunch of `00` data segments in Minesweeper, we can use `Ctrl + L` to keep searching for the next.
 
@@ -108,7 +108,7 @@ Right-click, save the file, select "Yes" to save. Note that here you still need 
 
 After saving, run the file to see the effect.
 
-![Translation of 2023-04-14-21-09-43.png](screenshots/2023-04-14-21-09-43.png)
+![Translation of 2023-04-14-21-09-43.png](screenshots/2023-04-14-21-09-43.jpg)
 
 ## Blog
 

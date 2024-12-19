@@ -13,14 +13,14 @@ Recovery是一种可以对安卓手机内部的数据文件进行修改的模式
 
 ## CWM:
 
-![](screenshots/2023-04-14-20-28-42.png)
+![](screenshots/2023-04-14-20-28-42.jpg)
 
 1.CWM常用的只有刷入刷机包以及清除数据，并且无法采用触控的方式，只能利用音量键等进行操作，相对twrp recovery来说功能较少。
 
 
 ## TWRP 
 
-![](screenshots/2023-04-14-20-28-55.png)
+![](screenshots/2023-04-14-20-28-55.jpg)
 
 1. install
 第三方rom、补丁的安装，也可以选install下的storage那里，切换至另一个存储器

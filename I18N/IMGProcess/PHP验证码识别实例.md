@@ -3,7 +3,7 @@
 Here's an example of CAPTCHA recognition using `PHP`. The recognition process includes image binarization, noise reduction, compensation, segmentation, skew correction, database construction, and matching. Finally, sample code will be provided that can directly run the recognition.
 
 ## Brief Description
-![](screenshots/2023-04-14-20-36-48.png)
+![](screenshots/2023-04-14-20-36-48.jpg)
 
 The CAPTCHA to be recognized is relatively simple, with no overlapping characters, but it may feature bolded fonts to varying degrees, as well as a skew of approximately 0-30 degrees. The number of characters can also vary between 4-5. Generally, using `Python` for CAPTCHA recognition is relatively simple. For further reference, you can read the following articles:  
 [CAPTCHA Recognition in Qiangzhi Education System using OpenCV](https://blog.csdn.net/qq_40413670/article/details/104347237)   

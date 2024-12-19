@@ -5,12 +5,12 @@ The previous article introduced adding a startup message box to a disassembled E
 ## Description
 First, prepare the necessary software, namely `IDA` and the Minesweeper software. I particularly recommend using `IDA Pro 7.5` version, especially for details such as backward and forward navigation using `Ctrl + Z` and `Ctrl + Y`, which are very comfortable to use. Of course, other versions have the same main functionalities.
 
-![Screenshot](screenshots/2023-04-14-20-50-55.png)
+![Screenshot](screenshots/2023-04-14-20-50-55.jpg)
 
 First, open Minesweeper with `IDA` using the default settings, then proceed to the code's function execution flow.
 
-![Screenshot](screenshots/2023-04-14-20-51-01.png)
-![Screenshot](screenshots/2023-04-14-20-51-08.png)
+![Screenshot](screenshots/2023-04-14-20-51-01.jpg)
+![Screenshot](screenshots/2023-04-14-20-51-08.jpg)
 
 Press the spacebar to switch to the code and press `Ctrl + E` to enter the entry point.
 
@@ -45,7 +45,7 @@ The position is folded. Select and press `D` to expand. Then jump again to the `
 
 Start writing the string. First, convert the string to `HEX` by searching for an online `HEX` converter. Convert `Title` to obtain `54 69 74 6C 65`.
 
-![Screenshot](screenshots/2023-04-14-20-53-07.png)
+![Screenshot](screenshots/2023-04-14-20-53-07.jpg)
 
 After selecting the line `01004A71`, click `edit - Patch program - Change byte`.
 
@@ -58,7 +58,7 @@ Enter the converted `HEX` encoding. Note that `MessageBoxW` uses a two-byte `UTF
 
 Leave a few more lines and write another one at `01004A80`. Convert `Hello World` to `HEX` encoding to get `48 65 6C 6C 6F 20 57 6F 72 6C 64`.
 
-![Screenshot](screenshots/2023-04-14-20-53-34.png)
+![Screenshot](screenshots/2023-04-14-20-53-34.jpg)
 
 Manually add `00` to obtain `48 00 65 00 6C 00 6C 00 6F 00 20 00 57 00 6F 00 72 00 6C 00 64`. If the length exceeds the available space, re-enter the string. However, direct input using `Hex View1` is also possible.
 
@@ -126,7 +126,7 @@ Now, the operation is complete. The idea is to execute our own code from the ent
 
 After saving, run the file to see the effect.
 
-![](screenshots/2023-04-14-21-04-39.png)
+![](screenshots/2023-04-14-21-04-39.jpg)
 
 ## Blog
 

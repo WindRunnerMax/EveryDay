@@ -7,7 +7,7 @@
 
 ##### Directory Structure
 
-![](screenshots/2023-04-14-20-32-27.png)
+![](screenshots/2023-04-14-20-32-27.jpg)
 
 ##### Preparation
 First, you need to manually enter the verification code after obtaining it automatically and creating the folders in the directory manually in PowerShell.  
