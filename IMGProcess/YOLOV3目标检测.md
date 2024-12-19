@@ -51,23 +51,23 @@ python yolo_video.py --image
 ```
 之后会出现`Input image filename:`我是放到`./img/3.jpg`下，于是就直接将路径输入
 
-![](screenshots/2023-04-14-20-38-00.png)
+![](screenshots/2023-04-14-20-38-00.jpg)
 
 稍等一会就可以识别完成
 
-![](screenshots/2023-04-14-20-38-06.png)
+![](screenshots/2023-04-14-20-38-06.jpg)
 
 ## 模型训练
 
 ### 准备数据集
 首先需要准备好目录结构，可以在 [http://host.robots.ox.ac.uk/pascal/VOC/voc2007/](http://host.robots.ox.ac.uk/pascal/VOC/voc2007/) 中下载`VOC2007`数据集，然后删除其中所有的文件，仅保留目录结构，也可以手动建立如下目录结构    
 
-![](screenshots/2023-04-14-20-38-17.png)
+![](screenshots/2023-04-14-20-38-17.jpg)
 
 然后将所有的图片放置在`JPEGImages`目录下，然后在
 [https://github.com/tzutalin/labelImg](https://github.com/tzutalin/labelImg) 下载`labelImg`标注工具，此工具是为了将图片框选标注后生成`XML`文件，使用`labelImg`打开图片，标注好后将图片生成的`XML`文件放置于`Annotations`文件夹内，保存的名字就是图片的名字。  
 
-![](screenshots/2023-04-14-20-38-35.png)
+![](screenshots/2023-04-14-20-38-35.jpg)
 
 ### 准备训练文件
 在`VOCdevkit/VOC2007`下建立一个`python`文件，将代码写入并运行，即会在`VOCdevkit/VOC2007/ImageSets/Main`下生成四个`txt`文件  
@@ -432,11 +432,11 @@ loss: 25.8876 - val_loss: 38.1282
 ```
 #### 原图
 
-![](screenshots/2023-04-14-20-49-23.png)
+![](screenshots/2023-04-14-20-49-23.jpg)
 
 #### 识别
 
-![](screenshots/2023-04-14-20-49-32.png)
+![](screenshots/2023-04-14-20-49-32.jpg)
 
 ### 实例代码
 ```

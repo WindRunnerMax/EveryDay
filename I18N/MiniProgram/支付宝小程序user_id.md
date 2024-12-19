@@ -12,7 +12,7 @@ Recently, the personal beta version of Alipay Mini Program was launched, so I wa
 
 2. **After registration, download all the provided software. Then, in the development center—Mini Program application—select Mini Program—development management—function list (at the bottom), add the [Get Member Basic Information] function.**
 
-![Screenshot](screenshots/2023-04-14-20-50-13.png)
+![Screenshot](screenshots/2023-04-14-20-50-13.jpg)
 
 3. **Use the RSA key generation tool to create a key, which can be used for signature verification in the future.**
 
@@ -20,7 +20,7 @@ Recently, the personal beta version of Alipay Mini Program was launched, so I wa
 
 After generating the application private key and application public key, copy the application public key and paste it in the [development center—Mini Program application—select Mini Program—settings—development settings—set interface encryption method].
 
-![Screenshot](screenshots/2023-04-14-20-50-27.png)
+![Screenshot](screenshots/2023-04-14-20-50-27.jpg)
 
 4. **For the frontend, I used silent access without displaying the authorization box. I only need the user_id.**
 
