@@ -11,7 +11,7 @@ http://127.0.0.1/ThinkPHP/index.php?s=index/think\app/invokefunction&function=ca
 ```
 Due to the lack of explicit detection of the controller name and in the absence of enabling forced routing, phpinfo() can be executed directly. If the server does not restrict the execution of functions such as shell, shell escalation can be executed directly.
 
-![](screenshots/2023-04-14-20-50-36.png)
+![](screenshots/2023-04-14-20-50-36.jpg)
 
 For a detailed process of the vulnerability execution, refer to [Vulnerability Execution Process](https://www.cnblogs.com/st404/p/10245844.html)
 
@@ -43,7 +43,7 @@ _Trigger condition_
 
 Use the `$_POST['_method']` variable to pass the actual request method. When `$_POST['_method']=__construct`, the method of the Request class will override the class variables using the filter variable and execute any command when internal parameter filtering is performed.
 
-![](screenshots/2023-04-14-20-50-45.png)
+![](screenshots/2023-04-14-20-50-45.jpg)
 
 This can directly upload a PHP file test.php
 ```xml

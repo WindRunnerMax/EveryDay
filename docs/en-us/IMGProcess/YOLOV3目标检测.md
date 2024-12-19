@@ -51,11 +51,11 @@ python yolo_video.py --image
 ```
 Next, the prompt `Input image filename:` will appear. I placed it under `./img/3.jpg`, so I just entered the path directly.
 
-![](screenshots/2023-04-14-20-38-00.png)
+![](screenshots/2023-04-14-20-38-00.jpg)
 
 After a short wait, the identification will be completed.
 
-![](screenshots/2023-04-14-20-38-06.png)
+![](screenshots/2023-04-14-20-38-06.jpg)
 
 ## Model Training
 
@@ -63,11 +63,11 @@ After a short wait, the identification will be completed.
 
 First, you need to prepare the directory structure. You can download the `VOC2007` dataset from [http://host.robots.ox.ac.uk/pascal/VOC/voc2007/](http://host.robots.ox.ac.uk/pascal/VOC/voc2007/), then delete all the files, leaving only the directory structure. Alternatively, you can manually create the following directory structure:
 
-![](screenshots/2023-04-14-20-38-17.png)
+![](screenshots/2023-04-14-20-38-17.jpg)
 
 Next, place all the images in the `JPEGImages` directory. Then, download the `labelImg` annotation tool from [https://github.com/tzutalin/labelImg](https://github.com/tzutalin/labelImg). This tool is used to annotate the images and create `XML` files containing the selected image boxes. Open the images using `labelImg`, annotate them, and save the generated `XML` files in the `Annotations` folder with the same names as the images.
 
-![](screenshots/2023-04-14-20-38-35.png)
+![](screenshots/2023-04-14-20-38-35.jpg)
 
 ### Prepare the Training Files
 
@@ -443,11 +443,11 @@ loss: 25.8876 - val_loss: 38.1282
 
 #### Original Image
 
-![](screenshots/2023-04-14-20-49-23.png)
+![](screenshots/2023-04-14-20-49-23.jpg)
 
 #### Recognition
 
-![](screenshots/2023-04-14-20-49-32.png)
+![](screenshots/2023-04-14-20-49-32.jpg)
 
 ### Example Code
 ```

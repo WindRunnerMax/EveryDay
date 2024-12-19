@@ -12,9 +12,9 @@ function AssetLoader(source) {
     .split("\n")
     .map((item) => {
       let line = item;
-      if (line.startsWith("<img")) {
+      if (line.startsWith("<img") || line.startsWith("<p><img")) {
         const result = /src="(.*?)"/.exec(line);
-        if (result && result[1] && result[1].endsWith(".png")) {
+        if (result && result[1] && /(.png|.jpg)/.test(result[1])) {
           line = `![IMG](${result[1]})`;
         }
       }
