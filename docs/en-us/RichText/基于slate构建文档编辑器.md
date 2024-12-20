@@ -3,7 +3,7 @@
 
 ## Description
 
-[Github](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)
+[GitHub](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)
 
 A rich text editor is a text editor that can be embedded in a browser and provides a what-you-see-is-what-you-get editing experience. There are many out-of-the-box rich text editors available, such as `UEditor` and `WangEditor`. They may have limited customization, but they offer quick implementation and visible results. On the other hand, frameworks like `Draft.js` and `Slate.js` serve as the core or controller of a rich text editor, providing high customizability but requiring more development time. When considering practical application or technology selection, it is important to conduct thorough research, as there is no absolute advantage or disadvantage of a framework in business scenarios – it's all about suitability.
 
