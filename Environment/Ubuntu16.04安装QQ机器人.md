@@ -5,7 +5,7 @@
 ## 安装酷Q HTTP
 首先安装好`docker`  
 
-![](screenshots/2023-04-14-20-49-41.png)
+![](screenshots/2023-04-14-20-49-41.jpg)
 
 酷Q官网提供了`docker` [COOLQ Docker 2.0](https://cqp.cc/t/34558)  
 但是我是打算通过`HTTP`进行一些功能开发的，于是选择了大佬做的带`HTTP`插件的 [CQHTTP Docker](https://richardchien.gitee.io/coolq-http-api/docs/4.12/#/Docker)  
@@ -29,7 +29,7 @@ docker run -ti --rm --name coolq \
 ```
 此时可以登录`noVNC`查看并且登录了
 
-![](screenshots/2023-04-14-20-49-49.png)
+![](screenshots/2023-04-14-20-49-49.jpg)
 
 如果测试没有问题的话，就讲启动参数中的`--rm`改为`-d`就可以存储运行了
 

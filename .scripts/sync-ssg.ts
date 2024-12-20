@@ -15,12 +15,14 @@ const ssg = path.resolve(root, `../Blog-SSG`);
     console.log("Processing", group);
     const from = path.resolve(root, group);
     const to = path.resolve(ssg, `docs/zh-cn`);
+    await exec(`rm -rf ${to}/${group}`);
     await exec(`cp -r ${from} ${to}`);
   }
 
   console.log("Processing", "I18N");
   const from = path.resolve(root, `i18n`);
   const to = path.resolve(ssg, `docs/en-us`);
+  await exec(`rm -rf ${to}/*`);
   await exec(`cp -r ${from}/* ${to}`);
 
   console.log("Processing", "sidebar.ts");

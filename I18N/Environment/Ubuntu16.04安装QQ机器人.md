@@ -6,7 +6,7 @@
 ## Installing CoolQ HTTP
 First, make sure to install `docker`. 
 
-![](screenshots/2023-04-14-20-49-41.png)
+![](screenshots/2023-04-14-20-49-41.jpg)
 
 The CoolQ official website provides the `docker` [COOLQ Docker 2.0](https://cqp.cc/t/34558).  
 However, I prefer to use the one with the `HTTP` plugin for some functionality development. I chose the one made by a senior, which contains the `HTTP` plugin [CQHTTP Docker](https://richardchien.gitee.io/coolq-http-api/docs/4.12/#/Docker).  
@@ -30,7 +30,7 @@ docker run -ti --rm --name coolq \
 ```
 At this point, you can log in to `noVNC` to view and log in.
 
-![](screenshots/2023-04-14-20-49-49.png)
+![](screenshots/2023-04-14-20-49-49.jpg)
 
 If the test is successful, change `--rm` to `-d` in the start parameters for persistent running.
 

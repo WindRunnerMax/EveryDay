@@ -14,6 +14,7 @@ const blog = path.resolve(root, `../Blog`);
   for (const group of DOCS_GROUP) {
     console.log("Processing", group);
     const from = path.resolve(root, group);
+    await exec(`rm -rf ${blog}/${group}`);
     await exec(`cp -r ${from} ${blog}`);
   }
   
