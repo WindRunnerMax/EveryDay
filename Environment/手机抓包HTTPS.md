@@ -7,7 +7,7 @@
 ## 1. Fiddler
 首先下载安装Fiddler
 
-![](screenshots/2023-04-14-19-00-50.png)
+![](screenshots/2023-04-14-19-00-50.jpg)
 
 打开 Tools - Options - HTTPS 并安装证书
 
@@ -28,33 +28,33 @@
 需要手机与电脑在同一个局域网，查看本机ip地址
 我用的是wifi，所以我只需要wlan的那个网卡显示的ip地址
 
-![](screenshots/2023-04-14-19-01-36.png)
+![](screenshots/2023-04-14-19-01-36.jpg)
 
 手机端打开 ip:8888 下载并安装证书
 安装证书如果提示找不到文件，那就去手机的 安全 - 从存储设备安装证书 会让你设置密码
 
-![](screenshots/2023-04-14-19-01-47.png)
+![](screenshots/2023-04-14-19-01-47.jpg)
 
 打开手机的已连接wifi，点击设置手动代理
 
-![](screenshots/2023-04-14-19-01-56.png)
+![](screenshots/2023-04-14-19-01-56.jpg)
 
 打开 微信 - 消灭病毒，Fiddler就可以抓到包了
 
-![](screenshots/2023-04-14-19-02-06.png)
+![](screenshots/2023-04-14-19-02-06.jpg)
 ## 2. Packet Capture
 打开软件右上角 选项-设置
 
-![](screenshots/2023-04-14-19-02-14.png)
+![](screenshots/2023-04-14-19-02-14.jpg)
 
 安装证书
 
-![](screenshots/2023-04-14-19-02-23.png)
+![](screenshots/2023-04-14-19-02-23.jpg)
 
 点击 开始-选择微信
 
-![](screenshots/2023-04-14-19-02-30.png)
+![](screenshots/2023-04-14-19-02-30.jpg)
 
 选择右边带有ssl字样的，即可看到openid
 
-![](screenshots/2023-04-14-19-02-36.png)
+![](screenshots/2023-04-14-19-02-36.jpg)
