@@ -270,6 +270,7 @@ export const docs: Record<string, string[]> = {
     "Plugin/从脚本管理器的角度审视Chrome扩展",
     "Plugin/基于WebRTC的局域网文件传输",
     "Plugin/基于ServiceWorker的文件传输方案",
+    "Plugin/基于Canvas构建简历编辑器"
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",
