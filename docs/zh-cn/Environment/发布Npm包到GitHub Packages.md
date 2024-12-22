@@ -71,8 +71,8 @@ proxy=socks5://127.0.0.1:1080
 https-proxy=socks5://127.0.0.1:1080
 ```
 
-## Github
+## Blog
 
 ```
-https://github.com/WindrunnerMax
+https://github.com/WindRunnerMax
 ```

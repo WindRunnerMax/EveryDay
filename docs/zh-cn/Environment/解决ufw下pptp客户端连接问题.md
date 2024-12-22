@@ -12,3 +12,11 @@
 `sudo service ufw restart`
 
 重新`pptpsetup`链接即可
+
+
+## Blog
+
+```
+https://github.com/WindRunnerMax
+```
+

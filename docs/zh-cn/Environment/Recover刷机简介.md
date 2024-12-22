@@ -46,3 +46,10 @@ partition SD card，这个请自行尝试
 文件管理
 11. adb sideload刷机
 自动将电脑端第三方rom和补丁包推送到手机内存储或者sd卡（adb命令：adb sideload ***.zip）
+
+
+## Blog
+
+```
+https://github.com/WindRunnerMax
+```
