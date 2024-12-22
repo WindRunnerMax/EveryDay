@@ -58,3 +58,10 @@
 选择右边带有ssl字样的，即可看到openid
 
 ![](screenshots/2023-04-14-19-02-36.jpg)
+
+
+## Blog
+
+```
+https://github.com/WindRunnerMax
+```
