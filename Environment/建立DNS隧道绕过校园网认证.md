@@ -118,6 +118,13 @@ Debug queue.c:300	Flushing outgoing data
 ## 最后
 最终还是没能成功实现想要的功能，最后使用`dnslog`探查了一下实际上是有`dns`查询的，还是需要研究一下究竟是什么阻拦策略导致没有完成隧道的建立。想来三级域名的`A`记录其实是可以携带一点信息的，即`abc.example.com`可以携带`abc`这个信息过去。此外还有一个终极大招，直接物理方案解决，毕竟`AP`可是在宿舍里边的。
 
+
+## Blog
+
+```
+https://github.com/WindRunnerMax
+```
+
 ## 参考
 
 ```

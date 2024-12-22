@@ -410,6 +410,12 @@ cuckoo web runserver 0.0.0.0:8000
 */6 * * * * cd $HOME/.cuckoo/storage/analyses && find ./ -regex .*/memory/.*\.exe_  -mmin +6 -delete && find ./ -regex .*/memory/.*\.dmp  -mmin +6 -delete
 ```
 
+## Blog
+
+```
+https://github.com/WindRunnerMax
+```
+
 
 ## 参考
 ```
