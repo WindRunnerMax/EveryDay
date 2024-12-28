@@ -79,7 +79,7 @@ du -sh .git
 git push
 ```
 
-这里还需要有一个额外的步骤，需要让每个参与者将本地的仓库删除，然后完整重新`clone`最新的仓库，防止持有旧数据的仓库重新推回仓库。
+这里还需要有一个额外的步骤，需要让每个参与者将本地的仓库删除，然后完整重新`clone`最新的仓库，防止持有旧数据的仓库重新推回仓库。此外，也可以使用`git-filter-repo`来实现类似的处理。
 
 ## GitHub
 从历史记录中删除文件并不是简单的事情，如果需要我们手动来执行操作的话，就很像我们从某一次提交开始，不断向后`rebase`。那么在这个过程中自然就会导致`commit`的`hash`值发生变化，从而出现一些问题，这里我们主要关注在`GitHub`的表现。
@@ -106,8 +106,10 @@ https://github.com/WindRunnerMax/EveryDay
 ## 参考
 
 ```
+
 https://api.github.com/repos/user/repo
 https://bbs.huaweicloud.com/blogs/343828
+https://github.com/newren/git-filter-repo
 https://rtyley.github.io/bfg-repo-cleaner/
 https://www.cnblogs.com/sowler/p/17550629.html
 https://api.github.com/search/commits?q=author:user
