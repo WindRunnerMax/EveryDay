@@ -34,6 +34,7 @@
 * `git commit --amend [file1] [file2] ...`: 重做上一次`commit`，并包括指定文件的新变化。
 * `git update-index --assume-unchanged file`: 假设未修改，已经被追踪的文件即使在本地修改了也不会被标记已修改。
 * `git update-index --no-assume-unchanged file`: 不再假设未修改，恢复对文件更改的跟踪。
+* `GIT_COMMITTER_DATE="2019-09-09T02:32:22Z" git commit --date="2019-09-09T02:32:22Z" -m "xxx"`: 指定提交时间。
 
 ## 分支
 * `git branch`: 列出所有本地分支。
