@@ -575,22 +575,18 @@ export const IframeWar: FC = () => {
 
 ## 每日一题
 
-```
-https://github.com/WindRunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 
 ## 参考
 
-```
-https://www.w3.org/mission/accessibility/
-https://github.com/vigetlabs/react-focus-trap
-https://github.com/theKashey/react-focus-lock
-https://github.com/focus-trap/focus-trap-react
-https://medium.com/@antonkorzunov/its-a-focus-trap-699a04d66fb5 
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop
-https://html.spec.whatwg.org/multipage/interaction.html#focusable-area
-https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide
-https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role
-https://stackoverflow.com/questions/14572084/keep-tabbing-within-modal-pane-only/38865836
-```
+- <https://www.w3.org/mission/accessibility/>
+- <https://github.com/vigetlabs/react-focus-trap>
+- <https://github.com/theKashey/react-focus-lock>
+- <https://github.com/focus-trap/focus-trap-react>
+- <https://medium.com/@antonkorzunov/its-a-focus-trap-699a04d66fb5>
+- <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop>
+- <https://html.spec.whatwg.org/multipage/interaction.html#focusable-area>
+- <https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide>
+- <https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/dialog_role>
+- <https://stackoverflow.com/questions/14572084/keep-tabbing-within-modal-pane-only/38865836>

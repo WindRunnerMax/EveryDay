@@ -477,14 +477,10 @@ cache:  10 30 60 100 150 210 ...
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindrunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://juejin.cn/post/7232856799170805820
-https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver
-https://arco.design/react/components/list#%E6%97%A0%E9%99%90%E9%95%BF%E5%88%97%E8%A1%A8
-```
+- <https://juejin.cn/post/7232856799170805820>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver>
+- <https://arco.design/react/components/list#%E6%97%A0%E9%99%90%E9%95%BF%E5%88%97%E8%A1%A8>

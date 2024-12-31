@@ -54,7 +54,7 @@ fmt -w 10 file.txt
 
 `-s`选项分割了很长的行，但是不重新填充它们。
 
-```
+```bash
 cat file.txt
 # Love is patient, love is kind. It does not envy, it does not boast, it is not proud. It is not rude, it is not self-seeking, it is not easily angered,  it keeps no record of wrongs. Love does not delight in evil but rejoices with the truth. It always protects, always trusts, always hopes, always perseveres. Love never fails.
 

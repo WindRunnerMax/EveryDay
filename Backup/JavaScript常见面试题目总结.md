@@ -543,3 +543,8 @@ const add = (...args) => {
 
 add(1, 2, 4, 5, 6).then((res) => console.log(res));
 ```
+
+## Blog
+
+- <https://github.com/WindRunnerMax/EveryDay>
+

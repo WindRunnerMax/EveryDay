@@ -156,14 +156,10 @@ const editor = el[key].child.memoizedProps.node;
 
 ## 每日一题
 
-```
-https://github.com/WindRunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://docs.slatejs.org/
-https://github.com/ianstormtaylor/slate
-https://github.com/WindRunnerMax/DocEditor
-```
+- <https://docs.slatejs.org/>
+- <https://github.com/ianstormtaylor/slate>
+- <https://github.com/WindRunnerMax/DocEditor>

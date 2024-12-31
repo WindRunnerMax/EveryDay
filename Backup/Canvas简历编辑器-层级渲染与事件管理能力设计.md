@@ -282,15 +282,11 @@ export class Root extends Node {
 
 ## 每日一题
 
-```
-https://github.com/WindRunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://github.com/WindRunnerMax/CanvasEditor
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas
-https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
-```
+- <https://github.com/WindRunnerMax/CanvasEditor>
+- <https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas>
+- <https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D>
 

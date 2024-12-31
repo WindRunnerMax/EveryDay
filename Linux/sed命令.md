@@ -24,7 +24,7 @@ sed [OPTION]... {script-only-if-no-other-script} [input-file]...
 ## 示例
 `file.txt`文件内容如下。
 
-```
+```plain
 unix is great os. unix is opensource. unix is free os.
 learn operating system.
 unix linux which one you choose.
@@ -78,7 +78,7 @@ sed "s/unix/linux/2g" file.txt
 
 用括号括住每个单词的第一个字符，在括号中打印每个单词的第一个字符。
 
-```
+```bash
 echo "Welcome To The World" | sed "s/\(\b[A-Z]\)/\(\1\)/g"
 
 # (W)elcome (T)o (T)he (W)orld
@@ -86,7 +86,7 @@ echo "Welcome To The World" | sed "s/\(\b[A-Z]\)/\(\1\)/g"
 
 可以限制`sed`命令替换特定行号上的字符串。
 
-```
+```bash
 sed "3 s/unix/linux/g" file.txt
 
 # unix is great os. unix is opensource. unix is free os.

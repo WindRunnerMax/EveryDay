@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "lib": ["es2022", "esnext"],
     "esModuleInterop": true,
     "downlevelIteration": true
   },

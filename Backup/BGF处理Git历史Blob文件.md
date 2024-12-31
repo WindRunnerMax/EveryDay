@@ -99,18 +99,13 @@ git push
 
 ## Blog
 
-```
-https://github.com/WindRunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-
-https://api.github.com/repos/user/repo
-https://bbs.huaweicloud.com/blogs/343828
-https://github.com/newren/git-filter-repo
-https://rtyley.github.io/bfg-repo-cleaner/
-https://www.cnblogs.com/sowler/p/17550629.html
-https://api.github.com/search/commits?q=author:user
-```
+- <https://api.github.com/repos/user/repo>
+- <https://bbs.huaweicloud.com/blogs/343828>
+- <https://github.com/newren/git-filter-repo>
+- <https://rtyley.github.io/bfg-repo-cleaner/>
+- <https://www.cnblogs.com/sowler/p/17550629.html>
+- <https://api.github.com/search/commits?q=author:user>
