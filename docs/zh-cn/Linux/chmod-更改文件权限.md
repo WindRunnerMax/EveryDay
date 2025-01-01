@@ -81,6 +81,12 @@ chmod 700 file.py
 chmod u=rwx,go= file.py
 ```
 
+所有者可以读、写、执行这个文件或目录，同组用户/其他用户可以读和执行，但不能写。
+
+```bash
+chmod 755 file.py
+```
+
 
 ## 每日一题
 
