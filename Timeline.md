@@ -1,6 +1,6 @@
 # Timeline
 
-前端笔记系列共有 421 篇文章，总计 74885 行， 855851 字， 2375400 字符。
+前端笔记系列共有 421 篇文章，总计 74906 行， 855906 字， 2375521 字符。
 
 ### 2024-12-28
 第 421 题：[Canvas编辑器之数据结构设计](Plugin/Canvas编辑器之数据结构设计.md)
@@ -177,40 +177,40 @@
 第 364 题：[Vue为何采用异步渲染](Vue/Vue为何采用异步渲染.md)
 
 ### 2021-02-21
-第 363 题：[top命令](Linux/top命令.md)
+第 363 题：[top-系统资源监控](Linux/top-系统资源监控.md)
 
 ### 2021-02-20
 第 362 题：[Rollup的基本使用](Plugin/Rollup的基本使用.md)
 
 ### 2021-02-19
-第 361 题：[curl命令](Linux/curl命令.md)
+第 361 题：[curl-网络数据传输](Linux/curl-网络数据传输.md)
 
 ### 2021-02-18
-第 360 题：[ip命令](Linux/ip命令.md)
+第 360 题：[ip-网络接口管理](Linux/ip-网络接口管理.md)
 
 ### 2021-02-17
-第 359 题：[journalctl命令](Linux/journalctl命令.md)
+第 359 题：[journalctl-系统日志管理](Linux/journalctl-系统日志管理.md)
 
 ### 2021-02-16
-第 358 题：[systemctl命令](Linux/systemctl命令.md)
+第 358 题：[systemctl-系统服务管理](Linux/systemctl-系统服务管理.md)
 
 ### 2021-02-15
-第 357 题：[kill命令](Linux/kill命令.md)
+第 357 题：[kill-终止进程](Linux/kill-终止进程.md)
 
 ### 2021-02-14
-第 356 题：[route命令](Linux/route命令.md)
+第 356 题：[route-网络路由管理](Linux/route-网络路由管理.md)
 
 ### 2021-02-13
-第 355 题：[traceroute命令](Linux/traceroute命令.md)
+第 355 题：[traceroute-网络路由跟踪](Linux/traceroute-网络路由跟踪.md)
 
 ### 2021-02-12
-第 354 题：[ifconfig命令](Linux/ifconfig命令.md)
+第 354 题：[ifconfig-网络接口管理](Linux/ifconfig-网络接口管理.md)
 
 ### 2021-02-11
-第 353 题：[netstat命令](Linux/netstat命令.md)
+第 353 题：[netstat-网络状态管理](Linux/netstat-网络状态管理.md)
 
 ### 2021-02-10
-第 352 题：[ps命令](Linux/ps命令.md)
+第 352 题：[ps-进程状态管理](Linux/ps-进程状态管理.md)
 
 ### 2021-02-09
 第 351 题：[Vue3.0新特性](Vue/Vue3.0新特性.md)
@@ -258,7 +258,7 @@
 第 337 题：[Navigator对象](Browser/Navigator对象.md)
 
 ### 2021-01-25
-第 336 题：[expr命令](Linux/expr命令.md)
+第 336 题：[expr-表达式计算](Linux/expr-表达式计算.md)
 
 ### 2021-01-24
 第 335 题：[ReactRouter的实现](React/ReactRouter的实现.md)
@@ -312,16 +312,16 @@
 第 319 题：[同步模块模式](Patterns/同步模块模式.md)
 
 ### 2021-01-07
-第 318 题：[tr命令](Linux/tr命令.md)
+第 318 题：[tr-转换文件内容](Linux/tr-转换文件内容.md)
 
 ### 2021-01-06
-第 317 题：[sort命令](Linux/sort命令.md)
+第 317 题：[sort-排序文件内容](Linux/sort-排序文件内容.md)
 
 ### 2021-01-05
-第 316 题：[sed命令](Linux/sed命令.md)
+第 316 题：[sed-脚本处理文件](Linux/sed-脚本处理文件.md)
 
 ### 2021-01-04
-第 315 题：[pico命令](Linux/pico命令.md)
+第 315 题：[pico-文本编辑程序](Linux/pico-文本编辑程序.md)
 
 ### 2021-01-03
 第 314 题：[有状态和无状态组件](React/有状态和无状态组件.md)
@@ -333,7 +333,7 @@
 第 312 题：[种花问题](LeetCode/种花问题.md)
 
 ### 2020-12-31
-第 311 题：[look命令](Linux/look命令.md)
+第 311 题：[look-查找字典单词](Linux/look-查找字典单词.md)
 
 ### 2020-12-30
 第 310 题：[最后一块石头的重量](LeetCode/最后一块石头的重量.md)
@@ -351,7 +351,7 @@
 第 306 题：[React组件的state和props](React/React组件的state和props.md)
 
 ### 2020-12-25
-第 305 题：[join命令](Linux/join命令.md)
+第 305 题：[join-合并文件内容](Linux/join-合并文件内容.md)
 
 ### 2020-12-24
 第 304 题：[参与者模式](Patterns/参与者模式.md)
@@ -372,13 +372,13 @@
 第 299 题：[React中JSX的理解](React/React中JSX的理解.md)
 
 ### 2020-12-18
-第 298 题：[aspell命令](Linux/aspell命令.md)
+第 298 题：[aspell-拼写检查](Linux/aspell-拼写检查.md)
 
 ### 2020-12-17
 第 297 题：[买卖股票的最佳时机含手续费](LeetCode/买卖股票的最佳时机含手续费.md)
 
 ### 2020-12-16
-第 296 题：[grep命令](Linux/grep命令.md)
+第 296 题：[grep-模式搜索匹配](Linux/grep-模式搜索匹配.md)
 
 ### 2020-12-15
 第 295 题：[单调递增的数字](LeetCode/单调递增的数字.md)
@@ -390,13 +390,13 @@
 第 293 题：[React虚拟DOM的理解](React/React虚拟DOM的理解.md)
 
 ### 2020-12-12
-第 292 题：[fold命令](Linux/fold命令.md)
+第 292 题：[fold-折叠文件内容](Linux/fold-折叠文件内容.md)
 
 ### 2020-12-11
 第 291 题：[Dota2参议院](LeetCode/Dota2参议院.md)
 
 ### 2020-12-10
-第 290 题：[fmt命令](Linux/fmt命令.md)
+第 290 题：[fmt-格式化输出内容](Linux/fmt-格式化输出内容.md)
 
 ### 2020-12-09
 第 289 题：[不同路径](LeetCode/不同路径.md)
@@ -414,7 +414,7 @@
 第 285 题：[React生命周期](React/React生命周期.md)
 
 ### 2020-12-04
-第 284 题：[fgrep命令](Linux/fgrep命令.md)
+第 284 题：[fgrep-固定字符串搜索](Linux/fgrep-固定字符串搜索.md)
 
 ### 2020-12-03
 第 283 题：[数据访问对象模式](Patterns/数据访问对象模式.md)
@@ -435,7 +435,7 @@
 第 278 题：[Vuex中的核心方法](Vue/Vuex中的核心方法.md)
 
 ### 2020-11-27
-第 277 题：[ex命令](Linux/ex命令.md)
+第 277 题：[ex-文本编辑器](Linux/ex-文本编辑器.md)
 
 ### 2020-11-26
 第 276 题：[链模式](Patterns/链模式.md)
@@ -456,7 +456,7 @@
 第 271 题：[供暖器](LeetCode/供暖器.md)
 
 ### 2020-11-20
-第 270 题：[egrep命令](Linux/egrep命令.md)
+第 270 题：[egrep-正则模式搜索](Linux/egrep-正则模式搜索.md)
 
 ### 2020-11-19
 第 269 题：[Js中Proxy对象](JavaScript/Js中Proxy对象.md)
@@ -465,7 +465,7 @@
 第 268 题：[迭代器模式](Patterns/迭代器模式.md)
 
 ### 2020-11-17
-第 267 题：[ed命令](Linux/ed命令.md)
+第 267 题：[ed-文本编辑器](Linux/ed-文本编辑器.md)
 
 ### 2020-11-16
 第 266 题：[根据身高重建队列](LeetCode/根据身高重建队列.md)
@@ -477,7 +477,7 @@
 第 264 题：[Vue常用性能优化](Vue/Vue常用性能优化.md)
 
 ### 2020-11-13
-第 263 题：[csplit命令](Linux/csplit命令.md)
+第 263 题：[csplit-分割文件](Linux/csplit-分割文件.md)
 
 ### 2020-11-12
 第 262 题：[按奇偶排序数组II](LeetCode/按奇偶排序数组II.md)
@@ -498,7 +498,7 @@
 第 257 题：[服务端渲染SSR的理解](Vue/服务端渲染SSR的理解.md)
 
 ### 2020-11-06
-第 256 题：[comm命令](Linux/comm命令.md)
+第 256 题：[comm-对比文件内容](Linux/comm-对比文件内容.md)
 
 ### 2020-11-05
 第 255 题：[子集II](LeetCode/子集II.md)
@@ -516,10 +516,10 @@
 第 251 题：[VueRouter导航守卫](Vue/VueRouter导航守卫.md)
 
 ### 2020-10-31
-第 250 题：[colrm命令](Linux/colrm命令.md)
+第 250 题：[colrm-删除文件内容列](Linux/colrm-删除文件内容列.md)
 
 ### 2020-10-30
-第 249 题：[col命令](Linux/col命令.md)
+第 249 题：[col-过滤控制字符](Linux/col-过滤控制字符.md)
 
 ### 2020-10-29
 第 248 题：[命令模式](Patterns/命令模式.md)
@@ -540,7 +540,7 @@
 第 243 题：[Vue路由懒加载](Vue/Vue路由懒加载.md)
 
 ### 2020-10-23
-第 242 题：[updatedb命令](Linux/updatedb命令.md)
+第 242 题：[updatedb-更新文件数据库](Linux/updatedb-更新文件数据库.md)
 
 ### 2020-10-22
 第 241 题：[策略模式](Patterns/策略模式.md)
@@ -564,7 +564,7 @@
 第 235 题：[Js中Currying的应用](JavaScript/Js中Currying的应用.md)
 
 ### 2020-10-15
-第 234 题：[read命令](Linux/read命令.md)
+第 234 题：[read-读取用户输入](Linux/read-读取用户输入.md)
 
 ### 2020-10-14
 第 233 题：[模板方法模式](Patterns/模板方法模式.md)
@@ -582,7 +582,7 @@
 第 229 题：[Vue路由History模式分析](Vue/Vue路由History模式分析.md)
 
 ### 2020-10-09
-第 228 题：[awk命令](Linux/awk命令.md)
+第 228 题：[awk-文本处理工具](Linux/awk-文本处理工具.md)
 
 ### 2020-10-08
 第 227 题：[反转字符串](LeetCode/反转字符串.md)
@@ -600,7 +600,7 @@
 第 223 题：[Vue路由Hash模式分析](Vue/Vue路由Hash模式分析.md)
 
 ### 2020-10-03
-第 222 题：[scp命令](Linux/scp命令.md)
+第 222 题：[scp-安全拷贝文件](Linux/scp-安全拷贝文件.md)
 
 ### 2020-10-02
 第 221 题：[宝石与石头](LeetCode/宝石与石头.md)
@@ -612,7 +612,7 @@
 第 219 题：[装饰器模式](Patterns/装饰器模式.md)
 
 ### 2020-09-29
-第 218 题：[whereis命令](Linux/whereis命令.md)
+第 218 题：[whereis-查找二进制文件](Linux/whereis-查找二进制文件.md)
 
 ### 2020-09-28
 第 217 题：[Js中Number对象](JavaScript/Js中Number对象.md)
@@ -630,7 +630,7 @@
 第 213 题：[二叉搜索树中的众数](LeetCode/二叉搜索树中的众数.md)
 
 ### 2020-09-23
-第 212 题：[cp命令](Linux/cp命令.md)
+第 212 题：[cp-复制文件](Linux/cp-复制文件.md)
 
 ### 2020-09-22
 第 211 题：[外观模式](Patterns/外观模式.md)
@@ -660,7 +660,7 @@
 第 203 题：[建造者模式](Patterns/建造者模式.md)
 
 ### 2020-09-13
-第 202 题：[which命令](Linux/which命令.md)
+第 202 题：[which-输出命令路径](Linux/which-输出命令路径.md)
 
 ### 2020-09-12
 第 201 题：[Vue中数组变动监听](Vue/Vue中数组变动监听.md)
@@ -684,7 +684,7 @@
 第 195 题：[二叉树的层次遍历 II](LeetCode/二叉树的层次遍历%20II.md)
 
 ### 2020-09-05
-第 194 题：[umask命令](Linux/umask命令.md)
+第 194 题：[umask-设置文件权限掩码](Linux/umask-设置文件权限掩码.md)
 
 ### 2020-09-04
 第 193 题：[二叉树的所有路径](LeetCode/二叉树的所有路径.md)
@@ -705,10 +705,10 @@
 第 188 题：[实现拼图滑动验证码](HTML/实现拼图滑动验证码.md)
 
 ### 2020-08-29
-第 187 题：[touch命令](Linux/touch命令.md)
+第 187 题：[touch-创建新文件](Linux/touch-创建新文件.md)
 
 ### 2020-08-28
-第 186 题：[tmpwatch命令](Linux/tmpwatch命令.md)
+第 186 题：[tmpwatch-删除未访问文件](Linux/tmpwatch-删除未访问文件.md)
 
 ### 2020-08-27
 第 185 题：[使括号有效的最少添加](LeetCode/使括号有效的最少添加.md)
@@ -720,28 +720,28 @@
 第 183 题：[平衡二叉树](LeetCode/平衡二叉树.md)
 
 ### 2020-08-24
-第 182 题：[tee命令](Linux/tee命令.md)
+第 182 题：[tee-文件内容分流](Linux/tee-文件内容分流.md)
 
 ### 2020-08-23
 第 181 题：[对keep-alive组件的理解](Vue/对keep-alive组件的理解.md)
 
 ### 2020-08-22
-第 180 题：[split命令](Linux/split命令.md)
+第 180 题：[split-分割文件](Linux/split-分割文件.md)
 
 ### 2020-08-21
 第 179 题：[二叉树的最小深度](LeetCode/二叉树的最小深度.md)
 
 ### 2020-08-20
-第 178 题：[rm命令](Linux/rm命令.md)
+第 178 题：[rm-删除文件](Linux/rm-删除文件.md)
 
 ### 2020-08-19
 第 177 题：[叶子相似的树](LeetCode/叶子相似的树.md)
 
 ### 2020-08-18
-第 176 题：[rcp命令](Linux/rcp命令.md)
+第 176 题：[rcp-远程文件拷贝](Linux/rcp-远程文件拷贝.md)
 
 ### 2020-08-17
-第 175 题：[patch命令](Linux/patch命令.md)
+第 175 题：[patch-修补生成文件](Linux/patch-修补生成文件.md)
 
 ### 2020-08-16
 第 174 题：[$router和$route的区别](Vue/$router和$route的区别.md)
@@ -750,19 +750,19 @@
 第 173 题：[提莫攻击](LeetCode/提莫攻击.md)
 
 ### 2020-08-14
-第 172 题：[paste命令](Linux/paste命令.md)
+第 172 题：[paste-合并文件内容](Linux/paste-合并文件内容.md)
 
 ### 2020-08-13
 第 171 题：[数组中的第K个最大元素](LeetCode/数组中的第K个最大元素.md)
 
 ### 2020-08-12
-第 170 题：[od命令](Linux/od命令.md)
+第 170 题：[od-读取文件内容](Linux/od-读取文件内容.md)
 
 ### 2020-08-11
 第 169 题：[被围绕的区域](LeetCode/被围绕的区域.md)
 
 ### 2020-08-10
-第 168 题：[mv命令](Linux/mv命令.md)
+第 168 题：[mv-移动文件](Linux/mv-移动文件.md)
 
 ### 2020-08-09
 第 167 题：[Vue中diff算法的理解](Vue/Vue中diff算法的理解.md)
@@ -771,16 +771,16 @@
 第 166 题：[一次编辑](LeetCode/一次编辑.md)
 
 ### 2020-08-07
-第 165 题：[more命令](Linux/more命令.md)
+第 165 题：[more-分页输出文件内容](Linux/more-分页输出文件内容.md)
 
 ### 2020-08-06
-第 164 题：[mktemp命令](Linux/mktemp命令.md)
+第 164 题：[mktemp-创建临时文件](Linux/mktemp-创建临时文件.md)
 
 ### 2020-08-05
 第 163 题：[有效的括号字符串](LeetCode/有效的括号字符串.md)
 
 ### 2020-08-04
-第 162 题：[mc命令](Linux/mc命令.md)
+第 162 题：[mc-文件管理器](Linux/mc-文件管理器.md)
 
 ### 2020-08-03
 第 161 题：[字符串相加](LeetCode/字符串相加.md)
@@ -789,43 +789,43 @@
 第 160 题：[Vue中虚拟DOM的理解](Vue/Vue中虚拟DOM的理解.md)
 
 ### 2020-08-01
-第 159 题：[chattr命令](Linux/chattr命令.md)
+第 159 题：[chattr-更改文件属性](Linux/chattr-更改文件属性.md)
 
 ### 2020-07-31
-第 158 题：[lsattr命令](Linux/lsattr命令.md)
+第 158 题：[lsattr-显示文件属性](Linux/lsattr-显示文件属性.md)
 
 ### 2020-07-30
-第 157 题：[locate命令](Linux/locate命令.md)
+第 157 题：[locate-快速查找文件](Linux/locate-快速查找文件.md)
 
 ### 2020-07-29
 第 156 题：[环形数组循环](LeetCode/环形数组循环.md)
 
 ### 2020-07-28
-第 155 题：[less命令](Linux/less命令.md)
+第 155 题：[less-分页输出文件内容](Linux/less-分页输出文件内容.md)
 
 ### 2020-07-27
-第 154 题：[ln命令](Linux/ln命令.md)
+第 154 题：[ln-创建文件链接](Linux/ln-创建文件链接.md)
 
 ### 2020-07-26
 第 153 题：[Vue中$refs的理解](Vue/Vue中$refs的理解.md)
 
 ### 2020-07-25
-第 152 题：[cut命令](Linux/cut命令.md)
+第 152 题：[cut-截取文件内容](Linux/cut-截取文件内容.md)
 
 ### 2020-07-24
 第 151 题：[除数博弈](LeetCode/除数博弈.md)
 
 ### 2020-07-23
-第 150 题：[find命令](Linux/find命令.md)
+第 150 题：[find-查找文件](Linux/find-查找文件.md)
 
 ### 2020-07-22
-第 149 题：[file命令](Linux/file命令.md)
+第 149 题：[file-探测文件类型](Linux/file-探测文件类型.md)
 
 ### 2020-07-21
 第 148 题：[最长公共前缀](LeetCode/最长公共前缀.md)
 
 ### 2020-07-20
-第 147 题：[diffstat命令](Linux/diffstat命令.md)
+第 147 题：[diffstat-文件差异计量](Linux/diffstat-文件差异计量.md)
 
 ### 2020-07-19
 第 146 题：[v-if与v-show的区别](Vue/v-if与v-show的区别.md)
@@ -834,16 +834,16 @@
 第 145 题：[插入、删除和获取元素](LeetCode/插入、删除和获取元素.md)
 
 ### 2020-07-17
-第 144 题：[diff命令](Linux/diff命令.md)
+第 144 题：[diff-对比文件差异](Linux/diff-对比文件差异.md)
 
 ### 2020-07-16
-第 143 题：[cmp命令](Linux/cmp命令.md)
+第 143 题：[cmp-文件差异状态](Linux/cmp-文件差异状态.md)
 
 ### 2020-07-15
 第 142 题：[全排列II](LeetCode/全排列II.md)
 
 ### 2020-07-14
-第 141 题：[chown命令](Linux/chown命令.md)
+第 141 题：[chown-更改文件所有者](Linux/chown-更改文件所有者.md)
 
 ### 2020-07-13
 第 140 题：[两个数组的交集II](LeetCode/两个数组的交集II.md)
@@ -852,13 +852,13 @@
 第 139 题：[MVVM模式的理解](Vue/MVVM模式的理解.md)
 
 ### 2020-07-11
-第 138 题：[chmod命令](Linux/chmod命令.md)
+第 138 题：[chmod-更改文件权限](Linux/chmod-更改文件权限.md)
 
 ### 2020-07-10
 第 137 题：[路径总和](LeetCode/路径总和.md)
 
 ### 2020-07-09
-第 136 题：[cat命令](Linux/cat命令.md)
+第 136 题：[cat-输出文件内容](Linux/cat-输出文件内容.md)
 
 ### 2020-07-08
 第 135 题：[跳水板](LeetCode/跳水板.md)
