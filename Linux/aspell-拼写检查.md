@@ -61,7 +61,7 @@ aspell [options] command
 
 `example.txt`文件内容如下：
 
-```
+```shell
 The quick brown fox jumped over the extraordinarily lazy dog.
 ```
 

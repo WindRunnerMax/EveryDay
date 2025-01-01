@@ -1391,7 +1391,7 @@
 <url>
   <loc>https://blog.touchczy.top/Plugin/Git常用命令.md</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T09:37:51.000Z</lastmod>
+  <lastmod>2024-12-28T03:35:39.000Z</lastmod>
 </url>
 
 <url>
@@ -1517,6 +1517,7 @@
 <url>
   <loc>https://blog.touchczy.top/Plugin/Canvas编辑器之数据结构设计.md</loc>
   <priority>1.0</priority>
+  <lastmod>2024-12-28T03:35:39.000Z</lastmod>
 </url>
 
 <url>
@@ -1826,393 +1827,328 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/cat命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/cat-输出文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-09T11:46:57.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/chmod命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/chmod-更改文件权限.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-11T09:34:56.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/chown命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/chown-更改文件所有者.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-14T15:06:44.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/cmp命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/cmp-文件差异状态.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-16T08:35:05.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/diff命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/diff-对比文件差异.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-17T13:28:53.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/diffstat命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/diffstat-文件差异计量.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-20T12:39:32.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/file命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/file-探测文件类型.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-22T12:13:54.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/find命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/find-查找文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-23T13:23:15.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/cut命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/cut-截取文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-25T13:27:33.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ln命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ln-创建文件链接.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-27T10:29:15.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/less命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/less-分页输出文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-28T07:48:09.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/locate命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/locate-快速查找文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-30T12:21:57.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/lsattr命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/lsattr-显示文件属性.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-07-31T14:21:33.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/chattr命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/chattr-更改文件属性.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-01T11:48:46.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/mc命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/mc-文件管理器.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-04T10:53:57.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/mktemp命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/mktemp-创建临时文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-06T12:25:10.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/more命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/more-分页输出文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-07T12:52:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/mv命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/mv-移动文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-10T11:50:21.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/od命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/od-读取文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-12T13:10:35.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/paste命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/paste-合并文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-14T15:47:52.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/patch命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/patch-修补生成文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-17T13:18:36.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/rcp命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/rcp-远程文件拷贝.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-18T13:47:29.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/rm命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/rm-删除文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-20T11:55:50.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/split命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/split-分割文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-22T13:25:34.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/tee命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/tee-文件内容分流.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-24T12:00:51.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/tmpwatch命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/tmpwatch-删除未访问文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-28T12:06:01.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/touch命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/touch-创建新文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-08-29T11:49:41.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/umask命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/umask-设置文件权限掩码.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-09-05T12:46:17.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/which命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/which-输出命令路径.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-09-13T02:37:09.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/cp命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/cp-复制文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-09-23T07:59:45.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/whereis命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/whereis-查找二进制文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-09-29T03:07:41.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/scp命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/scp-安全拷贝文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-03T02:17:36.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/awk命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/awk-文本处理工具.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-09T07:16:06.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/read命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/read-读取用户输入.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-15T08:25:20.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/updatedb命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/updatedb-更新文件数据库.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-23T07:52:22.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/col命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/col-过滤控制字符.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-30T03:05:27.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/colrm命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/colrm-删除文件内容列.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-10-31T10:48:36.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/comm命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/comm-对比文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-11-06T03:32:56.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/csplit命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/csplit-分割文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-11-13T02:27:56.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ed命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ed-文本编辑器.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-11-17T02:15:22.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/egrep命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/egrep-正则模式搜索.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-16T03:23:01.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ex命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ex-文本编辑器.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-11-27T03:30:14.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/fgrep命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/fgrep-固定字符串搜索.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-04T03:36:40.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/fmt命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/fmt-格式化输出内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-10T03:19:26.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/fold命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/fold-折叠文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-16T03:23:01.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/grep命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/grep-模式搜索匹配.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-16T03:23:01.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/aspell命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/aspell-拼写检查.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-18T05:09:59.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/join命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/join-合并文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-25T03:45:01.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/look命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/look-查找字典单词.md</loc>
   <priority>1.0</priority>
-  <lastmod>2020-12-31T03:53:42.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/pico命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/pico-文本编辑程序.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-01-04T10:54:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/sed命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/sed-脚本处理文件.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-01-05T03:18:25.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/sort命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/sort-排序文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-01-06T09:32:30.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/tr命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/tr-转换文件内容.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-01-07T01:56:47.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/expr命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/expr-表达式计算.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-01-25T12:47:19.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ps命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ps-进程状态管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-10T13:23:59.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/netstat命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/netstat-网络状态管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-11T11:41:14.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ifconfig命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ifconfig-网络接口管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-12T11:54:44.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/traceroute命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/traceroute-网络路由跟踪.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-13T12:09:45.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/route命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/route-网络路由管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-14T13:52:45.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/kill命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/kill-终止进程.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-15T14:03:24.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/systemctl命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/systemctl-系统服务管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-16T11:03:12.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/journalctl命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/journalctl-系统日志管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-20T11:21:14.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/ip命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/ip-网络接口管理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-18T10:15:31.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/curl命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/curl-网络数据传输.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-19T13:15:33.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/Linux/top命令.md</loc>
+  <loc>https://blog.touchczy.top/Linux/top-系统资源监控.md</loc>
   <priority>1.0</priority>
-  <lastmod>2021-02-21T11:44:10.000Z</lastmod>
 </url>
 
 <url>
