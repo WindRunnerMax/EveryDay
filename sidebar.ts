@@ -314,7 +314,8 @@ export const sidebar: Sidebar = {
         "RichText/初探富文本之划词评论能力",
         "RichText/初探富文本之文档虚拟滚动",
         "RichText/初探富文本之搜索替换算法",
-        "RichText/基于slate构建文档编辑器"
+        "RichText/基于Slate构建文档编辑器",
+        "RichText/WrapNode数据结构与操作变换"
       ]
     },
     {

@@ -473,3 +473,4 @@ v-model数据绑定分析.md
 从脚本管理器的角度审视Chrome扩展.md
 基于Canvas构建简历编辑器.md
 Canvas编辑器之数据结构设计.md
+WrapNode数据结构与操作变换.md
