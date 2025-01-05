@@ -277,7 +277,8 @@
   * [初探富文本之划词评论能力](RichText/初探富文本之划词评论能力.md)
   * [初探富文本之文档虚拟滚动](RichText/初探富文本之文档虚拟滚动.md)
   * [初探富文本之搜索替换算法](RichText/初探富文本之搜索替换算法.md)
-  * [基于slate构建文档编辑器](RichText/基于slate构建文档编辑器.md)
+  * [基于Slate构建文档编辑器](RichText/基于Slate构建文档编辑器.md)
+  * [WrapNode数据结构与操作变换](RichText/WrapNode数据结构与操作变换.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
