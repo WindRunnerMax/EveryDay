@@ -1,4 +1,4 @@
-# Building Document Editor with slate
+# Building Document Editor with Slate
 `slate.js` is a fully customizable framework for building rich text editors. Here we use `slate.js` to build a rich text editor focused on document editing.
 
 ## Description
