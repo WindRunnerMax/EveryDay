@@ -177,5 +177,5 @@ export const isTextBlock = (editor: Editor, node: Node): node is TextBlockElemen
 ## 参考
 
 - <https://docs.slatejs.org/>
-- <https://github.com/ianstormtaylor/slate>
 - <https://github.com/WindRunnerMax/DocEditor>
+- <https://github.com/ianstormtaylor/slate/blob/25be3b/>

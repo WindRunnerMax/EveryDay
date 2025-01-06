@@ -139,5 +139,5 @@ for (let i = 0; i < leaves.length; i++) {
 ## 参考
 
 - <https://docs.slatejs.org/>
-- <https://github.com/ianstormtaylor/slate>
 - <https://github.com/WindRunnerMax/DocEditor>
+- <https://github.com/ianstormtaylor/slate/blob/25be3b/>
