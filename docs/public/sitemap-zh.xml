@@ -1594,12 +1594,19 @@
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于Slate构建文档编辑器.html</loc>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于slate构建文档编辑器.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-01-05T04:06:28.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/WrapNode数据结构与操作变换.html</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-05T04:06:28.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/Node节点与Path路径映射.html</loc>
   <priority>1.0</priority>
 </url>
 
