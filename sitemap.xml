@@ -1593,12 +1593,19 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/RichText/基于Slate构建文档编辑器.md</loc>
+  <loc>https://blog.touchczy.top/RichText/基于slate构建文档编辑器.md</loc>
   <priority>1.0</priority>
+  <lastmod>2025-01-05T04:06:23.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/RichText/WrapNode数据结构与操作变换.md</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-05T04:06:23.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/RichText/Node节点与Path路径映射.md</loc>
   <priority>1.0</priority>
 </url>
 

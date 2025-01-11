@@ -161,5 +161,5 @@ const editor = el[key].child.memoizedProps.node;
 ## 参考
 
 - <https://docs.slatejs.org/>
-- <https://github.com/ianstormtaylor/slate>
 - <https://github.com/WindRunnerMax/DocEditor>
+- <https://github.com/ianstormtaylor/slate/blob/25be3b/>
