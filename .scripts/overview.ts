@@ -40,7 +40,9 @@ const root = path.resolve(__dirname, `..`);
       for (const item of value) {
         const name = item.split("/").pop();
         if (!name) continue;
-        content.push(`* [${name}](${item.replace(/ /g, "%20")}.md)`);
+        const zh = `* [${name}](${item.replace(/ /g, "%20")}.md)`;
+        const en = ` [(*en-us*)](I18N/${item.replace(/ /g, "%20")}.md)`;
+        content.push(zh + en);
       }
       content.push("");
     }
