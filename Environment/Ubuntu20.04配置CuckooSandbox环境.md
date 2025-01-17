@@ -53,7 +53,7 @@ source ./python2-conda.sh
 ## 安装Cuckoo
 
 ### 安装python库
-我是直接执行了`sudo pip install -U cuckoo`，然后执行过程中告诉我缺啥我都再装，虽然这样不太好但是也不是不行哈哈，文档对于这块说的还是比较清楚的，这里借鉴一下其他博客说明的安装环境，如果安装失败，搜索一下错误，我就遇到过一个编译`image`什么的错误，是在`github issue`中找到一个用`apt`安装的依赖才解决的，但是具体记不清了。
+我是直接执行了`sudo pip install -U cuckoo`，然后执行过程中告诉我缺啥我都再装，虽然这样不太好但是也不是不行哈。文档对于这块说的还是比较清楚的，这里借鉴一下其他博客说明的安装环境，如果安装失败，搜索一下错误，我就遇到过一个编译`image`什么的错误，是在`github issue`中找到一个用`apt`安装的依赖才解决的，但是具体记不清了。
 
 ```bash
 sudo apt-get install python python-pip python-dev libffi-dev libssl-dev
