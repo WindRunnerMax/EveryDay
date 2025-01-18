@@ -263,6 +263,7 @@
   * [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md)
   * [基于Canvas构建简历编辑器](Plugin/基于Canvas构建简历编辑器.md)
   * [Canvas编辑器之数据结构设计](Plugin/Canvas编辑器之数据结构设计.md)
+  * [Canvas编辑器之剪贴板数据处理](Plugin/Canvas编辑器之剪贴板数据处理.md)
 
 * RichText
   * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)
