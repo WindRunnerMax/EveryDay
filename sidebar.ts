@@ -295,7 +295,8 @@ export const sidebar: Sidebar = {
         "Plugin/基于WebRTC的局域网文件传输",
         "Plugin/基于ServiceWorker的文件传输方案",
         "Plugin/基于Canvas构建简历编辑器",
-        "Plugin/Canvas编辑器之数据结构设计"
+        "Plugin/Canvas编辑器之数据结构设计",
+        "Plugin/Canvas编辑器之剪贴板数据处理"
       ]
     },
     {
