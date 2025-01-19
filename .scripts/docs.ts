@@ -431,6 +431,7 @@ export const docs: Record<string, string[]> = {
     "Environment/斐讯K3C改散热",
     "Environment/解决ufw下pptp客户端连接问题",
     "Environment/建立DNS隧道绕过校园网认证",
+    "Environment/Ubuntu20.04配置CuckooSandbox环境",
   ],
   IMGProcess: [
     "IMGProcess/强智教务系统验证码识别OpenCV",
