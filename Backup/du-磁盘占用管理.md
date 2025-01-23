@@ -63,6 +63,12 @@ du -ah /home
 du -h -d 1
 ```
 
+显示当前目录的空间占用。
+
+```bash
+du -h -d 0
+```
+
 显示文件系统的磁盘空间使用情况`disk free`。
 
 ```bash
@@ -72,14 +78,28 @@ df -h
 显示当前目录下的所有文件和子目录的磁盘使用情况，并按照大小排序。
 
 ```bash
-du -h -d 1 | sort -h -r
+du -a -h -d 1 | sort -h -r
 ```
 
 显示当前目录下的所有文件和子目录的磁盘使用情况，排除部分文件夹，并按照大小排序。
 
 ```bash
-du -h -d 1 --exclude=.git --exclude=node_modules | sort -h -r
-du -h -d 1 -I .git -I node_modules | sort -h -r # Mac
+du -a -h -d 1 --exclude=.git --exclude=node_modules | sort -h -r
+find . -maxdepth 1 \( -path ./.git -o -path ./node_modules \) -prune -o -exec du -sh {} + | sort -h -r # Mac
+```
+
+仅检查某个文件的大小。
+
+```bash
+du -h tsconfig.json
+```
+
+使用`grep`过滤查看某个文件的体积，这在符号连接中比较有用。
+
+```bash
+ls -l -h tsconfig.json
+du -a -h -d 1 | grep tsconfig.json
+find . -maxdepth 1 -print0 | xargs -0 du -sh | grep tsconfig.json # Mac
 ```
 
 
