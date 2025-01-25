@@ -296,7 +296,8 @@ export const sidebar: Sidebar = {
         "Plugin/基于ServiceWorker的文件传输方案",
         "Plugin/基于Canvas构建简历编辑器",
         "Plugin/Canvas编辑器之数据结构设计",
-        "Plugin/Canvas编辑器之剪贴板数据处理"
+        "Plugin/Canvas编辑器之剪贴板数据处理",
+        "Plugin/Canvas编辑器之图形状态管理"
       ]
     },
     {
@@ -497,7 +498,8 @@ export const sidebar: Sidebar = {
         "Environment/发布Npm包到GitHub Packages",
         "Environment/斐讯K3C改散热",
         "Environment/解决ufw下pptp客户端连接问题",
-        "Environment/建立DNS隧道绕过校园网认证"
+        "Environment/建立DNS隧道绕过校园网认证",
+        "Environment/Ubuntu20.04配置CuckooSandbox环境"
       ]
     },
     {

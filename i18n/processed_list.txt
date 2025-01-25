@@ -476,3 +476,4 @@ Canvas编辑器之数据结构设计.md
 WrapNode数据结构与操作变换.md
 Node节点与Path路径映射.md
 Canvas编辑器之剪贴板数据处理.md
+Canvas编辑器之图形状态管理.md
