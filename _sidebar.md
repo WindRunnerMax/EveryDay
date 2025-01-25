@@ -264,6 +264,7 @@
   * [基于Canvas构建简历编辑器](Plugin/基于Canvas构建简历编辑器.md)
   * [Canvas编辑器之数据结构设计](Plugin/Canvas编辑器之数据结构设计.md)
   * [Canvas编辑器之剪贴板数据处理](Plugin/Canvas编辑器之剪贴板数据处理.md)
+  * [Canvas编辑器之图形状态管理](Plugin/Canvas编辑器之图形状态管理.md)
 
 * RichText
   * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)
@@ -429,6 +430,7 @@
   * [斐讯K3C改散热](Environment/斐讯K3C改散热.md)
   * [解决ufw下pptp客户端连接问题](Environment/解决ufw下pptp客户端连接问题.md)
   * [建立DNS隧道绕过校园网认证](Environment/建立DNS隧道绕过校园网认证.md)
+  * [Ubuntu20.04配置CuckooSandbox环境](Environment/Ubuntu20.04配置CuckooSandbox环境.md)
 
 * IMGProcess
   * [强智教务系统验证码识别OpenCV](IMGProcess/强智教务系统验证码识别OpenCV.md)

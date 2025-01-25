@@ -4,7 +4,7 @@
 ## 描述
 接入协同框架实际上并不是一件简单的事情，尤其是对于`OT`实现的协同算法而言，`OT`的英文全称是`Operational Transformation`，也就是说实现`OT`的基础就是对内容的描述与操作是`Operational`原子化的。在富文本领域，最经典的`Operation`有`quill`的`delta`模型，通过`retain`、`insert`、`delete`三个操作完成整篇文档的描述与操作，还有`slate`的`JSON`模型，通过`insert_text`、`split_node`、`remove_text`等等操作来完成整篇文档的描述与操作。
 
-有了这个协同实现的基础之后，还需要对所有`Op`具体实现变换`Transformation`，这就是个比较麻烦的工作了，而且也是必不可少的实现。同样是以`quill`与`slate`两款开源编辑器为例，在`quill`中已经实现了对于其数据结构`delta`的所有`Transformation`，可以直接调用官方的`quill-delta`包即可；对于`slate`而言，官方只提供了原子化的操作`API`，并没有`Transformation`的具体实现，但是有社区维护的`slate-ot`包实现了其`JSON`数据的`Transformation`，也可以直接调用即可。
+有了这个协同实现的基础之后，还需要对所有`Op`具体实现变换`Transformation`，这就是个比较麻烦的工作了，而且也是必不可少的实现。同样是以`quill`与`slate`两款开源编辑器为例，在`quill`中已经实现了对于其数据结构`delta`的所有`Transformation`，可以直接调用官方的`quill-delta`包即可。对于`slate`而言，官方只提供了原子化的操作`API`，并没有`Transformation`的具体实现，但是有社区维护的`slate-ot`包实现了其`JSON`数据的`Transformation`，也可以直接调用即可。
 
 `OT`协同的实现在富文本领域有比较多的实现可供参考，特别是在开源的富文本引擎上，其实现方案还是比较成熟的，但是引申一下，在其他领域可能并没有具体的实现，那么就需要参考接入的文档自己实现了。例如我们有一个自研的思维导图功能需要实现协同，而保存的数据结构都是自定义的，没有直接可以调用的实现方案，那么这就需要自己实现操作变换了，对于一个思维导图而言我们实现原子化的操作还是比较容易的，所以我们主要关注于变换的实现。
 

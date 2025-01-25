@@ -151,8 +151,10 @@ const key = Object.keys(el).find(it => it.startsWith("__react"));
 const editor = el[key].child.memoizedProps.node;
 ```
 
-## 最后
-在这里我们聊到了`WrapNode`数据结构与操作变换，主要是对于嵌套类型的数据结构需要关注的内容，而实际上节点的类型还可以分为很多种，我们在大范围上可以有`BlockNode`、`TextBlockNode`、`TextNode`，在`BlockNode`中我们又可以划分出`BaseNode`、`WrapNode`、`PairNode`、`InlineBlockNode`、`VoidNode`、`InstanceNode`等，因此文中叙述的内容还是属于比较基本的，在`slate`中还有很多额外的概念和操作需要关注，例如`Range`、`Operation`、`Editor`、`Element`、`Path`等。那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的。
+## 总结
+在这里我们聊到了`WrapNode`数据结构与操作变换，主要是对于嵌套类型的数据结构需要关注的内容，而实际上节点的类型还可以分为很多种，我们在大范围上可以有`BlockNode`、`TextBlockNode`、`TextNode`，在`BlockNode`中我们又可以划分出`BaseNode`、`WrapNode`、`PairNode`、`InlineBlockNode`、`VoidNode`、`InstanceNode`等。
+
+因此文中叙述的内容还是属于比较基本的，在`slate`中还有很多额外的概念和操作需要关注，例如`Range`、`Operation`、`Editor`、`Element`、`Path`等。那么在后边的文章中我们就主要聊一聊在`slate`中`Path`的表达，以及在`React`中是如何控制其内容表达与正确维护`Path`路径与`Element`内容渲染的。
 
 ## 每日一题
 
