@@ -1499,13 +1499,13 @@
 <url>
   <loc>https://blog.touchczy.top/Plugin/基于WebRTC的局域网文件传输.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-15T03:22:50.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/Plugin/基于ServiceWorker的文件传输方案.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-09-09T15:09:27.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
@@ -1517,24 +1517,25 @@
 <url>
   <loc>https://blog.touchczy.top/Plugin/Canvas编辑器之数据结构设计.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-28T03:35:39.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/Plugin/Canvas编辑器之剪贴板数据处理.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-18T03:53:02.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/Plugin/Canvas编辑器之图形状态管理.md</loc>
   <priority>1.0</priority>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之富文本概述.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-20T11:21:14.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
@@ -1552,7 +1553,7 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之OT协同实例.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
@@ -1582,7 +1583,7 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之在线文档交付.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-11T03:19:48.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
@@ -1594,13 +1595,13 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之文档虚拟滚动.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-11T03:19:48.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之搜索替换算法.md</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-20T11:21:14.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
@@ -1612,13 +1613,18 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/WrapNode数据结构与操作变换.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-11T03:19:48.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/RichText/TS类型扩展与节点类型检查.md</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/RichText/Node节点与Path路径映射.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-11T03:19:48.000Z</lastmod>
+  <lastmod>2025-01-25T03:57:26.000Z</lastmod>
 </url>
 
 <url>
