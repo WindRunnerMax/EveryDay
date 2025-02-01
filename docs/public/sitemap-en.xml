@@ -1530,6 +1530,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之图形状态管理.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-01-25T03:57:20.000Z</lastmod>
 </url>
 
 <url>
@@ -1614,6 +1615,11 @@
   <loc>https://blog-ssg.touchczy.top/RichText/WrapNode数据结构与操作变换.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-05T04:06:28.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/TS类型扩展与节点类型检查.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
