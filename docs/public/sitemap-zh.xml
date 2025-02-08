@@ -1534,6 +1534,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/Canvas编辑器之Rspack工程实践.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之富文本概述.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-25T03:57:20.000Z</lastmod>
@@ -1620,6 +1625,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/TS类型扩展与节点类型检查.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-02-01T11:51:05.000Z</lastmod>
 </url>
 
 <url>
