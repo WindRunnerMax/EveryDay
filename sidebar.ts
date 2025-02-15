@@ -298,7 +298,8 @@ export const sidebar: Sidebar = {
         "Plugin/Canvas编辑器之数据结构设计",
         "Plugin/Canvas编辑器之剪贴板数据处理",
         "Plugin/Canvas编辑器之图形状态管理",
-        "Plugin/Canvas编辑器之Rspack工程实践"
+        "Plugin/Canvas编辑器之Rspack工程实践",
+        "Plugin/Canvas编辑器之层级渲染事件管理"
       ]
     },
     {

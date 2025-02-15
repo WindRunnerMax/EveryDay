@@ -479,3 +479,4 @@ Canvas编辑器之剪贴板数据处理.md
 Canvas编辑器之图形状态管理.md
 TS类型扩展与节点类型检查.md
 Canvas编辑器之Rspack工程实践.md
+Canvas编辑器之层级渲染事件管理.md
