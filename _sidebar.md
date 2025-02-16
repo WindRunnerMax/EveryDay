@@ -392,6 +392,7 @@
   * [ip-网络接口管理](Linux/ip-网络接口管理.md)
   * [curl-网络数据传输](Linux/curl-网络数据传输.md)
   * [top-系统资源监控](Linux/top-系统资源监控.md)
+  * [du-磁盘占用管理](Linux/du-磁盘占用管理.md)
 
 * MiniProgram
   * [山科小站小程序](MiniProgram/山科小站小程序.md)
