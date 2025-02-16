@@ -401,6 +401,7 @@ export const docs: Record<string, string[]> = {
     "Linux/ip-网络接口管理",
     "Linux/curl-网络数据传输",
     "Linux/top-系统资源监控",
+    "Linux/du-磁盘占用管理"
   ],
   MiniProgram: [
     "MiniProgram/山科小站小程序",

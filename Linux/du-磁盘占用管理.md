@@ -105,14 +105,10 @@ find . -maxdepth 1 -print0 | xargs -0 du -sh | grep tsconfig.json # Mac
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindrunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.computerhope.com/unix/udu.htm
-https://linuxize.com/post/du-command-in-linux/
-https://www.runoob.com/linux/linux-comm-du.html
-```
+- <https://www.computerhope.com/unix/udu.htm>
+- <https://linuxize.com/post/du-command-in-linux/>
+- <https://www.runoob.com/linux/linux-comm-du.html>
