@@ -89,15 +89,119 @@ next(length) {
 以此我们简单定义了描述数据模型的状态，以及可以用来截取数据结构的迭代器。这部分是描述数据结构内容以及变更的基础，当然在这里我们精简了非常多的内容，因此看起来比较简单。实际上这里还有非常复杂的实现，例如如何实现`immutable`来减少重复渲染保证性能。
 
 ### 视图层
-视图层主要负责渲染数据模型，
+视图层主要负责渲染数据模型，这部分我们是可以使用`React`来渲染的，只不过在这个简单例子中，我们可以直接全量创建`DOM`即可。因此在这里我们直接遍历数据模型，根据节点类型来创建对应的`DOM`节点，然后将其插入到`contenteditable`的`div`中。
+
+```js
+const render = () => {
+  container.innerHTML = "";
+  for (const data of model) {
+    const node = document.createElement(data.type);
+    node.setAttribute("data-leaf", "true");
+    node.textContent = data.text;
+    container.appendChild(node);
+    MODEL_TO_DOM.set(data, node);
+    DOM_TO_MODEL.set(node, data);
+  }
+  editor.updateDOMselection();
+};
+```
+
+这里我们还额外增加了`data-leaf`属性，以便于标记叶子结点。我们的选区更新是需要标记叶子结点，以便于能够正确计算选区需要落在某个`DOM`节点上。而`MODEL_TO_DOM`和`DOM_TO_MODEL`则是用来维护`Model`与`DOM`的映射关系，因为我们需要根据`DOM`和`MODEL`来相互获取对应值。
+
+以此我们定义了非常简单的视图层，示例中我们不需要考虑太多的性能问题。但是在`React`真正完成视图层的时候，由于非受控的`ContentEditable`的表现，我们就需要考虑非常多的问题，例如`key`值的维护、脏`DOM`的检查、减少重复渲染、批量调度刷新、选区修正等等。
 
 ### 控制器
+控制器则是我们的架构中最复杂的部分，这里存在了大量的逻辑处理。我们的编辑器控制器模型需要在数据结构和视图层的基础上实现，因此我们就在最后将其叙述，恰好在这里的`MVC`模型顺序的最后即是`Controller`。在控制器层，总结起来最主要的功能就是同步，即同步数据模型和视图层的状态。
+
+举个例子，我们的视图层是基于数据模型来渲染的，假如此时我们在某个节点上输入了内容，那么我们需要将输入的内容同步到数据模型中。而如果此时我们没有正确同步数据模型，那么选区的长度计算就会出现问题，这种情况下自然还会导致选区的索引同步出现问题，这里还要区分受控和非受控问题。
+
+那么首先我们需要关注选区的同步，选区是编辑器操作的基础，选中的状态则是操作的基准位置。同步的本质实现则是需要用浏览器的`API`来同步到数据模型中，浏览器的选区存在`selectionchange`事件，通过这个事件我们可以关注到选区的变化，此时便可以获取最新的选区信息。
+
+通过`window.getSelection`方法我们可以获取到当前选区的信息，然后通过`getRangeAt`就可以拿到选区的`Range`对象，我们自然就可以通过`Range`对象来获取选区的开始和结束位置。有了选区的起始和结束位置，我们就可以通过先前设置的映射关系来取的对应的位置。
+
+```js
+document.addEventListener("selectionchange", () => {
+  const selection = window.getSelection();
+  const range = selection.getRangeAt(0);
+  const { startContainer, endContainer, startOffset, endOffset } = range;
+  const startLeaf = startContainer.parentElement.closest("[data-leaf]");
+  const endLeaf = endContainer.parentElement.closest("[data-leaf]");
+  const startModel = DOM_TO_MODEL.get(startLeaf);
+  const endModel = DOM_TO_MODEL.get(endLeaf);
+  const start = startModel.start + startOffset;
+  const end = endModel.start + endOffset;
+  editor.setSelection({ start, len: end - start });
+  editor.updateDOMselection();
+});
+```
+
+这里通过选区节点获取对应的`DOM`节点并不一定是我们需要的节点，浏览器的选区位置规则对我们的模型来说是不确定的，因此我们需要根据选区节点来查找目标的叶子节点。举个例子，普通的文本选中情况下选区是在文本节点上的，三击选中则是在整个行`DOM`节点上的。
+
+因此这里的`closest`只是处理最普通的文本节点选区，复杂的情况还需要进行`normalize`操作。而`DOM_TO_MODEL`则是状态映射，获取到最近的`[data-leaf]`节点就是为了拿到对应的状态，当获取到最新选区位置之后，是需要更新`DOM`的实际选区位置的，相当于校正了浏览器本身的选区状态。
+
+`updateDOMselection`方法则是完全相反的操作，上述的事件处理是通过`DOM`选区更新`Model`选区，而`updateDOMselection`则是通过`Model`选区更新`DOM`选区。那么此时我们是只有`start/len`，基于这两个数字的到对应的`DOM`并不是简单的事情，此时我们需要查找`DOM`节点。
+
+```js
+const leaves = Array.from(container.querySelectorAll("[data-leaf]"));
+```
+
+这里同样会存在不少的`DOM`查找，因此实际的操作中也需要尽可能地减少选择的范围，在我们实际的设计中，则是以行为基准查找`span`类型的节点。紧接着就需要遍历整个`leaves`数组，然后继续通过`DOM_TO_MODEL`来获取`DOM`对应的状态，然后来获取构造`range`需要的节点和偏移。
+
+```js
+const { start, len } = editor.selection;
+const end = start + len;
+for (const leaf of leaves) {
+  const data = DOM_TO_MODEL.get(leaf);
+  const leafStart = data.start;
+  const leafLen = data.text.length;
+  if (start >= leafStart && start <= leafStart + leafLen) {
+    startLeaf = leaf;
+    startLeafOffset = start - leafStart;
+    // 折叠选区状态下可以 start 与 end 一致
+    if (windowSelection.isCollapsed) {
+      endLeaf = startLeaf;
+      endLeafOffset = startLeafOffset;
+      break;
+    }
+  }
+  if (end >= leafStart && end <= leafStart + leafLen) {
+    endLeaf = leaf;
+    endLeafOffset = end - leafStart;
+    break;
+  }
+}
+```
+
+当查找到目标的`DOM`节点之后，我们那就可以构造出`modelRange`，并且将其设置为浏览器选区。但是需要注意的是，我们需要在此处检查当前选区是否与原本的选区相同，设想一下如果再次设置选区，那么就会触发`SelectionChange`事件，这样就会导致无限循环，自然是需要避免此问题。
+
+```js
+if (windowSelection.rangeCount > 0) {
+  range = windowSelection.getRangeAt(0);
+  // 当前选区与 Model 选区相同, 则不需要更新
+  if (
+    range.startContainer === modelRange.startContainer &&
+    range.startOffset === modelRange.startOffset &&
+    range.endContainer === modelRange.endContainer &&
+    range.endOffset === modelRange.endOffset
+  ) {
+    return void 0;
+  }
+}
+windowSelection.setBaseAndExtent(
+  startLeaf.firstChild,
+  startLeafOffset,
+  endLeaf.firstChild,
+  endLeafOffset
+);
+```
+
+
 
 ## 项目架构设计
 
-### Delta
-
 ### Core
+
+### Delta
 
 ### React
 
