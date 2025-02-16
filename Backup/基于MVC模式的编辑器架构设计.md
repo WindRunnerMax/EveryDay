@@ -195,17 +195,110 @@ windowSelection.setBaseAndExtent(
 );
 ```
 
+实际上选区的问题不比输入法的问题少，在这里我们就是非常简单地实现了浏览器选区与我们模型选区的同步，核心仍然是状态的同步。接下来就可以实现数据模型的同步，在这里也就是我们实际执行命令的实现，而不是直接使用`document.execCommand`。
 
+此时我们先前定义的数据迭代器就派上用场了，我们操作的目标也是需要使用`range`来实现，例如`123123`这段文本在`start: 3, len: 2`的选区，以及`strong`的类型，在这区间内的数据类型就会变成`123[12 strong]3`，这也就是将长数据进行裁剪的操作。
+
+我们首先根据需要操作的选区来构造`retain`数组，虽然这部分描述本身应该构造`ops`来操作，然而这里就需要更多的补充`compose`的实现，因此这里我们只使用一个数组和索引来标识了。
+
+```js
+let retain = [start, len, Infinity];
+let retainIndex = 0;
+```
+
+然后则需要定义迭代器和`retain`来合并数据，这里我们的操作是`0`索引来移动指针以及截取索引内的数据，`1`索引来实际变化类型的`type`，`2`索引我们将其固定为`Infinity`，在这种情况下我们是取剩余的所有数据。这里重要的`length`则是取两者较短的值，以此来实现数据的截取。
+
+```js
+const iterator = new Iterator(model);
+while (iterator.hasNext()) {
+  const length = Math.min(iterator.peekLength(), retain[retainIndex]);
+  const isApplyAttrs = retainIndex === 1;
+  const thisOp = iterator.next(length);
+  const nextRetain = retain[retainIndex] - length;
+  retain[retainIndex] = nextRetain;
+  if (retain[retainIndex] === 0) {
+    retainIndex = retainIndex + 1;
+  }
+  if (!thisOp) break;
+  isApplyAttrs && (thisOp.type = type);
+  newModel.push(thisOp);
+}
+```
+
+在最后，还记得我们维护的数据不仅是数据表达，更是描述整个数据的状态。因此最后我们还需要将所有的数据刷新一遍，以此来保证最后的数据模型正确，此时还需要调用`render`来重新渲染视图层，然后重新刷新浏览器选区。
+
+```js
+let index = 0;
+for (const data of newModel) {
+  data.start = index;
+  data.len = data.text.length;
+  index = index + data.text.length;
+}
+render();
+editor.updateDOMselection();
+```
+
+以此我们定义了相对复杂的控制器层，这里的控制器层主要是同步数据模型和视图层的状态，以及实现了最基本的命令操作，当然没有处理很多复杂的边界情况。在实际的编辑器实现中，这部分逻辑会非常复杂，因为我们需要处理非常多的问题，例如输入法、选区模型、剪贴板等等。
 
 ## 项目架构设计
+那么我们基本编辑器`MVC`模型已经实现，因此自然而然就可以将其抽象为独立的`package`，恰好我们也是通过`monorepo`的形式来管理项目的。因此在这里就可以将其抽象为`core`、`delta`、`react`、`utils`四个核心包，分别对应编辑器的核心逻辑、数据模型、视图层、工具函数。而具体的编辑器模块实现，则全部以插件的形式定义在`plugin`包中。
 
 ### Core
+`core`模块封装了编辑器的核心逻辑，包括剪贴板模块、历史操作模块、输入模块、选区模块、状态模块等等，所有的模块通过实例化的`editor`对象引用。这里除了本身分层的逻辑实现外，还希望实现模块的扩展能力，可以通过引用编辑器模块并且扩展能力后，可以重新装载到编辑器上。
+
+```
+Core
+ ├── clipboard
+ ├── collect
+ ├── editor
+ ├── event
+ ├── history
+ ├── input
+ ├── model
+ ├── perform
+ ├── plugin
+ ├── rect
+ ├── ref
+ ├── schema
+ ├── selection
+ ├── state
+ └── ...
+```
+
+实际上`core`模块中存在本身的依赖关系，例如选区模块依赖于事件模块的事件分发，这主要是由于模块在构造时需要依赖其他模块的实例，以此来初始化本身的数据和事件等。因此事件实例化的顺序会比较重要，但是我们在实际聊下来的时候则直接按上述定义顺序，并未按照直接依赖的有向图顺序。
+
+
 
 ### Delta
 
+```
+Delta
+ ├── attributes
+ ├── delta
+ ├── mutate
+ └── ...
+```
+
 ### React
 
+```
+React
+ ├── hooks
+ ├── model
+ ├── plugin
+ ├── preset
+ └── ...
+```
+
 ### Utils
+
+```
+Utils
+ ├── debounce.ts
+ ├── decorator.ts
+ ├── dom.ts
+ └── ...
+```
 
 ## 每日一题
 
