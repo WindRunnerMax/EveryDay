@@ -1,4 +1,4 @@
-# Slate文档编辑器-Decorator装饰器渲染调度
+# Decorator装饰器渲染调度
 在之前我们聊到了基于文档编辑器的数据结构设计，聊了聊基于`slate`实现的文档编辑器类型系统，那么当前我们来研究一下`slate`编辑器中的装饰器实现。装饰器在`slate`中是非常重要的实现，可以为我们方便地在编辑器渲染调度时处理`range`的渲染。
 
 * 在线编辑: <https://windrunnermax.github.io/DocEditor>
