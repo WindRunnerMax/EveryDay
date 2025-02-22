@@ -1642,6 +1642,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/Decorator装饰器渲染调度.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Patterns/简单工厂模式.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-05T11:37:01.000Z</lastmod>
@@ -2262,6 +2267,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Linux/du-磁盘占用管理.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-02-16T05:03:24.000Z</lastmod>
 </url>
 
 <url>
