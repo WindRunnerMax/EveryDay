@@ -285,6 +285,7 @@
   * [WrapNode数据结构与操作变换](RichText/WrapNode数据结构与操作变换.md)
   * [TS类型扩展与节点类型检查](RichText/TS类型扩展与节点类型检查.md)
   * [Node节点与Path路径映射](RichText/Node节点与Path路径映射.md)
+  * [Decorator装饰器渲染调度](RichText/Decorator装饰器渲染调度.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
