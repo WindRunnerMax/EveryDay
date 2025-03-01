@@ -7,12 +7,13 @@ This is a follow-up content as part of the series [Juejin pushed me to learn Can
 
 Related articles about the `Canvas` resume editor project:
 
-* [Juejin pushed me to learn Canvas, so I made a resume editor with Canvas](https://juejin.cn/post/7329799331216015395)
-* [Canvas Graphics Editor-Data Structure and History (undo/redo)](https://juejin.cn/post/7331575219957366836)
-* [Canvas Graphics Editor-What Data is in My Clipboard](https://juejin.cn/post/7331992322233024548)
-* [Canvas Resume Editor-Graphic Drawing and State Management (Lightweight DOM)](https://juejin.cn/spost/7354986873733333055)
-* [Canvas Resume Editor-Monorepo+Rspack Engineering Practice](https://juejin.cn/spost/7357349281885503500)
-* [Canvas Resume Editor-Layer Rendering and Event Management Capability Design](https://juejin.cn/spost/7376197082203684873)
+* [Juejin pushed me to learn Canvas, so I made a resume editor with Canvas](https://juejin.cn/post/* [Juejin Keeps Recommending Canvas, So I Learned Canvas and Made a Resume Editor](./基于Canvas构建简历编辑器.md)
+* [Canvas Resume Editor - Data Structures and History (undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas Resume Editor - What Data is Actually in My Clipboard](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas Resume Editor - Monorepo and Rspack Project Practice](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas Resume Editor - Hierarchical Rendering and Event Management Design](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas Resume Editor - Selected Drawing and Drag-and-Drop Multi-Selection Interaction Scheme](./Canvas编辑器之选中绘制交互方案.md)
 
 ## Description
 For an editor, `History`, which includes `undo` and `redo`, is an essential capability. There are generally two methods to implement the history recording:

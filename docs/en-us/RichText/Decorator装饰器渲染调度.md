@@ -6,10 +6,11 @@ Previously, we discussed the design of data structures based on a document edito
 
 Related articles about the `slate` document editor project:
 
-* [Building a Document Editor with Slate](https://juejin.cn/post/7265516410490830883)
-* [Slate Document Editor - WrapNode Data Structure and Operation Transformation](https://juejin.cn/spost/7385752495535603727)
-* [Slate Document Editor - TS Type Extension and Node Type Checking](https://juejin.cn/spost/7399453742346551332)
-* [Slate Document Editor - Decorator Rendering Dispatcher]()
+* [Building a Document Editor with Slate](./基于slate构建文档编辑器.md)
+* [Slate Document Editor - WrapNode Data Structure and Operation Transformation](./WrapNode数据结构与操作变换.md)
+* [Slate Document Editor - TS Type Extension and Node Type Checking](./TS类型扩展与节点类型检查.md)
+* [Slate Document Editor - Decorator Rendering Dispatcher](./Decorator装饰器渲染调度.md)
+* [Slate Document Editor - Node and Path Mapping](./Node节点与Path路径映射.md)
 
 ## Decorate
 In `slate`, `decoration` is a particularly interesting feature. Imagine a scenario where we need to highlight code blocks. We can implement this in several ways: the first approach involves directly parsing the content of the code block, extracting the keyword categories, and storing them in the data structure to render the highlight information during rendering. However, this increases the size of the data structure. The second approach involves storing only the code information and parsing it into `Marks` during frontend rendering when highlighting is needed. This approach adds a bit of complexity because we may need to mark it as a non-collaborative operation and as pure client-side `Op` that does not require server storage. The third method involves using `decoration`, where `slate` essentially streamlines the second approach by rendering additional `Marks` without altering the data structure.

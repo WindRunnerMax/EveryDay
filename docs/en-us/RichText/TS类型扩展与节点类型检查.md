@@ -7,9 +7,11 @@ Previously, we discussed the `WrapNode` data structure and operations transforma
 
 Related articles about the `slate` document editor project:
 
-- [Building a Document Editor with Slate](https://juejin.cn/post/7265516410490830883)
-- [Slate Document Editor - WrapNode Data Structure and Operation Transformation](https://juejin.cn/spost/7385752495535603727)
-- [Slate Document Editor - TS Type Extension and Node Type Checking](https://juejin.cn/spost/7399453742346551332)
+* [Building a Document Editor with Slate](./基于slate构建文档编辑器.md)
+* [Slate Document Editor - WrapNode Data Structure and Operation Transformation](./WrapNode数据结构与操作变换.md)
+* [Slate Document Editor - TS Type Extension and Node Type Checking](./TS类型扩展与节点类型检查.md)
+* [Slate Document Editor - Decorator Rendering Dispatcher](./Decorator装饰器渲染调度.md)
+* [Slate Document Editor - Node and Path Mapping](./Node节点与Path路径映射.md)
 
 ## TS Type Extension
 When incorporating `slate` into TypeScript (`TS`), you may notice that when calling `createEditor` to instantiate the editor, there is no generic type defined for input. Does this imply that `slate` cannot define types in `TS` and one must resort to using `as` for type assertions during property handling? This approach is not suitable for a mature editor engine. For a rich text editor, defining types in `TS` is crucial. We can perceive rich text as text with attributes. Unclear attribute definitions can lead to maintenance challenges. Maintaining rich text content is already problematic, hence defining types becomes necessary.

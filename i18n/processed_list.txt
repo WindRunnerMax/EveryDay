@@ -482,3 +482,4 @@ Canvas编辑器之Rspack工程实践.md
 Canvas编辑器之层级渲染事件管理.md
 du-磁盘占用管理.md
 Decorator装饰器渲染调度.md
+Canvas编辑器之选中绘制交互方案.md

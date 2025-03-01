@@ -7,11 +7,11 @@
 
 关于`slate`文档编辑器项目的相关文章:
 
-* [基于Slate构建文档编辑器](https://juejin.cn/post/7265516410490830883)
-* [Slate文档编辑器-WrapNode数据结构与操作变换](https://juejin.cn/spost/7385752495535603727)
-* [Slate文档编辑器-TS类型扩展与节点类型检查](https://juejin.cn/spost/7399453742346551332)
-* [Slate文档编辑器-Decorator装饰器渲染调度](https://juejin.cn/post/7433069014978592819)
-* [Slate文档编辑器-Node节点与Path路径映射]()
+* [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
+* [Slate文档编辑器-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate文档编辑器-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate文档编辑器-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate文档编辑器-Node节点与Path路径映射](./Node节点与Path路径映射.md)
 
 
 ## 渲染与命令

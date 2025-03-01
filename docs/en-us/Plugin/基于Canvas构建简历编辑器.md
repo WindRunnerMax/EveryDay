@@ -4,12 +4,13 @@ About a month ago, I noticed that Juejin kept recommending `Canvas`-related cont
 
 Related articles about the Canvas resume editor project:
 
-* [Juejin Keeps Recommending Canvas to Me, So I Learned Canvas and Created a Resume Editor](https://juejin.cn/post/7329799331216015395)
-* [Canvas Graphic Editor - Data Structure and History (Undo/Redo)](https://juejin.cn/post/7331575219957366836)
-* [Canvas Graphic Editor - What Data Is Actually in My Clipboard?](https://juejin.cn/post/7331992322233024548)
-* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](https://juejin.cn/spost/7354986873733333055)
-* [Canvas Resume Editor - Monorepo + Rspack Project Practice](https://juejin.cn/spost/7357349281885503500)
-* [Canvas Resume Editor - Layered Rendering and Event Management Design](https://juejin.cn/spost/7376197082203684873)
+* [Juejin Keeps Recommending Canvas, So I Learned Canvas and Made a Resume Editor](./基于Canvas构建简历编辑器.md)
+* [Canvas Resume Editor - Data Structures and History (undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas Resume Editor - What Data is Actually in My Clipboard](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas Resume Editor - Monorepo and Rspack Project Practice](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas Resume Editor - Hierarchical Rendering and Event Management Design](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas Resume Editor - Selected Drawing and Drag-and-Drop Multi-Selection Interaction Scheme](./Canvas编辑器之选中绘制交互方案.md)
 
 Why create a resume editor from scratch:
 

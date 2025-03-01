@@ -25,8 +25,8 @@ Of course, we have just replaced the requirements here, as mentioned earlier, th
     <div class="text-block">
       <div class="zone-container text-editor non-empty" data-zone-id="2" data-zone-container="*" data-slate-editor="true" contenteditable="true">
         <div class="ace-line" data-node="true" dir="auto">
-          <span data-string="true" class=" author-0087753711195911211" data-leaf="true">123</span>
-          <span data-string="true" style="font-weight:bold;" class=" author-0087753711195911211" data-leaf="true">123</span>
+          <span data-string="true" class=" author-x" data-leaf="true">123</span>
+          <span data-string="true" style="font-weight:bold;" class=" author-x" data-leaf="true">123</span>
           <span data-string="true" data-enter="true" data-leaf="true">&ZeroWidthSpace;</span>
         </div>
       </div>
