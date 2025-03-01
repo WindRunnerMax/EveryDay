@@ -1545,6 +1545,11 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/Plugin/Canvas编辑器之选中绘制交互方案.md</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/RichText/初探富文本之富文本概述.md</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-25T03:57:26.000Z</lastmod>
@@ -1643,6 +1648,7 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/Decorator装饰器渲染调度.md</loc>
   <priority>1.0</priority>
+  <lastmod>2025-02-22T03:04:03.000Z</lastmod>
 </url>
 
 <url>

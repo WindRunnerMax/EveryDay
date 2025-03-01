@@ -7,12 +7,13 @@
 
 关于`Canvas`简历编辑器项目的相关文章:
 
-* [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](https://juejin.cn/post/7329799331216015395)
-* [Canvas图形编辑器-数据结构与History(undo/redo)](https://juejin.cn/post/7331575219957366836)
-* [Canvas图形编辑器-我的剪贴板里究竟有什么数据](https://juejin.cn/post/7331992322233024548)
-* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](https://juejin.cn/spost/7354986873733333055)
-* [Canvas简历编辑器-Monorepo+Rspack工程实践](https://juejin.cn/spost/7357349281885503500)
-* [Canvas简历编辑器-层级渲染与事件管理能力设计](https://juejin.cn/spost/7376197082203684873)
+* [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
+* [Canvas简历编辑器-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas简历编辑器-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas简历编辑器-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas简历编辑器-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
 ## 剪贴板
 
