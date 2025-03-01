@@ -275,7 +275,8 @@ export const docs: Record<string, string[]> = {
     "Plugin/Canvas编辑器之剪贴板数据处理",
     "Plugin/Canvas编辑器之图形状态管理",
     "Plugin/Canvas编辑器之Rspack工程实践",
-    "Plugin/Canvas编辑器之层级渲染事件管理"
+    "Plugin/Canvas编辑器之层级渲染事件管理",
+    "Plugin/Canvas编辑器之选中绘制交互方案",
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",
@@ -402,7 +403,7 @@ export const docs: Record<string, string[]> = {
     "Linux/ip-网络接口管理",
     "Linux/curl-网络数据传输",
     "Linux/top-系统资源监控",
-    "Linux/du-磁盘占用管理"
+    "Linux/du-磁盘占用管理",
   ],
   MiniProgram: [
     "MiniProgram/山科小站小程序",
