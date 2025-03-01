@@ -7,13 +7,13 @@
 
 关于`Canvas`简历编辑器项目的相关文章:
 
-* [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/基于Canvas构建简历编辑器.md)
-* [Canvas图形编辑器-数据结构与History(undo/redo)](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之数据结构设计.md)
-* [Canvas图形编辑器-我的剪贴板里究竟有什么数据](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之剪贴板数据处理.md)
-* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之图形状态管理.md)
-* [Canvas简历编辑器-Monorepo+Rspack工程实践](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之Rspack工程实践.md)
-* [Canvas简历编辑器-层级渲染与事件管理能力设计](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之层级渲染事件管理.md)
-* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之选中绘制交互方案.md)
+* [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
+* [Canvas简历编辑器-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas简历编辑器-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas简历编辑器-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas简历编辑器-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
 ## 选中绘制
 我们先来聊一聊最基本的节点点击选中以及拖拽的交互，而在聊具体的代码实现之前，我们先来看一下对于图形的绘制问题。在`Canvas`中我们绘制路径的话，我们可以通过`fill`来填充路径，也可以通过`stroke`来描边路径，而在我们描边的时候，如果不注意的话可能会陷入一些绘制的问题。假如此时我们要绘制一条线，我们可以分别来看下使用`stroke`和`fill`的绘制方法实现，此时如果在高清`ctx.scale(devicePixel, devicePixel)`情况下，则能明显地看出来绘制位置差`0.5px`，而如果基准为`1px`的话则会出现`1px`的差值以及色值偏差。

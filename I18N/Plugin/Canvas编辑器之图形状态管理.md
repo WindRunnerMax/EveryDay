@@ -7,12 +7,13 @@ Previously, we discussed the design of data structures and data manipulation wit
 
 Related articles on the `Canvas` resume editor project:
 
-* [I often get recommended Canvas on Juejin, so I learned Canvas and created a resume editor](https://juejin.cn/post/7329799331216015395)
-* [Canvas Graphic Editor - Data Structures and History (undo/redo)](https://juejin.cn/post/7331575219957366836)
-* [Canvas Graphic Editor - What Data is in My Clipboard](https://juejin.cn/post/7331992322233024548)
-* [Canvas Resume Editor - Graphic Rendering and State Management (Lightweight DOM)](https://juejin.cn/spost/7354986873733333055)
-* [Canvas Resume Editor - Monorepo + Rspack Engineering Practice](https://juejin.cn/spost/7357349281885503500)
-* [Canvas Resume Editor - Hierarchical Rendering and Event Management Capabilities Design](https://juejin.cn/spost/7376197082203684873)
+* [Juejin Keeps Recommending Canvas, So I Learned Canvas and Made a Resume Editor](./基于Canvas构建简历编辑器.md)
+* [Canvas Resume Editor - Data Structures and History (undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas Resume Editor - What Data is Actually in My Clipboard](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas Resume Editor - Monorepo and Rspack Project Practice](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas Resume Editor - Hierarchical Rendering and Event Management Design](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas Resume Editor - Selected Drawing and Drag-and-Drop Multi-Selection Interaction Scheme](./Canvas编辑器之选中绘制交互方案.md)
 
 ## Graphic Rendering
 When working on a project, we must start from the requirements. First, it is essential to clarify that we are developing a resume editor, which only requires a limited variety of graphic types: rectangles, images, and rich text shapes. Thus, we can conveniently abstract this: we can assume that any element is a rectangle to achieve our goal.

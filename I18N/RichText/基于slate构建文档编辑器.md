@@ -1,6 +1,12 @@
 # Building Document Editor with Slate
 `slate.js` is a fully customizable framework for building rich text editors. Here we use `slate.js` to build a rich text editor focused on document editing.
 
+* [Building a Document Editor with Slate](./基于slate构建文档编辑器.md)
+* [Slate Document Editor - WrapNode Data Structure and Operation Transformation](./WrapNode数据结构与操作变换.md)
+* [Slate Document Editor - TS Type Extension and Node Type Checking](./TS类型扩展与节点类型检查.md)
+* [Slate Document Editor - Decorator Rendering Dispatcher](./Decorator装饰器渲染调度.md)
+* [Slate Document Editor - Node and Path Mapping](./Node节点与Path路径映射.md)
+
 ## Description
 
 [GitHub](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)

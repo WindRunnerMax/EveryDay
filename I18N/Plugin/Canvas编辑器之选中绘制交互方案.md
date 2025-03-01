@@ -7,13 +7,13 @@ Previously, we discussed how to create a lightweight `DOM` based on `Canvas` and
 
 Related articles about the `Canvas` resume editor project:
 
-* [My Journey with Canvas: Creating a Resume Editor](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/基于Canvas构建简历编辑器.md)
-* [Canvas Graphics Editor - Data Structures and History (undo/redo)](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之数据结构设计.md)
-* [Canvas Graphics Editor - What Data is in My Clipboard](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之剪贴板数据处理.md)
-* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之图形状态管理.md)
-* [Canvas Resume Editor - Monorepo + Rspack Engineering Practice](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之Rspack工程实践.md)
-* [Canvas Resume Editor - Hierarchical Rendering and Event Management Capability Design](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之层级渲染事件管理.md)
-* [Canvas Resume Editor - Selected Drawing and Drag-and-Drop Multi-Selection Interaction Scheme](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/Canvas编辑器之选中绘制交互方案.md)
+* [Juejin Keeps Recommending Canvas, So I Learned Canvas and Made a Resume Editor](./基于Canvas构建简历编辑器.md)
+* [Canvas Resume Editor - Data Structures and History (undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas Resume Editor - What Data is Actually in My Clipboard](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas Resume Editor - Graphic Drawing and State Management (Lightweight DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas Resume Editor - Monorepo and Rspack Project Practice](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas Resume Editor - Hierarchical Rendering and Event Management Design](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas Resume Editor - Selected Drawing and Drag-and-Drop Multi-Selection Interaction Scheme](./Canvas编辑器之选中绘制交互方案.md)
 
 ## Selected Drawing
 Let’s start by discussing the most fundamental interactions of node click selection and dragging. Before we dive into the specifics of the code implementation, let's first address the drawing of shapes. In `Canvas`, when we draw paths, we can fill them using `fill` or outline them using `stroke`. However, when outlining, we could encounter certain drawing issues if we’re not careful. 
