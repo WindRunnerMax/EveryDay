@@ -274,6 +274,16 @@ console.log(result);
 // ];
 ```
 
+值的一提的是，虽然我们的`diff`算法是使用的`fast-diff`，但是实际上这个算法的实现是精简于`diff-match-patch`。`diff-match-patch`本身除了实现`Myer's diff`算法，还实现了`Pre-processing Optimisations`预处理优化以及`Post-processing Cleanup`后置语义清理。对我们来说末尾的处理语法干扰、语义对齐更加重要，这样能够更好地处理数据。此外，其还实现了`Bitap`匹配算法，这是灵活匹配和补丁策略的核心。
+
+```html
+Text 1: Quicq fyre &nbsp; &nbsp; &nbsp;| Text 1: Slow fool<br>
+Text 2: Quick fire &nbsp; &nbsp; &nbsp;| Text 2: Quick fire<br>
+Diff: &nbsp; Quic<del>q</del><ins>k</ins> f<del>y</del><ins>i</ins>re &nbsp; &nbsp;| Diff: &nbsp; <del>Slow</del><ins>Quick</ins> f<del>ool</del><ins>ire</ins><br>
+Split:&nbsp; Quic<del>q</del><ins>k</ins><del> f</del><ins> f</ins><del>y</del><ins>i</ins>re &nbsp;| Split:&nbsp; <del>Slow</del><ins>Quick</ins><del> f</del><ins> f</ins><del>ool</del><ins>ire</ins><br>
+Merge:&nbsp; Quic<del>q fy</del><ins>k fi</ins>re &nbsp;| Merge:&nbsp; <del>Slow fool</del><ins>Quick fire</ins>
+```
+
 ## 对比视图
 现在我们的文档`diff`算法已经有了，接下来我们就需要切入正题，思考如何将其应用到具体的文档上。我们可以先从简单的方式开始，试想一下我们现在是对文档`A`与`B`进行了`diff`得到了`patch`，那么我们就可以直接对`diff`进行修改，构造成我们想要的结构，然后将其应用到`A`中就可以得到对比视图了。当然我们也可以`A`视图中应用删除内容，`B`视图中应用增加内容，这个方式我们在后边会继续聊到。目前我们是想在`A`中直接得到对比视图，其实对比视图无非就是红色高亮表示删除，绿色高亮表示新增，而富文本本身可以直接携带格式，那么我们就可以直接借助于富文本能力来实现高亮功能。
 
@@ -531,9 +541,15 @@ https://github.com/WindrunnerMax/EveryDay
 
 ```
 https://quilljs.com/docs/api/
+https://github.com/jhchen/fast-diff
 https://zhuanlan.zhihu.com/p/370480813
+https://neil.fraser.name/writing/diff/
+https://neil.fraser.name/writing/patch/
 https://www.npmjs.com/package/quill-delta
+https://github.com/google/diff-match-patch
 https://github.com/quilljs/quill/issues/1125
+https://neil.fraser.name/writing/diff/myers.pdf
+https://neil.fraser.name/writing/patch/bitap.ps
 https://developer.mozilla.org/zh-CN/docs/Web/API/Range
 https://developer.mozilla.org/zh-CN/docs/Web/API/Document/createRange
 ```

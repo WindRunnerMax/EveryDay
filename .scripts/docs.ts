@@ -294,8 +294,8 @@ export const docs: Record<string, string[]> = {
     "RichText/基于slate构建文档编辑器",
     "RichText/WrapNode数据结构与操作变换",
     "RichText/TS类型扩展与节点类型检查",
-    "RichText/Node节点与Path路径映射",
     "RichText/Decorator装饰器渲染调度",
+    "RichText/Node节点与Path路径映射",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
