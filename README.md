@@ -285,6 +285,7 @@
 * [从零实现的浏览器Web脚本](Plugin/从零实现的浏览器Web脚本.md) [(*en-us*)](I18N/Plugin/从零实现的浏览器Web脚本.md)
 * [基于Chrome扩展的浏览器事件](Plugin/基于Chrome扩展的浏览器事件.md) [(*en-us*)](I18N/Plugin/基于Chrome扩展的浏览器事件.md)
 * [从脚本管理器的角度审视Chrome扩展](Plugin/从脚本管理器的角度审视Chrome扩展.md) [(*en-us*)](I18N/Plugin/从脚本管理器的角度审视Chrome扩展.md)
+* [浏览器扩展开发的相关问题与解决方案](Plugin/浏览器扩展开发的相关问题与解决方案.md) [(*en-us*)](I18N/Plugin/浏览器扩展开发的相关问题与解决方案.md)
 * [基于WebRTC的局域网文件传输](Plugin/基于WebRTC的局域网文件传输.md) [(*en-us*)](I18N/Plugin/基于WebRTC的局域网文件传输.md)
 * [基于ServiceWorker的文件传输方案](Plugin/基于ServiceWorker的文件传输方案.md) [(*en-us*)](I18N/Plugin/基于ServiceWorker的文件传输方案.md)
 * [基于Canvas构建简历编辑器](Plugin/基于Canvas构建简历编辑器.md) [(*en-us*)](I18N/Plugin/基于Canvas构建简历编辑器.md)

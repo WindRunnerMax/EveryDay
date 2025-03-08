@@ -268,6 +268,7 @@ export const docs: Record<string, string[]> = {
     "Plugin/从零实现的浏览器Web脚本",
     "Plugin/基于Chrome扩展的浏览器事件",
     "Plugin/从脚本管理器的角度审视Chrome扩展",
+    "Plugin/浏览器扩展开发的相关问题与解决方案",
     "Plugin/基于WebRTC的局域网文件传输",
     "Plugin/基于ServiceWorker的文件传输方案",
     "Plugin/基于Canvas构建简历编辑器",
