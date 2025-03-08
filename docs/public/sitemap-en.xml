@@ -1488,13 +1488,18 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/基于Chrome扩展的浏览器事件.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-07-01T14:41:36.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/从脚本管理器的角度审视Chrome扩展.html</loc>
   <priority>1.0</priority>
   <lastmod>2024-12-15T03:22:56.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/Plugin/浏览器扩展开发的相关问题与解决方案.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
@@ -1512,42 +1517,43 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/基于Canvas构建简历编辑器.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-21T05:05:20.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之数据结构设计.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-28T03:36:46.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之剪贴板数据处理.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-18T03:53:09.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之图形状态管理.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-25T03:57:20.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之Rspack工程实践.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-08T11:25:59.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之层级渲染事件管理.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-15T05:36:24.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/Canvas编辑器之选中绘制交互方案.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
@@ -1625,31 +1631,31 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/RichText/基于slate构建文档编辑器.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-05T04:06:28.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/RichText/WrapNode数据结构与操作变换.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-05T04:06:28.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/RichText/TS类型扩展与节点类型检查.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-01T11:51:05.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog-ssg.touchczy.top/RichText/Node节点与Path路径映射.html</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-17T12:30:05.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/RichText/Decorator装饰器渲染调度.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-22T03:03:57.000Z</lastmod>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/Node节点与Path路径映射.html</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
 </url>
 
 <url>
