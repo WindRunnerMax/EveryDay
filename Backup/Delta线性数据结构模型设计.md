@@ -224,12 +224,49 @@ delta.transformPosition(5); // 6
 
 `Changeset`同样是一种基于`JSON`的数据格式，用于描述文档的内容及其变更。但是其并没有像`Delta`那么清晰的表达，`JSON`结构主要是`AttributePool`内，而对于文本内容的表达则是纯文本的结构。
 
-### 
+### 文档描述
+文档内容是使用`ClientVars`的数据结构表示的，其中包含了三个部分，`apool`文本属性池、`text`文本内容、`attribs`属性描述。在下面的例子中，我们描述了标题、加粗、斜体、纯文本的内容，那么这其中的内容如下所示。
 
+```js
+({
+  initialAttributedText: {
+    text: "short description\n*Heading1\ntext\n*Heading2\nbold italic\nplain text\n\n",
+    attribs: "*0|1+i*0*1*2*3+1*0|2+e*0*4*2*3+1*0|1+9*0*5+4*0+1*0*6+6*0|2+c|1+1",
+  },
+  apool: {
+    numToAttrib: {
+      "0": ["author", "a.XYe86foM7oYgmpuu"],
+      "1": ["heading", "h1"],
+      "2": ["insertorder", "first"],
+      "3": ["lmkr", "1"],
+      "4": ["heading", "h2"],
+      "5": ["bold", "true"],
+      "6": ["italic", "true"],
+    },
+    nextNum: 7,
+  },
+});
+```
 
-### 
+对于这个内容直接看上去是比较复杂的，当然实际上也是比较复杂的。`apool`是一个属性池，所有对于文本内容的装饰都是在这里存储的，也就是其中的`numToAttrib`属性存储的`[string, string]`值，`nextNum`则是下个要放置的索引。`text`则是纯文本的内容，相当于此时文档的纯文本内容。`attribs`则是根据`text`的纯文本内容，并且取得`apool`中的属性值，相当于装饰文本内容的编码。
 
-## Slate
+因此`attribs`需要单独拿出来解析，`*n`表示取第`n`个属性应用到文本上，通常需要配合`|n`和`+n`属性使用，`|n`表示影响`n`行，仅对于`\n`属性需要使用该属性，`+n`则表示取出`n`个字符数，相当于`retain`操作，不仅可以移动指针，还可以用来持有属性变更。特别需要注意的是`|m`不会单独出现，其总是与`+n`一同表达，表示这`n`个字符中存在`m`个换行，且最后一个应用的字符必然是`\n`。
+
+此外，`EasySync`里面的数字大都是`36`进制的，因此这里的`+i/+e`等都不是特殊的符号，需要用`0-9`数字来表示`0-9`的字符，而`10-35`则是表示`a-z`，例如`+i`就是`i - a = 8 => 8 + 10 = 18`。
+
+- `*0`表示取出`author`的属性，`|1+i`表示将其应用到了`i`长度即`18`，字符为`short description\n`，由于其包含`\n`则定义`|1`。
+- `*0*1*2*3`表示取出前`4`个属性，`+1`表示将其应用`1`个字符，即`*`字符，在`EasySync`中行首的该字符承载了行属性，而非放置`\n`中。
+- `*0`表示取出`author`的属性，`|2+e`表示应用了`e`长度即`14`，字符为`Heading1\ntext\n`，其包含两个`\n`则定义`|2`。
+- `*0*4*2*3`表示取出相关属性，`+1`表示将其应用`1`个字符，即`*`字符表示行属性内容。
+- `*0|1+9`表示取出`author`的属性，`+9`表示将其应用`9`个字符，即`Heading2\n`，末尾是`\n`则定义`|1`。
+- `*0*5+4`表示取出加粗等属性，应用`4`个字符，即`bold`。
+- `*0+1`表示取出`author`的属性，应用`1`个字符即空格。
+- `*0*6+6`表示取出斜体等属性，应用`6`个字符，即`italic`。
+- `*0|2+c`表示取出相关属性，应用`12`个字符即`\nplain text\n`，存在两个`\n`则定义`|2`。
+- `|1+1`表示末尾的`\n`属性，在`EasySync`中行末的该字符需要单独定义。
+
+### 变更描述
+
 
 ## 每日一题
 
@@ -239,6 +276,7 @@ delta.transformPosition(5); // 6
 
 - <https://github.com/slab/delta/blob/main/src/Delta.ts>
 - <https://github.com/slab/delta/blob/main/src/AttributeMap.ts>
+- <https://github.com/ether/etherpad-lite/tree/develop/doc/public/easysync>
 - <https://github.com/ether/etherpad-lite/blob/develop/src/static/js/Changeset.ts>
 - <https://github.com/ether/etherpad-lite/blob/develop/src/static/js/AttributePool.ts>
 - <https://github.com/ianstormtaylor/slate/blob/main/packages/slate/src/interfaces/operation.ts>

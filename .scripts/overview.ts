@@ -93,10 +93,7 @@ const root = path.resolve(__dirname, `..`);
       "Linux",
       "LeetCode",
     ]);
-    const LIMIT_MATCH = [
-      "Vue/Vue学习笔记.md",
-      "Vue/Vue-Cli4笔记.md",
-    ];
+    const LIMIT_MATCH = ["Vue/Vue学习笔记.md", "Vue/Vue-Cli4笔记.md"];
     const matchedPaths: string[] = [];
     for (const file of all) {
       const lastPart = file.split("/").slice(-2);
@@ -163,7 +160,9 @@ const root = path.resolve(__dirname, `..`);
     record.forEach((item, index) => {
       target.push(`### ${item.date}`);
       const path = item.path.replace(/ /g, "%20");
-      target.push(`第 ${count - index} 题：[${item.name.replace(/\.md$/, "")}](${path})`);
+      target.push(
+        `第 ${count - index} 题：[${item.name.replace(/\.md$/, "")}](${path})`
+      );
       target.push("");
     });
     await fs.writeFile(path.join(root, "Timeline.md"), target.join("\n"));

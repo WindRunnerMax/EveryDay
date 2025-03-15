@@ -17,7 +17,7 @@
     { insert: "一段文本", attributes: { italic: true } },
     { insert: "的" },
     { insert: "数据结构", attributes: { bold: true } },
-    { insert: "如下所示。\\n" },
+    { insert: "如下所示。\n" },
   ],
 };
 ```
