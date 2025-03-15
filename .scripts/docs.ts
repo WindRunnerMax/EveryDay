@@ -248,6 +248,7 @@ export const docs: Record<string, string[]> = {
     "React/React闭包陷阱",
     "React/ReactPortals传送门",
     "React/基于React的SSG渲染方案",
+    "React/基于React的虚拟滚动方案",
   ],
   Plugin: [
     "Plugin/Git常用命令",
