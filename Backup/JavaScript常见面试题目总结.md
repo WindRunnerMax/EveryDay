@@ -1,4 +1,4 @@
-# JavaScript 常见面试题目总结
+# JavaScript常见面试题目总结
 
 ## 间隔时间打印
 
