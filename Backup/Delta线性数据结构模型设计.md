@@ -330,7 +330,7 @@ iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
 - `$`表示结束符号，后续的内容符号则为`char bank`，最末尾的`\n`通常不需要表示，即使表示也需要`|1=1`单独表示。
 
 ## Slate
-`Slate`的数据结构以及选区的设计几乎完全对齐了`DOM`结构，且数据结构设计并未独立出来，同样基于`JSON`的结构，非常类似于低代码的结构设计。操作变换是直接在`slate`的核心模块`Transform`中实现，且位置相关操作变换的实现分散在`Point`、`Path`对象中。
+`slate`的数据结构以及选区的设计几乎完全对齐了`DOM`结构，且数据结构设计并未独立出来，同样基于`JSON`的结构，非常类似于低代码的结构设计。操作变换是直接在`slate`的核心模块`Transform`中实现，且位置相关操作变换的实现分散在`Point`、`Path`对象中。
 
 ```js
 [
@@ -347,10 +347,59 @@ iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
 ```
 
 ### Operation
+同样是基于`OT`实现操作变换算法，线性的数据结构仅需要`insert`、`delete`、`retain`三种基本操作即可实现，而在`slate`中则实现了`9`种y原子操作来描述变更，这其中包含了选区的变换。
 
+- `insert_node`: 插入节点。
+- `insert_text`: 插入文本。
+- `merge_node`: 合并节点。
+- `move_node`: 移动节点。
+- `remove_node`: 移除节点。
+- `remove_text`: 移除文本。
+- `set_node`: 设置节点。
+- `set_selection`: 设置选区。
+- `split_node`: 分割节点。
 
-### Transform
+实际上仅实现应用还好，其相对应的`invert`、`transform`则会更加复杂。在`slate`中的`inverse`相关操作在`operation.ts`中实现，与位置相关的`transform`在`path.ts`、`point.ts`中有相关实现。
 
+而实际上这些操作通常都不会在编辑器中直接调用，`slate`针对这些最基础的操作进行了封装，实现了`Transforms`模块。在这个模块中实现了诸多具体的操作，例如`insertNodes`、`liftNodes`、`mergeNodes`、`moveNodes`、`removeNodes`等等，这里的操作就远不止`9`种类型了。
+
+- `insertFragment`: 在指定的位置插入节点的片段。
+- `insertNodes`: 在指定的位置插入节点。
+- `removeNodes`: 在文档中指定的位置删除节点。
+- `mergeNodes`: 在某个节点与同级的前节点合并。
+- `splitNodes`: 在某个节点中的指定位置分割节点。
+- `wrapNodes`: 在某个节点中的指定位置包裹一层节点。
+- `unwrapNodes`: 在某个节点中的指定位置解除一层包裹节点。
+- `setNodes`: 在某个节点中的指定位置设置节点属性。
+- `unsetNodes`: 在某个节点中的指定位置取消节点属性。
+- `liftNodes`: 在某个节点中的指定位置提升一层节点。
+- `moveNodes`: 在文档中的指定位置移动节点。
+- `collapse`: 将选区折叠为插入符。
+- `select`: 主动设置选区位置。
+- `deselect`: 取消选区位置。
+- `move`: 移动选区位置。
+- `setPoint`: 设置选区的单侧位置。
+- `setSelection`: 设置新选区位置。
+- `delete`: 删除选区内容。
+- `insertText`: 在选区位置插入文本。
+- `transform`: 在编辑器上`immutable`地执行`op`。
+
+### OT-JSON
+类似的，在`OT-JSON(json0)`中实现了`11`中操作，富文本场景中`SubType`仍然需要扩展，那自然就需要更多的操作来描述变更。因此，实际上以`JSON`嵌套的数据格式来描述内容变更，要比线形的操作复杂得多。
+
+在`slate`中是自行封装了编辑器的基础`op`，如果其本身是在`OT-JSON`的基础上封装`Transforms`的话，对于实现`OT`的协同会更方便一些，`ShareDB`等协同框架都是要参考`OTTypes`的定义的。当然，基于`CRDT`实现的协同看起来更加容易处理。
+
+- `{p:[path], na:x}`: 在指定的路径`[path]`值上加`x`数值。
+- `{p:[path,idx], li:obj}`: 在列表`[path]`的索引`idx`前插入对象`obj`。
+- `{p:[path,idx], ld:obj}`: 从列表`[path]`的索引`idx`中删除对象`obj`。
+- `{p:[path,idx], ld:before, li:after}`: 用对象`after`替换列表`[path]`中索引`idx`的对象`before`。
+- `{p:[path,idx1], lm:idx2}`: 将列表`[path]`中索引`idx1`的对象移动到索引`idx2`处。
+- `{p:[path,key], oi:obj}`: 向路径`[path]`中的对象添加键`key`和对象`obj`。
+- `{p:[path,key], od:obj}`: 从路径`[path]`中的对象中删除键`key`和值`obj`。
+- `{p:[path,key], od:before, oi:after}`: 用对象`after`替换路径`[path]`中键`key`的对象`before`。
+- `{p:[path], t:subtype, o:subtypeOp}`: 对路径`[path]`中的对象应用类型为`t`的子操作`o`，子类型操作。
+- `{p:[path,offset], si:s}`: 在路径`[path]`的字符串的偏移量`offset`处插入字符串`s`，内部使用子类型。
+- `{p:[path,offset], sd:s}`: 从路径`[path]`的字符串的偏移量`offset`处删除字符串`s`，内部使用子类型。
 
 ## 每日一题
 
@@ -365,4 +414,3 @@ iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
 - <https://github.com/ether/etherpad-lite/blob/develop/src/static/js/AttributePool.ts>
 - <https://github.com/ianstormtaylor/slate/blob/main/packages/slate/src/interfaces/operation.ts>
 - <https://github.com/ianstormtaylor/slate/blob/main/packages/slate/src/interfaces/transforms/general.ts>
-
