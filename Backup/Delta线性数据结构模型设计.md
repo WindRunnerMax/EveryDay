@@ -219,10 +219,22 @@ delta.transformPosition(4); // 4
 delta.transformPosition(5); // 6
 ```
 
-## EtherPad
-`EtherPad`同样是非常优秀的协同编辑器，其内置实现的数据结构同样是线性的，数据结构设计被称为`ChangeSet`。协同算法实现是`EasySync`，且其专利文档中对如何进行服务端调度也有较为详细的描述。
+### OpIterator
+`OpIterator`类定义一个迭代器，用于迭代`delta`中的`op`操作。迭代器大量用于`diff`、`compose`、`transform`等方法中，需要注意的是该迭代器调用`next`时不会跨越`op`，即使传递的`length`大于当前`op`的长度。
 
-`Changeset`同样是一种基于`JSON`的数据格式，用于描述文档的内容及其变更。但是其并没有像`Delta`那么清晰的表达，`JSON`结构主要是`AttributePool`内，而对于文本内容的表达则是纯文本的结构。
+```js
+const delta = new Delta()
+  .insert("Hello", { bold: "true" })
+  .insert(" World", { italic: "true" });
+  .retain(3);
+iter.next(2); // { insert: "He", attributes: { bold: "true" } }
+iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
+```
+
+## EtherPad
+`EtherPad`同样是非常优秀的协同编辑器，其内置实现的数据结构同样是线性的，文档整体描述称为`ClientVars`，数据结构变更被称为`ChangeSet`。协同算法的实现是`EasySync`，且其文档中对如何进行服务端调度也有较为详细的描述。
+
+`ClientVars/Changeset`同样是一种基于`JSON`的数据格式，用于描述文档的内容及其变更。但是其并没有像`Delta`那么清晰的表达，`JSON`结构主要是`AttributePool`内，而对于文本内容的表达则是纯文本的结构。
 
 ### 文档描述
 文档内容是使用`ClientVars`的数据结构表示的，其中包含了三个部分，`apool`文本属性池、`text`文本内容、`attribs`属性描述。在下面的例子中，我们描述了标题、加粗、斜体、纯文本的内容，那么这其中的内容如下所示。
@@ -266,6 +278,78 @@ delta.transformPosition(5); // 6
 - `|1+1`表示末尾的`\n`属性，在`EasySync`中行末的该字符需要单独定义。
 
 ### 变更描述
+`OT`操作变换的基准原子实现就是`insert`、`delete`、`retain`三种操作，那么`ChangeSet`的内容描述自然也是类似，但是数据的变更描述并非像`delta`的结构那么清晰，而是特别设计了一套数据结构描述。
+
+文档在最开始创建或是导入的时候是初始的`ClientVars`，而此后每次对于文档内容的修改则是会生成`ChangeSet`。针对于上述的三种操作对应了三种符号，`=`表示`retain`、`+`表示`insert`、`-`表示`delete`，这三种符号的组合就可以描述文档内容的变更，除此之外还有额外的定义:
+
+- `Z`: 首字母为`MagicNumber`，表示为符号位。
+- `:N`: 文档原始内容长度为`N`。
+- `>N`: 最终文档长度会比原始文档长度长`N`。
+- `<N`: 最终文档长度会比原始文档长度短`N`。
+- `+N`: 实际执行操作，表示插入了`N`个字符。
+- `-N`: 实际实际操作，表示操作删除了`N`个字符。
+- `=N`: 实际执行操作，表示操作保留了`N`个字符，移动指针或应用属性。
+- `|N`: 表示影响了`N`行，与上述文档描述一致需要与`+/-/=N`使用，操作的长度包含`N`个`\n`，且末尾操作必须是`\n`。文档最末尾的`\n`需要表示的话，则必须要用`|1=1`表示。
+- `*I`: 表示应用属性，`I`为`apool`中的索引值，在一个`+`、`=`或`|`之前可以有任意数量的`*`操作。
+- `$`: 表示结束符号，用于标记`Operation`部分的结束。
+- `char bank`: 用于存储`insert`操作具体的字符内容，在执行插入操作时按序取用。
+
+同样是上述的例子，现在的文档中已经存在`exist text\n\n`的文本内容，紧接着将上述的内容粘贴到文档中，那么发生的`User ChangeSet`的变更描述如下:
+
+```js
+({
+  changeset:
+    "Z:c>1t|1=b*0|1+i*0*1*2*3+1*0|2+e*0*4*2*3+1*0|1+9*0+5*0*5+6*0|1+1*0+a$short description\n*Heading1\ntext\n*Heading2\nbold italic\nplain text",
+  apool: {
+    numToAttrib: {
+      "0": ["author", "a.XYe86foM7oYgmpuu"],
+      "1": ["heading", "h1"],
+      "2": ["insertorder", "first"],
+      "3": ["lmkr", "1"],
+      "4": ["heading", "h2"],
+      "5": ["italic", "true"],
+    },
+    nextNum: 6,
+  },
+});
+```
+
+- `Z`表示`MagicNumber`，即符号位。
+- `c`表示文档原始内容长度为`12`，即`exist text\n\n`内容长度。
+- `>1t`表示最终文档会比原始内容长度多`1t`，`36`进制转换`1t`为`64`，具体为`char bank`索引。
+- `|1=b`表示移动指针长度为`b`，转换长度为`11`，文本内容为`exist text\n`，末尾为`\n`定义`|1`。
+- `*0|1+i`表示从`apool`中取出`0`属性，应用`i`转换长度为`18`，文本内容为`short description\n`，末尾为`\n`定义`|1`。
+- `*0*1*2*3+1`表示取出`4`个属性，应用为`1`，文本内容为`*`，具体则是行属性的起始标记。
+- `*0|2+e`表示取出`0`属性，应用`e`转换长度为`14`，文本内容为`Heading1\ntext\n`，末尾为`\n`且包含两个`\n`定义`|2`。
+- `*0*4*2*3+1`表示取出`4`个属性，应用为`1`，文本内容为`*`，同样是行属性的起始标记。
+- `*0|1+9`表示取出`0`属性，应用长度为`9`，文本内容为`Heading2\n`，末尾为`\n`定义`|1`。
+- `*0+5`表示取出`0`属性，应用长度为`5`，文本内容为`bold `。
+- `*0*5+6`表示取出斜体等属性，应用长度为`6`，文本内容为`italic`。
+- `*0|1+1`表示取出`0`属性，应用长度为`1`，末尾为`\n`则定义`|1`，文本内容为`\n`。
+- `*0+a`表示取出`0`属性，应用长度为`a`即`10`，文本内容为`plain text`。
+- `$`表示结束符号，后续的内容符号则为`char bank`，最末尾的`\n`通常不需要表示，即使表示也需要`|1=1`单独表示。
+
+## Slate
+`Slate`的数据结构以及选区的设计几乎完全对齐了`DOM`结构，且数据结构设计并未独立出来，同样基于`JSON`的结构，非常类似于低代码的结构设计。操作变换是直接在`slate`的核心模块`Transform`中实现，且位置相关操作变换的实现分散在`Point`、`Path`对象中。
+
+```js
+[
+  {
+    type: "paragraph",
+    children: [
+      { text: "This is editable " },
+      { text: "rich", bold: true },
+      { text: " text." },
+    ],
+  },
+  { type: "block-quote", children: [{ text: "A wise quote." }] },
+];
+```
+
+### Operation
+
+
+### Transform
 
 
 ## 每日一题
