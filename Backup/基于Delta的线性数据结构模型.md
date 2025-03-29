@@ -349,7 +349,7 @@ iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
 ```
 
 ### Operation
-同样是基于`OT`实现操作变换算法，线性的数据结构仅需要`insert`、`delete`、`retain`三种基本操作即可实现，而在`slate`中则实现了`9`种y原子操作来描述变更，这其中包含了选区的变换。
+同样是基于`OT`实现操作变换算法，线性的数据结构仅需要`insert`、`delete`、`retain`三种基本操作即可实现，而在`slate`中则实现了`9`种原子操作来描述变更，这其中包含了文本处理、节点处理、选区变换的操作等。
 
 - `insert_node`: 插入节点。
 - `insert_text`: 插入文本。
@@ -387,7 +387,7 @@ iter.next(10); // { insert: "llo", attributes: { bold: "true" } }
 - `transform`: 在编辑器上`immutable`地执行`op`。
 
 ### OT-JSON
-类似的，在`OT-JSON(json0)`中实现了`11`中操作，富文本场景中`SubType`仍然需要扩展，那自然就需要更多的操作来描述变更。因此，实际上以`JSON`嵌套的数据格式来描述内容变更，要比线形的操作复杂得多。
+类似的，在`OT-JSON(json0)`中实现了`11`种操作，富文本场景中`SubType`仍然需要扩展，那自然就需要更多的操作来描述变更。因此，实际上以`JSON`嵌套的数据格式来描述内容变更，要比线形的操作复杂得多。
 
 在`slate`中是自行封装了编辑器的基础`op`，如果其本身是在`OT-JSON`的基础上封装`Transforms`的话，对于实现`OT`的协同会更方便一些，`ShareDB`等协同框架都是要参考`OTTypes`的定义的。当然，基于`CRDT`实现的协同看起来更加容易处理。
 
