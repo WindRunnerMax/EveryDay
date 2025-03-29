@@ -4,6 +4,7 @@
         "elif",
         "IFDEF",
         "IFNDEF",
+        "Immer",
         "instanceof",
         "Rspack",
         "Vite"
