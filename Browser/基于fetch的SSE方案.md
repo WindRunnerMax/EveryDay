@@ -258,7 +258,7 @@ export class StreamParser {
 }
 ```
 
-这里需要注意的是，在`Node`中的`ReadableStream`与浏览器实现的`ReadableStream`函数签名是不一样的，因此这里我们直接方便地使用`await`迭代数据即可，当然使用`on("data") on("end")`来接收数据与结束响应即可。我们还需要绑定`onMessage`事件来接收解析好的数据，并且将数据响应到目标客户端即可。
+这里需要注意的是，在`Node`中的`ReadableStream`与浏览器实现的`ReadableStream`函数签名是不一样的，因此这里我们直接方便地使用`await`迭代数据即可，当然也可以使用`on("data") on("end")`来接收数据与结束响应。我们还需要绑定`onMessage`事件来接收解析好的数据，并且将数据响应到目标客户端即可。
 
 ```js
 // packages/fetch-sse/server/utils/steam-parser.ts
@@ -340,7 +340,7 @@ curl -X POST http://127.0.0.1:8001 \
 -d '{"key1":"value1", "key2":"value2"}'
 ```
 
-实际上在这里我们的请求中存在`req.on("close")`、`res.on("close")`、`req.socket.on("close")`这三个事件，在`req`的事件会被上述携带`body`的数据所影响，因此此处可以使用`res`和`socket`上的事件来监听客户端的连接关闭，为了方便我们的事件触发，在此处我们直接使用`socket`上的事件来监听客户端的连接关闭，此外`socket`属性在`node16`前的属性名为`connection`。
+实际上在这里我们的请求中存在`req.on("close")`、`res.on("close")`、`req.socket.on("close")`这三个事件，在`req`的事件会被上述携带`body`的数据所影响，因此此处可以使用`res`和`socket`上的事件来监听客户端的连接关闭。为了方便我们的事件触发，在此处我们直接使用`socket`上的事件来监听客户端的连接关闭，此外`socket`属性在`node16`前的属性名为`connection`。
 
 ```bash
 echo "
