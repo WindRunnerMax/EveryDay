@@ -1668,6 +1668,12 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/RichText/从零设计实现富文本编辑器.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/基于MVC模式的编辑器架构设计.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>

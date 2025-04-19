@@ -1023,7 +1023,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Browser/基于fetch的SSE方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-11-18T16:32:08.000Z</lastmod>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
 </url>
 
 <url>
@@ -1572,7 +1572,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之编辑器引擎.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-17T12:30:05.000Z</lastmod>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
 </url>
 
 <url>
@@ -1608,7 +1608,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之文档diff算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-03-08T02:44:53.000Z</lastmod>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
 </url>
 
 <url>
@@ -1662,11 +1662,17 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/Node节点与Path路径映射.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/从零设计实现富文本编辑器.html</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于MVC模式的编辑器架构设计.html</loc>
   <priority>1.0</priority>
 </url>
 
@@ -3008,7 +3014,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-17T12:30:05.000Z</lastmod>
+  <lastmod>2025-04-12T02:16:52.000Z</lastmod>
 </url>
 
 </urlset>
