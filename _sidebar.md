@@ -290,6 +290,7 @@
   * [Decorator装饰器渲染调度](RichText/Decorator装饰器渲染调度.md)
   * [Node节点与Path路径映射](RichText/Node节点与Path路径映射.md)
   * [从零设计实现富文本编辑器](RichText/从零设计实现富文本编辑器.md)
+  * [基于MVC模式的编辑器架构设计](RichText/基于MVC模式的编辑器架构设计.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
