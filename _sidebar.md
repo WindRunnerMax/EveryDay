@@ -291,6 +291,7 @@
   * [Node节点与Path路径映射](RichText/Node节点与Path路径映射.md)
   * [从零设计实现富文本编辑器](RichText/从零设计实现富文本编辑器.md)
   * [基于MVC模式的编辑器架构设计](RichText/基于MVC模式的编辑器架构设计.md)
+  * [基于Delta的线性数据结构模型](RichText/基于Delta的线性数据结构模型.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
