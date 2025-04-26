@@ -300,6 +300,7 @@ export const docs: Record<string, string[]> = {
     "RichText/Node节点与Path路径映射",
     "RichText/从零设计实现富文本编辑器",
     "RichText/基于MVC模式的编辑器架构设计",
+    "RichText/基于Delta的线性数据结构模型",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
