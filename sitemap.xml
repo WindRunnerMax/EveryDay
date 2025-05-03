@@ -1437,6 +1437,11 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/Plugin/BGF处理Git历史Blob文件.md</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/Plugin/基于NoCode构建简历编辑器.md</loc>
   <priority>1.0</priority>
   <lastmod>2022-07-24T02:16:04.000Z</lastmod>
@@ -1679,6 +1684,7 @@
 <url>
   <loc>https://blog.touchczy.top/RichText/基于Delta的线性数据结构模型.md</loc>
   <priority>1.0</priority>
+  <lastmod>2025-04-26T02:24:23.000Z</lastmod>
 </url>
 
 <url>
@@ -3019,7 +3025,7 @@
 <url>
   <loc>https://blog.touchczy.top/MyLife/记一些日常的想法与思考.md</loc>
   <priority>1.0</priority>
-  <lastmod>2025-04-12T02:16:43.000Z</lastmod>
+  <lastmod>2025-04-26T02:24:23.000Z</lastmod>
 </url>
 
 </urlset>
