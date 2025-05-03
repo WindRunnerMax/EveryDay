@@ -282,6 +282,7 @@ export const sidebar: Sidebar = {
         "Plugin/Jest中Mock网络请求",
         "Plugin/TS内置类型与拓展",
         "Plugin/竞态问题与RxJs",
+        "Plugin/BGF处理Git历史Blob文件",
         "Plugin/基于NoCode构建简历编辑器",
         "Plugin/基于drawio构建流程图编辑器",
         "Plugin/初探webpack之编写plugin",
