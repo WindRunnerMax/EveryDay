@@ -275,6 +275,7 @@
 * [Jest中Mock网络请求](Plugin/Jest中Mock网络请求.md) [(*en-us*)](I18N/Plugin/Jest中Mock网络请求.md)
 * [TS内置类型与拓展](Plugin/TS内置类型与拓展.md) [(*en-us*)](I18N/Plugin/TS内置类型与拓展.md)
 * [竞态问题与RxJs](Plugin/竞态问题与RxJs.md) [(*en-us*)](I18N/Plugin/竞态问题与RxJs.md)
+* [BGF处理Git历史Blob文件](Plugin/BGF处理Git历史Blob文件.md) [(*en-us*)](I18N/Plugin/BGF处理Git历史Blob文件.md)
 * [基于NoCode构建简历编辑器](Plugin/基于NoCode构建简历编辑器.md) [(*en-us*)](I18N/Plugin/基于NoCode构建简历编辑器.md)
 * [基于drawio构建流程图编辑器](Plugin/基于drawio构建流程图编辑器.md) [(*en-us*)](I18N/Plugin/基于drawio构建流程图编辑器.md)
 * [初探webpack之编写plugin](Plugin/初探webpack之编写plugin.md) [(*en-us*)](I18N/Plugin/初探webpack之编写plugin.md)
