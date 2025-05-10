@@ -1439,6 +1439,7 @@
 <url>
   <loc>https://blog.touchczy.top/Plugin/BGF处理Git历史Blob文件.md</loc>
   <priority>1.0</priority>
+  <lastmod>2025-05-03T03:49:32.000Z</lastmod>
 </url>
 
 <url>
@@ -1637,6 +1638,11 @@
   <loc>https://blog.touchczy.top/RichText/初探富文本之搜索替换算法.md</loc>
   <priority>1.0</priority>
   <lastmod>2025-02-08T11:25:54.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/RichText/初探富文本之序列化与反序列化.md</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
