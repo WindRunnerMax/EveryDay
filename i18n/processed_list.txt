@@ -489,3 +489,4 @@ Canvas编辑器之选中绘制交互方案.md
 基于MVC模式的编辑器架构设计.md
 基于Delta的线性数据结构模型.md
 BGF处理Git历史Blob文件.md
+初探富文本之序列化与反序列化.md

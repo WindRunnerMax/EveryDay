@@ -1440,6 +1440,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/BGF处理Git历史Blob文件.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-05-03T03:49:54.000Z</lastmod>
 </url>
 
 <url>
@@ -1638,6 +1639,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之搜索替换算法.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-02-08T11:25:59.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之序列化与反序列化.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
