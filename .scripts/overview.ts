@@ -40,9 +40,8 @@ const root = path.resolve(__dirname, `..`);
       for (const item of value) {
         const name = item.split("/").pop();
         if (!name) continue;
-        const zh = `* [${name}](${item.replace(/ /g, "%20")}.md)`;
-        const en = ` [(*en-us*)](I18N/${item.replace(/ /g, "%20")}.md)`;
-        content.push(zh + en);
+        const link = `* [${name}](${item.replace(/ /g, "%20")}.md)`;
+        content.push(link);
       }
       content.push("");
     }
@@ -76,6 +75,71 @@ const root = path.resolve(__dirname, `..`);
     await fs.writeFile(path.join(root, "README.md"), target.join("\n"));
   };
   await processREADME();
+
+  console.log("Processing EN README.md");
+  const processEnREADME = async () => {
+    // 全量文章路径与字数统计
+    let count = 0;
+    let lineCount = 0;
+    let wordCount = 0;
+    let characters = 0;
+    // 全量文章索引以及目录
+    const content: string[] = [];
+    for (const [key, value] of Object.entries(docs)) {
+      content.push(`## ${key}`);
+      for (const item of value) {
+        const filePath = path.resolve(root, "I18N", `${item}.md`);
+        const fileContent = await fs.readFile(filePath, "utf8");
+        count++;
+        const lines = fileContent.split("\n");
+        const character = fileContent.length;
+        lineCount = lineCount + lines.length;
+        characters = characters + character;
+        wordCount = wordCount + countWords(fileContent.replace(/`/g, " "));
+        const firstLine = lines[0].trim();
+        const name = firstLine.replace(/^#+/g, "").trim();
+        if (!name) continue;
+        const link = `* [${name}](${item.replace(/ /g, "%20")}.md)`;
+        content.push(link);
+      }
+      content.push("");
+    }
+    const summary = [
+      `The repository contains \`${count}\` articles, totaling \`${lineCount}\` lines, \`${wordCount}\` words, and \`${characters}\` characters.`,
+    ];
+    // 生成 README.md
+    const origin = await fs.readFile(
+      path.join(root, "I18N", "README.md"),
+      "utf-8"
+    );
+    const readme = origin.split("\n");
+    const record: Record<string, string[]> = { summary, content };
+    const target: string[] = [];
+    const regexp = /<!-- (.+?) (.+?) -->/;
+    for (let i = 0; i < readme.length; ++i) {
+      target.push(readme[i]);
+      const start = regexp.exec(readme[i].trim());
+      const key = start && start[1];
+      const value = start && start[2];
+      if (!key || !value || value !== "Start") {
+        continue;
+      }
+      for (let k = i + 1; k < readme.length; ++k) {
+        const end = regexp.exec(readme[k].trim());
+        const endKey = end && end[1];
+        const endValue = end && end[2];
+        if (!key || !endValue || endKey !== key || endValue !== "End") {
+          continue;
+        }
+        target.push(...record[key.toLocaleLowerCase()]);
+        target.push(`<!-- ${key} End -->`);
+        i = k;
+        break;
+      }
+    }
+    await fs.writeFile(path.join(root, "I18N", "README.md"), target.join("\n"));
+  };
+  await processEnREADME();
 
   console.log("Processing Timeline.md");
   const processTimeline = async () => {
