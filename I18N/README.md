@@ -311,7 +311,7 @@ If you’d like to read the notes in order, you can [check the table of contents
 * [Designing and Implementing a Rich Text Editor from Scratch](RichText/从零设计实现富文本编辑器.md)
 * [Editor Architecture Design Based on MVC Pattern](RichText/基于MVC模式的编辑器架构设计.md)
 * [Linear Data Structure Model Based on Delta](RichText/基于Delta的线性数据结构模型.md)
-* [Core Interaction Strategy of Browser Selection Model](RichText/浏览器选区模型核心交互策略.md)
+* [Core Interaction Strategy of Browser Selection Model](RichText/浏览器选区模型的核心交互策略.md)
 
 ## Patterns
 * [Simple Factory Pattern](Patterns/简单工厂模式.md)
