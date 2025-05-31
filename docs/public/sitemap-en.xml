@@ -1398,6 +1398,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/React/低代码场景的状态管理方案.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-05-17T03:24:06.000Z</lastmod>
 </url>
 
 <url>
@@ -1698,6 +1699,11 @@
   <loc>https://blog-ssg.touchczy.top/RichText/基于Delta的线性数据结构模型.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-04-26T02:24:30.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/浏览器选区模型核心交互策略.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
