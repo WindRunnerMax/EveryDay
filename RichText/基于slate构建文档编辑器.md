@@ -193,7 +193,9 @@ declare module "slate" {
 ```
 
 ## 实现方案
-在这里是具体的插件实现方案与示例，每个部分都是一种类型的插件的实现，具体的代码都可以在 [Github](https://github.com/WindrunnerMax/DocEditor) 中找到。在插件实现方面，整体还是借助了`HTML5`的标签来完成各种样式，这样能够保持文档的标签语义完整性但是会造成`DOM`结构嵌套比较深。使用纯`CSS`来完成各种插件也是没问题的，而且实现上是更简单一些的，`context`提供`classList`来操作`className`，只不过纯`CSS`实现样式的话标签语义完整性就欠缺一些。这方面主要是个取舍问题，在此处实现的插件都是借助`HTML5`的标签以及一些自定义的交互策略来完成的，交互的执行上都是通过插件注册命令后触发实现的。
+在这里是具体的插件实现方案与示例，每个部分都是一种类型的插件的实现，具体的代码都可以在 [GitHub](https://github.com/WindRunnerMax/DocEditor) 中找到。在插件实现方面，整体还是借助了`HTML5`的标签来完成各种样式，这样能够保持文档的标签语义完整性但是会造成`DOM`结构嵌套比较深。
+
+使用纯`CSS`来完成各种插件也是没问题的，而且实现上是更简单一些的，`context`提供`classList`来操作`className`，只不过纯`CSS`实现样式的话标签语义完整性就欠缺一些。这方面主要是个取舍问题，在此处实现的插件都是借助`HTML5`的标签以及一些自定义的交互策略来完成的，交互的执行上都是通过插件注册命令后触发实现的。
 
 ### Leaf
 `leaf`类型的插件是行内的元素，例如加粗、斜体、下划线、删除线等等，在实现上只需要注意插件的命令注册与在该命令下如何渲染元素即可，下面是`bold`插件的实现，主要是注册了操作`attributes`的命令，以及使用`<strong />`作为渲染格式的标签。
@@ -574,18 +576,14 @@ export const ShortCutPlugin = (editor: Editor, commands: SlateCommands): Plugin 
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://docs.slatejs.org/
-https://github.com/ianstormtaylor/slate
-https://www.slatejs.org/examples/richtext
-http://t.zoukankan.com/kagol-p-14820617.html
-https://rain120.github.io/athena/zh/slate/Introduction.html
-https://www.wangeditor.com/v5/#%E6%8A%80%E6%9C%AF%E8%80%81%E6%97%A7
-```
+- <https://docs.slatejs.org/>
+- <https://github.com/ianstormtaylor/slate>
+- <https://www.slatejs.org/examples/richtext>
+- <http://t.zoukankan.com/kagol-p-14820617.html>
+- <https://rain120.github.io/athena/zh/slate/Introduction.html>
+- <https://www.wangeditor.com/v5/#%E6%8A%80%E6%9C%AF%E8%80%81%E6%97%A7>
 

@@ -3,11 +3,15 @@
 
 ## 描述
 
-[Github](https://github.com/WindrunnerMax/ResumeEditor) ｜ [Resume DEMO](https://windrunnermax.github.io/ResumeEditor/)  
+- GitHub: <https://github.com/WindRunnerMax/ResumeEditor>
+- DEMO: <https://windrunnermax.github.io/ResumeEditor/> 
 
-对于无代码`NoCode`和低代码`LowCode`还是比较容易混淆的，在我的理解上，`NoCode`强调自己编程给自己用，给用户的感觉是一个更强大的实用软件，是一个上层的应用，也就是说`NoCode`需要面向非常固定的领域才能做到好用；而对于`LowCode`而言，除了要考虑能用界面化的方式搭建流程，还要考虑在需要扩展的时候，把底层也暴露出来，拥有更强的可定制化功能，也就是说相比`NoCode`可以不把使用场景限定得那么固定。  
+对于无代码`NoCode`和低代码`LowCode`还是比较容易混淆的，在我的理解上，`NoCode`强调自己编程给自己用，给用户的感觉是一个更强大的实用软件，是一个上层的应用，也就是说`NoCode`需要面向非常固定的领域才能做到好用。而对于`LowCode`而言，除了要考虑能用界面化的方式搭建流程，还要考虑在需要扩展的时候，把底层也暴露出来，拥有更强的可定制化功能，也就是说相比`NoCode`可以不把使用场景限定得那么固定。
+
 对于简历编辑器而言，这就算是非常固定的领域了，而且在使用方面不需要去实现过多代码的编写，开箱即用即可，是作为一个上层应用而实现的。对于我个人而言就是单纯的因为要秋招了，网站上各种模版用起来细节上并不是很满意，在晚上睡觉前洗澡的时候突然有个想法要做这个，然后一个周末也就是两天的时间肝出来了一个简单的基于`NoCode`的简历编辑器。  
+
 说回正题，对于实现简历编辑器而言，需要有这几个方面的考虑，当然因为我是两天做出来的，也只是比较简单的实现了部分功能：
+
 * 需要支持拖动的页面网格布局或自由布局。
 * 对各组件有独立编辑的能力。
 * 生成`PDF`与预览页面的功能。
@@ -18,8 +22,11 @@
 ## 实现
 
 ### 数据存储
-对于数据而言，在这里是维护了一个`JSON`数据，对于整个简历编辑器而言都有着比较严格的`TS`定义，所以预先声明组件类型定义是很有必要的，在这里声明了`LocalComponentConfig`作为组件的类型定义，而对于整个生成的`JSON`而言，也就完成了作为`LocalComponentConfig[]`的嵌套。  
-在项目中显示的简历是完全采用`JSON`配置的形式来实现的，数据与视图的渲染是完全分离的，那么由此我们就可以通过编写多个`JSON`配置的形式，来实现不同简历主题模版。如果打开上边提到的`Resume DEMO`的话，可以看到预先加载了一个简历，这个简历的内容就是完全由`JSON`配置而得到的，具体而言可以参考`src/components/debug/example.ts`。如果数据以`local storage`字符串的形式存储在本地，键值为`cld-storage`，如果本地`local storage`没有这个键的话，就会加载示例的初始简历，数据存储形式为`{origin: ${data}, expire: number | number}`，通过`JSON.parse`可以解析取出数据。有了这个`JSON`数据的配置。
+对于数据而言，在这里是维护了一个`JSON`数据，对于整个简历编辑器而言都有着比较严格的`TS`定义，所以预先声明组件类型定义是很有必要的，在这里声明了`LocalComponentConfig`作为组件的类型定义，而对于整个生成的`JSON`而言，也就完成了作为`LocalComponentConfig[]`的嵌套。
+
+在项目中显示的简历是完全采用`JSON`配置的形式来实现的，数据与视图的渲染是完全分离的，那么由此我们就可以通过编写多个`JSON`配置的形式，来实现不同简历主题模版。如果打开上边提到的`Resume DEMO`的话，可以看到预先加载了一个简历，这个简历的内容就是完全由`JSON`配置而得到的，具体而言可以参考`src/components/debug/example.ts`。
+
+如果数据以`local storage`字符串的形式存储在本地，键值为`cld-storage`，如果本地`local storage`没有这个键的话，就会加载示例的初始简历，数据存储形式为`{origin: ${data}, expire: number | number}`，通过`JSON.parse`可以解析取出数据。有了这个`JSON`数据的配置。
 
 ```typescript
 // 数据定义
@@ -74,8 +81,9 @@ export const AppProvider: React.FC<{ mode?: ContextProps["mode"] }> = props => {
 
 
 ### 页面网格布局
-网格布局的实现比较简单，而且不需要再实现参考线去做对齐的功能，直接在拖拽时显示网格就好。另外如果以后会拓展多种宽度的`PDF`生成的话，也不会导致之前画布布局太过于混乱，因为本身就是栅格的实现，可以根据宽度自动的处理，当然要是适配移动端的话还是需要再做一套`Layout`数据的。  
-这个网格的页面布局实际上就是作为整个页面布局的画布来实现，`React`的生态有很多这方面的库，我使用了`react-grid-layout`这个库来实现拖拽，具体使用的话可以在本文的参考部分找到其`Github`链接，这个库的实现也是蛮不错的，基本可以做到开箱即用，但是细节方面还是很多东西需要处理的。对于`layout`配置项，因为我们本身是存储了一个`JSON`的数据结构，所以我们需要通过我们自己定义的数据结构来生成`layout`，在生成的过程中如果`cols`或者`rowHeight`有所变化而导致元素超出原定范围的话，还需要处理一下。
+网格布局的实现比较简单，而且不需要再实现参考线去做对齐的功能，直接在拖拽时显示网格就好。另外如果以后会拓展多种宽度的`PDF`生成的话，也不会导致之前画布布局太过于混乱，因为本身就是栅格的实现，可以根据宽度自动的处理，当然要是适配移动端的话还是需要再做一套`Layout`数据的。 
+ 
+这个网格的页面布局实际上就是作为整个页面布局的画布来实现，`React`的生态有很多这方面的库，我使用了`react-grid-layout`这个库来实现拖拽，具体使用的话可以在本文的参考部分找到其`GitHub`链接，这个库的实现也是蛮不错的，基本可以做到开箱即用，但是细节方面还是很多东西需要处理的。对于`layout`配置项，因为我们本身是存储了一个`JSON`的数据结构，所以我们需要通过我们自己定义的数据结构来生成`layout`，在生成的过程中如果`cols`或者`rowHeight`有所变化而导致元素超出原定范围的话，还需要处理一下。
 
 ```typescript
 // src/views/main-panel/index.tsx
@@ -270,7 +278,10 @@ export const image: LocalComponent = {
 ```
 
 #### 富文本组件
-富文本组件，用以编辑文字，在这里正好我有一个富文本编辑器的组件实现，可以参考 [Github](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)。
+富文本组件，用以编辑文字，在这里正好我有一个富文本编辑器的组件实现，可以参考:
+
+- GitHub: <https://github.com/WindrunnerMax/DocEditor> 
+- DEMO: <https://windrunnermax.github.io/DocEditor/>
 
 ```typescript
 // src/components/text/index.ts
@@ -328,18 +339,14 @@ export const blank: LocalComponent = {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-http://javakk.com/2127.html
-http://blog.wuweiwang.cn/?p=27961
-https://github.com/ctrlplusb/react-sizeme
-https://juejin.cn/post/6961309077162950692
-https://github.com/WindrunnerMax/DocEditor
-https://github.com/react-grid-layout/react-grid-layout
-```
+- <http://javakk.com/2127.html>
+- <http://blog.wuweiwang.cn/?p=27961>
+- <https://github.com/ctrlplusb/react-sizeme>
+- <https://juejin.cn/post/6961309077162950692>
+- <https://github.com/WindrunnerMax/DocEditor>
+- <https://github.com/react-grid-layout/react-grid-layout>
 
