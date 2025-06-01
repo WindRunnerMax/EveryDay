@@ -70,14 +70,14 @@ It should be noted that whether it's the release package or the installation pac
 npm install -g @windrunnermax/mini-program-cli@1.1.0 --registry=https://npm.pkg.github.com/
 ```
 
-If installing Npm packages from Github is very slow, consider configuring a proxy. Similarly, add the configuration to the `~/.npmrc` file.
+If installing Npm packages from GitHub is very slow, consider configuring a proxy. Similarly, add the configuration to the `~/.npmrc` file.
 
 ```yaml
 proxy=socks5://127.0.0.1:1080
 https-proxy=socks5://127.0.0.1:1080
 ```
 
-## Github
+## GitHub
 
 ```
 https://github.com/WindrunnerMax

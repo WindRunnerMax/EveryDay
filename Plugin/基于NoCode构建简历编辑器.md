@@ -3,8 +3,8 @@
 
 ## 描述
 
-- GitHub: <https://github.com/WindRunnerMax/ResumeEditor>
-- DEMO: <https://windrunnermax.github.io/ResumeEditor/> 
+- 开源地址: <https://github.com/WindRunnerMax/ResumeEditor>
+- 在线编辑: <https://windrunnermax.github.io/ResumeEditor/> 
 
 对于无代码`NoCode`和低代码`LowCode`还是比较容易混淆的，在我的理解上，`NoCode`强调自己编程给自己用，给用户的感觉是一个更强大的实用软件，是一个上层的应用，也就是说`NoCode`需要面向非常固定的领域才能做到好用。而对于`LowCode`而言，除了要考虑能用界面化的方式搭建流程，还要考虑在需要扩展的时候，把底层也暴露出来，拥有更强的可定制化功能，也就是说相比`NoCode`可以不把使用场景限定得那么固定。
 
@@ -280,8 +280,8 @@ export const image: LocalComponent = {
 #### 富文本组件
 富文本组件，用以编辑文字，在这里正好我有一个富文本编辑器的组件实现，可以参考:
 
-- GitHub: <https://github.com/WindrunnerMax/DocEditor> 
-- DEMO: <https://windrunnermax.github.io/DocEditor/>
+- 开源地址: <https://github.com/WindrunnerMax/DocEditor> 
+- 在线编辑: <https://windrunnermax.github.io/DocEditor/>
 
 ```typescript
 // src/components/text/index.ts

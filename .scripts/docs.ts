@@ -5,7 +5,6 @@
  * 3. 依次执行 npm run sync / npm run overview 命令
  * 4. 在相关项目中检查内容, 准确无误后分别执行 Commit.sh 提交
  */
-
 export const docs: Record<string, string[]> = {
   HTML: [
     "HTML/DOCTYPE",
@@ -249,7 +248,7 @@ export const docs: Record<string, string[]> = {
     "React/ReactPortals传送门",
     "React/基于React的SSG渲染方案",
     "React/基于React的虚拟滚动方案",
-    "React/低代码场景的状态管理方案"
+    "React/低代码场景的状态管理方案",
   ],
   Plugin: [
     "Plugin/Git常用命令",

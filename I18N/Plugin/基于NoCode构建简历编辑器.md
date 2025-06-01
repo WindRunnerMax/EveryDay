@@ -5,7 +5,7 @@ Building a resume editor based on `NoCode` to prepare for the job fair. Various 
 
 ## Description
 
-[Github](https://github.com/WindrunnerMax/ResumeEditor) ｜ [Resume DEMO](https://windrunnermax.github.io/ResumeEditor/)
+[GitHub](https://github.com/WindrunnerMax/ResumeEditor) ｜ [Resume DEMO](https://windrunnermax.github.io/ResumeEditor/)
 
 The distinction between `NoCode` and `LowCode` can be easily confused. In my understanding, `NoCode` emphasizes self-programming for personal use, giving the user a sense of a more powerful and practical software, which is an upper-layer application. This means that `NoCode` needs to be targeted at a very specific domain in order to be useful. On the other hand, `LowCode` not only needs to consider building processes in a graphical way but also needs to expose the underlying system when expansion is required, providing stronger customization. This allows for more flexibility compared to `NoCode`, which does not restrict usage scenarios as much.  
 For a resume editor, it falls into a very specific domain and does not require extensive code implementation for usage. It is meant to be used right out of the box as an upper-layer application. Personally, I decided to create it simply because I needed to prepare for the job fair and was not entirely satisfied with the various templates available on websites. The idea to create this editor came to me while I was taking a shower before going to bed one night, and I spent a weekend, which was just two days, to create a simple resume editor based on `NoCode`.  
@@ -273,7 +273,7 @@ export const image: LocalComponent = {
 ```
 
 #### Rich Text Component
-The rich text component is used to edit text. Here coincidentally, I have a rich text editor component implementation that you can refer to [Github](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/).
+The rich text component is used to edit text. Here coincidentally, I have a rich text editor component implementation that you can refer to [GitHub](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/).
 
 ```typescript
 // src/components/text/index.ts
