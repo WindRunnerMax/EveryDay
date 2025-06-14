@@ -373,7 +373,7 @@ String prefixed to the file bundle. The `footer` option does not disrupt `source
 export default {
   // ...,
   output: {
-      footer: "/* follow me on Github! */",
+      footer: "/* follow me on GitHub! */",
   }
 };
 ```
@@ -397,7 +397,7 @@ Similar to `output.footer`, if `banner` and `footer` are for adding strings at t
 export default {
   // ...,
   outro: {
-      footer: "/* follow me on Github! */",
+      footer: "/* follow me on GitHub! */",
   }
 };
 ```

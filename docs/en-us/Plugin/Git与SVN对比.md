@@ -19,12 +19,12 @@ Relatively speaking, distributed management systems are more powerful, but they 
 | Content Management | `SVN` has good support for Chinese and simple operations. | Convenient for managing source code, occupies less space and easy to manage branching. |
 | Learning Curve | Convenient to use, good support for Chinese, and simple operations. | Values efficiency over ease of use; higher learning curve with many unique commands such as `rebase`, commands for interacting with remote repositories, and others. |
 | Access Control | `SVN` has strict access control, can control permissions for groups and individuals for specific subdirectories, and each directory will have a hidden `.SVN` file. | `Git` does not have strict access control, only account role division. |
-| Management Platforms | Has very comprehensive plugins. | In addition to functional plugins, there are also platforms like `Gitlab`, `Gerrit`, `Github`, etc. |
+| Management Platforms | Has very comprehensive plugins. | In addition to functional plugins, there are also platforms like `Gitlab`, `Gerrit`, `GitHub`, etc. |
 
 ## Daily Question
 
 ```
-https://Github.com/WindrunnerMax/EveryDay
+https://github.com/WindrunnerMax/EveryDay
 ```
 
 ## References

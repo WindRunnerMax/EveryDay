@@ -332,7 +332,8 @@ export const sidebar: Sidebar = {
         "RichText/从零设计实现富文本编辑器",
         "RichText/基于MVC模式的编辑器架构设计",
         "RichText/基于Delta的线性数据结构模型",
-        "RichText/浏览器选区模型核心交互策略"
+        "RichText/浏览器选区模型的核心交互策略",
+        "RichText/编辑器选区模型的状态结构表达"
       ]
     },
     {

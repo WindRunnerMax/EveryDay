@@ -1702,7 +1702,12 @@
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/RichText/浏览器选区模型核心交互策略.html</loc>
+  <loc>https://blog-ssg.touchczy.top/RichText/浏览器选区模型的核心交互策略.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/编辑器选区模型的状态结构表达.html</loc>
   <priority>1.0</priority>
 </url>
 

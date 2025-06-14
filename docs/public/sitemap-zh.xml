@@ -1488,7 +1488,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/初探webpack之解析器resolver.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-08-06T14:38:23.000Z</lastmod>
+  <lastmod>2025-05-31T02:27:00.000Z</lastmod>
 </url>
 
 <url>
@@ -1518,7 +1518,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/浏览器扩展开发的相关问题与解决方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-03-08T02:44:53.000Z</lastmod>
+  <lastmod>2025-05-31T02:27:00.000Z</lastmod>
 </url>
 
 <url>
@@ -1702,7 +1702,12 @@
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器选区模型核心交互策略.html</loc>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器选区模型的核心交互策略.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/编辑器选区模型的状态结构表达.html</loc>
   <priority>1.0</priority>
 </url>
 

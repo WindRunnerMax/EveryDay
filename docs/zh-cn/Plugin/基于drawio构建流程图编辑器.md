@@ -8,10 +8,10 @@
 
 集成`drawio`到我们自己的项目有很多优点，包括但不限于 开箱即用的能力、应用于生产环境的非常成熟的项目、开源项目、支持二次开发、强大的社区等等，但是同样的`drawio`也存在一些不足，从上边简单的概括实际上可以看出来这个项目的历史实际上是非常久远了，本身也没有支持`ESM`，有大量的原型链修改，如果看过相关源码可以发现实际上是非常复杂的，代码的可读性和可维护性都不是很好，同时也没有支持`TypeScript`，这些都是我们需要解决的问题。实际上，现代浏览器中更加流行的方案应该是完全基于`Canvas`绘制的画板，当然这种方式的成本会相当高，如果我们想以低成本的方式集成一个流程图编辑器到我们自己的项目，那么`drawio`是最好的选择之一。
 
-那么问题来了，我们应该如何将`drawio`集成到自己的项目当中，我们在这里提供了两种方案，一种是独立编辑器，这种方式是将`Npm`包打包到自己的项目当中，另一种是嵌入`drawio`，这种方式是通过`iframe`与部署好的`drawio`项目进行通信，这两种方式都可以用来完成流程图的集成，文中描述的相关内容都在  [Github](https://github.com/WindrunnerMax/FlowChartEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/FlowChartEditor/) 中。
+那么问题来了，我们应该如何将`drawio`集成到自己的项目当中，我们在这里提供了两种方案，一种是独立编辑器，这种方式是将`Npm`包打包到自己的项目当中，另一种是嵌入`drawio`，这种方式是通过`iframe`与部署好的`drawio`项目进行通信，这两种方式都可以用来完成流程图的集成，文中描述的相关内容都在  [GitHub](https://github.com/WindrunnerMax/FlowChartEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/FlowChartEditor/) 中。
 
 ## 独立编辑器
-首先我们来研究下作为独立编辑器集成到我们自己项目当中的方式，我们先来看一下`mxGraph`项目，文档地址为`https://jgraph.github.io/mxgraph/`，可以看到`mxGraph`有`.NET`、`Java`、`JavaScript`三种语言的支持，在这里我们主要关注的是`JavaScript`的支持，在文档中实际上我们是可以找到相当多的`Example`，在这里我们需要关注的是`Graph Editor`这个示例。当我们打开这个示例`https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html`之后，可以发现这实际上是一个非常完整的编辑器项目，而且我们可以看到这个链接的地址是以`.html`结尾并且是部署在`Github`的`Git Pages`上的，这就意味着这个`.html`后缀不是由后端输出的而是一个完整的纯前端项目，那么在理论上我们就可以将其作为纯前端的包集成到我们自己的项目中。
+首先我们来研究下作为独立编辑器集成到我们自己项目当中的方式，我们先来看一下`mxGraph`项目，文档地址为`https://jgraph.github.io/mxgraph/`，可以看到`mxGraph`有`.NET`、`Java`、`JavaScript`三种语言的支持，在这里我们主要关注的是`JavaScript`的支持，在文档中实际上我们是可以找到相当多的`Example`，在这里我们需要关注的是`Graph Editor`这个示例。当我们打开这个示例`https://jgraph.github.io/mxgraph/javascript/examples/grapheditor/www/index.html`之后，可以发现这实际上是一个非常完整的编辑器项目，而且我们可以看到这个链接的地址是以`.html`结尾并且是部署在`GitHub`的`Git Pages`上的，这就意味着这个`.html`后缀不是由后端输出的而是一个完整的纯前端项目，那么在理论上我们就可以将其作为纯前端的包集成到我们自己的项目中。
 
 当前我们开发前端都离不开`Npm`包，我们也更希望将这个包作为依赖直接集成到我们的项目当中，但是当我们查阅相关的代码之后，发现这并不是一个简单的工作，例如当我们打开`Graph.js`这个文件，可以惊奇地发现仅这一个文件的代码行数就高达`11941`行，更不用说实际上核心部分是包括如下`10`个核心类的。
 
@@ -336,19 +336,15 @@ bus.startEdit();
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://github.com/jgraph/drawio
-https://github.com/jgraph/mxgraph
-https://github.com/maxGraph/maxGraph
-https://github.com/jgraph/mxgraph-js
-https://zh.wikipedia.org/wiki/Draw.io
-https://juejin.cn/post/7017686432009420808
-https://github.com/jgraph/drawio-integration
-https://jgraph.github.io/mxgraph/javascript/index.html
-```
+- <https://github.com/jgraph/drawio>
+- <https://github.com/jgraph/mxgraph>
+- <https://github.com/maxGraph/maxGraph>
+- <https://github.com/jgraph/mxgraph-js>
+- <https://zh.wikipedia.org/wiki/Draw.io>
+- <https://juejin.cn/post/7017686432009420808>
+- <https://github.com/jgraph/drawio-integration>
+- <https://jgraph.github.io/mxgraph/javascript/index.html>
