@@ -304,6 +304,7 @@ export const docs: Record<string, string[]> = {
     "RichText/基于MVC模式的编辑器架构设计",
     "RichText/基于Delta的线性数据结构模型",
     "RichText/浏览器选区模型的核心交互策略",
+    "RichText/编辑器选区模型的状态结构表达",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
