@@ -1,5 +1,5 @@
 # 发布Npm包到GitHub Packages
-`Github`集成了`GitHub Packages`功能，目前提供了`Npm`、`Docker`、`Maven`、`NuGet`、`RubyGems`的包管理工具，可以通过`Github`管理开源包，本文主要介绍使用`GitHub Packages`发布`Npm`包。
+`GitHub`集成了`GitHub Packages`功能，目前提供了`Npm`、`Docker`、`Maven`、`NuGet`、`RubyGems`的包管理工具，可以通过`GitHub`管理开源包，本文主要介绍使用`GitHub Packages`发布`Npm`包。
 
 ## 发布
 首先需要制作一个`package.json`文件，可以通过`npm init`命令根据提示生成一个`package.json`文件。
@@ -30,7 +30,8 @@
   "repository": "https://github.com/WindrunnerMax/Asse"
 }
 ```
-下面需要授权，首先在`Github`申请一个`Token`，`user - setting -  Developer settings - Personal access tokens - Generate new token`，生成一个用以发布`Npm`包的`Token`，需要选择权限，以下权限必选：
+
+下面需要授权，首先在`GitHub`申请一个`Token`，`user - setting -  Developer settings - Personal access tokens - Generate new token`，生成一个用以发布`Npm`包的`Token`，需要选择权限，以下权限必选：
 
 ![](screenshots/2023-04-14-18-52-25.png)
 
@@ -64,7 +65,7 @@ npm publish --access=public
 ```shell
 npm install -g @windrunnermax/mini-program-cli@1.1.0 --registry=https://npm.pkg.github.com/
 ```
-如果使用`Github`安装`Npm`包很慢的话，可以考虑配置代理，同样是在`~/.npmrc`文件中加入配置。
+如果使用`GitHub`安装`Npm`包很慢的话，可以考虑配置代理，同样是在`~/.npmrc`文件中加入配置。
 
 ```yaml
 proxy=socks5://127.0.0.1:1080
@@ -73,6 +74,4 @@ https-proxy=socks5://127.0.0.1:1080
 
 ## Blog
 
-```
-https://github.com/WindRunnerMax
-```
+- <https://github.com/WindRunnerMax>

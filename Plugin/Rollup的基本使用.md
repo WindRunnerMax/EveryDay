@@ -366,7 +366,7 @@ export default {
 export default {
   // ...,
   output: {
-      footer: "/* follow me on Github! */",
+      footer: "/* follow me on GitHub! */",
   }
 };
 ```
@@ -390,7 +390,7 @@ export default {
 export default {
   // ...,
   outro: {
-      footer: "/* follow me on Github! */",
+      footer: "/* follow me on GitHub! */",
   }
 };
 ```
@@ -424,14 +424,10 @@ export default {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.rollupjs.com/
-https://segmentfault.com/a/1190000010628352
-https://github.com/JohnApache/rollup-usage-doc
-```
+- <https://www.rollupjs.com/>
+- <https://segmentfault.com/a/1190000010628352>
+- <https://github.com/JohnApache/rollup-usage-doc>
