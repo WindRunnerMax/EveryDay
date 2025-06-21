@@ -739,23 +739,19 @@ const postToMain = (id: string, payload: string) => {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://juejin.cn/post/6844904029244358670
-https://github.com/jimmywarting/StreamSaver.js
-https://github.com/jimmywarting/native-file-system-adapter
-https://developer.mozilla.org/zh-CN/docs/Web/API/FetchEvent
-https://nodejs.org/docs/latest/api/stream.html#types-of-streams
-https://developer.mozilla.org/en-US/docs/Web/API/TransformStream
-https://help.aliyun.com/zh/oss/user-guide/map-custom-domain-names-5
-https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a#download
-https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition
-https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Concepts#backpressure
-https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects
-https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm
-```
+- <https://juejin.cn/post/6844904029244358670>
+- <https://github.com/jimmywarting/StreamSaver.js>
+- <https://github.com/jimmywarting/native-file-system-adapter>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/FetchEvent>
+- <https://nodejs.org/docs/latest/api/stream.html#types-of-streams>
+- <https://developer.mozilla.org/en-US/docs/Web/API/TransformStream>
+- <https://help.aliyun.com/zh/oss/user-guide/map-custom-domain-names-5>
+- <https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/a#download>
+- <https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Content-Disposition>
+- <https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Concepts#backpressure>
+- <https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects>
+- <https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Structured_clone_algorithm>
