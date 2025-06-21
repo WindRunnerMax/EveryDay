@@ -898,32 +898,29 @@ const onDownloadFile = (id: string, fileName: string) => {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-http://v6t.ipip.net/
-https://icetest.info/
-https://www.stunprotocol.org/
-https://global.v2ex.co/t/843359
-https://webrtc.github.io/samples/
-https://bford.info/pub/net/p2pnat/
-https://blog.p2hp.com/archives/11075
-https://zhuanlan.zhihu.com/p/86759357
-https://zhuanlan.zhihu.com/p/621743627
-https://github.com/RobinLinus/snapdrop
-https://web.dev/articles/webrtc-basics
-https://juejin.cn/post/6950234563683713037
-https://juejin.cn/post/7171836076246433799
-https://chidokun.github.io/p2p-file-transfer
-https://bloggeek.me/webrtc-vs-websockets/amp
-https://github.com/wangrongding/frontend-park
-https://web.dev/articles/webrtc-infrastructure
-https://socket.io/zh-CN/docs/v4/server-socket-instance/
-https://socket.io/zh-CN/docs/v4/client-socket-instance/
-https://developer.mozilla.org/zh-CN/docs/Web/API/RTCPeerConnection/createDataChannel
-https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Simple_RTCDataChannel_sample
-```
+- <http://v6t.ipip.net/>
+- <https://icetest.info/>
+- <https://www.stunprotocol.org/>
+- <https://global.v2ex.co/t/843359>
+- <https://webrtc.github.io/samples/>
+- <https://bford.info/pub/net/p2pnat/>
+- <https://blog.p2hp.com/archives/11075>
+- <https://zhuanlan.zhihu.com/p/86759357>
+- <https://zhuanlan.zhihu.com/p/621743627>
+- <https://github.com/RobinLinus/snapdrop>
+- <https://web.dev/articles/webrtc-basics>
+- <https://juejin.cn/post/6950234563683713037>
+- <https://juejin.cn/post/7171836076246433799>
+- <https://chidokun.github.io/p2p-file-transfer>
+- <https://bloggeek.me/webrtc-vs-websockets/amp>
+- <https://github.com/wangrongding/frontend-park>
+- <https://web.dev/articles/webrtc-infrastructure>
+- <https://socket.io/zh-CN/docs/v4/server-socket-instance/>
+- <https://socket.io/zh-CN/docs/v4/client-socket-instance/>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/RTCPeerConnection/createDataChannel>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/WebRTC_API/Simple_RTCDataChannel_sample>
+
