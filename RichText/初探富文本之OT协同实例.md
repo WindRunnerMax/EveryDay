@@ -10,9 +10,9 @@
 
 假如这个思维导图功能我们是通过`JSON`的数据结构保存的数据，那么我们就可以参考`json0`或者`slate-ot`的实现，特别是通过阅读单元测试可以比较容易地理解具体的功能，通过参考其实现来自行实现一份`OT`的变换，或者直接依照其实现维护一个中间层的数据结构，依照于这个中间层进行数据转换。再假如我们的思维导图维护的是一个线性的类文本结构，那么就可以参考`rich-text`与`quill-delta`的实现，只不过这样的话实现原子化的操作可能就麻烦一些了，当然同样我们也可以维护一个中间层的数据结构来完成`OT`。
 
-实际上有比较多的参考之后，接入`OT`协同就主要是理解并且实现的问题了，这样就有一个大体的实现方向了，而不是毫无头绪不知道应该从哪里开始做协同。另外还是那个宗旨，合适的才是最好的，要考虑到实现的成本问题，没有必要硬套数据结构的实现，就比如上边说的实现思维导图使用线性的文本来表示还是有点牵强的，当然并不是不可能的，比如`Google Docs`的`Table`就是完全的线性结构，要知道其是可以实现表格中嵌套表格的，相当于每一个单元格都是一篇文档，内部可以嵌入任何的富文本结构，而在实现上就是通过线性的结构完成的。
+实际上有比较多的参考之后，接入`OT`协同就主要是理解并且实现的问题了，这样就有一个大体的实现方向了，而不是毫无头绪不知道应该从哪里开始做协同。另外还是那个宗旨，合适的才是最好的，要考虑到实现的成本问题，没有必要硬套数据结构的实现。就比如上边说的实现思维导图使用线性的文本来表示还是有点牵强的，当然并不是不可能的，比如`Google Docs`的`Table`就是完全的线性结构，要知道其是可以实现表格中嵌套表格的，相当于每一个单元格都是一篇文档，内部可以嵌入任何的富文本结构，而在实现上就是通过线性的结构完成的。
 
-或许上边的`json0`和`rich-text`等概念可能一时间让人难以理解，所以下面的`Counter`与`Quill`两个实例就是介绍了如何使用`sharedb`实现协同，以及`json0`和`rich-text`究竟完成了什么样的工作，当然具体的`API`调用还是还是需要看`sharedb`的文档，本文只涉及到最基本的协同操作，所有的代码都在`https://github.com/WindrunnerMax/Collab`中，注意这是个`pnpm`的`workspace monorepo`项目，要注意使用`pnpm`安装依赖。
+或许上边的`json0`和`rich-text`等概念可能一时间让人难以理解，所以下面的`Counter`与`Quill`两个实例就是介绍了如何使用`sharedb`实现协同，以及`json0`和`rich-text`究竟完成了什么样的工作，当然具体的`API`调用还是还是需要看`sharedb`的文档。本文只涉及到最基本的协同操作，所有的代码都在`https://github.com/WindRunnerMax/Collab`中，注意这是个`pnpm`的`workspace monorepo`项目，要注意使用`pnpm`安装依赖。
 
 ## Counter
 首先我们运行一个基础的协同实例`Counter`，实现的主要功能是在多个客户端可以`+1`的情况下我们可以维护同一份计数器总数，该实例的地址是`https://github.com/WindrunnerMax/Collab/tree/master/packages/ot-counter`，首先简单看一下目录结构(`tree --dirsfirst -I node_modules`):
@@ -36,13 +36,13 @@ ot-counter
 └── tsconfig.json
 ```
 
-先简略说明下各个文件夹和文件的作用，`public`存储了静态资源文件，在客户端打包时将会把内容移动到`build`文件夹，`server`文件夹中存储了`OT`服务端的实现，在运行时同样会编译为`js`文件放置于`build`文件夹下，`src`文件夹是客户端的代码，主要是视图与`OT`客户端的实现，`babel.config.js`是`babel`的配置信息，`rollup.config.js`是打包客户端的配置文件，`rollup.server.js`是打包服务端的配置文件，`package.json`与`tsconfig.json`大家都懂，就不赘述了。
+先简略说明下各个文件夹和文件的作用，`public`存储了静态资源文件，在客户端打包时将会把内容移动到`build`文件夹。`server`文件夹中存储了`OT`服务端的实现，在运行时同样会编译为`js`文件放置于`build`文件夹下，`src`文件夹是客户端的代码，主要是视图与`OT`客户端的实现。`babel.config.js`是`babel`的配置信息，`rollup.config.js`是打包客户端的配置文件，`rollup.server.js`是打包服务端的配置文件，`package.json`与`tsconfig.json`大家都懂，就不赘述了。
 
-首先我们需要了解一下`json0`，乍眼一看`json0`确实不容易知道这是个啥，实际上这是`sharedb`默认携带的类型，`sharedb`提供了很多处理操作的机制，例如我们前边提到的服务端对于`Op`原子操作的调度，但没有提供转换操作的实际实现，因为业务的复杂性，必然会导致将要操作的数据结构的复杂性，于是转换和处理操作实际上是委托到业务自行实现的，在`sharedb`中称为`OT Types`。
+首先我们需要了解一下`json0`，乍眼一看`json0`确实不容易知道这是个啥，实际上这是`sharedb`默认携带的类型，`sharedb`提供了很多处理操作的机制。例如我们前边提到的服务端对于`Op`原子操作的调度，但没有提供转换操作的实际实现，因为业务的复杂性，必然会导致将要操作的数据结构的复杂性，于是转换和处理操作实际上是委托到业务自行实现的，在`sharedb`中称为`OT Types`。
 
-`OT Types`实际上相当于定义了一系列的接口，而要在`sharedb`中注册类型必须实现这些接口，而这些实现就是我们需要实现的`OT`操作变换，例如需要实现的`transform`函数`transform(op1, op2, side) -> op1'`，则必须满足`apply(apply(snapshot, op1), transform(op2, op1, 'left')) == apply(apply(snapshot, op2), transform(op1, op2, 'right'))`，由此来保证变换的最终一致性，再比如`compose`函数`compose(op1, op2) -> op`，就必须满足`apply(apply(snapshot, op1), op2) == apply(snapshot, compose(op1, op2))`，具体的文档与要求可以参考`https://github.com/ottypes/docs`。
+`OT Types`实际上相当于定义了一系列的接口，而要在`sharedb`中注册类型必须实现这些接口，而这些实现就是我们需要实现的`OT`操作变换，例如需要实现的`transform`函数`transform(op1, op2, side) -> op1'`，则必须满足`apply(apply(snapshot, op1), transform(op2, op1, 'left')) == apply(apply(snapshot, op2), transform(op1, op2, 'right'))`，由此来保证变换的最终一致性。再比如`compose`函数`compose(op1, op2) -> op`，就必须满足`apply(apply(snapshot, op1), op2) == apply(snapshot, compose(op1, op2))`，具体的文档与要求可以参考`https://github.com/ottypes/docs`。
 
-上边的这个实现看起来就很麻烦，乍眼一看还有公式，看起来对于数学上还有些要求。实现操作变换虽然本质上就是索引的转换，通过转换索引位置以确保收敛，但是要自己写还是需要些时间的，所幸在开源社区已经有很多的实现可以提供参考，在`sharedb`中也附带一个了默认类型`json0`，通过`json0`这个`JSON OT`类型可用于编辑任意`JSON`文档，实际上不光是`JSON`文档，我们的计数器也就是使用`json0`来实现的，毕竟在这里计数器也是只需要通过借助`JSON`的一个字段就可以实现的。回到`json0`支持以下操作：
+上边的这个实现看起来就很麻烦，乍眼一看还有公式，看起来对于数学上还有些要求。实现操作变换虽然本质上就是索引的转换，通过转换索引位置以确保收敛，但是要自己写还是需要些时间的，所幸在开源社区已经有很多的实现可以提供参考。在`sharedb`中也附带一个了默认类型`json0`，通过`json0`这个`JSON OT`类型可用于编辑任意`JSON`文档，实际上不光是`JSON`文档，我们的计数器也就是使用`json0`来实现的，毕竟在这里计数器也是只需要通过借助`JSON`的一个字段就可以实现的。回到`json0`支持以下操作：
 
 * 在列表中插入/删除/移动/替换项目。
 * 对象插入/删除/替换。
@@ -127,7 +127,7 @@ class Connection {
 ```
 
 ## Quill
-接下来我们运行一个富文本的实例`Quill`，实现的主要功能是在`quill`富文本编辑器中接入协同，并支持编辑光标的同步，该实例的地址是`https://github.com/WindrunnerMax/Collab/tree/master/packages/ot-quill`，首先简单看一下目录结构(`tree --dirsfirst -I node_modules`):
+接下来我们运行一个富文本的实例`Quill`，实现的主要功能是在`quill`富文本编辑器中接入协同，并支持编辑光标的同步，该实例的地址是`https://github.com/WindrunnerMax/Collab/tree/master/packages/ot-quill`。首先简单看一下目录结构(`tree --dirsfirst -I node_modules`):
 
 ```
 ot-quill
@@ -285,21 +285,18 @@ doc.subscribe(err => { // 订阅`doc`的初始化
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://github.com/ottypes/docs
-https://share.github.io/sharedb/
-https://github.com/share/sharedb
-https://www.npmjs.com/package/ot-json0
-https://www.npmjs.com/package/ot-json1
-https://zhuanlan.zhihu.com/p/481370601
-https://zhuanlan.zhihu.com/p/425265438
-https://www.npmjs.com/package/rich-text
-https://www.npmjs.com/package/quill-delta
-```
+- <https://github.com/ottypes/docs>
+- <https://share.github.io/sharedb/>
+- <https://github.com/share/sharedb>
+- <https://www.npmjs.com/package/ot-json0>
+- <https://www.npmjs.com/package/ot-json1>
+- <https://zhuanlan.zhihu.com/p/481370601>
+- <https://zhuanlan.zhihu.com/p/425265438>
+- <https://www.npmjs.com/package/rich-text>
+- <https://www.npmjs.com/package/quill-delta>
+
 
