@@ -219,14 +219,10 @@ function useMemoizedFn<T extends noop>(fn: T) {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://juejin.cn/post/6844904193044512782
-https://juejin.cn/post/7119839372593070094
-http://www.ferecord.com/react-hooks-closure-traps-problem.html
-```
+- <https://juejin.cn/post/6844904193044512782>
+- <https://juejin.cn/post/7119839372593070094>
+- <http://www.ferecord.com/react-hooks-closure-traps-problem.html>

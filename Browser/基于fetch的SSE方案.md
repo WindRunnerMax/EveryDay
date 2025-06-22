@@ -507,20 +507,16 @@ useEffect(() => {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://github.com/EventSource/eventsource
-https://github.com/Azure/fetch-event-source
-https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource
-https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html
-https://nodejs.org/docs/latest-v20.x/api/http.html#messagesocket
-https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream
-https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events
-https://stackoverflow.com/questions/7348736/how-to-check-if-connection-was-aborted-in-node-js-server
-https://stackoverflow.com/questions/76115409/why-does-node-js-express-call-request-close-on-post-request-with-data-before-r
-```
+- <https://github.com/EventSource/eventsource>
+- <https://github.com/Azure/fetch-event-source>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/EventSource>
+- <https://www.ruanyifeng.com/blog/2017/05/server-sent_events.html>
+- <https://nodejs.org/docs/latest-v20.x/api/http.html#messagesocket>
+- <https://html.spec.whatwg.org/multipage/server-sent-events.html#parsing-an-event-stream>
+- <https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events>
+- <https://stackoverflow.com/questions/7348736/how-to-check-if-connection-was-aborted-in-node-js-server>
+- <https://stackoverflow.com/questions/76115409/why-does-node-js-express-call-request-close-on-post-request-with-data-before-r>

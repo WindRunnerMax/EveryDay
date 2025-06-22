@@ -280,7 +280,7 @@ export const image: LocalComponent = {
 #### 富文本组件
 富文本组件，用以编辑文字，在这里正好我有一个富文本编辑器的组件实现，可以参考:
 
-- 开源地址: <https://github.com/WindrunnerMax/DocEditor> 
+- 开源地址: <https://github.com/WindRunnerMax/DocEditor> 
 - 在线编辑: <https://windrunnermax.github.io/DocEditor/>
 
 ```typescript

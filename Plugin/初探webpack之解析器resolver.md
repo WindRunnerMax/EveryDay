@@ -25,7 +25,7 @@
 
 在我们的项目中，其本身的依赖是没有问题的，既然能够编译通过那么必然在`.less`文件的引入都是携带了`~`标识的。但是当前我们的新组件中引入的样式文件并没有携带`~`标识，这就导致了`less-loader`无法正确地解析样式文件的位置，从而抛出模块找不到的异常。如果仅仅是我们新组件中的样式没有携带标识的话，我们是可以手动加入的，然而经过排查这部分内容是新引入的组件导致的，而且还是依赖的依赖，这就导致我们无法直接修改样式引入来解决这个问题。
 
-那么针对于这类问题，我们首先想到的肯定是升级`less-loader`的版本。但是很遗憾的是当升级到最新的`12`版本之后，项目同样跑不起来，这个问题大概是根某些依赖有冲突，抛出了一些很古怪的异常，在检索了一段时间这个错误信息之后，最终放弃了升级`less-loader`的方案。毕竟如果钻牛角尖的话我们需要不断尝试各种依赖版本，需要花费大量的时间测试，而且也不一定能够解决问题。
+那么针对于这类问题，我们首先想到的肯定是升级`less-loader`的版本。但是很遗憾的是当升级到最新的`12`版本之后，项目同样跑不起来。这个问题大概是根某些依赖有冲突，抛出了一些很古怪的异常，在检索了一段时间这个错误信息之后，最终放弃了升级`less-loader`的方案。毕竟如果钻牛角尖的话我们需要不断尝试各种依赖版本，需要花费大量的时间测试，而且也不一定能够解决问题。
 
 此时我们就需要换个思路，既然本质上还是`less-loader`的问题，而`loader`本质上是通过处理各种资源文件的原始内容来处理的。那么我们是不是可以在直接实现`loader`来在`less-loader`之前预处理`.less`文件，将相关样式的引用都加入`~`标识，这样就能够在`less-loader`之前将正确的`.less`文件处理好。那么在这里的思路就是在解析到引用`.less`文件的`.js`文件时，将其匹配并且加入`~`标识，这里只是简单表示下正则匹配，实际需要考虑的情况还会复杂一些。
 
@@ -97,7 +97,7 @@ module.exports = class LessImportPrefixPlugin {
 };
 ```
 
-插件已经实现了，我们同样需要在`less-loader`中将其配置进去。实际上由于项目时`Umi`脚手架搭建起来的，修改配置就必须要借助`webpack-chain`，不熟悉的话还是有些麻烦，所以我们这里直接在`rules`的`less-loader`中将插件配置好即可。
+此时插件已经实现了，我们同样需要在`less-loader`中将其配置进去。实际上由于项目时`Umi`脚手架搭建起来的，修改配置就必须要借助`webpack-chain`，不熟悉的话还是有些麻烦，所以我们这里直接在`rules`的`less-loader`中将插件配置好即可。
 
 ```js
 // packages/webpack-resolver/webpack.config.js
@@ -434,17 +434,13 @@ module.exports = {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://webpack.js.org/api/loaders
-https://webpack.js.org/configuration/resolve/#resolveplugins
-https://github.com/webpack/enhanced-resolve?tab=readme-ov-file#plugins
-https://github.com/less/less-docs/blob/master/content/tools/plugins.md
-https://github.com/less/less-docs/blob/master/content/features/plugins.md
-https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md
-```
+- <https://webpack.js.org/api/loaders>
+- <https://webpack.js.org/configuration/resolve/#resolveplugins>
+- <https://github.com/webpack/enhanced-resolve?tab=readme-ov-file#plugins>
+- <https://github.com/less/less-docs/blob/master/content/tools/plugins.md>
+- <https://github.com/less/less-docs/blob/master/content/features/plugins.md>
+- <https://github.com/jamiebuilds/babel-handbook/blob/master/translations/en/plugin-handbook.md>
