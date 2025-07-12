@@ -3,15 +3,16 @@
 
 ## 描述
 如果说函数式编程中有两种操作是必不可少的那无疑就是柯里化`Currying`和函数组合`Compose`，柯里化其实就是流水线上的加工站，函数组合就是我们的流水线，它由多个加工站组成。对于加工站即柯里化`Currying`，简单来说就是将一个多元函数，转换成一个依次调用的单元函数，也就是把一个多参数的函数转化为单参数函数的方法，函数的柯里化是用于将一个操作分成多步进行，并且可以改变函数的行为，在我的理解中柯里化实际就是实现了一个状态机，当达到指定参数时就从继续接收参数的状态转换到执行函数的状态。  
-简单来说，通过柯里化可以把函数调用的形式改变。
 
-```
+简单来说，通过柯里化可以把函数调用的形式改变:
+
+```js
 f(a,b,c) → f(a)(b)(c)
 ```
 
 与柯里化非常相似的概念有部分函数应用`Partial Function Application`，这两者不是相同的，部分函数应用强调的是固定一定的参数，返回一个更小元的函数。
 
-```
+```js
 // 柯里化
 f(a,b,c) → f(a)(b)(c)
 // 部分函数调用
@@ -144,7 +145,7 @@ console.log(g.next()); // {value: 31, done: true}
 console.log(g.next()); // {value: undefined, done: true} // 可以无限next()，但是value总为undefined，done总为true
 ```
 
-由于`Generator`函数能够将函数的执行暂时挂起，那么他就完全可以操作一个异步任务，当上一个任务完成之后再继续下一个任务，下面这个例子就是将一个异步任务同步化表达，当上一个延时定时器完成之后才会进行下一个定时器任务，可以通过这种方式解决一个异步嵌套的问题，例如利用回调的方式需要在一个网络请求之后加入一次回调进行下一次请求，很容易造成回调地狱，而通过`Generator`函数就可以解决这个问题，事实上`async/await`就是利用的`Generator`函数以及`Promise`实现的异步解决方案。
+由于`Generator`函数能够将函数的执行暂时挂起，那么他就完全可以操作一个异步任务，当上一个任务完成之后再继续下一个任务，下面这个例子就是将一个异步任务同步化表达，当上一个延时定时器完成之后才会进行下一个定时器任务，可以通过这种方式解决一个异步嵌套的问题。例如利用回调的方式需要在一个网络请求之后加入一次回调进行下一次请求，很容易造成回调地狱，而通过`Generator`函数就可以解决这个问题，事实上`async/await`就是利用的`Generator`函数以及`Promise`实现的异步解决方案。
 
 ```javascript
 var it = null;
@@ -169,7 +170,10 @@ it = g();
 it.next();
 ```
 虽然上边的例子能够自动执行，但是不够方便，现在实现一个`Thunk`函数的自动流程管理，其自动帮我们进行回调函数的处理，只需要在`Thunk`函数中传递一些函数执行所需要的参数比如例子中的`index`，然后就可以编写`Generator`函数的函数体，通过左边的变量接收`Thunk`函数中`funct`执行的参数，在使用`Thunk`函数进行自动流程管理时，必须保证`yield`后是一个`Thunk`函数。  
-关于自动流程管理`run`函数，首先需要知道在调用`next()`方法时，如果传入了参数，那么这个参数会传给上一条执行的`yield`语句左边的变量，在这个函数中，第一次执行`next`时并未传递参数，而且在第一个`yield`上边也并不存在接收变量的语句，无需传递参数，接下来就是判断是否执行完这个生成器函数，在这里并没有执行完，那么将自定义的`next`函数传入`res.value`中，这里需要注意`res.value`是一个函数，可以在下边的例子中将注释的那一行执行，然后就可以看到这个值是`f(funct){...}`，此时我们将自定义的`next`函数传递后，就将`next`的执行权限交予了`f`这个函数，在这个函数执行完异步任务后，会执行回调函数，在这个回调函数中会触发生成器的下一个`next`方法，并且这个`next`方法是传递了参数的，上文提到传入参数后会将其传递给上一条执行的`yield`语句左边的变量，那么在这一次执行中会将这个参数值传递给`r1`，然后在继续执行`next`，不断往复，直到生成器函数结束运行，这样就实现了流程的自动管理。
+
+关于自动流程管理`run`函数，首先需要知道在调用`next()`方法时，如果传入了参数，那么这个参数会传给上一条执行的`yield`语句左边的变量，在这个函数中，第一次执行`next`时并未传递参数，而且在第一个`yield`上边也并不存在接收变量的语句，无需传递参数，接下来就是判断是否执行完这个生成器函数，在这里并没有执行完，那么将自定义的`next`函数传入`res.value`中。
+
+这里需要注意`res.value`是一个函数，可以在下边的例子中将注释的那一行执行，然后就可以看到这个值是`f(funct){...}`，此时我们将自定义的`next`函数传递后，就将`next`的执行权限交予了`f`这个函数，在这个函数执行完异步任务后，会执行回调函数，在这个回调函数中会触发生成器的下一个`next`方法，并且这个`next`方法是传递了参数的，上文提到传入参数后会将其传递给上一条执行的`yield`语句左边的变量，那么在这一次执行中会将这个参数值传递给`r1`，然后在继续执行`next`，不断往复，直到生成器函数结束运行，这样就实现了流程的自动管理。
 
 ```javascript
 function thunkFunct(index){
@@ -206,18 +210,14 @@ run(g);
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.jianshu.com/p/5e1899fe7d6b
-https://zhuanlan.zhihu.com/p/108594470
-https://juejin.im/post/6844903936378273799#heading-12
-https://blog.csdn.net/crazypokerk_/article/details/97674338
-http://www.qiutianaimeili.com/html/page/2019/05/54g0vvxycyg.html
-https://baike.baidu.com/item/%E6%9F%AF%E9%87%8C%E5%8C%96/10350525?fr=aladdin
-https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch4.html#%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AF%E5%8F%8C%E5%85%B3%E8%AF%AD%E5%92%96%E5%96%B1
-```
+- <https://www.jianshu.com/p/5e1899fe7d6b>
+- <https://zhuanlan.zhihu.com/p/108594470>
+- <https://juejin.im/post/6844903936378273799#heading-12>
+- <https://blog.csdn.net/crazypokerk_/article/details/97674338>
+- <http://www.qiutianaimeili.com/html/page/2019/05/54g0vvxycyg.html>
+- <https://baike.baidu.com/item/%E6%9F%AF%E9%87%8C%E5%8C%96/10350525?fr=aladdin>
+- <https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/ch4.html#%E4%B8%8D%E4%BB%85%E4%BB%85%E6%98%AF%E5%8F%8C%E5%85%B3%E8%AF%AD%E5%92%96%E5%96%B1>
