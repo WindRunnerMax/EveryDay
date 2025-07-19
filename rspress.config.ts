@@ -10,7 +10,7 @@ export default defineConfig({
     include: ["docs/**/*.md"],
   },
   title: "Blog",
-  description: "WindrunnerMax Blog",
+  description: "WindRunnerMax Blog",
   lang: "en-us",
   themeConfig: {
     lastUpdated: true,

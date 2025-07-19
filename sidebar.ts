@@ -1,8 +1,9 @@
 export const sidebar: Sidebar = {
   "/": [
+    // @ts-ignore
     {
       "text": "BLOG",
-      "link": "index"
+      "link": "index",
     },
     {
       "text": "HTML",
@@ -644,7 +645,7 @@ type SidebarItem =
 interface SidebarGroup {
   text: string;
   link?: string;
-  items?: SidebarItem[];
+  items: SidebarItem[];
   collapsible?: boolean;
   collapsed?: boolean;
   tag?: string;
