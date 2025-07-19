@@ -28,7 +28,7 @@
 
 如果数据以`local storage`字符串的形式存储在本地，键值为`cld-storage`，如果本地`local storage`没有这个键的话，就会加载示例的初始简历，数据存储形式为`{origin: ${data}, expire: number | number}`，通过`JSON.parse`可以解析取出数据。有了这个`JSON`数据的配置。
 
-```typescript
+```js
 // 数据定义
 // src/types/components-types.ts
 export type LocalComponentConfig =  {
@@ -44,7 +44,7 @@ export type LocalComponentConfig =  {
 
 在这里实际上我们有两套数据结构的定义，因为目的是实现数据与组件的分离，但是组件也是需要有位置进行定义的，此外由于希望整个编辑器是可拆卸的，具体而言就是每个基础组件是独立注册的，如果将其注册部分移除，对于整个项目是不会产生任何影响的，只是视图无法根据`JSON`的配置成功渲染，最终呈现的效果为空而已。
 
-```typescript
+```js
 // 组件定义
 // src/types/components-types.ts
 interface ComponentsBase {
@@ -70,7 +70,7 @@ register(image, richText, blank);
 ### 数据通信
 因为要维护的`JSON`数据结构还是比较复杂的，在这里我们使用`Context + useImmerReducer`来实现的状态管理，当然使用`reducer`或者`Mobx`也都是可以的，这只是我觉得实现的比较简单的方案。
 
-```typescript
+```js
 // src/store/context.tsx
 export const AppProvider: React.FC<{ mode?: ContextProps["mode"] }> = props => {
   const { mode = EDITOR_MODE.EDITOR, children } = props;
@@ -85,7 +85,7 @@ export const AppProvider: React.FC<{ mode?: ContextProps["mode"] }> = props => {
  
 这个网格的页面布局实际上就是作为整个页面布局的画布来实现，`React`的生态有很多这方面的库，我使用了`react-grid-layout`这个库来实现拖拽，具体使用的话可以在本文的参考部分找到其`GitHub`链接，这个库的实现也是蛮不错的，基本可以做到开箱即用，但是细节方面还是很多东西需要处理的。对于`layout`配置项，因为我们本身是存储了一个`JSON`的数据结构，所以我们需要通过我们自己定义的数据结构来生成`layout`，在生成的过程中如果`cols`或者`rowHeight`有所变化而导致元素超出原定范围的话，还需要处理一下。
 
-```typescript
+```js
 // src/views/main-panel/index.tsx
 <ReferenceLine
     display={!isRender && dragging}
@@ -118,7 +118,7 @@ export const AppProvider: React.FC<{ mode?: ContextProps["mode"] }> = props => {
 
 对于`<ReferenceLine/>`组件，在这里通过`CSS`绘制了网格布局的网格点，从而实现参考线的作用。
 
-```typescript
+```js
 // src/views/main-panel/components/reference-line/index.tsx
 <div
     className={classes(
@@ -144,7 +144,7 @@ export const AppProvider: React.FC<{ mode?: ContextProps["mode"] }> = props => {
 有了基础的画布组件，我们就需要实现各个基础组件，那么基础组件就需要实现独立的编辑功能，而独立的编辑功能又需要三部分的实现：首先是数据的变更，因为编辑最终还是需要体现到数据上，也就是我们要维护的那个`JSON`数据，因为我们有了数据通信的方案，所以这里只需要定义`reducer`将其写到对应的组件配置的`props`或者其他字段中即可。
 
 
-```typescript
+```js
 // src/store/reducer.ts
 witch (action.type) {
     // ...
@@ -196,7 +196,7 @@ export const updateOneInNodeTree = (
 
 接下来是工具栏的实现，对于工具栏而言，我们需要针对选中的元素的`name`进行一个判别，加载工具栏之后，对于用户的操作，只需要根据当前选中的`id`通过数据通信应用到`JSON`数据中，最后在视图中就会应用其修改了。
 
-```typescript
+```js
 // src/views/main-panel/components/tool-bar/index.tsx
 const deleteBaseSection = () => {
     // ...
@@ -220,7 +220,7 @@ const copySection = () => {
 
 对于编辑面板而言，与工具栏类似，通过加载表单，在表单的数据变动之后通过`reducer`应用到`JSON`数据即可，在这里因为实现的编辑器确实比较简单，于是还加载了一个`CSS`编辑器，通过配合`CSS`可以实现更多的样式效果，当然通过拓展各个组件编辑面板部分是能够尽量去减少自定义`CSS`的编写的。
 
-```typescript
+```js
 // src/views/editor-panel/index.tsx
 const renderEditor = () => {
 const [selectNodeName] = state.selectedNode.name.split(".");
@@ -250,7 +250,7 @@ const EditorPanel = useMemo(() => renderEditor(), [state.selectedNode.id]);
 #### 图片组件
 图片组件，用以上传图片展示，因为本身没有后端，所以图片只能以`base64`存储在`JSON`的结构中。
 
-```typescript
+```js
 // src/components/image/index.ts
 export const image: LocalComponent = {
   name: "image" as const,
@@ -280,10 +280,10 @@ export const image: LocalComponent = {
 #### 富文本组件
 富文本组件，用以编辑文字，在这里正好我有一个富文本编辑器的组件实现，可以参考:
 
-- 开源地址: <https://github.com/WindrunnerMax/DocEditor> 
+- 开源地址: <https://github.com/WindRunnerMax/DocEditor> 
 - 在线编辑: <https://windrunnermax.github.io/DocEditor/>
 
-```typescript
+```js
 // src/components/text/index.ts
 export const richText: LocalComponent = {
   name: "rich-text" as const,
@@ -312,7 +312,7 @@ export const richText: LocalComponent = {
 #### 空白组件
 空白组件，可以用以作为占位空白符，也可以通过配合`CSS`实现背景效果。
 
-```typescript
+```js
 // src/components/blank/index.ts
 export const blank: LocalComponent = {
   name: "blank" as const,

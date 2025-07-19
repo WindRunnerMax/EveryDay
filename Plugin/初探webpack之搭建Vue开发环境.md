@@ -195,6 +195,7 @@ module.exports = {
 
 ### 搭建Vue基础环境
 首先我们可以尝试一下对于`.js`中编写的`Vue`组件进行构建，即不考虑单文件组件`.vue`文件的加载，只是构建一个`Vue`对象的实例，为了保持演示的代码尽量完整，此时我们在`src`下建立一个`main.js`出来作为之后编写代码的主入口，当然我们还需要在`index.js`中引入`main.js`，也就是说此时代码的名义上的入口是`main.js`并且代码也是在此处编写，实际对于`webpack`来说入口是`index.js`，截至此时的`commit`为`625814a`。  
+
 首先我们需要安装`Vue`，之后才能使用`Vue`进行开发。
 
 ```shell
@@ -1089,14 +1090,10 @@ module.exports = {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://juejin.cn/post/6989491439243624461
-https://juejin.cn/post/6844903942736838670
-https://segmentfault.com/a/1190000012789253
-```
+- <https://juejin.cn/post/6989491439243624461>
+- <https://juejin.cn/post/6844903942736838670>
+- <https://segmentfault.com/a/1190000012789253>

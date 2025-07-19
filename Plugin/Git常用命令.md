@@ -35,6 +35,7 @@
 * `git update-index --assume-unchanged file`: 假设未修改，已经被追踪的文件即使在本地修改了也不会被标记已修改。
 * `git update-index --no-assume-unchanged file`: 不再假设未修改，恢复对文件更改的跟踪。
 * `GIT_COMMITTER_DATE="2019-09-09T02:32:22Z" git commit --date="2019-09-09T02:32:22Z" -m "xxx"`: 指定提交时间。
+* `GIT_COMMITTER_DATE="2019-09-09T10:32:22+08:00" git commit --date="2019-09-09T10:32:22+08:00" -m "xxx"`: 指定提交时间，东八区时间。
 
 ## 分支
 * `git branch`: 列出所有本地分支。
@@ -110,15 +111,11 @@
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://blog.csdn.net/mine_song/article/details/70770467
-https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html
-https://www.liaoxuefeng.com/wiki/896043488029600/896067008724000
-```
+- <https://blog.csdn.net/mine_song/article/details/70770467>
+- <https://www.ruanyifeng.com/blog/2015/12/git-cheat-sheet.html>
+- <https://www.liaoxuefeng.com/wiki/896043488029600/896067008724000>
 

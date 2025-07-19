@@ -401,14 +401,10 @@ require.extensions[".less"] = () => undefined;
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.sanity.io/ssr-vs-ssg-guide
-https://react.docschina.org/reference/react-dom
-https://www.theanshuman.dev/articles/what-the-heck-is-ssg-static-site-generation-explained-with-nextjs-5cja
-```
+- <https://www.sanity.io/ssr-vs-ssg-guide>
+- <https://react.docschina.org/reference/react-dom>
+- <https://www.theanshuman.dev/articles/what-the-heck-is-ssg-static-site-generation-explained-with-nextjs-5cja>

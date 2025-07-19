@@ -533,23 +533,19 @@ window.onload = diffDelta;
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://quilljs.com/docs/api/
-https://github.com/jhchen/fast-diff
-https://zhuanlan.zhihu.com/p/370480813
-https://neil.fraser.name/writing/diff/
-https://neil.fraser.name/writing/patch/
-https://www.npmjs.com/package/quill-delta
-https://github.com/google/diff-match-patch
-https://github.com/quilljs/quill/issues/1125
-https://neil.fraser.name/writing/diff/myers.pdf
-https://neil.fraser.name/writing/patch/bitap.ps
-https://developer.mozilla.org/zh-CN/docs/Web/API/Range
-https://developer.mozilla.org/zh-CN/docs/Web/API/Document/createRange
-```
+- <https://quilljs.com/docs/api/>
+- <https://github.com/jhchen/fast-diff>
+- <https://zhuanlan.zhihu.com/p/370480813>
+- <https://neil.fraser.name/writing/diff/>
+- <https://neil.fraser.name/writing/patch/>
+- <https://www.npmjs.com/package/quill-delta>
+- <https://github.com/google/diff-match-patch>
+- <https://github.com/quilljs/quill/issues/1125>
+- <https://neil.fraser.name/writing/diff/myers.pdf>
+- <https://neil.fraser.name/writing/patch/bitap.ps>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/Range>
+- <https://developer.mozilla.org/zh-CN/docs/Web/API/Document/createRange>

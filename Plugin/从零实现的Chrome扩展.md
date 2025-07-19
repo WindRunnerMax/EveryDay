@@ -454,22 +454,18 @@ if (
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.rspack.dev/
-https://www.v2ex.com/t/861729
-https://zhuanlan.zhihu.com/p/410510492
-https://zhuanlan.zhihu.com/p/103072251
-https://juejin.cn/post/7094545901967900686
-https://juejin.cn/post/6844903985711677453
-https://developer.chrome.com/docs/extensions/mv3/intro/
-https://reorx.com/blog/understanding-chrome-manifest-v3/
-https://tomzhu.site/2022/06/25/webpack开发Chrome扩展时的热更新解决方案
-https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
-https://stackoverflow.com/questions/66618136/persistent-service-worker-in-chrome-extension
-```
+- <https://www.rspack.dev/>
+- <https://www.v2ex.com/t/861729>
+- <https://zhuanlan.zhihu.com/p/410510492>
+- <https://zhuanlan.zhihu.com/p/103072251>
+- <https://juejin.cn/post/7094545901967900686>
+- <https://juejin.cn/post/6844903985711677453>
+- <https://developer.chrome.com/docs/extensions/mv3/intro/>
+- <https://reorx.com/blog/understanding-chrome-manifest-v3/>
+- <https://tomzhu.site/2022/06/25/webpack开发Chrome扩展时的热更新解决方案>
+- <https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions>
+- <https://stackoverflow.com/questions/66618136/persistent-service-worker-in-chrome-extension>

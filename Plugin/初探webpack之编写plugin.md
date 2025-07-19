@@ -18,8 +18,9 @@
 * 扩展插件，在`webpack`构建流程中的特定时机注入扩展逻辑来改变构建结果或做你想要的事情。
 
 
-本文编写的就是编写一个简单的`webpack`插件，设想一个简单的场景，假如我们实现了一个多页的`Vue`应用，每个打包的页面都会共享一个相同的头部和底部，也就是顶部`navigation bar`和底部的`footer`。因为类似于`Vue`这种框架都是在运行时才会加载出来头部与底部，而这部分代码实际上完全可以作为一个独立的公用子项目去开发，没必要在多页应用的每个页面都引用一次组件再让框架去解析组件。另外在多页应用页面之间跳转时，如果编写一个头部组件在每个页面组件内部去引用的话，很容易因为需要加载解析`JS`的时间比较长从而出现导航栏闪烁的问题。   
-如果要解决上边提到的问题的话，可以采用的一个方案就是使用静态页面片，我们可以将头部和底部的页面片在`webpack`打包的时候将其注入到要打包完成的`html`页面中，这样的话不但可以节省一些框架解析组件的`JS`消耗，而且还可以有更好的`SEO`表现。虽然只是一个头部与底部并未承载多少信息，但是如果是在`SSR`场景下大量的重复`CPU`任务，提升一点对于整体来说还是有一个比较大的提高的，就像图形学中画线的算法一样，架不住运算次数太多。此外这样可以比较好的解决组件头部闪烁的问题，因为其是随着`HTML`一并返回的，所以能立即渲染在页面上不需要`JS`的加载解析，同样对于骨架屏而言也是可以采用`webpack`注入页面片的这种方案加载，文中涉及到的所有代码都在`https://github.com/WindrunnerMax/webpack-simple-environment`。
+本文编写的就是编写一个简单的`webpack`插件，设想一个简单的场景，假如我们实现了一个多页的`Vue`应用，每个打包的页面都会共享一个相同的头部和底部，也就是顶部`navigation bar`和底部的`footer`。因为类似于`Vue`这种框架都是在运行时才会加载出来头部与底部，而这部分代码实际上完全可以作为一个独立的公用子项目去开发，没必要在多页应用的每个页面都引用一次组件再让框架去解析组件。另外在多页应用页面之间跳转时，如果编写一个头部组件在每个页面组件内部去引用的话，很容易因为需要加载解析`JS`的时间比较长从而出现导航栏闪烁的问题。  
+
+如果要解决上边提到的问题的话，可以采用的一个方案就是使用静态页面片，我们可以将头部和底部的页面片在`webpack`打包的时候将其注入到要打包完成的`html`页面中，这样的话不但可以节省一些框架解析组件的`JS`消耗，而且还可以有更好的`SEO`表现。虽然只是一个头部与底部并未承载多少信息，但是如果是在`SSR`场景下大量的重复`CPU`任务，提升一点对于整体来说还是有一个比较大的提高的，就像图形学中画线的算法一样，架不住运算次数太多。此外这样可以比较好的解决组件头部闪烁的问题，因为其是随着`HTML`一并返回的，所以能立即渲染在页面上不需要`JS`的加载解析，同样对于骨架屏而言也是可以采用`webpack`注入页面片的这种方案加载，文中涉及到的所有代码都在`https://github.com/WindRunnerMax/webpack-simple-environment`。
 
 ## 实现
 
@@ -148,6 +149,7 @@ module.exports = {
 
 ### 编写插件
 之后到了正文环节，此时我们要编写一个插件去处理上边提到的需求，具体实现来看，我们需要的是首先在`html`中留下一个类似于`<!-- inject:name="head" -->`的标记注释，之后在`webpack`打包时对于`html`文件进行一次正则匹配，将注释相关的信息替换成页面片，通过`name`进行区分到底要加载哪一个页面片。另外个人感觉实际上编写`webpack`插件的时候还是首先参考其他人编写的`webpack`插件的实现，自己去翻阅文档成本查阅各种`hook`的成本有点高。  
+
 对于这个插件我们直接在根目录建立一个`static-page-slice.js`，插件由一个构造函数实例化出来，构造函数定义`apply`方法，在`webpack`处理插件的时候，`apply`方法会被`webpack compiler`调用一次。`apply`方法可以接收一个`webpack compiler`对象的引用，从而可以在回调函数中访问到`compiler`对象。一个最基础的`Plugin`的结构是类似于这样的:
 
 ```javascript
@@ -174,7 +176,9 @@ module.exports = BasicPlugin;
 * `compilation`对象包含了当前的模块资源、编译生成资源、变化的文件等，当`webpack`以开发模式运行时，每当检测到一个文件变化，一次新的`compilation`将被创建，`compilation`对象也提供了很多事件回调供插件做扩展，通过`compilation`也能读取到`compiler`对象。
 
 `compiler`和`compilation`的区别在于`: compiler`代表了整个`webpack`从启动到关闭的生命周期，而`compilation`只是代表了一次新的编译，与之相关的信息可以参考`https://webpack.docschina.org/api/compiler-hooks/`。  
+
 `webpack`就像一条生产线，要经过一系列处理流程后才能将源文件转换成输出结果，这条生产线上的每个处理流程的职责都是单一的，多个流程之间有存在依赖关系，只有完成当前处理后才能交给下一个流程去处理，插件就像是一个插入到生产线中的一个功能，在特定的时机对生产线上的资源做处理，`webpack`通过`tapable`来组织这条复杂的生产线`https://github.com/webpack/tapable`。  
+
 在这里我们选择在`compiler`钩子的`emit`时期处理资源文件，即是在输出`asset`到`output`目录之前执行，在此时要注意`emit`是一个`AsyncSeriesHook`也就是异步的`hook`，所以我们需要使用`Tapable`的`tapAsync`或者`tapPromise`，如果选取的是同步的`hook`，则可以使用`tap`。
 
 ```javascript
@@ -415,19 +419,15 @@ module.exports = StaticPageSlice;
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://webpack.docschina.org/concepts/
-https://juejin.cn/post/6854573216108085261
-https://webpack.docschina.org/api/plugins/
-https://juejin.cn/post/6844903942736838670
-https://segmentfault.com/a/1190000012840742
-https://segmentfault.com/a/1190000021821557
-https://webpack.docschina.org/api/compilation-hooks/
-https://webpack.docschina.org/api/normalmodulefactory-hooks/
-```
+- <https://webpack.docschina.org/concepts/>
+- <https://juejin.cn/post/6854573216108085261>
+- <https://webpack.docschina.org/api/plugins/>
+- <https://juejin.cn/post/6844903942736838670>
+- <https://segmentfault.com/a/1190000012840742>
+- <https://segmentfault.com/a/1190000021821557>
+- <https://webpack.docschina.org/api/compilation-hooks/>
+- <https://webpack.docschina.org/api/normalmodulefactory-hooks/>
