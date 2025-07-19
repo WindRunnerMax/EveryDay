@@ -2,7 +2,10 @@
 `React`自己实现了一套高效的事件注册、存储、分发和重用逻辑，在`DOM`事件体系基础上做了很大改进，减少了内存消耗，简化了事件逻辑，并最大程度地解决了`IE`等浏览器的不兼容问题。
 
 ## 描述
-`React`的合成事件`SyntheticEvent`实际上就是`React`自己在内部实现的一套事件处理机制，它是浏览器的原生事件的跨浏览器包装器，除兼容所有浏览器外，它还拥有和浏览器原生事件相同的接口，包括`stopPropagation()`和`preventDefault()`，合成事件与浏览器的原生事件不同，也不会直接映射到原生事件，也就是说通常不要使用`addEventListener`为已创建的`DOM`元素添加监听器，而应该直接使用`React`中定义的事件机制，而且在混用的情况下原生事件如果定义了阻止冒泡可能会阻止合成事件的执行，当然如果确实需要使用原生事件去处理需求，可以通过事件触发传递的`SyntheticEvent`对象的`nativeEvent`属性获得原生`Event`对象的引用，`React`中的事件有以下几个特点：
+`React`的合成事件`SyntheticEvent`实际上就是`React`自己在内部实现的一套事件处理机制，它是浏览器的原生事件的跨浏览器包装器，除兼容所有浏览器外，它还拥有和浏览器原生事件相同的接口，包括`stopPropagation()`和`preventDefault()`。合成事件与浏览器的原生事件不同，也不会直接映射到原生事件，也就是说通常不要使用`addEventListener`为已创建的`DOM`元素添加监听器，而应该直接使用`React`中定义的事件机制。
+
+而且在混用的情况下原生事件如果定义了阻止冒泡可能会阻止合成事件的执行，当然如果确实需要使用原生事件去处理需求，可以通过事件触发传递的`SyntheticEvent`对象的`nativeEvent`属性获得原生`Event`对象的引用，`React`中的事件有以下几个特点：
+
 * `React`上注册的事件最终会绑定在`document`这个`DOM`上，而不是`React`组件对应的`DOM`，通过这种方式减少内存开销，所有的事件都绑定在`document`上，其他节点没有绑定事件，实际上就是事件委托的。
 * `React`自身实现了一套事件冒泡机制，使用`React`实现的`Event`对象与原生`Event`对象不同，不能相互混用。
 * `React`通过队列的形式，从触发的组件向父组件回溯，然后调用他们`JSX`中定义的`callback`。
@@ -29,9 +32,9 @@ number timeStamp
 string type
 ```
 
-支持的合成事件一览，注意以下的事件处理函数在冒泡阶段被触发，如需注册捕获阶段的事件处理函数，则应为事件名添加`Capture`，例如处理捕获阶段的点击事件请使用`onClickCapture`，而不是`onClick`。
+支持的合成事件一览，注意以下的事件处理函数在冒泡阶段被触发，如需注册捕获阶段的事件处理函数，则应为事件名添加`Capture`。例如处理捕获阶段的点击事件请使用`onClickCapture`，而不是`onClick`。
 
-```
+```html
 <!-- 剪贴板事件 -->
 onCopy onCut onPaste
 
@@ -93,8 +96,9 @@ onToggle
 ```
 
 ### 示例
-一个简单的示例，同时绑定在一个`DOM`上的原生事件与`React`事件，因为原生事件阻止冒泡而导致`React`事件无法执行，同时我们也可以看到`React`传递的`event`并不是原生`Event`对象的实例，而是`React`自行实现维护的一个`event`对象。
-```
+一个简单的示例，同时绑定在一个`DOM`上的原生事件与`React`事件，因为原生事件阻止冒泡而导致`React`事件无法执行。同时我们也可以看到`React`传递的`event`并不是原生`Event`对象的实例，而是`React`自行实现维护的一个`event`对象。
+
+```html
 <!DOCTYPE html>
 <html>
 
@@ -156,10 +160,10 @@ onToggle
 ```
 
 ## React事件系统
-简单来说，在挂载的时候，通过`listenerBank`把事件存起来了，触发的时候`document`进行`dispatchEvent`，找到触发事件的最深的一个节点，向上遍历拿到所有的`callback`放在`eventQueue`，根据事件类型构建`event`对象，遍历执行`eventQueue`，不简单点说，我们可以查看一下`React`对于事件处理的源码实现，`commit id`为`4ab6305`，`TAG`是`React16.10.2`，在`React17`不再往`document`上挂事件委托，而是挂到`DOM`容器上，目录结构都有了很大更改，我们还是依照`React16`，首先来看一下事件的处理流程。
+简单来说，在挂载的时候，通过`listenerBank`把事件存起来了，触发的时候`document`进行`dispatchEvent`，找到触发事件的最深的一个节点，向上遍历拿到所有的`callback`放在`eventQueue`，根据事件类型构建`event`对象，遍历执行`eventQueue`。不简单点说，我们可以查看一下`React`对于事件处理的源码实现，`commit id`为`4ab6305`，`TAG`是`React16.10.2`，在`React17`不再往`document`上挂事件委托，而是挂到`DOM`容器上，目录结构都有了很大更改，我们还是依照`React16`，首先来看一下事件的处理流程。
 
 
-```
+```js
 /**
  * Summary of `ReactBrowserEventEmitter` event handling:
  *
@@ -217,7 +221,9 @@ onToggle
  *                   .
  */
 ```
-在`packages\react-dom\src\events\ReactBrowserEventEmitter.js`中就描述了上边的流程，并且还有相应的英文注释，使用`google`翻译一下，这个太概述了，所以还是需要详细描述一下，在事件处理之前，我们编写的`JSX`需要经过`babel`的编译，创建虚拟`DOM`，并处理组件`props`，拿到事件类型和回调`fn`等，之后便是事件注册、存储、合成、分发、执行阶段。
+
+在`packages\react-dom\src\events\ReactBrowserEventEmitter.js`中就描述了上边的流程，并且还有相应的英文注释，使用`google`翻译一下，这个太概述了，所以还是需要详细描述一下。在事件处理之前，我们编写的`JSX`需要经过`babel`的编译，创建虚拟`DOM`，并处理组件`props`，拿到事件类型和回调`fn`等，之后便是事件注册、存储、合成、分发、执行阶段。
+
 * `Top-level delegation`用于捕获最原始的浏览器事件，它主要由`ReactEventListener`负责，`ReactEventListener`被注入后可以支持插件化的事件源，这一过程发生在主线程。
 * `React`对事件进行规范化和重复数据删除，以解决浏览器的问题，这可以在工作线程中完成。
 * 将这些本地事件(具有关联的顶级类型用来捕获它)转发到`EventPluginHub`，后者将询问插件是否要提取任何合成事件。
@@ -266,7 +272,7 @@ function setInitialDOMProperties(
   }
 }
 ```
-如果事件名合法而且是一个函数的时候，就会调用`ensureListeningTo()`方法注册事件。`ensureListeningTo`会判断`rootContainerElement`是否为`document`或是`Fragment`，如果是则直接传递给`listenTo`，如果不是则通过`ownerDocument`来获取其根节点，对于`ownerDocument`属性，定义是这样的，`ownerDocument`可返回某元素的根元素，在`HTML`中`HTML`文档本身是元素的根元素，所以可以说明其实大部分的事件都是注册在`document`上面的，之后便是调用`listenTo`方法实际注册。
+如果事件名合法而且是一个函数的时候，就会调用`ensureListeningTo()`方法注册事件。`ensureListeningTo`会判断`rootContainerElement`是否为`document`或是`Fragment`，如果是则直接传递给`listenTo`，如果不是则通过`ownerDocument`来获取其根节点。对于`ownerDocument`属性，定义是这样的，`ownerDocument`可返回某元素的根元素，在`HTML`中`HTML`文档本身是元素的根元素，所以可以说明其实大部分的事件都是注册在`document`上面的，之后便是调用`listenTo`方法实际注册。
 
 ```javascript
 // packages\react-dom\src\client\ReactDOMComponent.js line 272
@@ -364,12 +370,14 @@ export function trapBubbledEvent(
 }
 ```
 
-可以看到`React`将事件分成了三类，优先级由低到高：
+可以看到`React`将事件分成了三类，优先级由低到高:
+
 * `DiscreteEvent`离散事件，例如`blur`、`focus`、 `click`、 `submit`、 `touchStart`，这些事件都是离散触发的。
 * `UserBlockingEvent`用户阻塞事件，例如`touchMove`、`mouseMove`、`scroll`、`drag`、`dragOver`等等，这些事件会阻塞用户的交互。
 * `ContinuousEvent`连续事件，例如`load`、`error`、`loadStart`、`abort`、`animationEnd`，这个优先级最高，也就是说它们应该是立即同步执行的，这就是`Continuous`的意义，是持续地执行，不能被打断。
 
-此外`React`将事件系统用到了`Fiber`架构里，`Fiber`中将任务分成了`5`大类，对应不同的优先级，那么三大类的事件系统和五大类的`Fiber`任务系统的对应关系如下。
+此外`React`将事件系统用到了`Fiber`架构里，`Fiber`中将任务分成了`5`大类，对应不同的优先级，那么三大类的事件系统和五大类的`Fiber`任务系统的对应关系如下:
+
 * `Immediate`: 此类任务会同步执行，或者说马上执行且不能中断，`ContinuousEvent`便属于此类。
 * `UserBlocking`: 此类任务一般是用户交互的结果，需要及时得到反馈，`DiscreteEvent`与`UserBlockingEvent`都属于此类。
 * `Normal`: 此类任务是应对那些不需要立即感受到反馈的任务，比如网络请求。
@@ -453,7 +461,7 @@ export function addEventCaptureListenerWithPassiveFlag(
 ```
 
 ### 事件存储
-让我们回到上边的`listenToTopLevel`方法中的`listeningSet.add(topLevelType)`，即是将事件添加到注册到事件列表对象中，即将`DOM`节点和对应的事件保存到`Weak Map`对象中，具体来说就是`DOM`节点作为键名，事件对象的`Set`作为键值，这里的数据集合有自己的名字叫做`EventPluginHub`，当然在这里最理想的情况会是使用`WeakMap`进行存储，不支持则使用`Map`对象，使用`WeakMap`主要是考虑到`WeakMaps`保持了对键名所引用的对象的弱引用，不用担心内存泄漏问题，`WeakMaps`应用的典型场合就是`DOM`节点作为键名。
+让我们回到上边的`listenToTopLevel`方法中的`listeningSet.add(topLevelType)`，即是将事件添加到注册到事件列表对象中，即将`DOM`节点和对应的事件保存到`Weak Map`对象中，具体来说就是`DOM`节点作为键名，事件对象的`Set`作为键值，这里的数据集合有自己的名字叫做`EventPluginHub`。当然在这里最理想的情况会是使用`WeakMap`进行存储，不支持则使用`Map`对象，使用`WeakMap`主要是考虑到`WeakMaps`保持了对键名所引用的对象的弱引用，不用担心内存泄漏问题，`WeakMaps`应用的典型场合就是`DOM`节点作为键名。
 
 ```javascript
 // packages\react-dom\src\events\ReactBrowserEventEmitter.js line 88
@@ -578,7 +586,9 @@ function extractPluginEvents(
 }
 ```
 不同的事件类型会有不同的合成事件基类，然后再通过`EventConstructor.getPooled`生成事件，`accumulateTwoPhaseDispatches`用于获取事件回调函数，最终调的是`getListener`方法。  
-为了避免频繁创建和释放事件对象导致性能损耗(对象创建和垃圾回收)，`React`使用一个事件池来负责管理事件对象(在`React17`中不再使用事件池机制)，使用完的事件对象会放回池中，以备后续的复用，也就意味着事件处理器同步执行完后，`SyntheticEvent`属性就会马上被回收，不能访问了，也就是事件中的`e`不能用了，如果要用的话，可以通过一下两种方式：
+
+为了避免频繁创建和释放事件对象导致性能损耗(对象创建和垃圾回收)，`React`使用一个事件池来负责管理事件对象(在`React17`中不再使用事件池机制)，使用完的事件对象会放回池中，以备后续的复用，也就意味着事件处理器同步执行完后，`SyntheticEvent`属性就会马上被回收，不能访问了，也就是事件中的`e`不能用了，如果要用的话，可以通过一下两种方式:
+
 * 使用`e.persist()`，告诉`React`不要回收对象池，在`React17`依旧可以调用只是没有实际作用。
 * 使用`e. nativeEvent`，因为它是持久引用的。
 
@@ -698,22 +708,17 @@ export function invokeGuardedCallbackAndCatchFirstError<
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://zhuanlan.zhihu.com/p/53961511
-https://zhuanlan.zhihu.com/p/25883536
-https://zhuanlan.zhihu.com/p/140791931
-https://www.jianshu.com/p/8d8f9aa4b033
-https://toutiao.io/posts/28of14w/preview
-https://juejin.cn/post/6844903988794671117
-https://segmentfault.com/a/1190000015142568
-https://zh-hans.reactjs.org/docs/events.html
-https://github.com/UNDERCOVERj/tech-blog/issues/13
-https://blog.csdn.net/kyooo0/article/details/111829693
-```
-
+- <https://zhuanlan.zhihu.com/p/53961511>
+- <https://zhuanlan.zhihu.com/p/25883536>
+- <https://zhuanlan.zhihu.com/p/140791931>
+- <https://www.jianshu.com/p/8d8f9aa4b033>
+- <https://toutiao.io/posts/28of14w/preview>
+- <https://juejin.cn/post/6844903988794671117>
+- <https://segmentfault.com/a/1190000015142568>
+- <https://zh-hans.reactjs.org/docs/events.html>
+- <https://github.com/UNDERCOVERj/tech-blog/issues/13>
+- <https://blog.csdn.net/kyooo0/article/details/111829693>

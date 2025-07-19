@@ -390,17 +390,14 @@ document.dispatchEvent(
 
 ## 每日一题
 
-```
-https://github.com/WindRunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://github.com/scriptscat/scriptcat
-https://github.com/greasemonkey/greasemonkey
-https://github.com/Tampermonkey/tampermonkey
-https://github.com/violentmonkey/violentmonkey
-https://reorx.com/blog/understanding-chrome-manifest-v3/
-https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions
-```
+- <https://github.com/scriptscat/scriptcat>
+- <https://github.com/greasemonkey/greasemonkey>
+- <https://github.com/Tampermonkey/tampermonkey>
+- <https://github.com/violentmonkey/violentmonkey>
+- <https://reorx.com/blog/understanding-chrome-manifest-v3/>
+- <https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions>
+

@@ -15,12 +15,12 @@
 
 对于`webpack`来说，一切皆模块，而`webpack`仅能处理出`js`以及`json`文件，因此如果要使用其他类型的文件，都需要转换成`webpack`可识别的模块，即`js`或`json`模块。也就是说无论什么后缀的文件例如`png`、`txt`、`vue`文件等等，都需要当作`js`来使用，但是直接当作`js`来使用肯定是不行的，因为这些文件并不符合`js`的语法结构，所以就需需要`webpack loader`来处理，帮助我们将一个非`js`文件转换为`js`文件，例如`css-loader`、`ts-loader`、`file-loader`等等。  
 
-在这里编写一个简单的`webpack loader`，设想一个简单的场景，在这里我们关注`vue2`，从实例出发，在平时我们构建`vue`项目时都是通过编写`.vue`文件来作为模块的，这种单文件组件的方式虽然比较清晰，但是如果一个组件比较复杂的话，就会导致整个文件相当大。当然`vue`中给我们提供了在`.vue`文件中引用`js`、`css`的方式，但是这样用起来毕竟还是稍显麻烦，所以我们可以通过编写一个`webpack loader`，在编写代码时将三部分即`html`、`js`、`css`进行分离，之后在`loader`中将其合并，再我们编写的`loader`完成处理之后再交与`vue-loader`去处理之后的事情。当然，关注点分离不等于文件类型分离，将一个单文件分成多个文件也只是对于代码编写过程中可读性的倾向问题，在这里我们重点关注的是编写一个简单的`loader`而不在于对于文件是否应该分离的探讨。文中涉及到的所有代码都在`https://github.com/WindrunnerMax/webpack-simple-environment`。
+在这里编写一个简单的`webpack loader`，设想一个简单的场景，在这里我们关注`vue2`，从实例出发，在平时我们构建`vue`项目时都是通过编写`.vue`文件来作为模块的，这种单文件组件的方式虽然比较清晰，但是如果一个组件比较复杂的话，就会导致整个文件相当大。当然`vue`中给我们提供了在`.vue`文件中引用`js`、`css`的方式，但是这样用起来毕竟还是稍显麻烦，所以我们可以通过编写一个`webpack loader`，在编写代码时将三部分即`html`、`js`、`css`进行分离，之后在`loader`中将其合并，再我们编写的`loader`完成处理之后再交与`vue-loader`去处理之后的事情。当然，关注点分离不等于文件类型分离，将一个单文件分成多个文件也只是对于代码编写过程中可读性的倾向问题，在这里我们重点关注的是编写一个简单的`loader`而不在于对于文件是否应该分离的探讨。文中涉及到的所有代码都在`https://github.com/WindRunnerMax/webpack-simple-environment`。
 
 ## 实现
 
 ### 搭建环境
-在这里直接使用我之前的 [初探webpack之从零搭建Vue开发环境](https://github.com/WindrunnerMax/EveryDay/blob/master/Plugin/%E5%88%9D%E6%8E%A2webpack%E4%B9%8B%E6%90%AD%E5%BB%BAVue%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.md) 中搭建的简单`vue + ts`开发环境，环境的相关的代码都在`https://github.com/WindrunnerMax/webpack-simple-environment`中的`webpack--vue-cli`分支中，我们直接将其`clone`并安装。
+在这里直接使用我之前的 [初探webpack之从零搭建Vue开发环境](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/初探webpack之搭建Vue开发环境.md) 中搭建的简单`vue + ts`开发环境，环境的相关的代码都在`https://github.com/WindRunnerMax/webpack-simple-environment`中的`webpack--vue-cli`分支中，我们直接将其`clone`并安装。
 
 ```
 git clone https://github.com/WindrunnerMax/webpack-simple-environment.git
@@ -126,6 +126,7 @@ webpack--loader
 ```
 
 现在我们开始正式编写这个`loader`了，首先需要简单说明一下`loader`的输入与输出以及常用的模块。
+
 * 简单来说`webpack loader`是一个从`string`到`string`的函数，输入的是字符串的代码，输出也是字符串的代码。
 * 通常来说对于各种文件的处理`loader`已经都有很好的轮子了，我们自己来编写的`loader`通常是用来做代码处理的，也就是说在`loader`中拿到`source`之后，我们将其转换为`AST`树，然后在这个`AST`上进行一些修改，之后再将其转换为字符串代码之后进行返回。
 * 从字符串到`AST`语法分析树是为了得到计算机容易识别的数据结构，在`webpack`中自带了一些工具，`acorn`是代码转`AST`的工具，`estraverse`是`AST`遍历工具，`escodegen`是转换`AST`到字符串代码的工具。
@@ -154,6 +155,7 @@ webpack--loader
 ```
 
 首先可以看到在`"vue-loader"`之后我们编写了一个对象，这个对象的`loader`参数是一个字符串，这个字符串是将来要被传递到`require`当中的，也就是说在`webpack`中他会自动帮我们把这个模块`require`即`require("./vue-multiple-files-loader")`。`webpack loader`是有优先级的，在这里我们的目标是首先经由`vue-multiple-files-loader`这个`loader`将代码处理之后再交与`vue-loader`进行处理，所以我们要将`vue-multiple-files-loader`写在`vue-loader`后边，这样就会首先使用`vue-multiple-files-loader`代码了。我们通过`options`这个对象传递参数，这个参数可以在`loader`中拿到。    
+
 关于`webpack loader`的优先级，首先定义`loader`配置的时候，除了`loader`与`options`选项，还有一个`enforce`选项，其可接受的参数分别是`pre: `前置`loader`、`normal: `普通`loader`、`inline: `内联`loader`、`post: `后置`loader`，其优先级也是`pre > normal > inline > post`，那么相同优先级的`loader`就是从右到左、从下到上，从上到下很好理解，至于从右到左，只是`webpack`选择了`compose`方式，而不是`pipe`的方式而已，在技术上实现从左往右也不会有难度，就是函数式编程中的两种组合方式而已。此外，我们在`require`的时候还可以跳过某些`loader`，`!`跳过`normal loader`、`-!`跳过`pre`和`normal loader`、`!!`跳过`pre normal`和`post loader`，比如`require("!!raw!./script.coffee")`，关于`loader`的跳过，`webpack`官方的建议是，除非从另一个`loader`处理生成的，一般不建议主动使用。 
 
 现在我们已经处理好`vue-multiple-files-loader.js`这个文件的创建以及`loader`的引用了，那么我们可以通过他来编写代码了，通常来说，`loader`一般是比较耗时的应用，所以我们通过异步来处理这个`loader`，通过`this.async`告诉`loader-runner`这个`loader`将会异步地回调，当我们处理完成之后，使用其返回值将处理后的字符串代码作为参数执行即可。
@@ -177,6 +179,7 @@ const readFile = promisify(fs.readFile);
 ```
 
 下面我们回到上边的需求上来，思路很简单，首先我们在这个`loader`中仅会收到以`.vue`结尾的文件，这是在`webpack.config.js`中配置的，所以我们在这里仅关注`.vue`文件，那么在这个文件下，我们需要获取这个文件所在的目录，然后将其遍历，通过`webpack.config.js`中配置的`options`来构建正则表达式去匹配同级目录下的`script`与`style`的相关文件，对于匹配成功的文件我们将其读取然后按照`.vue`文件的规则拼接到`source`中，然后将其返回之后将代码交与`vue-loader`处理即可。  
+
 那么我们首先处理一下当前目录，以及当前处理的文件名，还有正则表达式的构建，在这里我们传递了`scss`、`css`和`ts`，那么对于`App.vue`这个文件来说，将会构建`/App\.vue\.css$|App\.vue\.scss$/`和`App\.vue\.ts$`这两个正则表达式。
 
 ```javascript
@@ -312,18 +315,14 @@ module.exports = async function (source) {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindrunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://webpack.js.org/api/loaders/
-https://juejin.cn/post/6844904054393405453
-https://segmentfault.com/a/1190000014685887
-https://segmentfault.com/a/1190000021657031
-https://webpack.js.org/concepts/loaders/#inline
-http://t.zoukankan.com/hanshuai-p-11287231.html
-https://v2.vuejs.org/v2/guide/single-file-components.html
-```
+- <https://webpack.js.org/api/loaders/>
+- <https://juejin.cn/post/6844904054393405453>
+- <https://segmentfault.com/a/1190000014685887>
+- <https://segmentfault.com/a/1190000021657031>
+- <https://webpack.js.org/concepts/loaders/#inline>
+- <http://t.zoukankan.com/hanshuai-p-11287231.html>
+- <https://v2.vuejs.org/v2/guide/single-file-components.html>

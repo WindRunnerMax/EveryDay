@@ -1007,27 +1007,21 @@ number|string -> number|string|boolean -> ... -> number -> number|string
 }
 ```
 
-
-
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.typescriptlang.org/play/
-https://zhuanlan.zhihu.com/p/443995763
-https://zhuanlan.zhihu.com/p/353156044
-https://segmentfault.com/q/1010000040197076
-https://www.cnblogs.com/terrymin/p/13897214.html
-https://www.cnblogs.com/wangleicode/p/10937707.html
-https://blog.csdn.net/qq_43869822/article/details/121664818
-https://tslang.baiqian.ltd/release-notes/typescript-2.7.html
-https://www.typescriptlang.org/docs/handbook/utility-types.html
-https://levelup.gitconnected.com/intrinsic-types-in-typescript-8b9f814410d
-https://jkchao.github.io/typescript-book-chinese/tips/covarianceAndContravariance.html
-https://github.com/xcatliu/typescript-tutorial/blob/master/basics/declaration-files.md
-```
+- <https://www.typescriptlang.org/play/>
+- <https://zhuanlan.zhihu.com/p/443995763>
+- <https://zhuanlan.zhihu.com/p/353156044>
+- <https://segmentfault.com/q/1010000040197076>
+- <https://www.cnblogs.com/terrymin/p/13897214.html>
+- <https://www.cnblogs.com/wangleicode/p/10937707.html>
+- <https://blog.csdn.net/qq_43869822/article/details/121664818>
+- <https://tslang.baiqian.ltd/release-notes/typescript-2.7.html>
+- <https://www.typescriptlang.org/docs/handbook/utility-types.html>
+- <https://levelup.gitconnected.com/intrinsic-types-in-typescript-8b9f814410d>
+- <https://jkchao.github.io/typescript-book-chinese/tips/covarianceAndContravariance.html>
+- <https://github.com/xcatliu/typescript-tutorial/blob/master/basics/declaration-files.md>

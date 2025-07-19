@@ -4,8 +4,10 @@
 
 ## 描述
 在我开始学习`React Hooks`的时候，我就比较疑惑这个问题。首先看一下官方文档，在自定义`Hooks`的部分说明了，构建自己的`Hooks`可以让您将组件逻辑提取到可重用的函数中。如果仅仅是这样的话，那么我们也完全可以使用普通的函数来实现逻辑的复用，而没必要去使用`Hooks`了。    
+
 当然在这里还是得先明确一点定义: 自定义`Hooks`就是很明确的定义了，其以`use`开头，内部可以调用其他的`Hooks`；在这里描述的的普通函数指的是我们平时写的抽离公共逻辑的函数，而不是在我们定义的普通函数中去调用其他`Hooks`这种方式。如果在普通函数中调用了其他`Hooks`，那么这个函数就不再是普通函数了，除了违反了`Hooks`的命名规则以外，那就完全是一个`Hooks`的定义了。  
-实际上，`Coding`比较重要的两个概念是逻辑与数据，文档中提到的将组件逻辑提取到可重用的函数中，重要的是逻辑这两个字，而在两个组件中使用相同的自定义`Hooks`是不会共享`State`的。如果我们直接编写一个普通的函数，那么对于其数据是在所有调用者中共享的，因为其只是一个模块，当然前提是我们不会去`new`出一个新对象来保存状态，在这里只讨论最`plain`的调用方式，因为`Hooks`也是直接以非常`plain`的方式进行调用的。  
+
+实际上，`Coding`比较重要的两个概念是逻辑与数据，文档中提到的将组件逻辑提取到可重用的函数中，重要的是逻辑这两个字，而在两个组件中使用相同的自定义`Hooks`是不会共享`State`的。如果我们直接编写一个普通的函数，那么对于其数据是在所有调用者中共享的。因为其只是一个模块，当然前提是我们不会去`new`出一个新对象来保存状态，在这里只讨论最`plain`的调用方式，因为`Hooks`也是直接以非常`plain`的方式进行调用的。  
 那么也就是说，如果我们使用`Hooks`的话，实际上由于可以调用`useState`、`useRef`等`Hooks`，从而获取了对于这个`Fiber`的访问方法，那么也就相当于我们可以将状态或者说数据存放于当前节点当中，而不是类似于普通函数在全局中共享。当然如果需要全局共享状态的话，状态管理方案是更好的选择，而不是全局变量。
 
 ## 示例
@@ -49,15 +51,10 @@ const useRequest = (url) => {
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://www.zhihu.com/question/491311403
-https://zh-hans.reactjs.org/docs/hooks-custom.html
-https://stackoverflow.com/questions/60133412/react-custom-hooks-vs-normal-functions-what-is-the-difference
-```
-
+- <https://www.zhihu.com/question/491311403>
+- <https://zh-hans.reactjs.org/docs/hooks-custom.html>
+- <https://stackoverflow.com/questions/60133412/react-custom-hooks-vs-normal-functions-what-is-the-difference>

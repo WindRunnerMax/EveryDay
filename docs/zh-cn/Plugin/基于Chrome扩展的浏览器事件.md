@@ -351,17 +351,14 @@ chrome.downloads
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://chromedevtools.github.io/devtools-protocol/
-https://github.com/microsoft/playwright/issues/29417
-https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API
-https://developer.chrome.google.cn/docs/extensions/reference/api/debugger?hl=zh-cn
-https://stackoverflow.com/questions/71005817/how-does-pixels-relate-to-screen-size-in-css
-https://chromewebstore.google.com/detail/just-one-page-pdf/fgbhbfdgdlojklkbhdoilkdlomoilbpl
-```
+- <https://chromedevtools.github.io/devtools-protocol/>
+- <https://github.com/microsoft/playwright/issues/29417>
+- <https://developer.mozilla.org/en-US/docs/Web/API/Clipboard_API>
+- <https://developer.chrome.google.cn/docs/extensions/reference/api/debugger?hl=zh-cn>
+- <https://stackoverflow.com/questions/71005817/how-does-pixels-relate-to-screen-size-in-css>
+- <https://chromewebstore.google.com/detail/just-one-page-pdf/fgbhbfdgdlojklkbhdoilkdlomoilbpl>
+

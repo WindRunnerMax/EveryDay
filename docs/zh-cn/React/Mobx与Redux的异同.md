@@ -10,14 +10,17 @@
 * 子组件更新一个状态，可能有多个父组件，兄弟组件共用，实现困难。
 
 这种情况下继续使用提取状态到父组件的方法你会发现很复杂，而且随着组件增多，嵌套层级加深，这个复杂度也越来越高。因为关联的状态多，传递复杂，很容易出现像某个组件莫名其妙的更新或者不更新的情况，异常排查也会困难重重。也就是说当应用膨胀到一定程度时，推算应用的状态将会变得越来越困难，此时整个应用就会变成一个有很多状态对象并且在组件层级上互相修改状态的混乱应用。在很多情况下，状态对象和状态的修改并没有必要绑定在一些组件上，我们可以尝试将其提升，通过组件树来得到与修改状态。   
+
 目前通常的解决方案是引入状态管理库，比如`Mobx`或`Redux`，`Mobx`与`Redux`都是用来管理`JavaScript`应用的状态的解决方案，用以提供在某个地方保存状态、修改状态和更新状态，使我们的应用在状态与组件上解耦，我们可以从一个地方获得状态，在另一个地方修改，在其他地方得到他们更新后的状态。他们都遵循单一数据源的原则，这让我们更容易推断状态的值和状态的修改。当然他们并不一定要跟`React`绑定在一起，它们也可以在`AngularJs`和`VueJs`这些框架库里使用。  
+
 像`Redux`和`Mobx`这类状态管理库一般都有附带的工具，例如在`React`中使用的有`react-redux`和`mobx-react`，他们使你的组件能够获得状态，一般情况下，这些组件被叫做容器组件`container components`，或者说的更加确切的话，就是连接组件`connected components`。通常只要将组件作为连接组件，就可以在组件层级的任何地方得到和更改状态。  
+
 对于`Mobx`与`Redux`的异同这个问题，是我最近在找实习的时候遇到的，分别为`react mobx`与`react redux`作简单的示例，文中的示例代码都在`https://codesandbox.io/s/react-ts-template-forked-88t6in`中。
 
 ### Mobx
 `MobX`是一个经过战火洗礼的库，他通过透明的函数响应式编程`transparently applying functional reactive programming - TFRP`使得状态管理变得简单和可扩展。`MobX`背后的哲学很简单: 任何源自应用状态的东西都应该自动地获得，其中包括`UI`、数据序列化等等，核心重点就是: `MobX`通过响应式编程实现简单高效，可扩展的状态管理。
 
-```
+```js
 // src/mobx-store/store.ts
 import { observable, action, makeAutoObservable } from "mobx";
 
@@ -45,7 +48,7 @@ class Store {
 export default new Store();
 ```
 
-```
+```js
 // src/counter-mobx.tsx
 import React from "react";
 import { observer } from "mobx-react";
@@ -67,7 +70,7 @@ export default observer(CountMobx);
 ### Redux
 `Redux`用一个单独的常量状态树或者叫作对象保存这一整个应用的状态，这个对象不能直接被改变，当一些数据变化了，一个新的对象就会被创建，严格的单向数据流是`Redux`架构的设计核心。
 
-```
+```js
 // src/redux-store/store.ts
 import { createStore } from "redux";
 
@@ -141,7 +144,7 @@ const CountRedux: React.FC = () => {
 export default CountRedux;
 ```
 
-```
+```js
 // src/App.tsx
 import React from "react";
 import "./styles.css";
@@ -194,28 +197,24 @@ export default App;
 * `Redux`提供进行时间回溯的开发工具，同时纯函数以及更少的抽象，让调试变得更加容易。
 * `Mobx`中有更多的抽象和封装，调试会相对比较困难，同时结果也相对难以预测。
 
-## 最后
+## 总结
 `Mobx`与`Redux`都是非常棒的两个库，使用上没有对错，只有合适不合适，只是可能需要在使用之前做好调研工作。或许有人需要减少编写的代码行数，那么就可能会提到`Redux`有太多的样板代码，而应该使用`Mobx`，可以减少`xxx`行代码。又或许有人需要更加明确的处理对象的变更，那么就可能感觉放弃`Mobx`的响应式魔法，而使用`Redux`去通过纯 `JavaScript`来推断与调试。又或许两个状态管理库并不冲突，可以同时存在，分别管理不同的模块的状态。
 
 
 
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://cn.mobx.js.org/
-https://www.redux.org.cn/docs/react-redux/
-https://juejin.cn/post/6844903977553756168
-https://juejin.cn/post/6924572729886638088
-https://segmentfault.com/a/1190000011148981
-https://www.cnblogs.com/tommymarc/p/15768138.html
-https://blog.csdn.net/leelxp/article/details/108450518
-https://blog.csdn.net/Ed7zgeE9X/article/details/121896197
-https://yangleiup.github.io/accumulate/redux%E4%B8%8Emobx%E5%8C%BA%E5%88%AB.html
-https://medium.com/@pie6k/better-way-to-create-type-safe-redux-actions-and-reducers-with-typescript-45386808c103
-```
+- <https://cn.mobx.js.org/>
+- <https://www.redux.org.cn/docs/react-redux/>
+- <https://juejin.cn/post/6844903977553756168>
+- <https://juejin.cn/post/6924572729886638088>
+- <https://segmentfault.com/a/1190000011148981>
+- <https://www.cnblogs.com/tommymarc/p/15768138.html>
+- <https://blog.csdn.net/leelxp/article/details/108450518>
+- <https://blog.csdn.net/Ed7zgeE9X/article/details/121896197>
+- <https://yangleiup.github.io/accumulate/redux%E4%B8%8Emobx%E5%8C%BA%E5%88%AB.html>
+- <https://medium.com/@pie6k/better-way-to-create-type-safe-redux-actions-and-reducers-with-typescript-45386808c103>

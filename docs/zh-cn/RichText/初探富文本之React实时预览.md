@@ -728,23 +728,15 @@ export const renderWithIframe = (code: string, dependency: Sandbox) => {
 };
 ```
 
-
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://swc.rs/docs/usage/wasm
-https://zhuanlan.zhihu.com/p/589341143
-https://github.com/alangpierce/sucrase
-https://babel.dev/docs/babel-standalone
-https://github.com/simonguo/react-code-view
-https://github.com/LinFeng1997/markdown-it-react-component/
-```
-
-
-
+- <https://swc.rs/docs/usage/wasm>
+- <https://zhuanlan.zhihu.com/p/589341143>
+- <https://github.com/alangpierce/sucrase>
+- <https://babel.dev/docs/babel-standalone>
+- <https://github.com/simonguo/react-code-view>
+- <https://github.com/LinFeng1997/markdown-it-react-component/>

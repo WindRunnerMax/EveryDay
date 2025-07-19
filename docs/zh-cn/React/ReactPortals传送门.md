@@ -435,22 +435,17 @@ const getWrappedChildren = () => {
 };
 ```
 
-
 ## 每日一题
 
-```
-https://github.com/WindrunnerMax/EveryDay
-```
+- <https://github.com/WindRunnerMax/EveryDay>
 
 ## 参考
 
-```
-https://zhuanlan.zhihu.com/p/29880992
-https://juejin.cn/post/6844904024378982413
-https://juejin.cn/post/6904979968413925384
-https://segmentfault.com/a/1190000012325351
-https://zh-hans.legacy.reactjs.org/docs/portals.html
-https://codesandbox.io/p/sandbox/trigger-component-1hv99o
-https://zh-hans.react.dev/reference/react-dom/createPortal
-https://github.com/arco-design/arco-design/blob/main/components/Trigger/index.tsx
-```
+- <https://zhuanlan.zhihu.com/p/29880992>
+- <https://juejin.cn/post/6844904024378982413>
+- <https://juejin.cn/post/6904979968413925384>
+- <https://segmentfault.com/a/1190000012325351>
+- <https://zh-hans.legacy.reactjs.org/docs/portals.html>
+- <https://codesandbox.io/p/sandbox/trigger-component-1hv99o>
+- <https://zh-hans.react.dev/reference/react-dom/createPortal>
+- <https://github.com/arco-design/arco-design/blob/main/components/Trigger/index.tsx>
