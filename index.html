@@ -28,6 +28,17 @@
         scrollbar-width: thin;
       }
     </style>
+    <script>
+      // SEO Redirect
+      const search = new URLSearchParams(location.search);
+      if (search.has("q")) {
+        const query = search.get("q");
+        const url = new URL(window.location.href);
+        url.search = "";
+        url.hash = query;
+        location.replace(url.toString());
+      }
+    </script>
     <!-- <meta name="referrer" content="no-referrer"> -->
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script
@@ -162,30 +173,7 @@
           }).render("gitalk-container");
         });
       };
-      const QueryRouterAdapter = (hook, vm) => {
-        hook.beforeEach((markdown, next) => {
-          const search = new URLSearchParams(location.search);
-          if (search.has("q")) {
-            const query = search.get("q");
-            // fetch(location.origin + query + ".md")
-            //   .then((res) => res.text())
-            //   .then((text) => next(text))
-            //   .catch(() => next(markdown));
-            const url = new URL(window.location.href);
-            url.search = "";
-            url.hash = query;
-            location.replace(url.toString());
-            // window.history.replaceState({}, document.title, url.toString());
-          } else {
-            next(markdown);
-          }
-        });
-      };
-      window.$docsify.plugins = [
-        ...$docsify.plugins,
-        GitalkPlugin,
-        QueryRouterAdapter,
-      ];
+      window.$docsify.plugins = [...$docsify.plugins, GitalkPlugin];
     </script>
   </body>
 </html>
