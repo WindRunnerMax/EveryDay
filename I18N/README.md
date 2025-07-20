@@ -18,7 +18,7 @@
 If you like it, give it a star 😁   
 
 <!-- Summary Start -->
-The repository contains `508` articles, totaling `95743` lines, `776362` words, and `5360558` characters.
+The repository contains `508` articles, totaling `95742` lines, `776361` words, and `5360543` characters.
 <!-- Summary End -->
 
 This is the learning journey of a front-end beginner. If I only study without documenting anything, it would almost be like learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to keep learning daily. The articles below are accumulated starting from `2020.02.25`, all written based on research and synthesis of numerous references. The topics include `HTML` basics, `CSS` fundamentals, `JavaScript` basics and advanced concepts, `Browser`-related knowledge, `Vue` usage and analysis, `React` usage and analysis, `Plugin`-related content, `RichText` editors, `Patterns` design patterns, `Linux` commands, `LeetCode` solutions, and other categories. The content is fairly basic—after all, I’m still a beginner. Additionally, almost every example is designed to be run immediately—just create a new `HTML` file, copy the code, and open it in a browser, or run it directly in the `console`.
@@ -401,7 +401,7 @@ If you’d like to read the notes in order, you can [check the table of contents
 * [Look Command](Linux/look-查找字典单词.md)
 * [Pico Command](Linux/pico-文本编辑程序.md)
 * [Sed Command](Linux/sed-脚本处理文件.md)
-* [```markdown](Linux/tr-转换文件内容.md)
+* [tr Command](Linux/tr-转换文件内容.md)
 * [The `expr` command](Linux/expr-表达式计算.md)
 * [ps command](Linux/ps-进程状态管理.md)
 * [Netstat Command](Linux/netstat-网络状态管理.md)

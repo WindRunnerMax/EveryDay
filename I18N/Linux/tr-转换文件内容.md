@@ -1,4 +1,3 @@
-```markdown
 # tr Command
 The `tr` command is used to translate or delete characters in a file. It can read from a file or from the standard input, and after the string translation, it outputs the result to the standard output.
 
@@ -79,5 +78,4 @@ https://github.com/WindrunnerMax/EveryDay
 https://www.runoob.com/linux/linux-comm-tr.html
 https://www.tutorialspoint.com/unix_commands/tr.htm
 https://www.geeksforgeeks.org/tr-command-in-unix-linux-with-examples/
-```
 ```
