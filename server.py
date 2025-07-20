@@ -2,7 +2,7 @@ from http.server import SimpleHTTPRequestHandler
 import socketserver
 from pathlib import Path
 
-PORT = 9000
+PORT = 9001
 
 
 class CustomHandler(SimpleHTTPRequestHandler):

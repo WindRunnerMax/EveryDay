@@ -119,19 +119,18 @@
       src="https://unpkg.com/docsify-dist@4.11.6/blueimp-md5@2.19.0.js"
     ></script>
     <script>
-      window.$docsify.plugins = [].concat(function (hook, vm) {
+      const GitalkPlugin = (hook, vm) => {
         const dom = Docsify.dom;
-        hook.mounted(function () {
+        hook.mounted(() => {
           const div = dom.create("div");
           div.id = "gitalk-container";
           const main = dom.getNode("#main");
+          const width = main.clientWidth;
           div.style =
-            "width: " +
-            main.clientWidth +
-            "px; margin: 0 auto 20px;padding-bottom: 50px;";
+            "width: " + width + "px; margin: 0 auto 20px;padding-bottom: 50px;";
           dom.appendTo(dom.find(".content"), div);
         });
-        hook.doneEach(function () {
+        hook.doneEach(() => {
           let title = decodeURIComponent(
             vm.route.path.split("/").slice(-1).pop()
           );
@@ -162,7 +161,31 @@
             distractionFreeMode: false,
           }).render("gitalk-container");
         });
-      }, $docsify.plugins);
+      };
+      const QueryRouterAdapter = (hook, vm) => {
+        hook.beforeEach((markdown, next) => {
+          const search = new URLSearchParams(location.search);
+          if (search.has("q")) {
+            const query = search.get("q");
+            // fetch(location.origin + query + ".md")
+            //   .then((res) => res.text())
+            //   .then((text) => next(text))
+            //   .catch(() => next(markdown));
+            const url = new URL(window.location.href);
+            url.search = "";
+            url.hash = query;
+            location.replace(url.toString());
+            // window.history.replaceState({}, document.title, url.toString());
+          } else {
+            next(markdown);
+          }
+        });
+      };
+      window.$docsify.plugins = [
+        ...$docsify.plugins,
+        GitalkPlugin,
+        QueryRouterAdapter,
+      ];
     </script>
   </body>
 </html>
