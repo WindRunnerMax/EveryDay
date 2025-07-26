@@ -46,7 +46,10 @@
       window.$p = "p";
       const search = new URLSearchParams(location.search);
       if (location.hash && !search.has(window.$p)) {
-        url.searchParams.set(window.$p, location.hash.slice(1));
+        const hashValue = location.hash.slice(1);
+        const url = new URL(window.location.href);
+        url.searchParams.set(window.$p, hashValue === "/" ? "" : hashValue);
+        url.hash = "";
         location.replace(url.toString());
       }
     </script>
