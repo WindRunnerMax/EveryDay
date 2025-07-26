@@ -75,7 +75,7 @@ const blog = path.resolve(root, `../Blog`);
     console.log("Process File:", file);
     const time = await getGitLastUpdatedTimeStamp(file);
     sitemap.push(`<url>`);
-    sitemap.push(`  <loc>${domain}?q=/${filePath}</loc>`);
+    sitemap.push(`  <loc>${domain}?p=/${filePath}</loc>`);
     sitemap.push(`  <priority>1.0</priority>`);
     time &&
       sitemap.push(`  <lastmod>${new Date(time).toISOString()}</lastmod>`);
