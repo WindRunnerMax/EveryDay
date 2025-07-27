@@ -58,6 +58,7 @@
   <body>
     <div id="app">Please wait...</div>
     <script>
+      // https://docsify.js.org/
       window.$docsify = {
         name: "WindRunnerMax",
         repo: "https://github.com/WindRunnerMax",
@@ -148,11 +149,16 @@
             });
         });
         hook.doneEach(() => {
+          const search = new URLSearchParams(location.search);
+          const $p = search.get(window.$p) || "";
           const links = document.querySelectorAll(".sidebar-nav li > a");
           Array.from(links).forEach((a) => {
             const path = a.getAttribute("href");
             a.href = "?" + window.$p + "=" + path;
             a.onclick = (e) => (vm.route.path = path);
+            if ($p === path && a.parentElement.tagName === "LI") {
+              a.parentElement.classList.add("active");
+            }
           });
         });
       };
