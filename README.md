@@ -1,13 +1,13 @@
 # BLOG
 
 <p>
-<a href="https://github.com/WindrunnerMax/EveryDay">GitHub</a>
+<a href="https://github.com/WindrunnerMax/EveryDay" target="_blank">GitHub</a>
 <span>｜</span>
-<a href="https://github.com/WindrunnerMax/EveryDay/blob/master/Timeline.md">Timeline</a>
+<a href="https://github.com/WindrunnerMax/EveryDay/blob/master/Timeline.md" target="_blank">Timeline</a>
 <span>｜</span>
-<a href="https://blog.touchczy.top/">Blog</a>
+<a href="https://blog.touchczy.top/" target="_blank">Blog</a>
 <span>｜</span>
-<a href="https://blog-ssg.touchczy.top/">Blog-SSG</a>
+<a href="https://blog-ssg.touchczy.top/" target="_blank">Blog-SSG</a>
 </p>
 
 ## Hi ~

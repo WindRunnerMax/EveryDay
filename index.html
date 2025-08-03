@@ -35,14 +35,6 @@
       src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-57PHBXT1C5");
-    </script>
-    <script>
       window.$p = "p";
       const search = new URLSearchParams(location.search);
       if (location.hash && !search.has(window.$p)) {
@@ -52,9 +44,19 @@
         url.hash = "";
         location.replace(url.toString());
       }
+      const path = location.hash || search.get(window.$p) || "";
+      const title = path.split("/").pop();
+      title && (document.title = title);
+    </script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-57PHBXT1C5");
     </script>
   </head>
-
   <body>
     <div id="app">Please wait...</div>
     <script>
@@ -160,6 +162,11 @@
               a.parentElement.classList.add("active");
             }
           });
+          let title = $p.split("/").slice(-1).pop();
+          title = title || window.$docsify.name;
+          // 兼容命名评论 HASH
+          title = title === "WindRunnerMax" ? "WindrunnerMax" : title;
+          document.title = title;
         });
       };
       window.$docsify.plugins = [...$docsify.plugins, HistoryPlugin];
@@ -180,16 +187,7 @@
           dom.appendTo(dom.find(".content"), div);
         });
         hook.doneEach(() => {
-          const search = new URLSearchParams(location.search);
-          const p = search.get(window.$p);
-          const path = p || decodeURIComponent(vm.route.path);
-          let title = path.split("/").slice(-1).pop();
-          title = title || window.$docsify.name;
-          document.title = title;
-          // 兼容命名评论 HASH
-          if (title === "WindRunnerMax") {
-            title = "WindrunnerMax";
-          }
+          const title = document.title;
           for (
             let n = document.getElementById("gitalk-container");
             n.hasChildNodes();
