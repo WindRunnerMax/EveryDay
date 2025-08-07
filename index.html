@@ -169,7 +169,7 @@
           document.title = title;
         });
       };
-      window.$docsify.plugins = [...$docsify.plugins, HistoryPlugin];
+      window.$docsify.plugins = [HistoryPlugin, ...$docsify.plugins];
     </script>
     <script>
       const GitalkPlugin = (hook, vm) => {
