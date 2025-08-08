@@ -1,7 +1,7 @@
 # React中JSX的理解
 `JSX`是快速生成`react`元素的一种语法，实际是`React.createElement(component, props, ...children)`的语法糖，同时`JSX`也是`Js`的语法扩展，包含所有`Js`功能。
 
-## 描述
+## 概述
 
 ### JSX发展过程
 在之前，`Facebook`是`PHP`大户，所以`React`最开始的灵感就来自于`PHP`。  

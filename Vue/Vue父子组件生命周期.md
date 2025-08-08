@@ -1,7 +1,7 @@
 # Vue父子组件生命周期
 `Vue`实例需要经过创建、初始化数据、编译模板、挂载`DOM`、渲染、更新、渲染、卸载等一系列过程，这个过程就是`Vue`的生命周期，`Vue`中提供的钩子函数有`beforeCreate`、`created`、`beforeMount`、`mounted`、`beforeUpdate`、`updated`、`beforeDestroy`、`destroyed`，父子组件嵌套时，父组件和子组件各拥有各自独立的钩子函数。
 
-## 描述
+## 概述
 
 ### 创建过程
 创建过程主要涉及`beforeCreate`、`created`、`beforeMount`、`mounted`四个钩子函数。

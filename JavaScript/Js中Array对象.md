@@ -1,7 +1,7 @@
 # Js中Array对象
 `JavaScript`的`Array`对象是用于构造数组的全局对象，数组是类似于列表的高阶对象。
 
-## 描述
+## 概述
 在`JavaScript`中通常可以使用`Array`构造器与字面量的方式创建数组。
 
 ```javascript

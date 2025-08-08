@@ -1,7 +1,7 @@
 # Vue数据双向绑定
 `Vue`是通过数据劫持的方式来实现数据双向数据绑定的，其中最核心的方法便是通过`Object.defineProperty()`来实现对属性的劫持，该方法允许精确地添加或修改对象的属性，对数据添加属性描述符中的`getter`与`setter`实现劫持。
 
-## 描述
+## 概述
 运行一个`Vue`实例并将`data`打印，可以看到对象中对于`msg`有了`get`与`set`，通过他们就可以实现数据的劫持，从而进行数据的更新，在`Vue`中`get`与`set`是通过`ES5`的`Object.defineProperty()`方法定义的，该方法的具体功能可以查阅`https://github.com/WindrunnerMax/EveryDay/blob/master/JavaScript/defineProperty.md`。
 
 ```html

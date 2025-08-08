@@ -1,7 +1,7 @@
 # React中的纯组件
 `React`提供了一种基于浅比较模式来确定是否应该重新渲染组件的类`React.PureComponent`，通常只需要继承`React.PureComponent`就可以定义一个纯组件。`React.PureComponent`与`React.Component`很相似，两者的区别在于`React.Component`并未实现`shouldComponentUpdate()`，而`React.PureComponent`中以浅层对比`prop`和`state`的方式来实现了该函数。如果赋予`React`组件相同的`props`和`state`，`render()`函数会渲染相同的内容，那么在某些情况下使用`React.PureComponent`可提高性能。
 
-## 描述
+## 概述
 首先我们来回顾下`React`组件执行重渲染`re-render`更新的时机，一般当一个组件的`props`属性或者`state`状态发生改变的时候，也就是父组件传递进来的`props`发生变化或者使用`this.setState`函数时，组件会进行重新渲染`re-render`。而在接受到新的`props`或者`state`到组件更新之间会执行其生命周期中的一个函数`shouldComponentUpdate`，当该函数返回`true`时才会进行重渲染，如果返回`false`则不会进行重渲染，在这里`shouldComponentUpdate`默认返回`true`，因此当组件遇到性能瓶颈的时候可以在`shouldComponentUpdate`中进行逻辑判断，来自定义组件是否需要重渲染。  
 我们可以稍微查看一下源码的实现，可以看到`PureComponent`是通过寄生组合继承的方式继承了`Component`，`commit id`为` 0cf22a5`。
 

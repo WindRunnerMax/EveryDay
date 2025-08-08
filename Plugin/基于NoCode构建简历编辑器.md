@@ -1,7 +1,7 @@
 # 基于NoCode构建简历编辑器
 基于`NoCode`构建简历编辑器，要参加秋招了，因为各种模版用起来细节上并不是很满意，所以尝试做个简单的拖拽简历编辑器。
 
-## 描述
+## 概述
 
 - 开源地址: <https://github.com/WindRunnerMax/ResumeEditor>
 - 在线编辑: <https://windrunnermax.github.io/ResumeEditor/> 

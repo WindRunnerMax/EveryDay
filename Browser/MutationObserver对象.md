@@ -1,7 +1,7 @@
 # MutationObserver对象
 `MutationObserver  (W3C DOM4)`对象提供了监视对`DOM`树所做更改的能力，其被设计为旧的`Mutation Events`功能的替代品(该功能是`DOM3 Events`规范的一部分)。
 
-## 描述
+## 概述
 `Mutation Observer`用来监视`DOM`变动，`DOM`的任何变动，例如节点的增减、属性的变动、文本内容的变动，在配置之后都可以通过回调函数来获得通知。`Mutation Observer`类似于事件的监听`DOM.addEventListener`方法，都可以在触发某些变动的时候来执行回调函数，只不过`Mutation Observer`是异步触发，`DOM`的变动并不会马上触发，在等到当前所有`DOM`操作都结束才触发。
 
 ### observe

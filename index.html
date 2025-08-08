@@ -88,6 +88,23 @@
         routerMode: "history",
       };
     </script>
+    <script>
+      const baseUrl = window.$docsify.basePath || "";
+      const XHROpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function () {
+        const args = Array.prototype.slice.call(arguments);
+        const url = args[1];
+        if (url && url.startsWith("/README.md?p=")) {
+          const search = new URLSearchParams(location.search);
+          const path = search.get(window.$p) || "";
+          path && (args[1] = baseUrl + path + ".md");
+        }
+        if (url && url.startsWith("/_sidebar.md")) {
+          args[1] = baseUrl + "_sidebar.md";
+        }
+        XHROpen.apply(this, args);
+      };
+    </script>
     <script
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
@@ -135,28 +152,13 @@
     ></script>
     <script>
       const HistoryPlugin = (hook, vm) => {
-        hook.beforeEach((markdown, next) => {
-          const search = new URLSearchParams(location.search);
-          const path = search.get(window.$p) || "";
-          if (!path) return next(markdown);
-          vm.route.path = path;
-          const baseUrl = window.$docsify.basePath || "";
-          const fetchUrl = baseUrl + path + ".md";
-          fetch(fetchUrl)
-            .then((res) => res.text())
-            .then((data) => next(data))
-            .catch((err) => {
-              console.error("Fetch Error:", err);
-              next(markdown);
-            });
-        });
         hook.doneEach(() => {
           const search = new URLSearchParams(location.search);
           const $p = search.get(window.$p) || "";
           const links = document.querySelectorAll(".sidebar-nav li > a");
           Array.from(links).forEach((a) => {
             const path = a.getAttribute("href");
-            a.href = "?" + window.$p + "=" + path;
+            a.href = "/?" + window.$p + "=" + path;
             a.onclick = (e) => (vm.route.path = path);
             if ($p === path && a.parentElement.tagName === "LI") {
               a.parentElement.classList.add("active");

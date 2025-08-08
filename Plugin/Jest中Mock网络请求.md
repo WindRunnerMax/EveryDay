@@ -1,7 +1,7 @@
 # Jest中Mock网络请求
 最近需要将一个比较老的库修改为`TS`并进行单元测试，修改为`TS`还能会一点，单元测试纯粹是现学现卖了，初学`Jest`框架，觉得在单元测试中比较麻烦的就是测试网络请求，所以记录一下`Mock`掉`Axios`发起网络请求的一些方式。初学两天的小白，如有问题还请指出。
 
-## 描述
+## 概述
 文中提到的示例全部在 [jest-axios-mock-server仓库](https://github.com/WindrunnerMax/jest-axios-mock-server) 中，直接使用包管理器安装就可以启动示例，例如通过`yarn`安装：
 
 ```shell

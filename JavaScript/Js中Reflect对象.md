@@ -1,7 +1,7 @@
 # Js中Reflect对象
 `Reflect`是`ES6`起`JavaScript`内置的对象，提供拦截`JavaScript`操作的方法，这些方法与`Proxy`对象的`handlers`中的方法基本相同。
 
-## 描述
+## 概述
 `Reflect`并非一个构造函数，所以不能通过`new`运算符对其进行调用，或者将`Reflect`对象作为一个函数来调用，就像`Math`对象一样，`Reflect`对象的所有属性和方法都是静态的。  
 实际上`Reflect`对象是`ES6`为操作对象而提供的新`API`，而这个`API`设计的目的主要有：
 * 将`Object`对象的一些属于语言内部的方法放到`Reflect`对象上，从`Reflect`上能拿到语言内部的方法，例如`Object.defineProperty`方法。
