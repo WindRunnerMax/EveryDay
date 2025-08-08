@@ -1,7 +1,7 @@
 # setState同步异步场景
 `React`通过`this.state`来访问`state`，通过`this.setState()`方法来更新`state`，当`this.setState()`方法被调用的时候，`React`会重新调用`render`方法来重新渲染`UI`。相比较于在使用`Hooks`完成组件下所需要的心智负担，`setState`就是在使用`class`完成组件下所需要的心智负担，当然所谓的心智负担也许叫做所必须的基础知识更加合适一些。
 
-## 描述
+## 概述
 `setState`只在合成事件和生命周期钩子函数中是异步的，而在原生事件中都是同步的，简单实现一个`React Class TS`例子。
 
 ```js

@@ -1,7 +1,7 @@
 # Web Worker
 `JavaScript`是单线程语言，如果在`Js`主线程上进行比较耗时的操作，那么不仅异步的事件回调无法正常完成，浏览器的渲染线程也将被阻塞，无法正常渲染页面。`Web Worker`能够把`JavaScript`计算委托给后台线程，线程可以执行任务而不干扰用户界面。
 
-## 描述
+## 概述
 `worker`是使用构造函数创建的一个对象来运行一个`Js`文件，这个`Js`文件中包含将在`worker`线程中运行的代码，`worker`运行的全局对象不是当前`window`，专用`worker`线程运行环境的全局对象为`DedicatedWorkerGlobalScope`，共享`worker`线程运行环境的全局对象为`SharedWorkerGlobalScope`。  
 在`worker`可以运行任意`JavaScript`代码，但不能够直接操作`DOM`节点，也不能使用`window`对象的默认方法和属性，但是在`window`对象下的很多方法包括`WebSockets`，`IndexedDB`等在`worker`全局对象中都有实现。  
 `worker`线程与主线程之间的通信是通过`postMessage`发送消息以及`onmessage`事件处理函数来接收消息，这个过程中数据并不是被共享而是被复制。  

@@ -1,7 +1,7 @@
 # React生命周期
 `React`的生命周期从广义上分为挂载、渲染、卸载三个阶段，在`React`的整个生命周期中提供很多钩子函数在生命周期的不同时刻调用。
 
-## 描述
+## 概述
 此处描述的是使用`class`类组件提供的生命周期函数，每个组件都包含自己的生命周期方法，通过重写这些方法，可以在运行过程中特定的阶段执行这些方法，常用的生命周期有`constructor()`、`render()`、`componentDidMount()`、`componentDidUpdate()`、`componentWillUnmount()`。
 
 ### 挂载过程

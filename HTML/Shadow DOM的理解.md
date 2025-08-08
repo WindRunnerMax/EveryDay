@@ -1,7 +1,7 @@
 # Shadow DOM的理解
 `Shadow DOM`是`HTML`的一个规范，其允许在文档`document`渲染时插入一颗`DOM`元素子树，但是这棵子树不在主`DOM`树中，`Shadow DOM`如果按照英文翻译的话可以翻译为影子`DOM`，是一种不属于主`DOM`树的独立的结构。
 
-## 描述
+## 概述
 `Web components`的一个重要属性是封装——可以将标记结构、样式和行为隐藏起来，并与页面上的其他代码相隔离，保证不同的部分不会混在一起，可使代码更加干净、整洁，在这里`Shadow DOM`接口是关键所在，它可以将一个隐藏的、独立的`DOM`附加到一个元素上，`Shadow DOM`标准允许你为你自己的元素`custom element`维护一组`Shadow DOM`。  
 `Shadow DOM`允许将隐藏的`DOM`树附加到常规的`DOM`树中，它以`shadow root`节点为起始根节点，在这个根节点的下方，可以是任意元素，和普通的`DOM`元素一样，另外还有一些`Shadow DOM`特有的术语。  
 

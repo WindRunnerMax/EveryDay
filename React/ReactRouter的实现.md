@@ -2,7 +2,7 @@
 `ReactRouter`是`React`的核心组件，主要是作为`React`的路由管理器，保持`UI`与`URL`同步，其拥有简单的`API`与强大的功能例如代码缓冲加载、动态路由匹配、以及建立正确的位置过渡处理等。
 
 
-## 描述
+## 概述
 `React Router`是建立在`history`对象之上的，简而言之一个`history`对象知道如何去监听浏览器地址栏的变化，并解析这个`URL`转化为`location`对象，然后`router`使用它匹配到路由，最后正确地渲染对应的组件，常用的`history`有三种形式： `Browser History`、`Hash History`、`Memory History`。
 
 ### Browser History
