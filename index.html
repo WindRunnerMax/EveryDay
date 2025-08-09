@@ -118,7 +118,7 @@
     <script
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
-      src="https://unpkg.com/docsify-dist@4.11.6/catalog.js"
+      src="https://unpkg.com/docsify-dist@4.11.7/catalog.js"
     ></script>
     <script
       crossorigin="anonymous"
@@ -171,7 +171,7 @@
           document.title = title;
         });
       };
-      window.$docsify.plugins = [HistoryPlugin, ...$docsify.plugins];
+      window.$docsify.plugins = [...$docsify.plugins, HistoryPlugin];
     </script>
     <script>
       const GitalkPlugin = (hook, vm) => {

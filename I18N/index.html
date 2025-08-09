@@ -13,7 +13,7 @@
       rel="stylesheet"
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
-      href="https://unpkg.com/docsify-dist@4.11.6/vue.css"
+      href="https://unpkg.com/docsify-dist@4.11.7/vue.css"
     />
     <link
       rel="stylesheet"
@@ -73,6 +73,7 @@
           placeholder: "Type to search",
           noData: "No Results",
           depth: 1,
+          namespace: "I18N",
         },
         // basePath:"https://cdn.jsdelivr.net/gh/WindRunnerMax/EveryDay@gh-pages",
         alias: {
@@ -118,7 +119,7 @@
     <script
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
-      src="https://unpkg.com/docsify-dist@4.11.6/catalog.js"
+      src="https://unpkg.com/docsify-dist@4.11.7/catalog.js"
     ></script>
     <script
       crossorigin="anonymous"
@@ -169,9 +170,16 @@
           // 兼容命名评论 HASH
           title = title === "WindRunnerMax" ? "WindrunnerMax" : title;
           document.title = title;
+          // 处理图片的地址
+          const images = document.querySelectorAll("#main img");
+          Array.from(images).map((img) => {
+            const src = img.getAttribute("src") || "";
+            const fragment = src.split("/");
+            img.src = "/" + fragment.slice(-3).join("/");
+          });
         });
       };
-      window.$docsify.plugins = [HistoryPlugin, ...$docsify.plugins];
+      window.$docsify.plugins = [...$docsify.plugins, HistoryPlugin];
     </script>
     <script>
       const GitalkPlugin = (hook, vm) => {
