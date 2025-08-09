@@ -1,7 +1,7 @@
 # Attribute和Property的区别
 `attribute`是`XML`元素中的概念，用于描述`XML`标签的附加信息，即`XML`标签的属性，`property`是`JavaScript`对象中的概念，用于描述`JavaScript`对象的成员，即`JavaScript`对象的属性。
 
-## 描述
+## 概述
 在描述`HTML`时需要为其设定一些属性值的键值对用以描述标签：
 
 ```html

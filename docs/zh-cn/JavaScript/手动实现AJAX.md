@@ -1,6 +1,6 @@
 # Ajax
 
-## 描述
+## 概述
 
 `Ajax`在浏览器是通过`XMLHttpRequest`对象来实现数据传输的。
 

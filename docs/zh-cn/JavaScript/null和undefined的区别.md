@@ -1,7 +1,7 @@
 # null和undefined的区别
 在`Js`中`null`与`undefined`是两种基本数据类型，都可以用来表示"无"这个概念，但是在语义表达以及实际使用上是有所区别的。
 
-## 描述
+## 概述
 大多数计算机语言只有一个用来表示"无"这个概念的值，例如`C`与`C++`的`NULL`、`Java`与`PHP`的`null`、`Python`的`None`、`lua`与`Ruby`的`nil`，但是在`Js`中有`null`与`undefined`两种基本数据类型来表示"无"这个概念。在很多情况下`null`和`undefined`几乎等价，例如在`if`语句中，都会被自动转为`false`。
 
 ```javascript

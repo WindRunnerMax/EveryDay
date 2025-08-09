@@ -1,7 +1,7 @@
 # Js中fetch方法
 `fetch()`方法定义在`Window`对象以及`WorkerGlobalScope`对象上，用于发起获取资源的请求，其返回一个`Promise`对象，这个`Promise`对象会在请求响应后被`resolve`，并传回`Response`对象。
 
-## 描述
+## 概述
 `Promise<Response> fetch(input[, init])`  
 
 `input`: 定义要获取的资源，其值可以是：

@@ -1,7 +1,7 @@
 # 初探webpack之编写plugin
 `webpack`通过`plugin`机制让其使用更加灵活，以适应各种应用场景，当然也大大增加了`webpack`的复杂性，在`webpack`运行的生命周期中会广播出许多事件，`plugin`可以`hook`这些事件，在合适的时机通过`webpack`提供的`API`改变其在处理过程中的输出结果。
 
-## 描述
+## 概述
 `webpack`是一个现代`JavaScript`应用程序的静态模块打包器`module bundler`，当`webpack`处理应用程序时，它会递归地构建一个依赖关系图`dependency graph`，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个`bundle`。  
 使用`webpack`作为前端构建工具通常可以做到以下几个方面的事情: 
 

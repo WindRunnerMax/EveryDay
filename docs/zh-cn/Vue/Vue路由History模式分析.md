@@ -1,7 +1,7 @@
 # Vue路由History模式分析
 `Vue-router`是`Vue`的核心组件，主要是作为`Vue`的路由管理器，`Vue-router`默认`hash`模式，通过引入`Vue-router`对象模块时配置`mode`属性可以启用`history`模式。
 
-## 描述
+## 概述
 `Vue-router`的`hash`模式使用`URL`的`Hash`来模拟一个完整的`URL`，当`URL`改变时页面不会重新加载，而`Vue-router`的`history`模式是充分利用`history.pushState`的`API`来完成`URL`跳转，同样在页面跳转时无须重新加载页面，当然也不会对于服务端进行请求，当然对于`history`模式仍然是需要后端的配置支持，由于应用是个单页客户端应用，如果后台没有正确的配置，当用户在浏览器直接访问`URL`时就会返回`404`，所以需要在服务端增加一个覆盖所有情况的候选资源，如果`URL`匹配不到任何静态资源时，则应该返回同一个`index.html`应用依赖页面，例如在`Nginx`下的配置。
 
 ```

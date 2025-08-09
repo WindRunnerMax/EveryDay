@@ -1590,7 +1590,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之OT协同算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-06-21T06:27:51.000Z</lastmod>
+  <lastmod>2025-07-26T03:10:13.000Z</lastmod>
 </url>
 
 <url>
@@ -1602,7 +1602,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之CRDT协同算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-06-21T06:27:51.000Z</lastmod>
+  <lastmod>2025-07-26T03:10:13.000Z</lastmod>
 </url>
 
 <url>
@@ -1711,6 +1711,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/编辑器选区模型的状态结构表达.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-07-19T05:20:19.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器选区与编辑器选区模型同步.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>

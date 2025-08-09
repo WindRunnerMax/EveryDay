@@ -1,7 +1,7 @@
 # IntersectionObserver对象
 `IntersectionObserver`对象，从属于`Intersection Observer API`，提供了一种异步观察目标元素与其祖先元素或顶级文档视窗`viewport`交叉状态的方法，祖先元素与视窗`viewport`被称为根`root`，也就是说`IntersectionObserver API`，可以自动观察元素是否可见，由于可见`visible`的本质是，目标元素与视口产生一个交叉区，所以这个`API`叫做交叉观察器，兼容性`https://caniuse.com/?search=IntersectionObserver`。  
 
-## 描述
+## 概述
 `IntersectionObserver`解决了一个长期以来`Web`的问题，观察元素是否可见，这个可见`visible`的本质是，目标元素与视口产生一个交叉区，所以这个`API`叫做交叉观察器。  
 要检测一个元素是否可见或者两个元素是否相交并不容易，很多解决办法不可靠或性能很差。现在很多需求下都需要用到相交检测，例如图片懒加载、内容无限滚动、检测元素的曝光情况、可视区域播放动画等等，相交检测通常要用到`onscroll`事件监听，并且可能需要频繁调用`Element.getBoundingClientRect()`等方法以获取相关元素的边界信息，事件监听和调用`Element.getBoundingClientRect`都是在主线程上运行，因此频繁触发、调用可能会造成性能问题，这种检测方法极其怪异且不优雅。  
 `Intersection Observer API`会注册一个回调函数，每当被监视的元素进入或者退出另外一个元素时或`viewport`，或者两个元素的相交部分大小发生变化时，该回调方法会被触发执行，这样网站的主线程不需要再为了监听元素相交而辛苦劳作，浏览器会自行优化元素相交管理，注意`Intersection Observer API`无法提供重叠的像素个数或者具体哪个像素重叠，他的更常见的使用方式是当两个元素相交比例在`N%`左右时，触发回调，以执行某些逻辑。  

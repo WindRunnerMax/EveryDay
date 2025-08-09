@@ -7,7 +7,7 @@
 * [Slate文档编辑器-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
 * [Slate文档编辑器-Node节点与Path路径映射](./Node节点与Path路径映射.md)
 
-## 描述
+## 概述
 
 [GitHub](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)
 
