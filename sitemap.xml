@@ -3133,6 +3133,16 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Plugin/基于向量检索实现基础RAG服务</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Plugin/基于向量检索实现基础RAG服务</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/RichText/初探富文本之富文本概述</loc>
   <priority>1.0</priority>
   <lastmod>2025-08-08T16:06:26.000Z</lastmod>
@@ -3411,11 +3421,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/RichText/浏览器选区与编辑器选区模型同步</loc>
   <priority>1.0</priority>
+  <lastmod>2025-08-09T03:22:03.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/RichText/浏览器选区与编辑器选区模型同步</loc>
   <priority>1.0</priority>
+  <lastmod>2025-08-09T03:22:03.000Z</lastmod>
 </url>
 
 <url>

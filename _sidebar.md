@@ -272,6 +272,7 @@
   * [Canvas编辑器之Rspack工程实践](Plugin/Canvas编辑器之Rspack工程实践.md)
   * [Canvas编辑器之层级渲染事件管理](Plugin/Canvas编辑器之层级渲染事件管理.md)
   * [Canvas编辑器之选中绘制交互方案](Plugin/Canvas编辑器之选中绘制交互方案.md)
+  * [基于向量检索实现基础RAG服务](Plugin/基于向量检索实现基础RAG服务.md)
 
 * RichText
   * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)
