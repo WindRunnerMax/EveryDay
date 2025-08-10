@@ -18,7 +18,7 @@
 If you like it, give it a star 😁   
 
 <!-- Summary Start -->
-The repository contains `508` articles, totaling `95742` lines, `776361` words, and `5360543` characters.
+The repository contains `509` articles, totaling `96280` lines, `780511` words, and `5390099` characters.
 <!-- Summary End -->
 
 This is the learning journey of a front-end beginner. If I only study without documenting anything, it would almost be like learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to keep learning daily. The articles below are accumulated starting from `2020.02.25`, all written based on research and synthesis of numerous references. The topics include `HTML` basics, `CSS` fundamentals, `JavaScript` basics and advanced concepts, `Browser`-related knowledge, `Vue` usage and analysis, `React` usage and analysis, `Plugin`-related content, `RichText` editors, `Patterns` design patterns, `Linux` commands, `LeetCode` solutions, and other categories. The content is fairly basic—after all, I’m still a beginner. Additionally, almost every example is designed to be run immediately—just create a new `HTML` file, copy the code, and open it in a browser, or run it directly in the `console`.
@@ -313,6 +313,7 @@ If you’d like to read the notes in order, you can [check the table of contents
 * [Linear Data Structure Model Based on Delta](RichText/基于Delta的线性数据结构模型.md)
 * [Core Interaction Strategy of Browser Selection Model](RichText/浏览器选区模型的核心交互策略.md)
 * [Expressing the State Structure of Editor Selection Model](RichText/编辑器选区模型的状态结构表达.md)
+* [Synchronizing Browser Selection with Editor Selection Model](RichText/浏览器选区与编辑器选区模型同步.md)
 
 ## Patterns
 * [Simple Factory Pattern](Patterns/简单工厂模式.md)
