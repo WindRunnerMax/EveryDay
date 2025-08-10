@@ -280,6 +280,7 @@ export const docs: Record<string, string[]> = {
     "Plugin/Canvas编辑器之Rspack工程实践",
     "Plugin/Canvas编辑器之层级渲染事件管理",
     "Plugin/Canvas编辑器之选中绘制交互方案",
+    "Plugin/基于向量检索实现基础RAG服务",
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",
