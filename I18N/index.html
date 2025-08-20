@@ -73,7 +73,6 @@
           placeholder: "Type to search",
           noData: "No Results",
           depth: 1,
-          namespace: "I18N",
         },
         // basePath:"https://cdn.jsdelivr.net/gh/WindRunnerMax/EveryDay@gh-pages",
         alias: {
@@ -164,6 +163,12 @@
             if ($p === path && a.parentElement.tagName === "LI") {
               a.parentElement.classList.add("active");
             }
+          });
+          const hashLinks = document.querySelectorAll("article a[data-id]");
+          Array.from(hashLinks).forEach((a) => {
+            a.onclick = (e) => (vm.route.path = $p);
+            search.set("id", a.getAttribute("data-id"));
+            a.href = "/I18N/?" + decodeURIComponent(search.toString());
           });
           let title = $p.split("/").slice(-1).pop();
           title = title || window.$docsify.name;

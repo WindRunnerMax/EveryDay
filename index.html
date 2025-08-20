@@ -164,6 +164,12 @@
               a.parentElement.classList.add("active");
             }
           });
+          const hashLinks = document.querySelectorAll("article a[data-id]");
+          Array.from(hashLinks).forEach((a) => {
+            a.onclick = (e) => (vm.route.path = $p);
+            search.set("id", a.getAttribute("data-id"));
+            a.href = "/?" + decodeURIComponent(search.toString());
+          });
           let title = $p.split("/").slice(-1).pop();
           title = title || window.$docsify.name;
           // 兼容命名评论 HASH
