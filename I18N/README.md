@@ -1,7 +1,7 @@
 # EveryDay
 
 <p>
-<a href="https://github.com/WindrunnerMax/EveryDay">GitHub</a>
+<a href="https://github.com/WindRunnerMax/EveryDay">GitHub</a>
 <span>｜</span>
 <a href="./Timeline.md">Timeline</a>
 <span>｜</span>
