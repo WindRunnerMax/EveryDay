@@ -106,6 +106,8 @@ public archive(block: Token) {
 
 在处理好归档索引之后，我们就可以在循环中具体处理这归档的部分。这里的策略非常简单，如果循环时某个节点存在前个节点，就可以归档上一个节点了。当然这里的归档并没有那么理想，特别是存在列表、表格等节点时，这里就需要特殊地处理，我们后续会讨论这个问题。
 
+而后续就是解析当前的`Token`了，这部分是需要适配编辑器本身数据结构的实现。在当前编辑器中，我们认为`Token`作为主级节点存在，然而其本身并不能够完整对应到编辑器行的状态，例如`list`节点会存在嵌套的`list_item`节点，而我们的结构是纯扁平化的行结构，因此需要独立适配处理。
+
 ```js
 const prev = tree[i - 1];
 const child = tree[i];
@@ -122,26 +124,128 @@ const section = parseLexerToken(child, {
 });
 ```
 
+将`Token`转换到`Delta`片段的过程我们以`heading`行格式以及`bold`行内格式为例，简单地说明一下解析过程。对于行节点而言，执行顺序很重要，需要先递归地处理所有行内节点，然后再执行行节点的处理，而无论是行节点还是行内，都是封装好的原地修改的方式来修改属性值。
 
+```js
+switch (token.type) {
+  case "heading": {
+    const tokens = token.tokens || [];
+    const delta = parseChildTokens(tokens, { ...options, depth: depth + 1, parent: token });
+    applyLineMarks(delta, { heading: "h" + token.depth });
+    return delta;
+  }
+  case "strong": {
+    const tokens = token.tokens || [];
+    const delta = parseChildTokens(tokens, { ...options, depth: depth, parent: token });
+    applyMarks(delta, { bold: "true" });
+    return delta;
+  }
+}
+```
+
+此外，如果需要再继续解析`HTML`节点的话，则需要引入`parse5/htmlparse2`等独立解析`HTML`片段，不过`parse5`的解析结果会严格处理`DOM`的嵌套结构，因此用`htmlparse2`来处理`HTML`片段更合适。当然还有一种常见的解析方案，将所有数据处理为`HTML`，再行解析`HTML-AST`。
 
 ### 语法修复
-这里主要是针对于法修复
+在上述的实现中，我们已经能够实现针对于`Markdown`部分的增量解析了。虽然这个策略多数情况下是没有什么问题的，但是在流式输出的过程中，会出现两个问题，一是流式输入过程中会存在临态节点，会导致错误的归档，例如缩进的列表，二是错误的语法匹配，例如无序列表缩进时的`-`解析为标题。
 
-parse5 / htmlparse2
+因此我们需要处理这些`Case`，当然这里目标主要是针对于语法的错误匹配修复，而并非补全不完整的语法。首先我们来看一下列表的缩进问题，若是直接使用上述的策略，那么在下面这个例子中，就会导致第一行`1`节点被归档，然后导致`1.1`节点没有缩进格式，因为此时不存在嵌套的`list token`。
 
 ```md
 - 无序列表项1
    - 无序列表项1.1
+```
+
+先来分析一下这个问题所在，流式的输出过程中，`1.1`行会有一个临态`   `也就是缩进的前置三个空格的状态，而其在输出到`-`字符之前，这个`Token`的解析格式是下面的内容。则按照上述策略，先前的`Token`存在且当前的`Token`存在，则前置的`Token`进行归档。
+
+```js
+[{ type: "list", raw: "1. xxx", ordered: true, start: 1, loose: false, items: [ /* ... */ ]},
+{  type:"space", raw:"\n   \n" }]
+```
+
+因此在归档之后，就仅剩下`1.1`的节点需要解析了，而由于前一行的`1`节点已经被归档，那么此时`1.1`就是新的`list`以及`list_item`节点了。因为不存在嵌套节点，所以其虽然能够正常解析内容，但是就不存在缩进的格式了。
+
+```js
+{ type:"list", raw:"   -\n", ordered: false, start: "", loose: false, items: [ /* ... */ ]}
+```
+
+因此，针对这个问题，我们需要对解析的`Token`进行一些额外的处理。在上述的这个`Case`中，我们可以认为是由于`space`节点的存在，导致了前一个`list`节点被过早归档了，因此我们可以认为`space`节点是临时状态，不应该导致前一个节点的归档。
+
+```js
+export const normalizeTokenTree = (tree: Token[]) => {
+  const copied = [...tree];
+  if (!copied.length)  return copied;
+  const last = copied[copied.length - 1];
+  // 若是需要等待后续的数据处理, 就移除最后一个节点
+  // Case1: 出现 space 节点可能会存在等待输入的情况, 例如上述的 list
+  // 1. xxx
+  //    [前方三个空格会出现 space 导致归档]
+  if (last.type === "space") {
+    copied.pop();
+  }
+  return copied;
+};
+```
+
+而针对于第二个问题，同样会表现的很明显，由于格式的错误匹配会导致样式，而这个状态同样也是临态，因此在继续解析的过程中，会匹配到正确的结构，在这个过程中就会导致明显的样式突变，在输出的过程中非常明显。例如下面的这个例子中，本应该认为是无序列表的`-`，却被错误地解析为标题。
+
+```md
+- xxx
    - 
 ```
 
+```js
+({
+  type: "list",
+  items: [
+    {
+      type: "list_item",
+      tokens: [ { type: "heading", tokens: [ /* ...*/ ] } ],
+    },
+  ],
+});
+```
+
+实际上这个格式并没有什么问题，因为这本身就是规范中的格式，只不过通过`---`设置标题的格式在平时并不常用。我们自然也可以去查阅一下规范中的格式定义，在`Setext headings`部分中可以看到相关的定义:
+
 > The setext heading underline can be preceded by up to three spaces of indentation, and may have trailing spaces or tabs - Example 86
+
+```md
+Foo
+   ----
+```
 > A list item can contain a heading - Example 300
+
+```md
+- # Foo
+- Bar
+  ---
+  baz
+```
+
+因此，处理这个问题的方法也很简单，即我们避免这个临时状态的出现，这也是我们处理这两个问题所要遵循的原则。因此我们可以通过正则来匹配这个临态，若是匹配成功则将该行移除掉，等待后续的正确格式出现。
+
+```js
+export const normalizeFragment = (md: string) => {
+  // Case 1: 在缩进的无序列表尾部出现单个 - 时, 需要避免被解析为标题
+  // - xxx
+  //    -
+  const lines = md.split("\n");
+  const lastLine = lines[lines.length - 1];
+  if (lastLine && /^[ ]{2,}-[ \n]?$/.test(lastLine)) {
+    lines.pop();
+  }
+  return lines.join("\n");
+};
+```
 
 ## 编辑器流式渲染
 
+### 流式解析
+
+### 稳定键值
 id 数据重建
 
+### 编辑适配
 额外编辑的 OT 或者是重新实现编辑器的纯渲染结构以及样式，最后做成编辑器模式
 
 `OT`的实现中最重要的就是`transform`方法，我们可以先看看`transform`所代表的意义。如果是在协同中的话，`b'=a.t(b)`的意思是，假设`a`和`b`都是从相同的`draft`分支出来的，那么`b'`就是假设`a`已经应用了，此时`b`需要在`a`的基础上变换出`b'`才能直接应用。
@@ -149,6 +253,7 @@ id 数据重建
 而我们也可以换种理解方式，即`transform`解决了`a`操作对`b`操作造成的影响。那么类似于`History`模块中`undoable`的实现，`transform`同样可以来解决单机客户端`Opa`以及`Opb`操作带来的影响，那么自然也可以解决流式输出以及用户输入本身相互的数据影响。
 
 ## 总结
+业务代码实现
 
 ## 每日一题
 
