@@ -26,6 +26,14 @@ markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> 
 
 不过在这里我们并不展开讨论这些自定义语法解析的内容，而是主要聚焦在基本的`Md`语法解析和增量渲染上，但是在解析的过程中我们还是会涉及到针对语法错误匹配的相关问题处理。文中的相关实现可以参考 [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) 以及 [StreamDelta](https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/stream-delta) 中。
 
+```mermaid
+%%{init: {"theme": "neutral" } }%%
+graph LR
+    文本 --> |片段| 词法解析 --> |Tokens| 游标指针 --> DC[Delta 变更]
+    编辑器 --> DF[Delta 片段] --> R[Retain 指针] --> D[Diff Delta] --> 应用
+    DC --> D
+```
+
 ## Markdown增量解析
 首先我们来实现`Markdown`的流式增量解析，能够实现增量解析的重要的基础是，`Md`输出的后续内容格式通常不会影响先前的格式，即我们可以归档已经稳定的内容。因此我们可以设计一套数据处理方案，在解析的过程中需要遵循的整体大原则:
 
@@ -33,7 +41,6 @@ markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> 
 - 基于`Lexer`解析的结构, 双指针绑定`Delta`的增量变更。
 
 ### 词法解析
-
 首先我们需要一个词法解析器将`Md`解析成`Token`流，或者是需要一个语法解析器将`Md`解析成`AST`。由于我们的数据结构是扁平化的，标准词法解析的扁平`Token`流对我们的二次解析并非难事，而若是完全嵌套结构的数据结构，语法解析生成`AST`的解析方案对则可能更加方便。
 
 当前的主流解析器有比较多的相关实现，`marked`提供了`lexer`方法以及`marked.Lexer`作为解析器，`remark`作为`unified`庞大生态系统的一部分，也提供了`mdast-util-from-markdown`独立的解析器，`markdown-it`同样也提供了`parse`方法以及`parseInline`作为解析器。
@@ -59,12 +66,66 @@ markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> 
 }
 ```
 
-### 索引指针
+### 归档索引
+那么在解析的过程中，我们需要维护几个变量来持有当前解析的状态。`content`维护了当前正在解析的片段，接受流式的数据需要不断拿到新片段来组装，`indexIds`以索引值作为稳定的键用来映射`id`值，`archiveLexerIndex`则维护了已经归档的主级`Tokens`节点索引值。
+
+```js
+/** 正在解析的内容 */
+protected content: string;
+/** 索引幂等的记录 */
+public indexIds: O.Map<O.Map<string>>;
+/** 归档的主级节点索引值 */
+public archiveLexerIndex: number;
+```
+
+当执行追加内容时，我们直接将`content`与本次追加的`text`内容合并解析，然后借助`marked`词法解析就可以得到`Token Tree`，在调度的主框架中，我们只解析主级节点。只解析主级节点可以尽可能简化我们需要处理的数据，而子级节点可以再建立二级扩展索引处理。
+
+```js
+const tree = marked.lexer(this.content);
+const archiveLexerIndex = this.archiveLexerIndex;
+// 只迭代 root 的首层子节点
+for (let i = 0; i < tree.length; i++) {
+  // ...
+}
+```
+
+接着我们需要将归档的位置处理一下，归档就意味着我们认为该`Token`将不会再处理了，因此持有的索引`index`就自增。而`block.raw`就是该`Token`就是解析的原始内容，这也是使用`marked`的简单之处，否则还需要自行根据索引解析一下，文本归档的部分我们直接移除即可。
+
+```js
+/**
+ * 归档部分内容
+ * @returns archived 字符长度
+ */
+public archive(block: Token) {
+  this.archiveLexerIndex++;
+  const len = block.raw.length;
+  this.content = this.content.slice(len);
+  return len;
+}
+```
+
+在处理好归档索引之后，我们就可以在循环中具体处理这归档的部分。这里的策略非常简单，如果循环时某个节点存在前个节点，就可以归档上一个节点了。当然这里的归档并没有那么理想，特别是存在列表、表格等节点时，这里就需要特殊地处理，我们后续会讨论这个问题。
+
+```js
+const prev = tree[i - 1];
+const child = tree[i];
+// 首层子节点存在第二级时，归档上一个节点
+// 此外诸如表格等节点可以正则匹配来避免过早归档
+if (prev && child) {
+  this.archive(prev);
+}
+const section = parseLexerToken(child, {
+  depth: 0,
+  mc: this,
+  parent: null,
+  index: archiveLexerIndex + i,
+});
+```
 
 
 
 ### 语法修复
-
+这里主要是针对于法修复
 
 parse5 / htmlparse2
 
