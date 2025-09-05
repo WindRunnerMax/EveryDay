@@ -3,17 +3,17 @@
 在前边我们聊了数据结构的设计和剪贴板的数据操作，那么这些操作都还是比较倾向于数据相关的操作，那么我们现在就来聊聊基本的图形绘制以及图形状态管理，或者换句话说我们需要来实现轻量级的`DOM`。
 
 * 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
-* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
+* 开源地址: <https://github.com/WindRunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 
 * [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
-* [Canvas简历编辑器-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
-* [Canvas简历编辑器-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
-* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
-* [Canvas简历编辑器-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
-* [Canvas简历编辑器-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
-* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
+* [Canvas简历编辑器#2-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas简历编辑器#3-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas简历编辑器#4-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas简历编辑器#5-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas简历编辑器#6-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas简历编辑器#7-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
 
 ## 图形绘制

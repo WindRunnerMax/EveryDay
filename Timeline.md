@@ -42,7 +42,7 @@
 第 431 题：[Canvas编辑器之选中绘制交互方案](Plugin/Canvas编辑器之选中绘制交互方案.md)
 
 ### 2025-02-22
-第 430 题：[Decorator装饰器渲染调度](RichText/Decorator装饰器渲染调度.md)
+第 430 题：[Node节点与Path路径映射](RichText/Node节点与Path路径映射.md)
 
 ### 2025-02-16
 第 429 题：[du-磁盘占用管理](Linux/du-磁盘占用管理.md)
@@ -63,7 +63,7 @@
 第 424 题：[Canvas编辑器之剪贴板数据处理](Plugin/Canvas编辑器之剪贴板数据处理.md)
 
 ### 2025-01-11
-第 423 题：[Node节点与Path路径映射](RichText/Node节点与Path路径映射.md)
+第 423 题：[Decorator装饰器渲染调度](RichText/Decorator装饰器渲染调度.md)
 
 ### 2025-01-05
 第 422 题：[WrapNode数据结构与操作变换](RichText/WrapNode数据结构与操作变换.md)
