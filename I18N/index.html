@@ -35,6 +35,7 @@
       src="//www.googletagmanager.com/gtag/js?id=G-57PHBXT1C5"
     ></script>
     <script>
+      /** 兼容历史的 HASH 链接地址 */
       window.$p = "p";
       const search = new URLSearchParams(location.search);
       if (location.hash && !search.has(window.$p)) {
@@ -47,6 +48,22 @@
       const path = location.hash || search.get(window.$p) || "";
       const title = path.split("/").pop();
       title && (document.title = title);
+    </script>
+    <script>
+      /** 处理 SEO 的权威链接地址 */
+      window.setCanonicalUrl = () => {
+        const href = location.href;
+        const url = new URL(location.href);
+        url.searchParams.delete("id");
+        const canonicalLink = document.querySelector('link[rel="canonical"]');
+        canonicalLink && canonicalLink.remove();
+        const canonical = Object.assign(document.createElement("link"), {
+          rel: "canonical",
+          href: decodeURIComponent(url.toString()),
+        });
+        document.head && document.head.appendChild(canonical);
+      };
+      window.setCanonicalUrl();
     </script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -175,6 +192,7 @@
           // 兼容命名评论 HASH
           title = title === "WindRunnerMax" ? "WindrunnerMax" : title;
           document.title = title;
+          window.setCanonicalUrl();
           // 处理图片的地址
           const images = document.querySelectorAll("#main img");
           Array.from(images).map((img) => {
