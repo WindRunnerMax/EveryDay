@@ -2,10 +2,10 @@
 `slate.js`是一个完全可定制的框架，用于构建富文本编辑器，在这里我们使用`slate.js`构建专注于文档编辑的富文本编辑器。
 
 * [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
-* [Slate文档编辑器-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
-* [Slate文档编辑器-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
-* [Slate文档编辑器-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
-* [Slate文档编辑器-Node节点与Path路径映射](./Node节点与Path路径映射.md)
+* [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate文档编辑器#4-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate文档编辑器#5-Node节点与Path路径映射](./Node节点与Path路径映射.md)
 
 ## 概述
 

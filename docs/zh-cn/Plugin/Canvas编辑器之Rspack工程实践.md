@@ -3,17 +3,17 @@
 在之前我们围绕`Canvas`聊了很多代码设计层面的东西，在这里我们聊一下工程实践。在之前的文中我也提到过，因为是本着学习的态度以及对技术的好奇心来做的，所以除了一些工具类的库例如 `ArcoDesign`、`ResizeObserve`、`Jest` 等包之外，关于 数据结构`packages/delta`、插件化`packages/plugin`、核心引擎`packages/core` 等都是手动实现的，所以在这里除了学习了`Canvas`之外，实际上还做了一些项目工程化的实践。
 
 * 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
-* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
+* 开源地址: <https://github.com/WindRunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 
 * [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
-* [Canvas简历编辑器-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
-* [Canvas简历编辑器-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
-* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
-* [Canvas简历编辑器-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
-* [Canvas简历编辑器-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
-* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
+* [Canvas简历编辑器#2-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas简历编辑器#3-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas简历编辑器#4-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas简历编辑器#5-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas简历编辑器#6-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas简历编辑器#7-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
 ## Pnpm+Monorepo
 我们先来聊聊为什么要用`monorepo`，先举一个我之前踩过的坑作为例子，在之前我的富文本编辑器项目 [DocEditor](https://github.com/WindrunnerMax/DocEditor) 就是完全写在了独立的单个`src`目录中，在项目本身的运行过程中是没什么问题的，但是当时我想将编辑器独立出来作为`NPM`包用，打包的过程是借助了`Rollup`也没什么问题，问题就出在了引用方上。当时我在简历编辑器中引入文档编辑器的`NPM`包时，发现有一个模块被错误的`TreeShaking`了，现在都还能在编辑器中看到这部分兼容。

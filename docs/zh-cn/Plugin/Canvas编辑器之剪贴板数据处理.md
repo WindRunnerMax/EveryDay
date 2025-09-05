@@ -3,17 +3,17 @@
 在这里我们先来聊聊我们究竟应该如何操作剪贴板，也就是我们在浏览器的复制粘贴事件，并且在此基础上聊聊我们在`Canvas`图形编辑器中应该如何控制焦点以及如何实现复制粘贴行为。
 
 * 在线编辑: <https://windrunnermax.github.io/CanvasEditor>
-* 开源地址: <https://github.com/WindrunnerMax/CanvasEditor>
+* 开源地址: <https://github.com/WindRunnerMax/CanvasEditor>
 
 关于`Canvas`简历编辑器项目的相关文章:
 
 * [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
-* [Canvas简历编辑器-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
-* [Canvas简历编辑器-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
-* [Canvas简历编辑器-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
-* [Canvas简历编辑器-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
-* [Canvas简历编辑器-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
-* [Canvas简历编辑器-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
+* [Canvas简历编辑器#2-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas简历编辑器#3-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas简历编辑器#4-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas简历编辑器#5-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas简历编辑器#6-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas简历编辑器#7-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
 ## 剪贴板
 
