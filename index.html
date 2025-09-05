@@ -173,6 +173,7 @@
           const search = new URLSearchParams(location.search);
           const $p = search.get(window.$p) || "";
           const links = document.querySelectorAll(".sidebar-nav li > a");
+          // 处理侧边栏导航链接
           Array.from(links).forEach((a) => {
             const path = a.getAttribute("href");
             a.href = "/?" + window.$p + "=" + path;
@@ -181,18 +182,34 @@
               a.parentElement.classList.add("active");
             }
           });
+          // 处理文章内的 HASH 链接
           const hashLinks = document.querySelectorAll("article a[data-id]");
           Array.from(hashLinks).forEach((a) => {
             a.onclick = (e) => (vm.route.path = $p);
             search.set("id", a.getAttribute("data-id"));
             a.href = "/?" + decodeURIComponent(search.toString());
           });
+          // 处理页面内的超链接地址
+          const pageLinks = document.querySelectorAll("article a[href]");
+          Array.from(pageLinks).forEach((a) => {
+            const href = a.getAttribute("href");
+            if ($p && href && href.startsWith("/./")) {
+              const newPath = href.replace("/./", "");
+              const fragment = $p.split("/");
+              fragment.pop();
+              fragment.push(newPath);
+              const path = fragment.join("/");
+              a.href = "/?" + window.$p + "=" + decodeURIComponent(path);
+              a.onclick = (e) => (vm.route.path = path);
+            }
+          });
+          // 设置页面的标题
           let title = $p.split("/").slice(-1).pop();
           title = title || window.$docsify.name;
+          window.setCanonicalUrl();
           // 兼容命名评论 HASH
           title = title === "WindRunnerMax" ? "WindrunnerMax" : title;
           document.title = title;
-          window.setCanonicalUrl();
         });
       };
       window.$docsify.plugins = [...$docsify.plugins, HistoryPlugin];
