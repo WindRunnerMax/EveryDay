@@ -5,11 +5,15 @@ The design of the data model is the core foundation of the editor, directly affe
 - Live Editor: <https://windrunnermax.github.io/BlockKit/>
 - Project Notes: <https://github.com/WindRunnerMax/BlockKit/blob/master/NOTE.md>
 
-Articles related to building a rich text editor project from scratch:
+Articles on implementing a rich text editor project from scratch:
 
-- [Feeling inadequate, preparing to write a rich text editor from scratch]()
-- [Building a Rich Text Editor from Scratch - Editor Architecture Design based on MVC pattern]()
-- [Building a Rich Text Editor from Scratch - Linear Data Structure Model based on Delta]()
+- [Feeling Inadequate, Getting Started on Writing a Rich Text Editor from Scratch](./从零设计实现富文本编辑器.md)
+- [Implementing a Rich Text Editor from Scratch #2 - Editor Architecture Design based on MVC Pattern](./基于MVC模式的编辑器架构设计.md)
+- [Implementing a Rich Text Editor from Scratch #3 - Linear Data Structure Model based on Delta](./基于Delta的线性数据结构模型.md)
+- [Implementing a Rich Text Editor from Scratch #4 - Core Interaction Strategy of Browser Selection Model](./浏览器选区模型的核心交互策略.md)
+- [Implementing a Rich Text Editor from Scratch #5 - State Structure Representation of Editor Selection Model](./编辑器选区模型的状态结构表达.md)
+- [Implementing a Rich Text Editor from Scratch #6 - Synchronization between Browser Selection and Editor Selection Model](./浏览器选区与编辑器选区模型同步.md)
+- [Implementing a Rich Text Editor from Scratch #7 - Half-Controlled Input Mode based on Composite Events](./基于组合事件的半受控输入模式.md)
 
 ## Delta
 As mentioned in the previous architectural design, we have implemented a flat data structure with independent modular design, making it more convenient to handle both editor operations and server-side data parsing. While nested data structures may align better with the `DOM` representation, they introduce complexity to data manipulation.

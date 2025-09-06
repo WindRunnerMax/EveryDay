@@ -6,10 +6,15 @@ In the previous planning, we needed to implement an editor architecture based on
 - Online Editor: <https://windrunnermax.github.io/BlockKit/>
 - Project Notes: <https://github.com/WindRunnerMax/BlockKit/blob/master/NOTE.md>
 
-Related articles on building a rich text editor project from scratch:
+Articles on implementing a rich text editor project from scratch:
 
-- [Feeling inadequate, preparing to write a rich text editor from scratch]()
-- [Building a Rich Text Editor from Scratch - Editor Architecture Design Based on MVC Pattern]()
+- [Feeling Inadequate, Getting Started on Writing a Rich Text Editor from Scratch](./从零设计实现富文本编辑器.md)
+- [Implementing a Rich Text Editor from Scratch #2 - Editor Architecture Design based on MVC Pattern](./基于MVC模式的编辑器架构设计.md)
+- [Implementing a Rich Text Editor from Scratch #3 - Linear Data Structure Model based on Delta](./基于Delta的线性数据结构模型.md)
+- [Implementing a Rich Text Editor from Scratch #4 - Core Interaction Strategy of Browser Selection Model](./浏览器选区模型的核心交互策略.md)
+- [Implementing a Rich Text Editor from Scratch #5 - State Structure Representation of Editor Selection Model](./编辑器选区模型的状态结构表达.md)
+- [Implementing a Rich Text Editor from Scratch #6 - Synchronization between Browser Selection and Editor Selection Model](./浏览器选区与编辑器选区模型同步.md)
+- [Implementing a Rich Text Editor from Scratch #7 - Half-Controlled Input Mode based on Composite Events](./基于组合事件的半受控输入模式.md)
 
 ## Streamlined Editor
 In the design of the entire system architecture, the most crucial core concept is **state synchronization**. If we take the state model as the foundation, then the state synchronization we need to maintain can be summarized into the following two aspects:
