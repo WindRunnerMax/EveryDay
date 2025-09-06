@@ -1,6 +1,8 @@
 # 初探webpack之搭建Vue开发环境
 平时我们可以用`vue-cli`很方便地搭建`Vue`的开发环境，`vue-cli`确实是个好东西，让我们不需要关心`webpack`等一些繁杂的配置，然后直接开始写业务代码，但这会造成我们过度依赖`vue-cli`，忽视了`webpack`的重要性，当遇到一些特殊场景时候，例如`Vue`多入口的配置、优化项目的打包速度等等时可能会无从下手。当然现在才开始学习`vue2 + webpack`可能有点晚，毕竟现在都在考虑转移到`vue3 + vite`了。
 
+初探`webpack`系列相关文章:
+
 * [初探webpack案例#1-编写plugin](./初探webpack之编写plugin.md)
 * [初探webpack案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
 * [初探webpack案例#3-编写loader](./初探webpack之编写loader.md)

@@ -62,6 +62,8 @@ def scan_and_compress_images(directory):
     size_threshold = 2 * 1024 * 1024  # 2MB
     compressed_files = []
     for root, _, files in os.walk(directory):
+        if root.find("node_modules") != -1:
+            continue
         for file_name in files:
             if not file_name.lower().endswith((".png", ".jpg", ".jpeg")):
                 continue
@@ -127,6 +129,7 @@ def replace_md_file_content(directory):
 
 if __name__ == "__main__":
     # Replace with the path to your directory
-    directory_to_scan = os.path.realpath(os.path.join(os.getcwd(), "../"))
+    # conda-init -> python .scripts/screenshot.py
+    directory_to_scan = os.path.realpath(os.path.join(os.getcwd(), "./"))
     compressed_files = scan_and_compress_images(directory_to_scan)
     replace_md_file_content(directory_to_scan)

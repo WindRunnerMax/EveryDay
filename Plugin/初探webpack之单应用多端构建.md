@@ -1,6 +1,8 @@
 # 初探webpack之单应用多端构建
 在现代化前端开发中，我们可以借助构建工具来简化很多工作，单应用多端构建就是其中应用比较广泛的方案，`webpack`中提供了`loader`与`plugin`来给予开发者非常大的操作空间来操作构建过程，通过操作中间产物我们可以非常方便地实现多端构建。当然这是一种思想而不是深度绑定在`webpack`中的方法，我们也可以借助其他的构建工具来实现，比如`rollup`、`vite`、`rspack`等等。
 
+初探`webpack`系列相关文章:
+
 * [初探webpack案例#1-编写plugin](./初探webpack之编写plugin.md)
 * [初探webpack案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
 * [初探webpack案例#3-编写loader](./初探webpack之编写loader.md)

@@ -1,6 +1,8 @@
 # 初探webpack之编写loader
 `loader`加载器是`webpack`的核心之一，其用于将不同类型的文件转换为`webpack`可识别的模块，即用于把模块原内容按照需求转换成新内容，用以加载非`js`模块，通过配合扩展插件，在`webpack`构建流程中的特定时机注入扩展逻辑来改变构建结果，从而完成一次完整的构建。
 
+初探`webpack`系列相关文章:
+
 * [初探webpack案例#1-编写plugin](./初探webpack之编写plugin.md)
 * [初探webpack案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
 * [初探webpack案例#3-编写loader](./初探webpack之编写loader.md)
