@@ -1584,79 +1584,79 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之富文本概述.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之编辑器引擎.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之OT协同算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之OT协同实例.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之CRDT协同算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之CRDT协同实例.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之React实时预览.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之文档diff算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之在线文档交付.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之划词评论能力.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之文档虚拟滚动.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之搜索替换算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之序列化与反序列化.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-05T13:37:51.000Z</lastmod>
+  <lastmod>2025-09-05T14:11:45.000Z</lastmod>
 </url>
 
 <url>
@@ -1723,6 +1723,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器选区与编辑器选区模型同步.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-08-09T03:22:11.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于组合事件的半受控输入模式.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
