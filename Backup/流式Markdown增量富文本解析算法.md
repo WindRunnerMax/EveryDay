@@ -344,17 +344,63 @@ const block = new Block({ id, delta });
 
 而我们也可以换种理解方式，即`transform`解决了`a`操作对`b`操作造成的影响。那么类似于`History`模块中`undoable`的实现，`transform`同样可以来解决单机客户端`Opa`以及`Opb`操作带来的影响，那么自然也可以解决流式输出以及用户输入本身相互的数据影响。
 
+这个策略实际上同样适用于在存量文档上的增量流式处理，即已有的文档上进行增量的`Md`解析，这部分实现对我们的编辑器的场景中意义会更大一些。设想这样的场景，类似于`IDE`的编辑模式实现，用户希望在存量文档上增删内容，那么就可以直接将内容应用而非弹窗的模式实现。
+
 由于我们已经记录了`archiveLength`，在`archiveLength`内的文档内容变更我们认为是已经稳定的结构，而`archiveLength`外的文档内容我们认为是临时的状态。因此这里的`OT`则变得简单了很多，我们需要做的计算拆分为了两部分:
 
 - 对于`archiveLength`内的变更，对于`insert`操作我们就将索引值相加，而对于`delete`操作我们就将索引值相减。
 - 对于`archiveLength`外的变更，我们则需要根据索引构造一个`retain`操作，然后将用户变更的`changes`组合到当前的`Delta`中。
 
+在这里我们需要明确一个基本原则，`archive`指的是已经稳定的内容，那么在变更中仅有`retain`表达的值应该作为索引，而`insert`以及`delete`操作都应该作为实际改编内容的长度。因此在计算归档的索引值时，我们仅应该考虑`retain`的长度，其他操作作为变更内容的长度。
+
+还有一个问题，虽然理论上我们在内容输入的时候大概率仅会存在`retain + insert/delete`的操作，但是为了避免一些不可预见的情况，我们还是应该完整地处理所有的操作类型。因此我们需要以`retain`计算切割的位置，左侧的操作作为归档长度的变更，右侧的操作作为当前`Delta`的变更。
+
+```js
+/**
+ * 获取变更带来的内容片段
+ */
+export const getContentChangeFragment = (delta: Delta, dc: DeltaComposer) => {
+  /** 剩余的 archive retain */
+  let archive = dc.archiveIndex;
+  /** 目标 archive 变更的长度 */
+  let changeLength = 0;
+  /** delta 的分割 -> archive | current delta */
+  let dividing = 0;
+  let op: Op | undefined;
+  const newOps = [...delta.ops];
+  while ((op = newOps.shift())) {
+    if (isRetainOp(op)) {
+      if (op.retain > archive) {
+        newOps.unshift({ retain: op.retain - archive });
+        dividing = dividing + archive;
+        break;
+      } else {
+        archive = archive - op.retain;
+        dividing = dividing + op.retain;
+      }
+      continue;
+    }
+    if (isDeleteOp(op)) {
+      changeLength = changeLength - op.delete;
+      dividing = dividing + op.delete;
+      continue;
+    }
+    if (isInsertOp(op)) {
+      changeLength = changeLength + op.insert.length;
+      dividing = dividing + op.insert.length;
+      continue;
+    }
+  }
+  return { delta: new Delta(newOps), changeLength };
+};
+```
+
 ## 总结
+在本文中我们实现了`Md`的词法解析，在此基础上处理了增量的`Token`归档以及增量处理，在`Md`整个流程的基础上结合了，编辑器数据结构本身的增量渲染。并且还处理了具体的语法匹配问题，以及编辑器细节`id`索引和编辑模式。在这些内容的基础上，实现了流式`Markdown`增量富文本解析算法。
+
 此外，由于编辑器数据结构通常都是各自维护的一套模式，因此在这里我们更偏向于业务代码实现，而并非通用的解析模式，在不同的业务场景下都需要额外的适配。不过在`Md`解析的流程上抽象出来更底层的实现是比较通用的模式，这部分确实是可以提供通用算法出来的。
 
-实际上到这里，还需要考虑一个问题，若是不需要实现流式输出时编辑，我们也完全可以实现一套流式输出的纯`HTML`渲染模式，等待流式输出完成之后再替换为编辑器。这当然是个可行的方案，并且还可以避免很多复杂的实现，只不过这样实现成本就转移到了需要额外做一套纯渲染的样式，以保证用户体验。
-
-在本文中我们实现了`Md`的词法解析，在此基础上处理了增量的`Token`归档以及增量处理，在`Md`整个流程的基础上结合了，编辑器数据结构本身的增量渲染。并且还处理了具体的语法匹配问题，以及编辑器细节`id`索引和编辑模式。在这些内容的基础上，实现了流式`Markdown`增量富文本解析算法。
+实际上到这里，还需要考虑一个问题，若是目标是从零输出内容而不是增量处理，我们也完全可以实现一套流式输出的纯`HTML`渲染模式，等待流式输出完成之后再替换为编辑器。这当然是个可行的方案，并且还可以避免很多复杂的实现，只不过这样实现成本就转移到了需要额外做一套纯渲染的样式，以匹配编辑器本身的样式，来保证用户体验。
 
 ## 每日一题
 
