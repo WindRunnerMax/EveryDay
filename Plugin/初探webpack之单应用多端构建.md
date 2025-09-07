@@ -3,11 +3,11 @@
 
 初探`webpack`系列相关文章:
 
-* [初探webpack案例#1-编写plugin](./初探webpack之编写plugin.md)
-* [初探webpack案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
-* [初探webpack案例#3-编写loader](./初探webpack之编写loader.md)
-* [初探webpack案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
-* [初探webpack案例#5-解析器resolver](./初探webpack之解析器resolver.md)
+* [初探 webpack 案例#1-编写plugin](./初探webpack之编写plugin.md)
+* [初探 webpack 案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
+* [初探 webpack 案例#3-编写loader](./初探webpack之编写loader.md)
+* [初探 webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
+* [初探 webpack 案例#5-解析器resolver](./初探webpack之解析器resolver.md)
 
 ## 概述
 首先我们先来聊聊多端构建，实际上单应用多端构建的思想非常简单，就是在同一个项目中我们可以通过一套代码来构建出多个端的代码，例如小程序的跨平台兼容、浏览器扩展程序的跨平台兼容、海内外应用资源合规问题等等，这些场景的特点是核心代码是一致的。只不过因为跨平台的原因会有接口调用或者实现配置的差异，但是差异化的代码量是非常少的，在这种场景下借助构建工具来实现单应用多端编译是非常合适的。

@@ -3,11 +3,11 @@
 
 初探`webpack`系列相关文章:
 
-* [初探webpack案例#1-编写plugin](./初探webpack之编写plugin.md)
-* [初探webpack案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
-* [初探webpack案例#3-编写loader](./初探webpack之编写loader.md)
-* [初探webpack案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
-* [初探webpack案例#5-解析器resolver](./初探webpack之解析器resolver.md)
+* [初探 webpack 案例#1-编写plugin](./初探webpack之编写plugin.md)
+* [初探 webpack 案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
+* [初探 webpack 案例#3-编写loader](./初探webpack之编写loader.md)
+* [初探 webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
+* [初探 webpack 案例#5-解析器resolver](./初探webpack之解析器resolver.md)
 
 ## 概述
 先来聊聊故事的背景，在前段时间隔壁老哥需要将大概五年前的项目逐步开发重构新版本`2.0`，通常如果我们开发新版本的话可能会从零启动新项目，在新项目中重新复用组件模块。但是由于新项目时间紧任务重，并且由于项目模块众多且结构复杂，在初版规划中需要修改和新增的模块并非大多数，综合评估下来从零开发新版本的成本太高，所以最终敲定的方案是依然在旧版本上逐步过渡到新版本。

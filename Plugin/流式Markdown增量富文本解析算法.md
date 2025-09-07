@@ -1,6 +1,12 @@
 # 流式Markdown增量富文本解析算法
 在先前我们我们实现了`SSE`流式输出的实现，以及基于向量检索的`RAG`服务，这些实现都可以算作是`AI Infra`的范畴。这里我们再来聊一下在`SSE`流式输出的基础上，将`Markdown`解析和富文本编辑器的渲染结合起来，实现编辑器的增量解析算法，同样属于文档场景下的`Infra`建设。
 
+`AI Infra`系列相关文章:
+
+- [基于 fetch 的 SSE 方案](../Browser/基于fetch的SSE方案.md)
+- [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
+- [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
+
 ## 概述
 在`SSE`流式输出的场景下，`LLMs`模型会逐步输出`Markdown`文本，在基本场景下我们只需要实现`DOM`的渲染即可。然而，在富文本编辑器的场景下，这件事就变得复杂了起来，因为编辑器通常都是自行维护一套数据结构，并不可以直接接受`DOM`结构，再叠加性能问题就需要考虑到下面几点:
 
@@ -24,7 +30,9 @@
 markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> rehype plugins + hast-> components + ->react elements
 ```
 
-不过在这里我们并不展开讨论这些自定义语法解析的内容，而是主要聚焦在基本的`Md`语法解析和增量渲染上，但是在解析的过程中我们还是会涉及到针对语法错误匹配的相关问题处理。文中的相关实现可以参考 [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) 以及 [StreamDelta](https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/stream-delta) 中。
+不过在这里我们并不展开讨论这些自定义语法解析的内容，而是主要聚焦在基本的`Md`语法解析和增量渲染上，但是在解析的过程中我们还是会涉及到针对语法错误匹配的相关问题处理。
+
+文中的相关实现可以参考 [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) 以及 [StreamDelta](https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/stream-delta) 中，且有单元测试可以检查实现效果以及各种需要注意的边界情况。
 
 ```mermaid
 %%{init: {"theme": "neutral" } }%%
@@ -317,7 +325,7 @@ for (let i = 0; i < tree.length; i++) {
 实际上这部分实现是非常需要测试来保证稳定性的，特别是在不断处理各种`Case`中，需要避免之前测试过的内容解析出现问题，因此维持一个测试集是非常有必要的，在单元测试的过程中我们主要专注于下面几种类型的输入以及输出:
 
 - 首先是完整的`Md`文本输入，这部分主要测试的是将所有的`Token`解析的正确性。
-- 其次就是文本内容的流式输入，这部分测试就可以完全使用单个字符的流渲染输出即可。
+- 其次就是文本内容的流式输入，这部分测试就可以完全使用单个字符的稳定流渲染输出即可。
 - 还有就是随机的字符流式输入，这种情况下不容易维持稳定的单元测试的输出，此时需要测试最终的输出。
 
 ### 稳定键值

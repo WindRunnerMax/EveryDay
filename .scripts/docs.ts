@@ -281,6 +281,7 @@ export const docs: Record<string, string[]> = {
     "Plugin/Canvas编辑器之层级渲染事件管理",
     "Plugin/Canvas编辑器之选中绘制交互方案",
     "Plugin/基于向量检索实现基础RAG服务",
+    "Plugin/流式Markdown增量富文本解析算法",
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",
@@ -307,7 +308,7 @@ export const docs: Record<string, string[]> = {
     "RichText/浏览器选区模型的核心交互策略",
     "RichText/编辑器选区模型的状态结构表达",
     "RichText/浏览器选区与编辑器选区模型同步",
-    "RichText/基于组合事件的半受控输入模式"
+    "RichText/基于组合事件的半受控输入模式",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
