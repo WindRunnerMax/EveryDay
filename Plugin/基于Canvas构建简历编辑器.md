@@ -1,16 +1,18 @@
 # 基于Canvas构建简历编辑器
 大概一个月前，我发现掘金老是给我推荐`Canvas`相关的内容，比如很多 小游戏、流程图编辑器、图片编辑器 等等各种各样的项目，不知道是不是因为我某一天点击了相关内容触发了推荐机制，还是因为现在`Canvas`比较火大家都在卷，本着我可以用不上但是不能不会的原则，我也花了将近一个月的时间通过`Canvas`实现了简历编辑器。
 
+<details>
+<summary><strong>Canvas 简历编辑器项目系列文章</strong></summary>
 
-关于`Canvas`简历编辑器项目的相关文章:
+* [掘金老给我推 Canvas, 我也学习 Canvas 做了个简历编辑器](./基于Canvas构建简历编辑器.md)
+* [Canvas 简历编辑器#2-数据结构与 History(undo/redo)](./Canvas编辑器之数据结构设计.md)
+* [Canvas 简历编辑器#3-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
+* [Canvas 简历编辑器#4-图形绘制与状态管理(轻量级 DOM)](./Canvas编辑器之图形状态管理.md)
+* [Canvas 简历编辑器#5-Monorepo+Rspack 工程实践](./Canvas编辑器之Rspack工程实践.md)
+* [Canvas 简历编辑器#6-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
+* [Canvas 简历编辑器#7-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
 
-* [掘金老给我推Canvas，我也学习Canvas做了个简历编辑器](./基于Canvas构建简历编辑器.md)
-* [Canvas简历编辑器#2-数据结构与History(undo/redo)](./Canvas编辑器之数据结构设计.md)
-* [Canvas简历编辑器#3-我的剪贴板里究竟有什么数据](./Canvas编辑器之剪贴板数据处理.md)
-* [Canvas简历编辑器#4-图形绘制与状态管理(轻量级DOM)](./Canvas编辑器之图形状态管理.md)
-* [Canvas简历编辑器#5-Monorepo+Rspack工程实践](./Canvas编辑器之Rspack工程实践.md)
-* [Canvas简历编辑器#6-层级渲染与事件管理能力设计](./Canvas编辑器之层级渲染事件管理.md)
-* [Canvas简历编辑器#7-选中绘制与拖拽多选交互方案](./Canvas编辑器之选中绘制交互方案.md)
+</details>
 
 为什么要自行实现一个简历编辑器：
 

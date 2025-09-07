@@ -1,17 +1,19 @@
 # Node节点与Path路径映射
 在之前我们聊到了`slate`中的`Decorator`装饰器实现，装饰器可以为我们方便地在编辑器渲染调度时处理`range`的渲染，这在实现搜索替换、代码高亮等场景非常有用。那么在这篇文章中，我们聊一下`Node`节点与`Path`路径映射，这里的`Node`指的是渲染的节点对象，`Path`则是节点对象在当前`JSON`中的路径，即本文的重点是如何确定渲染出的节点处于文档数据定义中的位置。
 
-
 * 在线编辑: <https://windrunnermax.github.io/DocEditor>
 * 开源地址: <https://github.com/WindRunnerMax/DocEditor>
 
-关于`slate`文档编辑器项目的相关文章:
+<details>
+<summary><strong>Slate 文档编辑器项目系列文章</strong></summary>
 
-* [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
-* [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
-* [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
-* [Slate文档编辑器#4-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
-* [Slate文档编辑器#5-Node节点与Path路径映射](./Node节点与Path路径映射.md)
+* [基于 Slate 构建文档编辑器](./基于slate构建文档编辑器.md)
+* [Slate 文档编辑器#2-WrapNode 数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate 文档编辑器#3-TS 类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate 文档编辑器#4-Decorator 装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate 文档编辑器#5-Node 节点与 Path 路径映射](./Node节点与Path路径映射.md)
+
+</details>
 
 ## 渲染与命令
 在`slate`的文档中的`03-defining-custom-elements`一节中，我们可以看到我们可以看到`slate`中的`Element`节点是可以自定义渲染的，渲染的逻辑是需要我们根据`props`的`element`对象来判断类型，如果类型是`code`的话那就要渲染我们预定义好的`CodeElement`组件，否则渲染`DefaultElement`组件，这里的`type`是我们预设的`init`数据结构值，是数据结构的形式约定。

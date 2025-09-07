@@ -5,13 +5,16 @@
 * 在线编辑: <https://windrunnermax.github.io/DocEditor>
 * 开源地址: <https://github.com/WindrunnerMax/DocEditor>
 
-关于`slate`文档编辑器项目的相关文章:
+<details>
+<summary><strong>Slate 文档编辑器项目系列文章</strong></summary>
 
-* [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
-* [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
-* [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
-* [Slate文档编辑器#4-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
-* [Slate文档编辑器#5-Node节点与Path路径映射](./Node节点与Path路径映射.md)
+* [基于 Slate 构建文档编辑器](./基于slate构建文档编辑器.md)
+* [Slate 文档编辑器#2-WrapNode 数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate 文档编辑器#3-TS 类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate 文档编辑器#4-Decorator 装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate 文档编辑器#5-Node 节点与 Path 路径映射](./Node节点与Path路径映射.md)
+
+</details>
 
 ## TS类型扩展
 当我们使用`TS`引入`slate`时，可能会发现调用`createEditor`实例化编辑器时，并没有提供范型的定义类型传入，那么这是不是意味着`slate`无法在`TS`中定义类型，而是只能在处理属性时采用`as`的形式强制类型断言。那么作为成熟的编辑器引擎显然是不能这样的，对于富文本编辑器来说，能够在`TS`中定义类型是非常重要的，我们可以将富文本理解为带着属性的文本，如果属性的定义不明确，那么维护起来可能会变得越来越困难，而本身维护富文本就充斥着各种问题，所以维护类型的定义是很有必要的。

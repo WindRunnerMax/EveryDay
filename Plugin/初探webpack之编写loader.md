@@ -1,13 +1,16 @@
 # 初探webpack之编写loader
 `loader`加载器是`webpack`的核心之一，其用于将不同类型的文件转换为`webpack`可识别的模块，即用于把模块原内容按照需求转换成新内容，用以加载非`js`模块，通过配合扩展插件，在`webpack`构建流程中的特定时机注入扩展逻辑来改变构建结果，从而完成一次完整的构建。
 
-初探`webpack`系列相关文章:
+<details>
+<summary><strong>初探 Webpack 案例系列文章</strong></summary>
 
-* [初探 webpack 案例#1-编写plugin](./初探webpack之编写plugin.md)
-* [初探 webpack 案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
-* [初探 webpack 案例#3-编写loader](./初探webpack之编写loader.md)
-* [初探 webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
-* [初探 webpack 案例#5-解析器resolver](./初探webpack之解析器resolver.md)
+* [初探 Webpack 案例#1-编写 plugin](./初探webpack之编写plugin.md)
+* [初探 Webpack 案例#2-搭建 Vue 开发环境](./初探webpack之搭建Vue开发环境.md)
+* [初探 Webpack 案例#3-编写 loader](./初探webpack之编写loader.md)
+* [初探 Webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
+* [初探 Webpack 案例#5-解析器 resolver](./初探webpack之解析器resolver.md)
+
+</details>
 
 ## 概述
 `webpack`是一个现代`JavaScript`应用程序的静态模块打包器`module bundler`，当`webpack`处理应用程序时，它会递归地构建一个依赖关系图`dependency graph`，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个`bundle`。  
