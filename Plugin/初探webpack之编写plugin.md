@@ -1,13 +1,16 @@
 # 初探webpack之编写plugin
 `webpack`通过`plugin`机制让其使用更加灵活，以适应各种应用场景，当然也大大增加了`webpack`的复杂性，在`webpack`运行的生命周期中会广播出许多事件，`plugin`可以`hook`这些事件，在合适的时机通过`webpack`提供的`API`改变其在处理过程中的输出结果。
 
-初探`webpack`系列相关文章:
+<details>
+<summary><strong>初探 Webpack 案例系列文章</strong></summary>
 
-* [初探 webpack 案例#1-编写plugin](./初探webpack之编写plugin.md)
-* [初探 webpack 案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
-* [初探 webpack 案例#3-编写loader](./初探webpack之编写loader.md)
-* [初探 webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
-* [初探 webpack 案例#5-解析器resolver](./初探webpack之解析器resolver.md)
+* [初探 Webpack 案例#1-编写 plugin](./初探webpack之编写plugin.md)
+* [初探 Webpack 案例#2-搭建 Vue 开发环境](./初探webpack之搭建Vue开发环境.md)
+* [初探 Webpack 案例#3-编写 loader](./初探webpack之编写loader.md)
+* [初探 Webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
+* [初探 Webpack 案例#5-解析器 resolver](./初探webpack之解析器resolver.md)
+
+</details>
 
 ## 概述
 `webpack`是一个现代`JavaScript`应用程序的静态模块打包器`module bundler`，当`webpack`处理应用程序时，它会递归地构建一个依赖关系图`dependency graph`，其中包含应用程序需要的每个模块，然后将所有这些模块打包成一个或多个`bundle`。  

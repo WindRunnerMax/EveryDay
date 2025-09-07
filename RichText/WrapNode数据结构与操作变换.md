@@ -5,13 +5,16 @@
 * 在线编辑: <https://windrunnermax.github.io/DocEditor>
 * 开源地址: <https://github.com/WindrunnerMax/DocEditor>
 
-关于`slate`文档编辑器项目的相关文章:
+<details>
+<summary><strong>Slate 文档编辑器项目系列文章</strong></summary>
 
-* [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
-* [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
-* [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
-* [Slate文档编辑器#4-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
-* [Slate文档编辑器#5-Node节点与Path路径映射](./Node节点与Path路径映射.md)
+* [基于 Slate 构建文档编辑器](./基于slate构建文档编辑器.md)
+* [Slate 文档编辑器#2-WrapNode 数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate 文档编辑器#3-TS 类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate 文档编辑器#4-Decorator 装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate 文档编辑器#5-Node 节点与 Path 路径映射](./Node节点与Path路径映射.md)
+
+</details>
 
 ## Normalize
 在`slate`中数据结构的规整是比较麻烦的事情，特别是对于需要嵌套的结构来说，例如在本项目中存在的`Quote`和`List`，那么在规整数据结构的时候就有着多种方案，同样以这两组数据结构为例，每个`Wrap`必须有相应的`Pair`的结构嵌套，那么对于数据结构就有如下的方案。实际上我觉得对于这类问题是很难解决的，嵌套的数据结构对于增删改查都没有那么高效，因此在缺乏最佳实践相关的输入情况下，也只能不断摸索。

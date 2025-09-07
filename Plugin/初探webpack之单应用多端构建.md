@@ -1,13 +1,16 @@
 # 初探webpack之单应用多端构建
 在现代化前端开发中，我们可以借助构建工具来简化很多工作，单应用多端构建就是其中应用比较广泛的方案，`webpack`中提供了`loader`与`plugin`来给予开发者非常大的操作空间来操作构建过程，通过操作中间产物我们可以非常方便地实现多端构建。当然这是一种思想而不是深度绑定在`webpack`中的方法，我们也可以借助其他的构建工具来实现，比如`rollup`、`vite`、`rspack`等等。
 
-初探`webpack`系列相关文章:
+<details>
+<summary><strong>初探 Webpack 案例系列文章</strong></summary>
 
-* [初探 webpack 案例#1-编写plugin](./初探webpack之编写plugin.md)
-* [初探 webpack 案例#2-搭建Vue开发环境](./初探webpack之搭建Vue开发环境.md)
-* [初探 webpack 案例#3-编写loader](./初探webpack之编写loader.md)
-* [初探 webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
-* [初探 webpack 案例#5-解析器resolver](./初探webpack之解析器resolver.md)
+* [初探 Webpack 案例#1-编写 plugin](./初探webpack之编写plugin.md)
+* [初探 Webpack 案例#2-搭建 Vue 开发环境](./初探webpack之搭建Vue开发环境.md)
+* [初探 Webpack 案例#3-编写 loader](./初探webpack之编写loader.md)
+* [初探 Webpack 案例#4-单应用多端构建](./初探webpack之单应用多端构建.md)
+* [初探 Webpack 案例#5-解析器 resolver](./初探webpack之解析器resolver.md)
+
+</details>
 
 ## 概述
 首先我们先来聊聊多端构建，实际上单应用多端构建的思想非常简单，就是在同一个项目中我们可以通过一套代码来构建出多个端的代码，例如小程序的跨平台兼容、浏览器扩展程序的跨平台兼容、海内外应用资源合规问题等等，这些场景的特点是核心代码是一致的。只不过因为跨平台的原因会有接口调用或者实现配置的差异，但是差异化的代码量是非常少的，在这种场景下借助构建工具来实现单应用多端编译是非常合适的。
