@@ -168,6 +168,7 @@
       src="https://unpkg.com/docsify-dist@4.11.6/blueimp-md5@2.19.0.js"
     ></script>
     <script>
+      const BASE_Q = "/?";
       const HistoryPlugin = (hook, vm) => {
         hook.doneEach(() => {
           const search = new URLSearchParams(location.search);
@@ -176,7 +177,7 @@
           // 处理侧边栏导航链接
           Array.from(links).forEach((a) => {
             const path = a.getAttribute("href");
-            a.href = "/?" + window.$p + "=" + path;
+            a.href = BASE_Q + window.$p + "=" + path;
             a.onclick = (e) => (vm.route.path = path);
             if ($p === path && a.parentElement.tagName === "LI") {
               a.parentElement.classList.add("active");
@@ -187,20 +188,24 @@
           Array.from(hashLinks).forEach((a) => {
             a.onclick = (e) => (vm.route.path = $p);
             search.set("id", a.getAttribute("data-id"));
-            a.href = "/?" + decodeURIComponent(search.toString());
+            a.href = BASE_Q + decodeURIComponent(search.toString());
           });
           // 处理页面内的超链接地址
           const pageLinks = document.querySelectorAll("article a[href]");
           Array.from(pageLinks).forEach((a) => {
             const href = a.getAttribute("href");
             if ($p && href && href.startsWith("/./")) {
-              const newPath = href.replace("/./", "");
+              const fileName = href.replace("/./", "");
               const fragment = $p.split("/");
-              fragment.pop();
-              fragment.push(newPath);
+              fragment.pop() && fragment.push(fileName);
               const path = fragment.join("/");
-              a.href = "/?" + window.$p + "=" + decodeURIComponent(path);
+              a.href = BASE_Q + window.$p + "=" + decodeURIComponent(path);
               a.onclick = (e) => (vm.route.path = path);
+            }
+            if ($p && href && href.startsWith("/../")) {
+              const newPath = href.replace("/../", "/");
+              a.href = BASE_Q + window.$p + "=" + decodeURIComponent(newPath);
+              a.onclick = (e) => (vm.route.path = newPath);
             }
           });
           // 设置页面的标题

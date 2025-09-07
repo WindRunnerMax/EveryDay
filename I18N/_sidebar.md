@@ -261,6 +261,7 @@
   * [Canvas Resume Editor - Layered Rendering and Event Management Capability](Plugin/Canvas编辑器之层级渲染事件管理.md)
   * [Canvas Editor: Selected Drawing Interaction Scheme](Plugin/Canvas编辑器之选中绘制交互方案.md)
   * [Implementing Basic RAG Service Based on Vector Retrieval](Plugin/基于向量检索实现基础RAG服务.md)
+  * [Incremental Rich Text Parsing Algorithm in Streaming Markdown](Plugin/流式Markdown增量富文本解析算法.md)
 
 * RichText
   * [First Look at Rich Text: Overview of Rich Text](RichText/初探富文本之富文本概述.md)
