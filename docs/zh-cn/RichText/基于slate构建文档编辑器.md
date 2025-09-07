@@ -4,13 +4,16 @@
 * 在线编辑: <https://windrunnermax.github.io/DocEditor>
 * 开源地址: <https://github.com/WindrunnerMax/DocEditor>
 
-关于`slate`文档编辑器项目的相关文章:
+<details>
+<summary><strong>Slate 文档编辑器项目系列文章</strong></summary>
 
-* [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
-* [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
-* [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
-* [Slate文档编辑器#4-Decorator装饰器渲染调度](./Decorator装饰器渲染调度.md)
-* [Slate文档编辑器#5-Node节点与Path路径映射](./Node节点与Path路径映射.md)
+* [基于 Slate 构建文档编辑器](./基于slate构建文档编辑器.md)
+* [Slate 文档编辑器#2-WrapNode 数据结构与操作变换](./WrapNode数据结构与操作变换.md)
+* [Slate 文档编辑器#3-TS 类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
+* [Slate 文档编辑器#4-Decorator 装饰器渲染调度](./Decorator装饰器渲染调度.md)
+* [Slate 文档编辑器#5-Node 节点与 Path 路径映射](./Node节点与Path路径映射.md)
+
+</details>
 
 ## 概述
 
