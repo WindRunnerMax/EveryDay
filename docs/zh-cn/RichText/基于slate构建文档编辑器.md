@@ -1,6 +1,11 @@
 # 基于slate构建文档编辑器
 `slate.js`是一个完全可定制的框架，用于构建富文本编辑器，在这里我们使用`slate.js`构建专注于文档编辑的富文本编辑器。
 
+* 在线编辑: <https://windrunnermax.github.io/DocEditor>
+* 开源地址: <https://github.com/WindrunnerMax/DocEditor>
+
+关于`slate`文档编辑器项目的相关文章:
+
 * [基于Slate构建文档编辑器](./基于slate构建文档编辑器.md)
 * [Slate文档编辑器#2-WrapNode数据结构与操作变换](./WrapNode数据结构与操作变换.md)
 * [Slate文档编辑器#3-TS类型扩展与节点类型检查](./TS类型扩展与节点类型检查.md)
@@ -9,7 +14,7 @@
 
 ## 概述
 
-[GitHub](https://github.com/WindrunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)
+[GitHub](https://github.com/WindRunnerMax/DocEditor) ｜ [Editor DEMO](https://windrunnermax.github.io/DocEditor/)
 
 富文本编辑器是一种可内嵌于浏览器，所见即所得的文本编辑器。现在有很多开箱即用的富文本编辑器，例如`UEditor`、`WangEditor`等，他们的可定制性差一些，但是胜在开箱即用，可以短时间就见到效果。而类似于`Draft.js`、`Slate.js`，他们是富文本编辑器的`core`或者叫做`controller`，并不是一个完整的功能，这样就能够让我们有非常高的可定制性，当然也就会造成开发所需要的时间比较多。在实际应用或技术选型的时候，还是要多做一些调研，因为在业务上框架没有绝对的优势与劣势，只有合适不合适。   
 
