@@ -720,7 +720,7 @@ module.exports = {   // 处理项目中的css文件，生产环境和测试环�
   }),
   cssSourceMap: sourceMapEnabled,
   cacheBusting: config.dev.cacheBusting,
-  transformToRequire: {   // 在模版编译过程中，编译器可以将某些属性，如 src 路径，转换为require调用，以便目标资源可以由 webpack 处理
+  transformToRequire: {   // 在模板编译过程中，编译器可以将某些属性，如 src 路径，转换为require调用，以便目标资源可以由 webpack 处理
     video: ['src', 'poster'],
     source: 'src',
     img: 'src',
