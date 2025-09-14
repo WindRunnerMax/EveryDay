@@ -111,7 +111,7 @@
 +---------------------------------------------------------------------------+
 ```
 
-这里相对豆包的变量模板输入框形式来说，最大的差异就是非变量块不可编辑。那么相对来说这种形式就比较简单了，普通的文本就使用`span`节点，变量节点则使用可编辑的`input`标签即可。看起来没什么问题，然而我们需要处理其自动宽度，否则交互起来效果会比较差。
+这里相对豆包的变量模板输入框形式来说，最大的差异就是非变量块不可编辑。那么相对来说这种形式就比较简单了，普通的文本就使用`span`节点，变量节点则使用可编辑的`input`标签即可。看起来没什么问题，然而我们需要处理其自动宽度，类似`arco`的实现，否则交互起来效果会比较差。
 
 实际上`input`的自动宽度并没有那么好实现，通常来说这种情况需要额外的`div`节点放置文本来同步计算宽度，类似于前文我们聊的`GitHub`搜索输入框的实现方式。那么在这里我们使用`Editable`的`span`节点来实现内容的编辑，当然也会存在其他问题需要处理，例如避免回车、粘贴等。
 
@@ -127,23 +127,124 @@
   const inputs = document.querySelectorAll(".input");
   inputs.forEach(input => {
     input.setAttribute("contenteditable", "true");
-    const onInputPlaceholder = () => {
+    const onInput = () => {
       !input.innerText ? input.setAttribute("data-placeholder", input.getAttribute("placeholder"))
       : input.removeAttribute("data-placeholder");
     }
-    onInputPlaceholder()
-    input.oninput = onInputPlaceholder;
+    onInput();
+    input.oninput = onInput;
   });
 </script>
 ```
 
 ## 变量模板输入框
-同样适用于较短的`Prompt`模版场景
+变量模板输入框可以认为是上述实现的扩展，主要是支持了文本的编辑，这种情况下通常就需要引入富文本编辑器来实现了。因此，这种模式同样适用于较短的`Prompt`模版场景，并且用户可以在模板的基础上进行灵活的调整，参考下面的示例实现的 [DEMO](https://windrunnermax.github.io/BlockKit/variable.html) 效果。
+
+```
++---------------------------------------------------------------------------+
+| 我是一位 {{role}}，帮我写一篇关于 {{theme}} 内容的 {{platform}} 文章，          |
+| 需要符合该平台写作风格，文章篇幅为 {{space}} 。                                 |
++---------------------------------------------------------------------------+
+```
 
 ### 方案设计
-`slate`编辑器实现起来虽然比较方便
+实际上只要涉及到编辑器相关的内容，无论是富文本编辑器、图形编辑器等，都会比较复杂，其中的都涉及到了数据结构、选区模式、渲染性能等问题。而即使是个简单的输入框，也会涉及到其中的很多问题，因此我们必须要做好调研并且设计好方案。
+
+开篇我们就讲述了为何`slate`可以实现这种交互，而其他的编辑器框架则不行，主要是因为`slate`的`inline`节点是特殊类型实现。具体来说，`slate`的`inline`节点是一个`children`数组，因此这里看起来是同个位置的选区可以通过`path`的不同区分，`child`内会多一层级。
+
+```js
+[
+  {
+    type: "paragraph",
+    children: [{
+      type: "badge",
+      children: [{ text: "Approved" }],
+    }],
+  },
+]
+```
+
+因此既然`slate`本身设计上支持这种选区行为，那么实现起来就会非常方便了。然而我对于`slate`编辑器实在是太熟悉了，也为`slate`提过一些`PR`，所以在这里我并不太想继续用`slate`实现，而恰好我一直在写 [从零实现富文本编辑器](https://github.com/WindRunnerMax/EveryDay/blob/master/RichText/从零设计实现富文本编辑器.md) 的系列文章，因此用自己做的框架`BlockKit`实现是个不错的选择。
+
+而实际上，用`slate`的实现并非完全没有问题，主要是`slate`的数据结构完全支持任意层级的嵌套，那么也就是说，我们必须要用很多策略来限制用户的行为。例如我们复制了嵌入节点，是完全可以将其贴入到其他块结构内，造成更多级别的`children`嵌套，类似这种情况必须要写完善的`normalize`方法处理。
+
+那么在`BlockKit`中并不支持多层级的嵌套，因为我们的选区设计是线性的结构，即使有多个标签并列，大多数情况下我们会认为选区是在偏左的`DOM`节点末尾。而由于某些情况下节点在浏览器中的特殊表现，例如`Embed`类型的节点，我们才会将光标放置在偏右的`DOM`位置。
+
+```js
+// 左偏选区设计
+{ offset: 4 }
+// <em>text[caret]</em><strong>text</strong>
+{ offset: 5 }
+// <em>text</em><strong>t[caret]ext</strong>
+```
+
+因此我们必须要想办法支持这个行为，而更改架构设计则是不可行的，毕竟如果需要修改诸如选区模式、数据结构等模块，就相当于修改了地基，上层的所有模块都需要重新适配。因此我们需要通过其他方式来实现这个功能，而且还需要在整体编辑器的架构设计基础上实现。
+
+那么这里的本质问题是我们的编辑器不支持独立的空结构，其中主要是没有办法额外表示一个选区位置，如果能够通过某些方式独立表达选区位置，理论上就可以实现这个功能。沿着这个思路，我们可以比较容易地想出来下面的两个方式:
+
+1. 在变量块周围维护配对的`Embed`节点，即通过额外的节点构造出新的选区位置，再来适配编辑器的相关行为。
+2. 变量块本身通过独立的`Editable`节点实现，相当于脱离编辑器本身的控制，同样需要适配内部编辑的相关行为。
+
+方案`1`的优点是其本身并不会脱离编辑器的控制，整体的选区、历史记录等操作都可以被编辑器本身管理。缺点是需要额外维护`Embed`节点，整体实现会比较复杂，例如删除末尾`Embed`节点时需要配对删除前方的节点、粘贴的时候也需要避免节点被重复插入、需要额外的包装节点处理样式等。
+
+方案`2`的优点是维护了独立的节点，在`DOM`层面上不需要额外的处理，将其作为普通可编辑的`Embed`节点即可。缺点是脱离了编辑器框架本身的控制，必须要额外处理选区、历史记录等操作，相当于本身实现了内部的不受控的新编辑器，独立出来的编辑区域自然需要额外的`Case`需要处理。
+
+最终比较起来，我们还是选择了方案`2`，主要是其实现起来会比较简单，并且不需要额外维护复杂的约定式节点结构。虽然脱离了编辑器本身的控制，但是我们可以通过事件将其选区、历史记录等操作同步到编辑器本身，相当于半受控处理，虽然会有一些边界情况需要处理，但是整体实现起来还比较可控。
 
 ### Editable 组件
+那么在方案`2`的基础上，我们就首先需要实现一个`Editable`组件，来实现变量块的内容编辑。由于变量块的内容并不需要支持任何加粗等操作，因此这里我们并不需要嵌套富文本编辑器本身，而是只需要支持一个纯文本的可编辑区域即可，通过事件通信的形式实现半受控处理。
+
+因此在这里我们就只需要一个`span`标签，并且设置其`contenteditable`属性为`true`即可。至于为什么不使用`input`来实现文本的输入框，主要是`input`的宽度跟随文本长度变化需要自己测量，而直接使用可编辑的`span`标签是天然支持的。
+
+```js
+<div
+  className="block-kit-editable-text"
+  contentEditable
+  suppressContentEditableWarning
+></div>
+```
+
+可输入的变量框就简单地实现出来了，而仅仅是可以输入文本并不够，我们还需要空内容时的占位符。由于`Editable`节点本身并不支持`placeholder`属性，因此我们必须要自行注入`DOM`节点，而且还需要避免占位符节点被选中、复制等，这种情况下伪元素是最合适的选择。
+
+```css
+.block-kit-editable-text {
+  display: inline-block;
+  outline: none;
+
+  &::after {
+    content: attr(data-vars-placeholder);
+    cursor: text;
+    opacity: 0.5;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+```
+
+当然`placeholder`的值可以是动态设置的，并且`placeholder`也仅仅是在内容为空时才会显示，因此我们还需要监听`input`事件来动态设置`data-vars-placeholder`属性。
+
+```js
+const showPlaceholder = !value && placeholder && !isComposing;
+<div
+  className="block-kit-editable-text"
+  data-vars-placeholder={showPlaceholder ? placeholder : void 0}
+></div>
+```
+
+这里的`isComposing`状态可以注意一下，这个状态是用来处理输入法`IME`的。当唤醒输入法输入的时候，编辑器通常会处于一个不受控的状态，这点我们先前在处理输入的文章中讨论过，然而此时文本区域是存在候选词的，因此这个情况下不应该显示占位符。
+
+```js
+const [isComposing, setIsComposing] = useState(false);
+const onCompositionStart = useMemoFn(() => {
+  setIsComposing(true);
+});
+
+const onCompositionEnd = useMemoFn((e: CompositionEvent) => {
+  setIsComposing(false);
+});
+```
+
+
 
 ### 选择器组件
 
