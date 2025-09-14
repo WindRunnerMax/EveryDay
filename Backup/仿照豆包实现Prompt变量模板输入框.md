@@ -244,13 +244,295 @@ const onCompositionEnd = useMemoFn((e: CompositionEvent) => {
 });
 ```
 
+接下来需要处理内容的输入，在此处的半受控主要是指的我们并不依靠`BeforeInput`事件来阻止用户输入，而是在允许用户输入后，主动通过`onChange`事件将内容同步到外部。而外部编辑器接收到变更后，会触发该节点的`rerender`，在这里我们再检查内容是否一致决定更新行为。
 
+在这里不使用`input`标签其实也会存在一些问题，主要是`DOM`标签本身内部是可以写入很多复杂的`HTML`内容的，而这里我们是希望将其仅仅作为普通的文本输入框来使用，因此我们在检查到`DOM`节点不符合要求的时候，需要将其重置为纯文本内容。
+
+```js
+useEffect(() => {
+  if (!editNode) return void 0;
+  if (isDOMText(editNode.firstChild)) {
+    if (editNode.firstChild.nodeValue !== props.value) {
+      editNode.firstChild.nodeValue = props.value;
+    }
+    for (let i = 1, len = editNode.childNodes.length; i < len; i++) {
+      const child = editNode.childNodes[i];
+      child && child.remove();
+    }
+  } else {
+    editNode.innerText = props.value;
+  }
+}, [props.value, editNode]);
+
+const onInput = useMemoFn((e: InputEvent) => {
+  if (e.isComposing || isNil(editNode)) {
+    return void 0;
+  }
+  const newValue = editNode.textContent || "";
+  newValue !== value && onChange(newValue);
+});
+```
+
+对于避免`Editable`节点出现非文本的`HTML`内容，我们还需要在`onPaste`事件中阻止用户粘贴非文本内容，这里需要阻止默认行为，并且将纯文本的内容提取出来重新插入。这里还涉及到了使用旧版的浏览器`API`，实际上`L0`的编辑器就是基于这些旧版的浏览器`API`实现的，例如`pell`编辑器。
+
+此外，我们还需要避免用户按下`Enter`键导致换行，在`Editable`里回车各大浏览的支持都不一致，因此这里即使是真的需要支持换行，我们也最好是使用`\n`来作为软换行使用，然后将`white-space`设置为`pre-wrap`来实现换行。我们可以回顾一下浏览器的不同行为:
+
+- 在空`contenteditable`编辑器的情况下，直接按下回车键，在`Chrome`中的表现是会插入`<div><br></div>`，而在`FireFox(<60)`中的表现是会插入`<br>`，`IE`中的表现是会插入`<p><br></p>`。
+- 在有文本的编辑器中，如果在文本中间插入回车例如`123|123`，在`Chrome`中的表现内容是`123<div>123</div>`，而在`FireFox`中的表现则是会将内容格式化为`<div>123</div><div>123</div>`。
+- 同样在有文本的编辑器中，如果在文本中间插入回车后再删除回车，例如`123|123->123123`，在`Chrome`中的表现内容会恢复原本的`123123`，而在`FireFox`中的表现则是会变为`<div>123123</div>`。
+
+```js
+const onPaste = useMemoFn((e: ClipboardEvent) => {
+  preventNativeEvent(e);
+  const clipboardData = e.clipboardData;
+  if (!clipboardData) return void 0;
+  const text = clipboardData.getData(TEXT_PLAIN) || "";
+  document.execCommand("insertText", false, text.replace(/\n/g, " "));
+});
+
+const onKeyDown = useMemoFn((e: KeyboardEvent) => {
+  if (isKeyCode(e, KEY_CODE.ENTER) || isKeyCode(e, KEY_CODE.TAB)) {
+    preventNativeEvent(e);
+    return void 0;
+  }
+})
+```
+
+至此`Editable`变量组件就基本实现完成了，接下来我们就可以实现一个变量块插件，将其作为`Embed`节点`Schema`集合进编辑器框架当中。在编辑器的插件化中，我们主要是将当前的值传递到编辑组件中，并且在`onChange`事件中将变更同步到编辑器本身，这就非常类似于表单的输入框处理了。
+
+```js
+export class EditableInputPlugin extends EditorPlugin {
+  public key = VARS_KEY;
+  public options: EditableInputOptions;
+
+  constructor(options?: EditableInputOptions) {
+    super();
+    this.options = options || {};
+  }
+  public destroy(): void {}
+
+  public match(attrs: AttributeMap): boolean {
+    return !!attrs[VARS_KEY];
+  }
+
+  public onTextChange(leaf: LeafState, value: string, event: InputEvent) {
+    const rawRange = leaf.toRawRange();
+    if (!rawRange) return void 0;
+    const delta = new Delta().retain(rawRange.start).retain(rawRange.len, { [VARS_VALUE_KEY]: value });
+    this.editor.state.apply(delta, { autoCaret: false, });
+  }
+
+  public renderLeaf(context: ReactLeafContext): React.ReactNode {
+    const { attributes: attrs = {} } = context;
+    const varKey = attrs[VARS_KEY];
+    const placeholders = this.options.placeholders || {};
+    return (
+      <Embed context={context}>
+        <EditableTextInput
+          className={cs(VARS_CLS_PREFIX, `${VARS_CLS_PREFIX}-${varKey}`)}
+          value={attrs[VARS_VALUE_KEY] || ""}
+          placeholder={placeholders[varKey]}
+          onChange={(v, e) => this.onTextChange(context.leafState, v, e)}
+        ></EditableTextInput>
+      </Embed>
+    );
+  }
+}
+```
+
+然而，当我们将`Editable`节点集成后出现了问题，特别是选区无法设置到变量编辑节点内。主要是这里的选区会不受编辑器控制，因此我们还需要在编辑器的核心包里，避免选区被编辑器框架强行拉取到`leaf`节点上，这还是需要编辑器本身支持的。
+
+同样的，很多事件同样需要避免编辑器框架本身处理，得益于浏览器`DOM`事件流的设计，我们可以比较轻松地通过阻止事件冒泡来避免编辑器框架处理这些事件。当然还有一些不冒泡的如`Focus`等事件，以及`SelectionChange`等全局事件，我们还需要在编辑器本身的事件中心中处理这些事件。
+
+```js
+/**
+ * 独立节点嵌入 HOC
+ * - 独立区域 完全隔离相关事件
+ * @param props
+ */
+export const Isolate: FC<IsolateProps> = props => {
+  const [ref, setRef] = useState<HTMLSpanElement | null>(null);
+
+  useEffect(() => {
+    // 阻止事件冒泡
+  }, [ref]);
+
+  return (
+    <span
+      ref={setRef}
+      {...{ [ISOLATED_KEY]: true }}
+      contentEditable={false}
+    >
+      {props.children}
+    </span>
+  );
+};
+```
+
+```js
+/**
+ * 判断选区变更时, 是否需要忽略该变更
+ * @param node
+ * @param root
+ */
+export const isNeedIgnoreRangeDOM = (node: DOMNode, root: HTMLDivElement) => {
+  for (let n: DOMNode | null = node; n !== root; n = n.parentNode) {
+    // node 节点向上查找到 body, 说明 node 并非在 root 下, 忽略选区变更
+    if (!n || n === document.body || n === document.documentElement) {
+      return true;
+    }
+    // 如果是 ISOLATED_KEY 的元素, 则忽略选区变更
+    if (isDOMElement(n) && n.hasAttribute(ISOLATED_KEY)) {
+      return true;
+    }
+  }
+  return false;
+};
+```
+
+到这里，模板输入框基本已经实现完成了，在实际使用中问题太大的问题。然而在测试兼容性时发现一个细节，在`Firefox`和`Safari`中，按下方向键从非变量节点跳到变量节点时，不一定能够成功跳入或者跳出，具体的表现在不同的浏览器都有差异，只有`Chrome`是完全正常的。
+
+因此为了兼容浏览器的处理，我们还需要在`KeyDown`事件中主动处理在边界上的跳转行为。这部分的实现是需要适配编辑器本身的实现的，需要完全根据`DOM`节点来处理新的选区位置，因此这里的实现主要是根据预设的`DOM`结构类型来处理，这里实现代码比较多，因此举个左键跳出变量块的例子。
+
+```js
+const onKeyDown = useMemoFn((e: KeyboardEvent) => {
+  LEFT_ARROW_KEY: if (
+    !readonly &&
+    isKeyCode(e, KEY_CODE.LEFT) &&
+    sel &&
+    sel.isCollapsed &&
+    sel.anchorOffset === 0 &&
+    sel.anchorNode &&
+    sel.anchorNode.parentElement &&
+    sel.anchorNode.parentElement.closest(`[${LEAF_KEY}]`)
+  ) {
+    const leafNode = sel.anchorNode.parentElement.closest(`[${LEAF_KEY}]`)!;
+    const prevNode = leafNode.previousSibling;
+    if (!isDOMElement(prevNode) || !prevNode.hasAttribute(LEAF_KEY)) {
+      break LEFT_ARROW_KEY;
+    }
+    const selector = `span[${LEAF_STRING}], span[${ZERO_SPACE_KEY}]`;
+    const focusNode = prevNode.querySelector(selector);
+    if (!focusNode || !isDOMText(focusNode.firstChild)) {
+      break LEFT_ARROW_KEY;
+    }
+    const text = focusNode.firstChild;
+    sel.setBaseAndExtent(text, text.length, text, text.length);
+    preventNativeEvent(e);
+  }
+})
+```
+
+最后，我们还需要处理`History`的相关操作，由于变量块本身是脱离编辑器框架的，选区实际上是并没有被编辑器本身感知的。所以这里的`undo`、`redo`等操作实际上是无法处理变量块选区的变更，因此这里我们就简单处理一下，避免输入组件`undo`本身的操作被记录到编辑器内。
+
+```js
+public onTextChange(leaf: LeafState, value: string, event: InputEvent) {
+  this.editor.state.apply(delta, {
+    autoCaret: false,
+    // 即使不记录到 History 模块, 仍然存在部分问题
+    // 但若是受控处理, 则又存在焦点问题, 因为此时焦点并不在编辑器
+    undoable: event.inputType !== "historyUndo" && event.inputType !== "historyRedo",
+  });
+}
+```
 
 ### 选择器组件
+选择器组件主要是固定变量的值，例如上述的的例子中我们将篇幅这个变量固定为短篇、中篇、长篇等选项。这里的实现就比较简单了，主要是选择器组件本身不需要处理选区的问题，其本身就是常规的`Embed`类型节点，因此只需要实现选择器组件，并且在`onChange`事件中将值同步到编辑器本身即可。
 
+```js
+export class SelectorInputPlugin extends EditorPlugin {
+  public key = SEL_KEY;
+  public options: SelectorPluginOptions;
+
+  constructor(options?: SelectorPluginOptions) {
+    super();
+    this.options = options || {};
+  }
+
+  public destroy(): void {}
+
+  public match(attrs: AttributeMap): boolean {
+    return !!attrs[SEL_KEY];
+  }
+
+  public onValueChange(leaf: LeafState, v: string) {
+    const rawRange = leaf.toRawRange();
+    if (!rawRange) return void 0;
+    const delta = new Delta().retain(rawRange.start).retain(rawRange.len, {
+      [SEL_VALUE_KEY]: v,
+    });
+    this.editor.state.apply(delta, { autoCaret: false });
+  }
+
+  public renderLeaf(context: ReactLeafContext): React.ReactNode {
+    const { attributes: attrs = {} } = context;
+    const selKey = attrs[SEL_KEY];
+    const value = attrs[SEL_VALUE_KEY] || "";
+    const options = this.options.selector || {};
+    return (
+      <Embed context={context}>
+        <SelectorInput
+          value={value}
+          optionsWidth={this.options.optionsWidth || SEL_OPTIONS_WIDTH}
+          onChange={(v: string) => this.onValueChange(context.leafState, v)}
+          options={options[selKey] || [value]}
+        />
+      </Embed>
+    );
+  }
+}
+```
+
+`SelectorInput`组件则是常规的选择器组件，这里需要注意的是避免该组件被浏览器的选区处理，因此会在`MouseDown`事件中阻止默认行为。而弹出层的`DOM`节点则是通过`Portal`的形式挂载到编辑器外部的节点上，这样自然不会被选区影响。
+
+```js
+export const SelectorInput: FC<{ value: string; options: string[]; optionsWidth: number; onChange: (v: string) => void; }> = props => {
+  const { editor } = useEditorStatic();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onOpen = (e: React.MouseEvent<HTMLSpanElement>) => {
+    if (isOpen) {
+      MountNode.unmount(editor, SEL_KEY);
+    } else {
+      const target = (e.target as HTMLSpanElement).closest(`[${VOID_KEY}]`);
+      if (!target) return void 0;
+      const rect = target.getBoundingClientRect();
+      const onChange = (v: string) => {
+        props.onChange && props.onChange(v);
+        MountNode.unmount(editor, SEL_KEY);
+        setIsOpen(false);
+      };
+      const Element = (
+        <SelectorOptions
+          value={props.value}
+          width={props.optionsWidth}
+          left={rect.left + rect.width / 2 - props.optionsWidth / 2}
+          top={rect.top + rect.height}
+          options={props.options}
+          onChange={onChange}
+        ></SelectorOptions>
+      );
+      MountNode.mount(editor, SEL_KEY, Element);
+      const onMouseDown = () => {
+        setIsOpen(false);
+        MountNode.unmount(editor, SEL_KEY);
+        document.removeEventListener(EDITOR_EVENT.MOUSE_DOWN, onMouseDown);
+      };
+      document.addEventListener(EDITOR_EVENT.MOUSE_DOWN, onMouseDown);
+    }
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <span className="editable-selector" onMouseDownCapture={preventReactEvent} onClick={onOpen}>
+      {props.value}
+    </span>
+  );
+};
+```
 
 ## 总结
-在本文中我们基于富文本编辑器实现了变量模板输入框，
+在本文中我们调研了用户`Prompt`输入的相关场景实现，且讨论了纯文本输入框模式、表单模版输入模式，还观察了一些有趣的实现方案。最后重点基于富文本编辑器实现了变量模板输入框，特别适配了我们从零实现的编辑器框架`BlockKit`，并且实现了`Editable`变量块、选择器变量块等插件。
 
 实际上引入富文本编辑器总是会比较复杂，在简单的场景下直接使用`Editable`自然也是可行的，特别是类似这种简单的输入框场景，无需处理复杂的性能问题。然而若是要实现更复杂的交互形式，以及多种块结构、插件化策略等，使用富文本编辑器框架还是更好的选择，否则最终还是向着编辑器实现了。
 
