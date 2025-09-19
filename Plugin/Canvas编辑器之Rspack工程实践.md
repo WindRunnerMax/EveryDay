@@ -46,7 +46,7 @@ Invalid hook call. Hooks can only be called inside of the body of a function com
 3.  You might have more than one copy of React in the same app See for tips about how to debug and fix this problem.
 ```
 
-接着回到项目本身，当前项目已经抽离出来独立的[RspackMonoTemplate](https://github.com/WindrunnerMax/RspackMonoTemplate)，平时开发也会基于这个模版创建仓库。当前简历编辑器项目的结构`tree -L 2 -I node_modules --dirsfirst`如下:
+接着回到项目本身，当前项目已经抽离出来独立的[RspackMonoTemplate](https://github.com/WindrunnerMax/RspackMonoTemplate)，平时开发也会基于这个模板创建仓库。当前简历编辑器项目的结构`tree -L 2 -I node_modules --dirsfirst`如下:
 
 ```
 CanvasEditor
