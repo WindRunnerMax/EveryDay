@@ -68,7 +68,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/HTML/前端性能优化方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-13T02:51:05.000Z</lastmod>
 </url>
 
 <url>
@@ -867,7 +867,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Browser/浏览器页面呈现过程.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-13T02:51:05.000Z</lastmod>
 </url>
 
 <url>
@@ -1194,7 +1194,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Vue/Vue中组件间通信的方式.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-13T02:51:05.000Z</lastmod>
 </url>
 
 <url>
@@ -1302,7 +1302,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/React/React中组件间通信的方式.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-13T02:51:05.000Z</lastmod>
 </url>
 
 <url>
@@ -1584,7 +1584,12 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/流式Markdown增量富文本解析算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-13T02:51:05.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/仿照豆包实现Prompt变量模板输入框.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>

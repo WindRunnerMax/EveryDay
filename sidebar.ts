@@ -306,7 +306,8 @@ export const sidebar: Sidebar = {
         "Plugin/Canvas编辑器之层级渲染事件管理",
         "Plugin/Canvas编辑器之选中绘制交互方案",
         "Plugin/基于向量检索实现基础RAG服务",
-        "Plugin/流式Markdown增量富文本解析算法"
+        "Plugin/流式Markdown增量富文本解析算法",
+        "Plugin/仿照豆包实现Prompt变量模板输入框"
       ]
     },
     {
