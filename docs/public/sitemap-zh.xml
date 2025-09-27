@@ -633,7 +633,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/JavaScript/模板语法的简单实现.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -729,7 +729,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/JavaScript/常见的内存泄漏场景.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-05T11:37:01.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1029,7 +1029,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Vue/Vue学习笔记.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-12-19T13:58:14.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1152,7 +1152,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Vue/v-model数据绑定分析.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-08-09T03:22:11.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1374,7 +1374,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/React/React闭包陷阱.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-07-19T05:20:19.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1386,7 +1386,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/React/基于React的SSG渲染方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-08-09T03:22:11.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1452,7 +1452,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于NoCode构建简历编辑器.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-08-09T03:22:11.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1494,7 +1494,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/从零实现的Chrome扩展.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1536,7 +1536,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于Canvas构建简历编辑器.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1560,7 +1560,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/Canvas编辑器之Rspack工程实践.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1590,6 +1590,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/仿照豆包实现Prompt变量模板输入框.html</loc>
   <priority>1.0</priority>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1643,7 +1644,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之在线文档交付.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1709,7 +1710,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于MVC模式的编辑器架构设计.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -1913,7 +1914,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Patterns/简单模板模式.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-08-09T03:22:11.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
@@ -3074,13 +3075,13 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/从大学开始搞的开源项目.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-06-28T15:12:19.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T03:29:58.000Z</lastmod>
+  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 </urlset>
