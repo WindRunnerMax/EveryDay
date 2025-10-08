@@ -963,7 +963,7 @@ $ npx husky add .husky/pre-commit "npx lint-staged"
 
 ### 配置TypeScript
 虽然是`Vue2`对`ts`支持相对比较差，但是至少对于抽离出来的逻辑是可以写成`ts`的，可以在编译期就避免很多错误，对于一些`Vue2 +TS`的装饰器写法可以参考之前的博客 [uniapp小程序迁移到TS
-](https://blog.touchczy.top/#/MiniProgram/uniapp%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%BF%81%E7%A7%BB%E5%88%B0TS) ，本次的改动比较大，主要是配置了`ESLint`相关信息，处理`TS`与`Vue`文件的提示信息，`webpack.config.js`配置`resolve`的一些信息以及`ts-loader`的解析，对于`.vue`的`TS`装饰器方式修改，`src/sfc.d.ts`作为`.vue`文件的声明文件，`VueRouter`与`Vuex`的`TS`修改，以及最后的`tsconfig.json`用以配置`TS`信息，配置`TypeScript`完成之后的`commit id`为`0fa9324`。
+](blog.touchczy.top/?p=/MiniProgram/uniapp小程序迁移到TS) ，本次的改动比较大，主要是配置了`ESLint`相关信息，处理`TS`与`Vue`文件的提示信息，`webpack.config.js`配置`resolve`的一些信息以及`ts-loader`的解析，对于`.vue`的`TS`装饰器方式修改，`src/sfc.d.ts`作为`.vue`文件的声明文件，`VueRouter`与`Vuex`的`TS`修改，以及最后的`tsconfig.json`用以配置`TS`信息，配置`TypeScript`完成之后的`commit id`为`0fa9324`。
 
 ```shell
 yarn add -D @typescript-eslint/eslint-plugin @typescript-eslint/parser @babel/plugin-syntax-typescript typescript vue-property-decorator vue-class-component ts-loader vuex-class

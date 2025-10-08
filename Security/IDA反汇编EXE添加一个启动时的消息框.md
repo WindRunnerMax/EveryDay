@@ -148,14 +148,10 @@ CALL DWORD PTR DS:[MessageBoxW]
 
 ## Blog
 
-```
-https://blog.touchczy.top/#/
-```
+- <https://blog.touchczy.top/#/>
 
 ## 参考
 
-```
-https://tool.lu/hexstr/
-http://www.downcc.com/soft/24420.html
-http://www.xz7.com/downinfo/347986.html
-```
+- <https://tool.lu/hexstr/>
+- <http://www.downcc.com/soft/24420.html>
+- <http://www.xz7.com/downinfo/347986.html>
