@@ -119,14 +119,10 @@
 
 ## Blog
 
-```
-https://blog.touchczy.top/#/
-```
+- <https://blog.touchczy.top/#/>
 
 ## 参考
 
-```
-http://www.downcc.com/soft/24420.html
-https://www.xiazaiba.com/html/3979.html
-https://www.52pojie.cn/thread-217068-1-1.html
-```
+- <http://www.downcc.com/soft/24420.html>
+- <https://www.xiazaiba.com/html/3979.html>
+- <https://www.52pojie.cn/thread-217068-1-1.html>
