@@ -43,7 +43,7 @@
 
 然而，如果每次输入或者选区变化等时机都进行`DOM`检查和修复，势必会影响编辑器整体性能或者输入流畅性，并且`DOM`检查和修复的范围也需要进行限制，否则同样影响性能。因此在这里我们需要对浏览器的输入模式进行归类，针对不同的类型进行不同的`DOM`检查和修复模式。
 
-### 行内节点
+## 行内节点
 `DOM`结构与`Model`结构的同步在非受控的`React`组件中变得复杂，这其实也就是部分编辑器选择自绘选区的原因之一，可以以此避免非受控问题。那么非受控的行为造成的主要问题可以比较容易地复现出来，假设此时存在两个节点，分别是`inline`类型和`text`类型的文本节点:
 
 ```
@@ -148,11 +148,80 @@ export function App(props) {
 }
 ```
 
-### 包装节点
-wrapper anchor node
+## 包装节点
+关于包装节点的问题需要我们先聊一下这个模式的设计，现在实现的富文本编辑器是没有块结构的，因此实现任何具有嵌套的结构都是个复杂的问题。在这里我们原本就不会处理诸如表格类的嵌套结构，但是例如`blockquote`这种`wrapper`级结构我们是需要处理的。
 
-### 浏览器兼容
-然而，在后期的实现中，重新出现了先前在`Wrapper DOM`一节中提到的`a`标签问题，此时的问题变得复杂了很多，主要是各个浏览器的兼容性的问题。类似于行内代码块，本质上还是浏览器`IME`非受控导致的`DOM`变更问题，但是在浏览器表现差异很大，下面是最小的`DEMO`结构。
+类似的结构还有`list`，但是`list`我们可以完全自己绘制，但是`blockquote`这种结构是需要具体组合才可以的。然而如果仅仅是`blockquote`还好，在`inline`节点上使用`wrapper`是更常见的实现，例如`a`标签的包装在编辑器的实现模式中就是很常规的行为。
+
+具体来说，在我们将文本分割为`bold`、`italic`等`inline`节点时，会导致`DOM`节点被实际切割，此时如果嵌套`<a>`节点的话，就会导致`hover`后下划线等效果出现切割。因此如果能够将其`wrapper`在同一个`<a>`标签的话，就不会出现这种问题。
+
+但是新的问题又来了，如果仅仅是单个`key`来实现渲染时嵌套并不是什么复杂问题，而同时存在多个需要`wrapper`的`key`则变成了令人费解的问题。如下面的例子中，如果将`34`单独合并`b`，外层再包裹`a`似乎是合理的，但是将`34`先包裹`a`后再合并`5`的`b`也是合理的，甚至有没有办法将`67`一并合并，因为其都存在`b`标签。
+
+```html
+1 2 3  4  5 6  7 8 9 0
+a a ab ab b bc b c c c
+```
+
+思来想去，我最终想到了个简单的实现，对于需要`wrapper`的元素，如果其合并`list`的`key`和`value`全部相同的话，那么就作为同一个值来合并。那么这种情况下就变的简单了很多，我们将其认为是一个组合值，而不是单独的值，在大部分场景下是足够的。
+
+```html
+1 2 3  4  5 6  7 8 9 0
+a a ab ab b bc b c c c
+12 34 5 6 7 890
+```
+
+不过话又说回来，这种`wrapper`结构是比较特殊的场景下才会需要的，在某些操作例如缩进这个行为中，是无法判断究竟是要缩进引用块还是缩进其中的文字。这个问题在很多开源编辑器中都存在，特别是扁平化的数据结构设计例如`Quill`编辑器。
+
+其实也就是在没有块结构的情况下，对于类似的行为不好控制，而整体缩进这件事配合`list`在大型文档中也是很合理的行为，因此这部分实现还是要等我们的块结构编辑器实现才可以。当然，如果数据结构本身支持嵌套模式，例如`Slate`就可以实现。
+
+后续在`wrap node`实现的`a`标签来实现输入时，又出现了上述类似`inline-code`的脏`DOM`问题。以下面的`DOM`结构来看，看似并不会有什么问题，然而当光标放置于超链接这三个字后唤醒`IME`输入中文时，会发现输入“测试输入”这几个字会被放置于直属`div`下，与`a`标签平级。
+
+```html
+<div contenteditable>
+  <a href="https://www.baidu.com"><span>超链接</span></a>
+  <span>文本</span>
+</div>
+```
+
+```html
+<div contenteditable>
+  <a href="https://www.baidu.com"><span>超链接</span></a>
+  测试输入
+  <span>文本</span>
+</div>
+```
+
+在这种情况下我们先前实现的脏`DOM`检测就失效了，因为检查脏`DOM`的实现是基于`data-leaf`实现的。此时浏览器的输入表现会导致我们无法正确检查到这部分内容，除非直接拿`data-node`行节点来直接判断，这样的实现自然不够好。
+
+说到这里，先前我发现飞书文档的实现是`a`标签渲染的`leaf`，而`wrap`的包装实现是使用的`span`直接处理的，并且额外增加了样式来实现`hover`效果。直接使用`span`包裹就不会出现上述问题，而内部的`a`标签虽然会导致同样的问题，但是在`leaf`下可以触发脏`DOM`检查。
+
+```html
+<div contenteditable>
+  <span>
+    <a href="https://www.baidu.com"><span>超链接</span></a>
+    测试输入
+  </span>
+  <span>文本</span>
+</div>
+```
+
+因此就可以在先前的脏`DOM`检查基础上解决了问题，而本质上类似的行为就是浏览器默认处理的结果，不同的浏览器处理结果可能都不一样。目前看起来是浏览器认为`a`标签的结构应该是属于`inline`的实现，也就是类似我们的`inline-code`实现，理论上倒却是并没有什么问题，由此我们需要自己来处理这些非受控的问题。
+
+实际上`Quill`本身也会出现这个问题，同样也是脏`DOM`的处理。而`slate`并不会出现这个问题，这里处理方案则是通过`DOM`规避了问题，在`a`标签两端放置额外的`&nbsp`节点，以此来避免这个问题。当然还引入了额外的问题，引入了新的节点，目前看起来转移光标需要受控处理。
+
+```html
+<!-- https://github.com/ianstormtaylor/slate/blob/main/site/examples/ts/inlines.tsx -->
+<div contenteditable>
+  <a href="https://www.baidu.com"
+    ><span contenteditable="false" style="font-size: 0">&nbsp;</span
+    ><span>超链接测试输入</span
+    ><span contenteditable="false" style="font-size: 0">&nbsp;</span></a
+  ><span>文本</span>
+</div>
+```
+
+## 浏览器兼容性
+在后续浏览器的测试中，重新出现了上述提到的`a`标签问题，此时并不是由于包装节点引起的，因此问题变得复杂了很多，主要是各个浏览器的兼容性的问题。类似于行内代码块，本质上还是浏览器`IME`非受控导致的`DOM`变更问题，但是在浏览器表现差异很大，下面是最小的`DEMO`结构。
 
 ```html
 <div contenteditable>
@@ -189,7 +258,7 @@ wrapper anchor node
 </span>
 ```
 
-因此我们的脏`DOM`检查需要更细粒度地处理，仅仅对比文本内容显然是不足以处理的，我们还需要检查文本的内容节点结构是否准确。其实最开始我是仅处理了`Chrome`下的情况，最简单的办法就是在`leaf`节点下仅允许存在单个节点，存在多个节点则说明是脏`DOM`。
+因此我们的脏`DOM`检查需要更细粒度地处理，仅仅对比文本内容显然是不足以处理的，我们还需要检查文本的内容节点结构是否准确。其实最开始我们是仅处理了`Chrome`下的情况，最简单的办法就是在`leaf`节点下仅允许存在单个节点，存在多个节点则说明是脏`DOM`。
 
 ```js
 for (let i = 1; i < nodes.length; ++i) {
@@ -240,8 +309,64 @@ if (isDOMText(dom.firstChild)) {
 }
 ```
 
-### 样式组合
-此外，由于我们的编辑器是完全`immutable`实现的，因此在文本节点变更时若是需要存在连续的格式处理，例如`inline-code`的样式实现，那么就会存在渲染问题。具体表现是若是多个连续的`code`节点，最后一个节点长度为`1`，删除最后这个节点时会导致前一个节点无法刷新样式。
+这里需要注意的是，我们还需要处理零宽字符类型的情况。当`Embed`节点前没有任何节点，即位于行首时，输入中文后同样会导致`IME`的输入内容被滞留在`Embed`节点的零宽字符上，这点与上述的`inline`节点是类似的，因此这部分也需要处理。
+
+```js
+const zeroNode = LEAF_TO_ZERO_TEXT.get(leaf);
+const isZeroNode = !!zeroNode;
+const textNode = isZeroNode ? zeroNode : LEAF_TO_TEXT.get(leaf);
+const text = isZeroNode ? ZERO_SYMBOL : leaf.getText();
+const nodes = textNode.childNodes;
+```
+
+到这里，我们的脏`DOM`检查已经能够处理大部分情况了，整体的模式都是`React`在行`DOM`结构计算完成后，浏览器渲染前进行处理。针对于文本节点以及`a`标签的检查，需要检查文本与状态的关系，以及严格的`DOM`结构破坏后的需要直接`Remount`组件。
+
+```js
+// 文本节点内部仅应该存在一个文本节点, 需要移除额外节点
+for (let i = 1; i < nodes.length; ++i) {
+  const node = nodes[i];
+  node && node.remove();
+}
+// 如果文本内容不合法, 通常是由于输入的脏 DOM, 需要纠正内容
+if (isDOMText(textNode.firstChild)) {
+  // Case1: [inline-code][caret][text] IME 会导致模型/文本差异
+  // Case3: 在单行仅存在 Embed 节点时, 在节点最前输入会导致内容重复
+  if (textNode.firstChild.nodeValue === text) return false;
+  textNode.firstChild.nodeValue = text;
+  } else {
+  // Case2: Safari 下在 a 节点末尾输入时, 会导致节点内外层交换
+  const func = LEAF_TO_REMOUNT.get(leaf);
+  func && func();
+  if (process.env.NODE_ENV === "development") {
+    console.log("Force Render Text Node", textNode);
+  }
+}
+```
+
+而针对于额外的文本节点，即本章节中重点提到的浏览器兼容性问题，我们需要严格地控制`leaf`节点下的`DOM`结构。如果仅存在单个文本节点的情况下，是符合设计的结构，而如果是存在多个节点，除了`Void/Embed`节点的情况外，则说明`DOM`结构被破坏了，这里我们就需要移除掉多余的节点。
+
+```js
+// data-leaf 节点内部仅应该存在非文本节点, 文本类型单节点, 嵌入类型双节点
+for (let i = 1; i < nodes.length; ++i) {
+  const node = nodes[i];
+  // 双节点情况下, 即 Void/Embed 节点类型时需要忽略该节点
+  if (isHTMLElement(node) && node.hasAttribute(VOID_KEY)) {
+    continue;
+  }
+  // Case1: Chrome a 标签内的 IME 输入会导致同级的额外文本节点类型插入
+  // Case2: Firefox a 标签内的 IME 输入会导致同级的额外 data-string 节点类型插入
+  node.remove();
+}
+```
+
+## 样式组合渲染
+由于我们的编辑器是以`immutable`提高渲染性能，因此在文本节点变更时若是需要存在连续的格式处理，例如`inline-code`的样式实现，就会出现组件不重新渲染问题。具体表现是若是存在多个连续的`code`节点，最后一个节点长度为`1`，删除最后这个节点时会导致前一个节点无法刷新样式。
+
+```
+[inline][c]|
+```
+
+这个问题的原因是我们的`className`是在渲染`leaf`节点时动态计算的，具体的逻辑如下所示。如果前一个节点不存在或者前一个节点不是`inline-code`，则添加`inline-code-start`类属性，类似的需要在最后一个节点加入`inline-code-end`类属性。
 
 ```js
 if (!prev || !prev.op.attributes || !prev.op.attributes[INLINE_CODE_KEY]) {
@@ -271,7 +396,7 @@ public didPaintLineState(lineState: LineState): void {
 }
 ```
 
-虽然看起来已经解决了问题，然而在`React`中还是存在一些问题，主要的原因此时的`DOM`处理是非受控的。在下面的例子中，由于`React`在处理`style`属性时，只会更新发生变化的样式属性，即使整体是新对象，但具体值与上次渲染时相同，因此`React`不会重新设置这个样式属性。
+虽然看起来已经解决了问题，然而在`React`中还是存在一些问题，主要的原因此时的`DOM`处理是非受控的。类似于下面的例子，由于`React`在处理`style`属性时，只会更新发生变化的样式属性，即使整体是新对象，但具体值与上次渲染时相同，因此`React`不会重新设置这个样式属性。
 
 ```js
 // https://playcode.io/react
@@ -312,14 +437,10 @@ public didPaintLineState(lineState: LineState): void {
 }
 ```
 
-### Emoji 处理
-
-实际上是受控的
-
-### 词级文本处理
-
 ## 总结
+在先前我们实现了半受控的输入模式，这个输入模式同样是目前大多数富文本编辑器的主流实现方式。在这里我们关注于浏览器`ContentEdiable`模式输入的默认行为造成的`DOM`结构问题，并且通过脏`DOM`检查的方式来修正这些问题，以此来保持编辑器的严格`DOM`结构。
 
+当前我们主要关注的是编辑器文本的输入问题，即如何将键盘输入的内容写入到编辑器数据模型中。而接下来我们需要关注于输入模式结构化变更的受控处理，即回车、删除、拖拽等操作的处理，这些操作同样也是基于输入相关事件实现的，而且通常会涉及到文本的结构变更，属于输入模式的补充。
 
 ## 每日一题
 
@@ -327,5 +448,6 @@ public didPaintLineState(lineState: LineState): void {
 
 ## 参考
 
+- <https://18.react.dev/>
 - <https://developer.mozilla.org/zh-CN/docs/Web/API/CompositionEvent>
 - <https://medium.engineering/why-contenteditable-is-terrible-122d8a40e480>
