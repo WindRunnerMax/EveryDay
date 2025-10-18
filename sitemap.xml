@@ -2775,13 +2775,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/React/低代码场景的状态管理方案</loc>
   <priority>1.0</priority>
-  <lastmod>2025-10-14T03:11:51.000Z</lastmod>
+  <lastmod>2025-10-15T12:22:29.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/React/低代码场景的状态管理方案</loc>
   <priority>1.0</priority>
-  <lastmod>2025-10-14T03:11:51.000Z</lastmod>
+  <lastmod>2025-10-15T12:22:29.000Z</lastmod>
 </url>
 
 <url>
@@ -3466,6 +3466,16 @@
   <loc>https://blog.touchczy.top/I18N/?p=/RichText/基于组合事件的半受控输入模式</loc>
   <priority>1.0</priority>
   <lastmod>2025-10-14T03:11:51.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/RichText/浏览器输入模式的非受控DOM行为</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/RichText/浏览器输入模式的非受控DOM行为</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
