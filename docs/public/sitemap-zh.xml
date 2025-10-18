@@ -729,7 +729,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/JavaScript/常见的内存泄漏场景.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
+  <lastmod>2025-09-27T09:19:05.000Z</lastmod>
 </url>
 
 <url>
@@ -1741,6 +1741,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/基于组合事件的半受控输入模式.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-09-07T08:12:59.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器输入模式的非受控DOM行为.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
