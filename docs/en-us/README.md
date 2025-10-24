@@ -18,7 +18,7 @@
 If you like it, give it a star 😁   
 
 <!-- Summary Start -->
-The repository contains `513` articles, totaling `98170` lines, `802625` words, and `5539383` characters.
+The repository contains `514` articles, totaling `98571` lines, `806796` words, and `5567025` characters.
 <!-- Summary End -->
 
 This is the learning journey of a front-end beginner. If I only study without documenting anything, it would almost be like learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to keep learning daily. The articles below are accumulated starting from `2020.02.25`, all written based on research and synthesis of numerous references. The topics include `HTML` basics, `CSS` fundamentals, `JavaScript` basics and advanced concepts, `Browser`-related knowledge, `Vue` usage and analysis, `React` usage and analysis, `Plugin`-related content, `RichText` editors, `Patterns` design patterns, `Linux` commands, `LeetCode` solutions, and other categories. The content is fairly basic—after all, I’m still a beginner. Additionally, almost every example is designed to be run immediately—just create a new `HTML` file, copy the code, and open it in a browser, or run it directly in the `console`.
@@ -318,6 +318,7 @@ If you’d like to read the notes in order, you can [check the table of contents
 * [Expressing the State Structure of Editor Selection Model](RichText/编辑器选区模型的状态结构表达.md)
 * [Synchronizing Browser Selection with Editor Selection Model](RichText/浏览器选区与编辑器选区模型同步.md)
 * [Half-Controlled Input Mode Based on Composite Events](RichText/基于组合事件的半受控输入模式.md)
+* [Uncontrolled DOM Behavior in Browser Input Mode](RichText/浏览器输入模式的非受控DOM行为.md)
 
 ## Patterns
 * [Simple Factory Pattern](Patterns/简单工厂模式.md)
