@@ -280,13 +280,317 @@ Lock Release _lock_key 1 -> 0
 ```
 
 ### 分布式锁
-锁，单进程模式仅需要处理内存，单机集群即多进程模式可以共享内存或者使用文件系统，分布式多实例模式则需要使用`Redis`等外部存储
+实际上关于锁的问题，上述的单进程模式仅需要处理内存，而如果是单机集群模式，即多进程模式可以共享内存或者使用文件系统处理。然而现在常见的都是分布式多实例模式，这种情况下则需要使用`Redis`等外部存储，因为需要一个集中式的锁管理。
 
-这些分布式任务队列库都需要接入消息队列或数据库作为后端存储
+此外，`Redis`提供了`RedLock`算法可以实现分布式互斥，也就是阻止并发，因此并不适合我们这里的任务队列场景。还有`Redis`分布式主从部署的情况下，若是`Redis`主节点挂掉，从节点晋升为主节点时，可能会导致短暂的任务超限，即同时运行的任务数超过`MaxTask`。
+
+因此这里我们需要将内存的锁实现替换为`Redis`的分布式锁实现，对比内存的实现，由于本身`Redis`支持`incr`和`decr`原子操作，但是其不能限制其数据范围，因此我们需要使用`LUA`脚本来实现分布式锁的功能。下面是并行任务的`LUA`实现:
+
+```js
+/**
+ * Redis 自增锁 LUA 脚本
+ * - KEYS[1]: 锁的键名
+ * - ARGV[1]: 最大任务数 MaxTask
+ * @example ioredis.eval(LUA_SCRIPT, 1, LOCK_KEY, MAX_TASK);
+ */
+export const INCR_LOCK_LUA = `
+  local current = redis.call("GET", KEYS[1])
+
+  if not current then
+    current = 0
+  else
+    current = tonumber(current)
+  end
+
+  if current >= tonumber(ARGV[1]) then
+    return -1
+  end
+
+  local new_count = redis.call("INCR", KEYS[1])
+  return new_count
+`;
+
+/**
+ * Redis 自减锁 LUA 脚本
+ * - KEYS[1]: 锁的键名
+ * @example ioredis.eval(LUA_SCRIPT, 1, LOCK_KEY);
+ */
+export const DESC_LOCK_LUA = `
+  local current = redis.call("GET", KEYS[1])
+  
+  if not current then
+    return 0
+  end
+
+  current = tonumber(current)
+  if current <= 0 then
+    return 0
+  end
+
+  local new_count = redis.call("DECR", KEYS[1])
+  return new_count
+`;
+```
 
 ## 优雅停机
+优雅停机的处理要更复杂一些，因为其不能完全依靠框架本身的处理能力，而是需要我们在应用层进行处理。即我们必须要将信号传递到进程中，如果进程没有收到信号的话，那么就无法进行优雅停机的处理，即使是处理好了相关资源的清理，也没有实际效用。
 
-### 子进程信号
+特别的，在分布式部署的情况下我们都是部署在`Docker`容器中，在这种情况下信号的传递就非常依赖容器本身的配置，以及守护进程的方式。假设停机信号仅发送给主进程而不像是`Ctrl+C`一样发送给进程组，那么优雅停机就必须要主动将信号传递到子进程中，否则子进程将无法进行停机处理。
+
+### SIGINT
+`SIGINT`信号就是我们主要关注的信号类型，当我们在终端中按下`Ctrl+C`时，系统会向当前前台进程组发送`SIGINT`信号，从而触发进程的中断处理。在`kill`命令中，`SIGINT`信号的编号为`2`，因此我们也可以通过`kill -2 <pid>`或者`kill -INT <pid>`命令来发送该信号。
+
+在这里我们来实现简单的`SIGINT`信号处理，需要创建简单的`HTTP`服务器，然后通过监听`process.on("SIGINT")`事件来处理信号。当我们执行`Ctrl+C`时，服务器不会立即关闭，而是会输出等待的提示，接下来等待`2s`后关闭，然后才会退出进程。
+
+```js
+const server = http.createServer((_, res) => {
+  console.log("Received Request", Date.now());
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("Hello, World!\n");
+});
+
+process.on("SIGINT", async () => {
+  console.log("Received SIGINT. Shutting Down Gracefully...");
+  await new Promise(r => setTimeout(r, 2000));
+  server.close(() => {
+    console.log("Server Closed. Exiting Process.");
+    process.exit(0);
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server Running at http://localhost:${PORT}/`);
+});
+```
+
+### 信号传递
+`Ctrl+C`会给整个前台进程组发送`SIGINT`信号，但是在业务中可能会仅可能给主进程发送`SIGINT`信号，这时候子进程就无法收到信号。我们可以来模拟一下这个行为，当使用`npx`命令时，其并不会将信号转发到其启动的子进程。此外还有个常用的信号是`SIGTERM`，编号为`15`。
+
+```bash
+# ps -A -o pid,ppid,comm,args > ps.txt
+# lsof -i :3000
+# kill -INT 1234
+echo "signal.sh PID-PPID $$,$PPID"
+npx tsx ./src/index.ts
+```
+
+当使用`bash signal.sh`启动脚本时，先输出当前进程的`PID`和以及父进程的`PPID`。此时由于进程是`bash`启动的，因此`PPID`是`bash`的进程号，接下来使用`npx tsx`启动`NodeJs`进程，此时`NodeJs`进程的父进程就是`npx`进程，假设输出是下面的`id`:
+
+```bash
+signal.sh PID-PPID 66721,59534
+59534 51513 /bin/zsh         /bin/zsh -il                 # zsh shell
+66721 59534 bash             bash signal.sh               # bash 
+66722 66721 npm exec tsx ./s npm exec tsx ./src/index.ts  # npx tsx
+```
+
+此时如果执行`kill -INT 66721`命令发送到脚本进程，会发现`NodeJs`进程并没有收到信号，因此无法进行优雅停机处理。通常在这种情况下只能等待一定时间后强制杀死子进程，也就是`kill -9 <pid>`或者`kill -KILL <pid>`命令。而如果直接`kill -2 66722`，则可以正常停机。
+
+我们的假设是信号仅发送到主进程，而此时的主进程就是`bash`启动命令，无法结束进程就很合理了。这里问题其实就在于我们是使用`npx`启动的进程，这个命令会启动一个新的进程来执行服务的启动命令，在信号不传递的情况下，子进程是无法收到信号的。
+
+在`Bash`中，我们可以使用`exec`命令用于替换当前的`Shell`进程，而不是创建新的子进程。因此，如果我们在`npx`命令前使用`exec`来替换掉当前的`bash`进程，那么信号就可以直接传递到`NodeJs`进程中了。
+
+```bash
+exec npx tsx ./src/index.ts
+```
+
+此时的进程关系如下所示，此时的主进程就是`67033`进程号了，此时直接`kill -INT 67033`就可以正常收到信号并且进行优雅停机处理了。这里还需要关注一下，我们是直接使用终端执行的命令，所以其本身的进程`59534`即`zsh`进程号就是父进程号。
+
+```bash
+signal.sh PID-PPID 67033,59534
+59534 51513 /bin/zsh         /bin/zsh -il
+67033 59534 npm exec tsx ./s npm exec tsx ./src/index.ts   
+```
+
+由于`npx`会创建子进程来执行命令，因此若是启动服务的命令本身如果也是创建子进程的方式，那么同样会存在信号无法传递的问题。因此在使用`pm2`等进程管理工具时，也需要注意其启动命令的信号传递问题，那么这种情况下我们可以避免使用`npx`命令来启动进程，此时服务就作为顶层进程启动了。
+
+```bash
+export PATH="$PWD/node_modules/.bin:$PATH"
+exec tsx ./src/index.ts
+```
+
+```bash
+signal.sh PID-PPID 67675,59534
+59534 51513 /bin/zsh         /bin/zsh -il
+67675 59534 node             node /xxx/node_modules/.bin/../tsx/dist/cli.mjs ./src/index.ts
+```
+
+### 子进程管理
+由于下面需要以`PM2`在集群模式下实现信号传递，在这里我们就先做一个简单有趣的实验，主要是为了观察子进程执行的情况。通常情况下我们会在部署环境中使用容器内的进程例如`systemd`来守护进程，并不会使用`pm2`的守护进程，但是如果直接使用`pm2`守护，那就需要主动传递信号。
+
+因此在这里我们实现一个简单的父子进程模型，相当于简单地表示一下进程的模型。`child.sh`是普通的脚本，在这里会直接使用`while`来保持进程。`normal.sh`是父进程脚本，使用`bash`启动`child.sh`作为子进程。`fork.sh`也是父进程脚本，但是会使用`disown`来分离进程。
+
+```bash
+# child.sh
+while true; do
+    sleep 1
+    echo "child.sh PID-PPID $$,$PPID"
+done
+```
+
+```bash
+# normal.sh
+echo "normal.sh PID-PPID $$,$PPID"
+bash child.sh > /dev/tty 2>&1
+```
+
+```bash
+# fork.sh
+echo "fork.sh PID-PPID $$,$PPID"
+bash child.sh > /dev/tty 2>&1 &
+disown -h %1
+```
+
+当我们分别使用两个终端来启动`normal.sh`以及`fork.sh`后，可以观察到`normal`进程会持有且不会停止，`fork`进程会结束先前的进程，可以在终端里执行其他命令，类似于将其放置于后台，注意输出重定向到`tty`终端不会停, 也可以输出到文件。
+
+```bash
+normal.sh PID-PPID 70263,69842
+child.sh PID-PPID 70264,70263
+69842 51513 /bin/zsh         /bin/zsh -il
+70263 69842 bash             bash normal.sh
+70264 70263 bash             bash child.sh
+72259 70264 sleep            sleep 1
+```
+
+```bash
+fork.sh PID-PPID 70303,69954
+child.sh PID-PPID 70304,1
+69954 51513 /bin/zsh         /bin/zsh -il
+70304     1 bash             bash child.sh
+72260 70304 sleep            sleep 1
+```
+
+### PM2 管理
+在先前的实验中我们已经观察到了信号传递的问题，那么在`pm2`中同样会存在这个问题。假设我们使用`pm2 start`来启动进程，这种情况下就是使用`fork`模式启动的进程，因此信号是无法传递到子进程中的，因为这个进程会立即结束掉。
+
+```bash
+export PORT=3000
+echo "bootstrap.sh PID-PPID $$,$PPID"
+npx tsc --project tsconfig.json
+export PATH="$PWD/node_modules/.bin:$PATH"
+exec pm2 start ./dist/index.js -i 2 --kill-timeout 5000 --log-date-format="YYYY-MM-DD HH:mm:ss" --log ./output.log
+```
+
+此时的进程树关系如下，由于进程会立即结束，此时`pm2`的主进程的父进程就是`1`。然后由于是使用的集群模式，因此会启动两个子进程来执行服务，而这两个子进程的父进程就是`pm2`的主进程，此时我们是没有办法发送`SIGINT`信号给主进程，自然子进程也无法收到信号。
+
+```bash
+73353     1 PM2 v6.0.8: God  PM2 v6.0.8: God Daemon (/Users/czy/.pm2) 
+73354 73353 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js 
+73355 73353 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js 
+```
+
+在这种情况下，如果需要尝试优雅停机处理，那么就需要主动将信号传递到子进程中。通常来说由于进程结束，我们无法从主进程中得到子进程的`PID`，因此只能通过`pm2`提供的命令来获取子进程的`PID`，或者直接使用`ps`来匹配`PID`，然后再发送信号，这种情况下是可以优雅停机的。
+
+```bash
+kill -INT $(pgrep pm2)
+```
+
+因此，我们可以组合上面的脚本来实现信号的传递处理，首先需要避免主进程脚本结束掉，因此需要使用`while`来保持进程，然后在收到信号时获取子进程的`PID`并且传递信号。注意这种情况下不能用`exec`了，需要正常`fork`出子进程，否则后续`while`以及`trap`代码不会执行。
+
+```bash
+pm2 start ./dist/index.js -i 2 --kill-timeout 5000 --log-date-format="YYYY-MM-DD HH:mm:ss" --log ./output.log
+forward_signal() {
+    pm2_pid=$(pgrep pm2)
+    kill -INT $pm2_pid
+    exit 0
+}
+trap forward_signal SIGINT
+while true; do
+    sleep 1
+done
+```
+
+```bash
+bootstrap.sh PID-PPID 76699,73203
+76731     1 PM2 v6.0.8: God  PM2 v6.0.8: God Daemon (/Users/czy/.pm2) 
+76732 76731 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js 
+76733 76731 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js 
+73203 51513 /bin/zsh         /bin/zsh -il
+76699 73203 bash             bash bootstrap.sh
+76895 76699 sleep            sleep 1
+```
+
+实际上，`pm2`当前支持了`pm2-runtime`命令来更好地支持容器化场景下的进程管理，同样的之前叙述的`npx`命令问题也会出现。从下面的进程树中可以看出来信号传递会比之前多了一层，而执行`kill -INT 80795`命令时，子进程是无法收到信号的，进程也不会结束。
+
+```bash
+78367 51513 /bin/zsh         /bin/zsh -il
+80795 78367 bash             bash bootstrap.sh
+80819 80795 npm exec pm2-run npm exec pm2-runtime start pm2.config.js --env production      
+80836 80819 node             node /xxx/.bin/../pm2/bin/pm2-runtime start pm2.config.js --env production
+80844 80836 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js     
+80845 80836 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js 
+```
+
+因此这里的实现仍然需要保证使用`exec`来启动`pm2-runtime`服务，此外该命令不会启动`pm2`的守护进程，相关日志会直接输出到当前`shell`中。而且也是支持集群模式的，下面的例子展示了使用`pm2-runtime`启动的进程关系树，执行`kill -INT 84685`可以正常处理信号。
+
+```bash
+78367 51513 /bin/zsh         /bin/zsh -il
+78673 78367 node             node /xxx/.bin/../pm2/bin/pm2-runtime start pm2.config.js --env production
+78704 78673 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js     
+78705 78673 node /Users/czy/ node /xxx/graceful-shutdown/dist/index.js
+```
+
+### 心跳机制
+在分布式环境下，除了信号传递的问题之外，还有一个问题就是进程本身的存活检测问题。假设某个实例由于某些原因直接退出了，那么此时就无法进行优雅停机处理了，因此我们需要通过心跳机制来检测进程的存活状态，以此来维护服务本身的健壮性。
+
+心跳机制的实现其实非常简单，主要是通过定时向存储位置写入当前的时间戳来表示进程的存活状态。假设我们使用`Redis`来存储心跳时间戳，那么每个实例可以使用唯一的`key`来存储自己的心跳时间戳，然后定时更新这个时间戳。
+
+```js
+export const launchInstance = () => {
+  const keep = () => {
+    // 更新 Redis 心跳时间戳
+    setTimeout(keep, LOOP_TIME);
+  };
+  keep();
+  // 开机时清理一次过期实例
+  const res = clearInactiveInstances();
+  console.log("Active Instance", res.active);
+  console.log("Inactive Instance", res.inactive);
+};
+
+export const terminateInstance = () => {
+  // 优雅停机时删除当前实例
+};
+
+export const clearInactiveInstances = () => {
+  const entries = Object.entries(MEMORY_MAP);
+  const now = Date.now();
+  const active: string[] = [];
+  const inactive: string[] = [];
+  for (const [key, value] of entries) {
+    if (now - Number(value) > ACTIVE_TIME_OUT) {
+      // 清理过期实例
+      inactive.push(key);
+      continue;
+    }
+    active.push(key);
+  }
+  return { active, inactive };
+};
+```
+
+由于实例本身如果退出了，那么心跳时间戳就不会再更新了，而且守护进程的存在，退出的进程会在一段时间内重启。那么在业务中，例如我们最开始聊的任务队列实现中，我们就可以在实例启动的时获取当前的活跃实例，然后检查正在运行任务的调度实例`id`是否还在活跃实例中，以此来尝试重新调度任务。
+
+```js
+// task
+{
+  id: 1,
+  pod_id: "$instance_id0",
+  status: "running"
+}
+
+// redis
+[
+  "$instance_id0": 100,
+  "$instance_id1": 9999999999,
+  "$instance_id2": 9999999999
+]
+```
+
+## 总结
+在文本中我们实现了一个简单的分布式任务队列，并且实现了优雅停机的处理。任务队列主要是通过分布式锁来限制并发数，从而保证任务能够被合理地调度执行，从而实现长任务的异步调度机制，并且实现任务的流量削峰、错误重试等。
+
+优雅停机的处理主要是通过信号传递来实现的，从而保证进程能够在收到停机信号时进行资源的清理和任务的完成，避免任务的中断和数据的不一致问题。此外还叙述了父子进程间的信号传递，以及实现心跳机制来检测实例的存活状态，从而保证分布式环境下的服务健壮性。
 
 ## 每日一题
 
@@ -294,5 +598,5 @@ Lock Release _lock_key 1 -> 0
 
 ## 参考
 - <https://docs.nestjs.com/modules>
+- <https://pm2.keymetrics.io/docs/usage/docker-pm2-nodejs/>
 - <https://pm2.keymetrics.io/docs/usage/signals-clean-restart/>
-- <https://github.com/WindRunnerMax/webpack-simple-environment>
