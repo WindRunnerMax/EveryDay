@@ -1594,6 +1594,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于NodeJs实现任务队列与优雅停机.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/初探富文本之富文本概述.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-09-07T08:12:59.000Z</lastmod>
