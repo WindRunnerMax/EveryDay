@@ -263,6 +263,7 @@
   * [Implementing Basic RAG Service Based on Vector Retrieval](Plugin/基于向量检索实现基础RAG服务.md)
   * [Incremental Rich Text Parsing Algorithm in Streaming Markdown](Plugin/流式Markdown增量富文本解析算法.md)
   * [Implementing Prompt Variable Template Input Box Like Bean Pack](Plugin/仿照豆包实现Prompt变量模板输入框.md)
+  * [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](Plugin/基于NodeJs实现任务队列与优雅停机.md)
 
 * RichText
   * [First Look at Rich Text: Overview of Rich Text](RichText/初探富文本之富文本概述.md)

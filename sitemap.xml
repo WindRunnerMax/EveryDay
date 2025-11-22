@@ -3169,6 +3169,16 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/RichText/初探富文本之富文本概述</loc>
   <priority>1.0</priority>
   <lastmod>2025-09-07T08:12:51.000Z</lastmod>

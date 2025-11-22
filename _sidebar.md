@@ -275,6 +275,7 @@
   * [基于向量检索实现基础RAG服务](Plugin/基于向量检索实现基础RAG服务.md)
   * [流式Markdown增量富文本解析算法](Plugin/流式Markdown增量富文本解析算法.md)
   * [仿照豆包实现Prompt变量模板输入框](Plugin/仿照豆包实现Prompt变量模板输入框.md)
+  * [基于NodeJs实现任务队列与优雅停机](Plugin/基于NodeJs实现任务队列与优雅停机.md)
 
 * RichText
   * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)
