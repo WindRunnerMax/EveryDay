@@ -37,7 +37,7 @@
 { offset: 4 } // 位置 1
 ```
 
-对于类似的光标位置问题，开源的编辑器编辑器例如`Quill`、`Lexical`等，甚至商业化的飞书文档、`Notion`都没有直接支持这种模式。这些编辑器的`schema`设计都是两个字符间仅会存在一个`caret`的光标插入点，验证起来也很简单，只要看能否单独插入一个空内容的`inline`节点即可。
+对于类似的光标位置问题，开源的编辑器例如`Quill`、`Lexical`等，甚至商业化的飞书文档、`Notion`都没有直接支持这种模式。这些编辑器的`schema`设计都是两个字符间仅会存在一个`caret`的光标插入点，验证起来也很简单，只要看能否单独插入一个空内容的`inline`节点即可。
 
 在这里虽然我们主要目标是实现变量模板的输入框形式，但是其他的形式也非常有意思，例如`GitHub`的搜索输入框高亮、`CozeLoop`的`Prompt`变量调时输入等。因此我们会先将这些形式都简单叙述一下，在最后再重点实现变量模板输入框的形式，最终的实现可以参考 [BlockKit Variables](https://github.com/WindRunnerMax/BlockKit/tree/master/examples/variable) 以及 [CodeSandbox](https://codesandbox.io/p/devbox/cycrdf)。
 
@@ -55,7 +55,7 @@
 ```
 
 ### 文本高亮匹配
-在这里更有趣的是`GitHub`的搜索输入框，在使用综合搜索、`issue`搜索等功能时，我们可以看到如果关键词不会会被高亮。例如`is:issue state:open `时，`issue`和`open`会被高亮，而`F12`检查时发现其仅是使用`input`标签，并没有引入富文本编辑器。
+在这里更有趣的是`GitHub`的搜索输入框，在使用综合搜索、`issue`搜索等功能时，我们可以看到如果关键词会被高亮。例如搜索时的`is:issue state:open `文本内容，`issue`和`open`会被高亮，而`F12`检查时发现其仅是使用`input`标签，并没有引入富文本编辑器。
 
 在这里`GitHub`的实现方式就非常有趣，实际上是使用了`div`渲染格式样式，来实现高亮的效果，然后使用透明的`input`标签来实现输入交互。如果在`F12`检查时将`input`节点的`color`透明隐藏掉，就可以发现文本的内容重叠了起来，需要关注的点在于怎么用`CSS`实现文本的对齐。
 

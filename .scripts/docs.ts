@@ -312,6 +312,7 @@ export const docs: Record<string, string[]> = {
     "RichText/浏览器选区与编辑器选区模型同步",
     "RichText/基于组合事件的半受控输入模式",
     "RichText/浏览器输入模式的非受控DOM行为",
+    "RichText/编辑器文本结构变更的受控处理",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
