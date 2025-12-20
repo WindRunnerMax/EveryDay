@@ -3171,13 +3171,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-22T03:38:21.000Z</lastmod>
+  <lastmod>2025-11-30T15:21:56.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-22T03:38:21.000Z</lastmod>
+  <lastmod>2025-11-30T15:21:56.000Z</lastmod>
 </url>
 
 <url>
@@ -3490,6 +3490,16 @@
   <loc>https://blog.touchczy.top/I18N/?p=/RichText/浏览器输入模式的非受控DOM行为</loc>
   <priority>1.0</priority>
   <lastmod>2025-10-18T11:23:24.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/RichText/编辑器文本结构变更的受控处理</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/RichText/编辑器文本结构变更的受控处理</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
