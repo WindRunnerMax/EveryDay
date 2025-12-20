@@ -1596,7 +1596,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于NodeJs实现任务队列与优雅停机.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-22T03:38:26.000Z</lastmod>
+  <lastmod>2025-11-30T15:22:01.000Z</lastmod>
 </url>
 
 <url>
@@ -1753,6 +1753,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/浏览器输入模式的非受控DOM行为.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-10-18T11:23:32.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/编辑器文本结构变更的受控处理.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
