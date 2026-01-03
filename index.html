@@ -211,6 +211,15 @@
               a.onclick = (e) => (vm.route.path = newPath);
             }
           });
+          // 处理页面内的图片地址
+          const imgLinks = document.querySelectorAll("article img[src]");
+          Array.from(imgLinks).forEach((img) => {
+            const src = img.getAttribute("src");
+            const query = BASE_Q + window.$p + "=";
+            if ($p && src && src.startsWith(query)) {
+              img.src = src.replace(query, "");
+            }
+          });
           // 设置页面的标题
           let title = $p.split("/").slice(-1).pop();
           title = title || window.$docsify.name;
