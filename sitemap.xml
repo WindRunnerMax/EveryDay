@@ -3171,13 +3171,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-30T15:21:56.000Z</lastmod>
+  <lastmod>2026-01-03T05:58:05.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-30T15:21:56.000Z</lastmod>
+  <lastmod>2026-01-03T05:58:05.000Z</lastmod>
 </url>
 
 <url>
@@ -3961,6 +3961,30 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/aspell-拼写检查</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/aspell-拼写检查</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/awk-文本处理工具</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/awk-文本处理工具</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/cat-输出文件内容</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -3968,6 +3992,18 @@
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Linux/cat-输出文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/chattr-更改文件属性</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/chattr-更改文件属性</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4009,6 +4045,90 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/col-过滤控制字符</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/col-过滤控制字符</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/colrm-删除文件内容列</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/colrm-删除文件内容列</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/comm-对比文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/comm-对比文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/cp-复制文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/cp-复制文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/csplit-分割文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/csplit-分割文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/curl-网络数据传输</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/curl-网络数据传输</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/cut-截取文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/cut-截取文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/diff-对比文件差异</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -4028,6 +4148,78 @@
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Linux/diffstat-文件差异计量</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/du-磁盘占用管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-02-16T05:03:19.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/du-磁盘占用管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-02-16T05:03:19.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ed-文本编辑器</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ed-文本编辑器</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/egrep-正则模式搜索</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/egrep-正则模式搜索</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ex-文本编辑器</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ex-文本编辑器</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/expr-表达式计算</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/expr-表达式计算</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/fgrep-固定字符串搜索</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fgrep-固定字符串搜索</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4057,25 +4249,97 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/cut-截取文件内容</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/fmt-格式化输出内容</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/cut-截取文件内容</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fmt-格式化输出内容</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ln-创建文件链接</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/fold-折叠文件内容</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ln-创建文件链接</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fold-折叠文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/grep-模式搜索匹配</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/grep-模式搜索匹配</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ifconfig-网络接口管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ifconfig-网络接口管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ip-网络接口管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ip-网络接口管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/join-合并文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/join-合并文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/journalctl-系统日志管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/journalctl-系统日志管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/kill-终止进程</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/kill-终止进程</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4093,6 +4357,18 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ln-创建文件链接</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ln-创建文件链接</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/locate-快速查找文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -4105,6 +4381,18 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/look-查找字典单词</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/look-查找字典单词</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/lsattr-显示文件属性</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -4112,18 +4400,6 @@
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Linux/lsattr-显示文件属性</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/chattr-更改文件属性</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/chattr-更改文件属性</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4177,6 +4453,18 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/netstat-网络状态管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/netstat-网络状态管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/od-读取文件内容</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -4213,6 +4501,30 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/Linux/pico-文本编辑程序</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/pico-文本编辑程序</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/ps-进程状态管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ps-进程状态管理</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Linux/rcp-远程文件拷贝</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
@@ -4220,138 +4532,6 @@
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Linux/rcp-远程文件拷贝</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/rm-删除文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/rm-删除文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/split-分割文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/split-分割文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/tee-文件内容分流</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tee-文件内容分流</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/tmpwatch-删除未访问文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tmpwatch-删除未访问文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/touch-创建新文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/touch-创建新文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/umask-设置文件权限掩码</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/umask-设置文件权限掩码</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/which-输出命令路径</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/which-输出命令路径</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/cp-复制文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/cp-复制文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/whereis-查找二进制文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/whereis-查找二进制文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/scp-安全拷贝文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/scp-安全拷贝文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/awk-文本处理工具</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/awk-文本处理工具</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4369,193 +4549,37 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/updatedb-更新文件数据库</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/rm-删除文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/updatedb-更新文件数据库</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/rm-删除文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/col-过滤控制字符</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/route-网络路由管理</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/col-过滤控制字符</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/route-网络路由管理</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/colrm-删除文件内容列</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/scp-安全拷贝文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/colrm-删除文件内容列</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/comm-对比文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/comm-对比文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/csplit-分割文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/csplit-分割文件</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ed-文本编辑器</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ed-文本编辑器</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/egrep-正则模式搜索</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/egrep-正则模式搜索</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ex-文本编辑器</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ex-文本编辑器</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/fgrep-固定字符串搜索</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fgrep-固定字符串搜索</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/fmt-格式化输出内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fmt-格式化输出内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/fold-折叠文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/fold-折叠文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/grep-模式搜索匹配</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/grep-模式搜索匹配</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/aspell-拼写检查</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/aspell-拼写检查</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/join-合并文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/join-合并文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/look-查找字典单词</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/look-查找字典单词</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/pico-文本编辑程序</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/pico-文本编辑程序</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/scp-安全拷贝文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4585,97 +4609,13 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/tr-转换文件内容</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/split-分割文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tr-转换文件内容</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/expr-表达式计算</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/expr-表达式计算</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ps-进程状态管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ps-进程状态管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/netstat-网络状态管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/netstat-网络状态管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ifconfig-网络接口管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ifconfig-网络接口管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/traceroute-网络路由跟踪</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/traceroute-网络路由跟踪</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/route-网络路由管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/route-网络路由管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/kill-终止进程</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/kill-终止进程</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/split-分割文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4693,37 +4633,25 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/journalctl-系统日志管理</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/tee-文件内容分流</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/journalctl-系统日志管理</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tee-文件内容分流</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/ip-网络接口管理</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/tmpwatch-删除未访问文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/ip-网络接口管理</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/?p=/Linux/curl-网络数据传输</loc>
-  <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
-</url>
-
-<url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/curl-网络数据传输</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tmpwatch-删除未访问文件</loc>
   <priority>1.0</priority>
   <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
@@ -4741,15 +4669,87 @@
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/?p=/Linux/du-磁盘占用管理</loc>
+  <loc>https://blog.touchczy.top/?p=/Linux/touch-创建新文件</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-16T05:03:19.000Z</lastmod>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog.touchczy.top/I18N/?p=/Linux/du-磁盘占用管理</loc>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/touch-创建新文件</loc>
   <priority>1.0</priority>
-  <lastmod>2025-02-16T05:03:19.000Z</lastmod>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/tr-转换文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/tr-转换文件内容</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/traceroute-网络路由跟踪</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/traceroute-网络路由跟踪</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/umask-设置文件权限掩码</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/umask-设置文件权限掩码</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/updatedb-更新文件数据库</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/updatedb-更新文件数据库</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/whereis-查找二进制文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/whereis-查找二进制文件</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/Linux/which-输出命令路径</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/Linux/which-输出命令路径</loc>
+  <priority>1.0</priority>
+  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
 </url>
 
 <url>

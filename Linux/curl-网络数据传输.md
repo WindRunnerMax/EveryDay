@@ -294,7 +294,7 @@ curl www.baidu.com
 使`curl`显示进度表，以指示传输速率、传输的数据量、剩余时间等。
 
 ```shell
-curl -# -o ftp://ftp.example.com/file.zip
+curl -# -o 1.zip ftp://ftp.example.com/file.zip
 ```
 
 指定请求的网络接口。
@@ -333,6 +333,18 @@ curl -u username:password -O ftp://test.rebex.net/readme.txt
 curl -v www.baidu.com
 ```
 
+输出请求的元信息，包括连接时间、传输时间、响应状态码等。
+
+```shell
+curl -w "\nMeta: %{http_code} %{time_connect} %{time_total}\n" https://www.baidu.com
+```
+
+设置请求的最大超时时间为`10`秒。
+
+```shell
+curl --max-time 10 https://www.baidu.com
+```
+
 设置请求头信息，此处由于响应信息过多将其存储在`baidu.html`。
 
 ```shell
@@ -342,12 +354,6 @@ curl -v \
 -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36" \
 -o baidu.html https://www.baidu.com
 ```
-
-
-
-
-
-
 
 ## 每日一题
 
