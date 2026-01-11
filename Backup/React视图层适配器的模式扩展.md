@@ -28,7 +28,7 @@
 
 虽然独立设计视图层可以解决视图层适配成本问题，但相应的会增加维护成本以及包本身体积，因此在我们的编辑器设计上，我们还是选择复用现有的视图层框架。然而，即使复用视图层框架，适配富文本编辑器也并非是一件简单的事情，需要关注的点包括但不限于以下几部分:
 
-- 核心层与视图层渲染: 生命周期同步、状态管理、渲染模式、`DOM`映射状态等。
+- 视图层初始状态渲染: 生命周期同步、状态管理、渲染模式、`DOM`映射状态等。
 - 内容编辑的增量更新: 不可变对象、增量渲染、`Key`值维护等。
 - 渲染事件与节点检查: 脏`DOM`检查、选区更新、渲染`Hook`等。
 - 编辑节点的组件预设: 零宽字符、`Embed`节点、`Void`节点等。
@@ -330,11 +330,67 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 使用这种方式实际与`ReactDOM.render`效果基本一致，但是`createPortal`是可以自由使用`Context`的，且在`React`树渲染的位置是用户挂载的位置。实际上讨论这部分的主要原因是，我们在视图层的渲染并非需要严格使用框架来渲染，分离渲染模式也是能够兼容性能和生态的处理方式。
 
-## 
+## DOM 映射状态
+在实现`MVC`架构时，理论上控制器层以及视图层都是独立的，控制器不会感知视图层的状态。但是在我们具体实现过程中，视图层的`DOM`是需要被控制器层处理的，例如事件绑定、选区控制、剪贴板操作等等，那么如何让控制器层能够操作相关的`DOM`就是个需要处理的问题。
+
+理论上而言，我们在`DOM`上的设计是比较严格的，即`data-block`节点属块级节点，而`data-node`节点属行级节点，`data-leaf`节点则属行内节点。`block`节点下只能包含`node`节点，而`node`节点下只能包含`leaf`节点。
+
+```html
+<div contenteditable style="outline: none" data-block>
+  <div data-node><span data-leaf><span>123</span></span></div>
+  <div data-node>
+    <span data-leaf><span contenteditable="false">321</span></span>
+  </div>
+  <div data-node><span data-leaf><span>123</span></span></div>
+</div>
+```
+
+那么在这种情况下，我们是可以在控制器层通过遍历`DOM`节点来获取相关的状态的，或者诸如`querySelectorAll`、`createTreeWalker`等方法来获取相关的节点。但是这样明显是会存在诸多无效的遍历操作，因此我们需要考虑是否有更高效的方式来获取相关的节点。
+
+在`React`中我们可以通过`ref`来获取相关的节点，那么如何将`DOM`节点对象映射到相关编辑器对象上。我们此时存在多个状态对象，因此可以将相关的对象完整一一映射到对应的主级`DOM`结构上，而且`Js`中我们可以使用`WeakMap`来维护弱引用关系。
+
+```js
+export class Model {
+  /** DOM TO STATE */
+  protected DOM_MODEL: WeakMap<HTMLElement, BlockState | LineState | LeafState>;
+  /** STATE TO DOM */
+  protected MODEL_DOM: WeakMap<BlockState | LineState | LeafState, HTMLElement>;
+
+  /**
+   * 映射 DOM - LeafState
+   * @param node
+   * @param state
+   */
+  public setLeafModel(node: HTMLSpanElement, state: LeafState) {
+    this.DOM_MODEL.set(node, state);
+    this.MODEL_DOM.set(state, node);
+  }
+}
+```
+
+在`React`组件的`ref`回调函数中，我们需要通过`setLeafModel`方法来将`DOM`节点映射到`LeafState`上。在`React`中相关执行时机为`ref -> layout effect -> effect`，且需要保证引用不变, 否则会导致回调在`re-render`时被多次调用`null/span`状态。
+
+```js
+export const Leaf: FC<LeafProps> = props => {
+  /**
+   * 处理 ref 回调
+   */
+  const onRef = useMemoFn((dom: HTMLSpanElement | null) => {
+    dom && editor.model.setLeafModel(dom, lineState);
+  });
+
+  return (
+    <span ref={onRef} {...{ [LEAF_KEY]: true }}>
+      {props.children}
+    </span>
+  );
+};
+```
 
 ## 总结
+在先前我们主要讨论了模型层以及核心层的设计，即数据模型以及编辑器的核心交互逻辑，也包括了部分`DOM`相关处理的基础实现。还重点讲述了选区的状态同步、输入的状态同步，并且处理了相关实现在浏览器中的兼容问题。
 
-
+在当前部分，我们主要讨论了视图层的适配器设计，主要是全量的视图初始化渲染，包括生命周期同步、状态管理、渲染模式、`DOM`映射状态等。接下来我们需要处理变更的增量更新，这属于性能方面的优化，我们需要考虑如何最小化`DOM`以及`Op`操作，以及在`React`中实现增量渲染的方式。
 
 ## 每日一题
 
