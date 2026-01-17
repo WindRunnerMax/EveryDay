@@ -3505,6 +3505,16 @@
 </url>
 
 <url>
+  <loc>https://blog.touchczy.top/?p=/RichText/React视图层适配器的模式扩展</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/RichText/React视图层适配器的模式扩展</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog.touchczy.top/?p=/Patterns/简单工厂模式</loc>
   <priority>1.0</priority>
   <lastmod>2025-08-08T16:06:26.000Z</lastmod>
@@ -4107,13 +4117,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/Linux/curl-网络数据传输</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+  <lastmod>2026-01-10T09:48:05.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Linux/curl-网络数据传输</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:04.000Z</lastmod>
+  <lastmod>2026-01-10T09:48:05.000Z</lastmod>
 </url>
 
 <url>

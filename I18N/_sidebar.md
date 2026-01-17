@@ -292,6 +292,7 @@
   * [Half-Controlled Input Mode Based on Composite Events](RichText/基于组合事件的半受控输入模式.md)
   * [Uncontrolled DOM Behavior in Browser Input Mode](RichText/浏览器输入模式的非受控DOM行为.md)
   * [Controlled Handling of Editor Text Structure Changes](RichText/编辑器文本结构变更的受控处理.md)
+  * [Extending the Pattern of React View Layer Adapters](RichText/React视图层适配器的模式扩展.md)
 
 * Patterns
   * [Simple Factory Pattern](Patterns/简单工厂模式.md)
