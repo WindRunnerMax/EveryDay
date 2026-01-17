@@ -39,7 +39,7 @@
 
 对于类似的光标位置问题，开源的编辑器例如`Quill`、`Lexical`等，甚至商业化的飞书文档、`Notion`都没有直接支持这种模式。这些编辑器的`schema`设计都是两个字符间仅会存在一个`caret`的光标插入点，验证起来也很简单，只要看能否单独插入一个空内容的`inline`节点即可。
 
-在这里虽然我们主要目标是实现变量模板的输入框形式，但是其他的形式也非常有意思，例如`GitHub`的搜索输入框高亮、`CozeLoop`的`Prompt`变量调时输入等。因此我们会先将这些形式都简单叙述一下，在最后再重点实现变量模板输入框的形式，最终的实现可以参考 [BlockKit Variables](https://github.com/WindRunnerMax/BlockKit/tree/master/examples/variable) 以及 [CodeSandbox](https://codesandbox.io/p/devbox/cycrdf)。
+在这里虽然我们主要目标是实现变量模板的输入框形式，但是其他的形式也非常有意思，例如`GitHub`的搜索输入框高亮、`CozeLoop`的`Prompt`变量调时输入等。因此我们会先将这些形式都简单叙述一下，在最后再重点实现变量模板输入框的形式，最终的实现可以参考 [BlockKit Variables](https://github.com/WindRunnerMax/BlockKit/tree/master/examples/variable) 以及 [CodeSandbox](https://codesandbox.io/p/sandbox/vars-input-nrfnwf)。
 
 ## 纯文本输入框
 纯文本输入框的形式就比较常见了，例如`<input>`、`<textarea>`等标签，当前我们平时使用的输入框也都是类似的形式，例如`DeepSeek`就是单纯的`textarea`标签。当然也有富文本编辑器的输入框形式，例如`Gemini`的输入框，但整体形式上基本一致。

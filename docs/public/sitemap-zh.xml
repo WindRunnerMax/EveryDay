@@ -1762,6 +1762,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/React视图层适配器的模式扩展.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Patterns/简单工厂模式.html</loc>
   <priority>1.0</priority>
   <lastmod>2025-08-09T03:22:11.000Z</lastmod>
@@ -2064,7 +2069,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Linux/curl-网络数据传输.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-01-01T03:23:57.000Z</lastmod>
+  <lastmod>2026-01-10T09:48:13.000Z</lastmod>
 </url>
 
 <url>
