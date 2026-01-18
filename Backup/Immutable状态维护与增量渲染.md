@@ -22,31 +22,81 @@
 
 </details>
 
-## 不可变对象
-在先前的`State`模块更新文档内容时，我们是直接重建了所有的`LineState`以及`LeafState`对象，然后在`React`视图层的`BlockModel`中监听了`OnContentChange`事件，以此来将`BlockState`的更新应用到视图层。这种方式简单直接，全量更新状态能够保证在`React`的状态更新，然而这种方式的问题在于性能，当文档内容非常大的时候，全量计算将会导致大量的状态重建，并且其本身的改变也会导致`React`的`diff`差异进而全量更新文档视图，这样的性能开销通常是不可接受的。
+## 不可变状态
+在这里我们先不引入视图层的渲染问题，而是仅在`Model`层面上实现精细化的处理，具体来说就是实现不可变的状态对象，仅更新的节点才会被重新创建，其他节点则直接复用。此模块的实现颇为复杂，也并未引入`immer`等框架，而是直接处理的状态对象，最终是实现了两种模式的增量变更。
 
-那么通常来说我们就需要基于`Changes`来确定状态的更新，首先我们需要确定更新的粒度，例如以行为基准则`retain`跨行的时候就直接复用原有的`LineState`，这当然是个合理的方法，相当于尽可能复用`Origin List`然后生成`Target List`，这样的方式自然可以避免部分状态的重建，尽可能复用原本的对象。整体思路大概是分别记录旧列表和新列表的`row`和`col`两个`index`值，然后更新时记录起始`row`，删除和新增自然是正常处理，对于更新则认为是先删后增，对于内容的处理则需要分别讨论单行和跨行的问题，最后可以将这部分增删`LineState`数据放置于`changes`中，就可以得到实际增删的`Ops`了，这部分数据在`apply`的`delta`中是不存在的，同样可以认为是数据的补充。
+### Line 级状态复用
+回到最开始实现的`State`模块更新文档内容，我们是直接重建了所有的`LineState`以及`LeafState`对象，然后在`React`视图层的`BlockModel`中监听了`OnContentChange`事件，以此来将`BlockState`的更新应用到视图层。
 
-那么这里实际上是存在非常需要关注的点是我们现在维护的是状态模型，那么也就是说所有的更新就不再是直接的`Delta.compose`，而是使用我们实现的`Mutate`，假如我们对于数据的处理存在偏差的话，那么就会导致状态出现问题，本质上我们是需要实现`Line`级别的`compose`方法。实际上我们可以重新考虑这个问题，如果我们整个行的`LeafState`都没有变化的话，是不是就可以意味着`LineState`就可以直接复用了，在`React`中`Immutable`是很常用的概念，那么我们完全可以重写`compose`等方法做到`Immutable`，然后在更新的时候重新构建新的`Delta`，当行中`Ops`都没有发生变化的时候，我们就可以直接复用`LinState`，当然`LeafState`是完全可以直接复用的，这里我们将粒度精细到了`Op`级别。
+```js
+delta.eachLine((line, attributes, index) => {
+  const lineState = new LineState(line, attributes, this);
+  lineState.index = index;
+  lineState.start = offset;
+  lineState.key = Key.getId(lineState);
+  offset = offset + lineState.length;
+  this.lines[index] = lineState;
+});
+```
+
+这种方式简单直接，全量更新状态能够保证在`React`的状态更新，然而这种方式的问题在于性能，当文档内容非常大的时候，全量计算将会导致大量的状态重建，并且其本身的改变也会导致`React`的`diff`差异进而全量更新文档视图，这样的性能开销通常是不可接受的。
+
+那么通常来说我们就需要基于变更来确定状态的更新，首先我们需要确定更新的粒度，例如以行为基准则`retain`跨行的时候就直接复用原有的`LineState`。相当于尽可能复用`Origin List`然后生成`Target List`，这样的方式自然可以避免部分状态的重建，尽可能复用原本的对象。
+
+整体思路大概是分别记录旧列表和新列表的`row`和`col`两个`index`值，然后更新时记录起始`row`，删除和新增自然是正常处理，对于更新则认为是先删后增。对于内容的处理则需要分别讨论单行和跨行的问题，中间部分的内容就作为重建的操作。
+
+最后可以将这部分增删`LineState`数据放置于`Changes`中，就可以得到实际增删的`Ops`了，这样我们就可以优化部分的性能，因为仅原列表和目标列表的中间部分才会重建，其他部分的行状态直接复用。此外这部分数据在`apply`的`delta`中是不存在的，同样可以认为是数据的补充。
+
+```js
+  Origin List (Old)                          Target List (New)
++-------------------+                      +-------------------+
+| [0] LineState A   | <---- Retain ------> | [0] LineState A   | (Reused)
++-------------------+                      +-------------------+
+| [1] LineState B   |          |           | [1] LineState B2  | (Update)
++-------------------+       Changes        |     (Modified)    | (Del C)
+| [2] LineState C   |          |           +-------------------+
++-------------------+          V           | [2] NewState X    | (Inserted)
+| [3] LineState D   | ---------------\     +-------------------+
++-------------------+                 \--> | [3] LineState D   | (Reused)
+| [4] LineState E   | <---- Retain ------> | [4] LineState E   | (Reused)
++-------------------+                      +-------------------+
+```
+
+那么这里实际上是存在非常需要关注的点是我们现在维护的是状态模型，也就是说所有的更新就不再是直接的`compose`，而是使用我们实现的`Mutate`对象。本质上我们是需要实现行级别的`compose`方法，这里的实现非常重要，假如我们对于数据的处理存在偏差的话，那么就会导致状态出现问题。
+
+此外在这种方式中，我们判断`LineState`是否需要新建则是根据整个行内的所有`LeafState`来重建的。也就是说这种时候我们是需要再次将所有的`op`遍历一遍，当然实际上由于最后还需要将`compose`后的`Delta`切割为行级别的内容，所以其实即使在应用变更后也最少需要再遍历两次。
+
+那么此时我们需要思考优化方向，首先是首个`retain`，在这里我们应该直接完整复用原本的`LineState`，包括处理后的剩余节点也是如此。而对于中间的节点，我们就需要为其独立设计更新策略，这部分理论上来说是需要完全独立处理为新的状态对象的，这样可以减少部分`Leaf Op`的遍历。
+
+其中，如果是新建的节点，我们直接构建新的`LineState`即可，删除的节点则不从原本的`LineState`中放置于新的列表。而对于更新的节点，我们需要更新原本的`LineState`对象，因为实际上行是存在更新的，而重点是我们需要将原本的`LineState`的`key`值复用。
+
+这里我们先简单实现实现描述一下复用的问题，比较方便的实现则是直接以`\n`的标识为目标的`State`，这就意味着我们要独立`\n`为独立的状态。即如果在`123|456\n`的`|`位置插入`\n`的话，那么我们就是`123`是新的`LineState`，`456`是原本的`LineState`，以此来实现`key`的复用。
+
+```js
+[
+  insert("123"), insert("\n"), 
+  insert("456"), insert("\n")
+]
+// ===>
+[ 
+  LineState(LeafState("123"), LeafState("\n")), 
+  LineState(LeafState("456"), LeafState("\n"))
+]
+```
+
+其实这里有个非常值得关注的点是，`LineState`在`Delta`中是没有具体对应的`Op`的，而相对应的`LeafState`则是有具体的`Op`的。这就意味着我们在处理`LineState`的更新时，是不能直接根据变更控制的，因此必须要找到能够映射的状态，因此最简单的方案即根据`\n`节点映射。
+
+```js
+LeafState("\n", key="1") <=> LineState(key="L1")
+```
+
+### Leaf 级状态复用
+实际上我们可以重新考虑这个问题，如果我们整个行的`LeafState`都没有变化的话，是不是就可以意味着`LineState`就可以直接复用了，在`React`中`Immutable`是很常用的概念，那么我们完全可以重写`compose`等方法做到`Immutable`，然后在更新的时候重新构建新的`Delta`，当行中`Ops`都没有发生变化的时候，我们就可以直接复用`LinState`，当然`LeafState`是完全可以直接复用的，这里我们将粒度精细到了`Op`级别。
 
 此外在调研了相关编辑器之后，我发现关于`key`值的管理也是个值的探讨的问题。先前我认为`Slate`生成的`key`跟节点是完全一一对应的关系，例如当`A`节点变化时，其代表的层级`key`必然会发生变化，然而在关注这个问题之后，我发现其在更新生成新的`Node`之后，会同步更新`Path`以及`PathRef`对应的`Node`节点所对应的`key`值，包括飞书的`Block`行状态管理也是这样实现的，飞书`Block`的叶子节点则更加抽象，`key`值是`stringify`化的`Op`属性值拼接其`Line`内的属性值`index`，用以处理重复的属性对象。我思考在这里`key`值应该是需要主动控制强制刷新的时候，以及完全是新节点才会用得到的，应该跟`React`以及`ContentEditable`非受控有关系，这个问题还是需要进一步的探讨。
 
 因此关于整个状态模型的管理，还有很多问题需要处理，例如我们即使需要重建`LineState`，也需要尽可能找到其原始的`LineState`以便于复用其`key`值，避免整个行的`ReMount`，当然即使复用了`key`值，因为重建了`State`实例，`React`也会继续后边的`ReRender`流程。说到这里，我们对于`ViewModel`的节点都补充了`React.memo`，以便于我们的`State`复用能够正常起到效果。但是，目前来说我们的重建方案效率是不如最开始提到的行方案的，因为此时我们相当于从结果反推，大概需要经过`O(3N)`的时间消耗，而同时`compose`以及复用`state`才是效率最高的方案，这里还存在比较大的优化空间，特别是在多行文档中只更改小部分行内容的情况下，实际上这也是最常见的形式。
 
-
-
-
-
-
-
-
-
-
-
-
-此外在这种方式中，我们判断`LineState`是否需要新建则是根据整个行内的所有`LeafState`来重建的，也就是说这种时候我们是需要再次将所有的`op`遍历一遍，当然实际上由于最后还需要将`compose`后的`Delta`切割为行级别的内容，所以其实这里最少需要遍历两遍。那么此时我们需要思考优化方向，首先是首个`retain`，在这里我们应该直接完整复用原本的`LineState`，包括处理后的剩余节点也是如此。而对于中间的节点，我们就需要为其独立设计更新策略。
-
-首先是对于新建的节点，我们直接构建新的`LineState`即可，删除的节点则不从原本的`LineState`中放置于新的列表。而对于更新的节点，我们实际上是需要更新原本的`LineState`对象的，因为我们实际上的行是存在更新的，而重点是我们需要将原本的`LineState`的`key`值复用，这里我们方便的实现则是直接以`\n`的标识为目标的`State`，即如果在`123|312\n`的`|`位置插入`\n`的话，那么我们就是`123`是新的`LineState`，`312`是原本的`LineState`，这样我们就可以实现`key`的复用。
 
 ## Key 值维护
 至此我们实现了一套`Immutable Delta+Iterator`来处理更新，这种时候我们就可以借助不可变的方式来实现`React`视图的更新。此时的`key`是根据`WeakMap`来实现的对应`id`值，此时就可以借助`key`的管理以及`React.memo`来实现视图的复用。
@@ -180,35 +230,34 @@ offset === 0 && newLeaf.updateKey(nextLeaf.key);
 
 ```js
 // BlockState
-public updateLines() {
-  let offset = 0;
-  this.lines.forEach((line, index) => {
-    line.index = index;
-    line.start = offset;
-    line.key = line.key || Key.getId(line);
-    const size = line.isDirty ? line.updateLeaves() : line.length;
-    offset = offset + size;
-  });
-  this.length = offset;
-  this.size = this.lines.length;
-}
+let offset = 0;
+this.lines.forEach((line, index) => {
+  line.index = index;
+  line.start = offset;
+  line.key = line.key || Key.getId(line);
+  const size = line.isDirty ? line.updateLeaves() : line.length;
+  offset = offset + size;
+});
+this.length = offset;
+this.size = this.lines.length;
+```
+
+```js
 // LineState
-public updateLeaves() {
-  let offset = 0;
-  const ops: Op[] = [];
-  this.leaves.forEach((leaf, index) => {
-    ops.push(leaf.op);
-    leaf.offset = offset;
-    leaf.parent = this;
-    leaf.index = index;
-    offset = offset + leaf.length;
-    leaf.key = leaf.key || Key.getId(leaf);
-  });
-  this._ops = ops;
-  this.length = offset;
-  this.isDirty = false;
-  this.size = this.leaves.length;
-}
+let offset = 0;
+const ops: Op[] = [];
+this.leaves.forEach((leaf, index) => {
+  ops.push(leaf.op);
+  leaf.offset = offset;
+  leaf.parent = this;
+  leaf.index = index;
+  offset = offset + leaf.length;
+  leaf.key = leaf.key || Key.getId(leaf);
+});
+this._ops = ops;
+this.length = offset;
+this.isDirty = false;
+this.size = this.leaves.length;
 ```
 
 此外，在实现单元测试时还发现，在`leaf`上独立维护了`key`值，那么`\n`这个特殊的节点自然也会有独立的`key`值。这种情况下在`line`级别上维护的`key`值倒是也可以直接复用`\n`这个`leaf`的`key`值。当然这只是理论上的实现，可能会导致一些意想不到的刷新问题。
