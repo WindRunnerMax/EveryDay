@@ -122,6 +122,14 @@
         if (url && url.startsWith("/I18N/_sidebar.md")) {
           args[1] = baseUrl + "/I18N/_sidebar.md";
         }
+        this.onreadystatechange = function () {
+          const xhr = this;
+          if (xhr.readyState === 4 && xhr.status === 404) {
+            Object.defineProperty(xhr, "status", { value: 200 });
+            const res = "# 404 Not Found";
+            Object.defineProperty(xhr, "response", { value: res });
+          }
+        };
         XHROpen.apply(this, args);
       };
     </script>
