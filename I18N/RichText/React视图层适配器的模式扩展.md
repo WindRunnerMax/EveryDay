@@ -6,18 +6,19 @@ At the initial architecture design of the editor, we based our work on the `MVC`
 - Project Notes: <https://github.com/WindRunnerMax/BlockKit/blob/master/NOTE.md>
 
 <details>
-<summary><strong>Series of Articles on Building a Rich Text Editor from Scratch</strong></summary>
+<summary><strong>Implementing a Rich Text Editor from Scratch Series</strong></summary>
 
-- [Feeling a bit lost, I'm preparing to try writing a rich text editor from scratch](./从零设计实现富文本编辑器.md)
-- [Building a Rich Text Editor from Scratch #2 - MVC Pattern-Based Editor Architecture Design](./基于MVC模式的编辑器架构设计.md)
-- [Building a Rich Text Editor from Scratch #3 - Delta-Based Linear Data Structure Model](./基于Delta的线性数据结构模型.md)
-- [Building a Rich Text Editor from Scratch #4 - Core Interaction Strategies of the Browser Selection Model](./浏览器选区模型的核心交互策略.md)
-- [Building a Rich Text Editor from Scratch #5 - State Structure Representation of the Editor Selection Model](./编辑器选区模型的状态结构表达.md)
-- [Building a Rich Text Editor from Scratch #6 - Synchronizing Browser Selection and Editor Selection Models](./浏览器选区与编辑器选区模型同步.md)
-- [Building a Rich Text Editor from Scratch #7 - Semi-Controlled Input Mode Based on Composite Events](./基于组合事件的半受控输入模式.md)
-- [Building a Rich Text Editor from Scratch #8 - Uncontrolled DOM Behavior of Browser Input Mode](./浏览器输入模式的非受控DOM行为.md)
-- [Building a Rich Text Editor from Scratch #9 - Controlled Handling of Changes in Editor Text Structure](./编辑器文本结构变更的受控处理.md)
-- [Building a Rich Text Editor from Scratch #10 - Extending the Pattern of React View Layer Adapters](./React视图层适配器的模式扩展.md)
+- [Feeling utterly unskilled, I'm planning to try building a rich text editor from scratch](./从零设计实现富文本编辑器.md)
+- [Implementing a Rich Text Editor from Scratch #2 - MVC Pattern-Based Editor Architecture Design](./基于MVC模式的编辑器架构设计.md)
+- [Implementing a Rich Text Editor from Scratch #3 - Delta-Based Linear Data Structure Model](./基于Delta的线性数据结构模型.md)
+- [Implementing a Rich Text Editor from Scratch #4 - Core Interaction Strategies for Browser Selection Model](./浏览器选区模型的核心交互策略.md)
+- [Implementing a Rich Text Editor from Scratch #5 - State Structure Representation of Editor Selection Model](./编辑器选区模型的状态结构表达.md)
+- [Implementing a Rich Text Editor from Scratch #6 - Synchronization of Browser and Editor Selection Models](./浏览器选区与编辑器选区模型同步.md)
+- [Implementing a Rich Text Editor from Scratch #7 - Semi-Controlled Input Mode Based on Composite Events](./基于组合事件的半受控输入模式.md)
+- [Implementing a Rich Text Editor from Scratch #8 - Uncontrolled DOM Behavior in Browser Input Mode](./浏览器输入模式的非受控DOM行为.md)
+- [Implementing a Rich Text Editor from Scratch #9 - Controlled Handling of Editor Text Structure Changes](./编辑器文本结构变更的受控处理.md)
+- [Implementing a Rich Text Editor from Scratch #10 - Pattern Extension of React View Layer Adapter](./React视图层适配器的模式扩展.md)
+- [Implementing a Rich Text Editor from Scratch #11 - Immutable State Management and Incremental Rendering](./Immutable状态维护与增量渲染.md)
 
 </details>
 
