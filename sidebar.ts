@@ -342,7 +342,8 @@ export const sidebar: Sidebar = {
         "RichText/基于组合事件的半受控输入模式",
         "RichText/浏览器输入模式的非受控DOM行为",
         "RichText/编辑器文本结构变更的受控处理",
-        "RichText/React视图层适配器的模式扩展"
+        "RichText/React视图层适配器的模式扩展",
+        "RichText/Immutable状态维护与增量渲染"
       ]
     },
     {

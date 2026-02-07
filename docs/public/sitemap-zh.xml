@@ -1596,7 +1596,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/Plugin/基于NodeJs实现任务队列与优雅停机.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-03T05:58:11.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:36.000Z</lastmod>
 </url>
 
 <url>
@@ -1765,6 +1765,11 @@
   <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/React视图层适配器的模式扩展.html</loc>
   <priority>1.0</priority>
   <lastmod>2026-01-17T03:37:12.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/zh-cn/RichText/Immutable状态维护与增量渲染.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
@@ -3105,7 +3110,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/zh-cn/MyLife/记一些日常的想法与思考.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-18T13:52:17.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:36.000Z</lastmod>
 </url>
 
 </urlset>
