@@ -5,15 +5,22 @@ The design of the data model is the core foundation of the editor, directly affe
 - Live Editor: <https://windrunnermax.github.io/BlockKit/>
 - Project Notes: <https://github.com/WindRunnerMax/BlockKit/blob/master/NOTE.md>
 
-Articles on implementing a rich text editor project from scratch:
+<details>
+<summary><strong>Implementing a Rich Text Editor from Scratch Series</strong></summary>
 
-- [Feeling Inadequate, Getting Started on Writing a Rich Text Editor from Scratch](./从零设计实现富文本编辑器.md)
-- [Implementing a Rich Text Editor from Scratch #2 - Editor Architecture Design based on MVC Pattern](./基于MVC模式的编辑器架构设计.md)
-- [Implementing a Rich Text Editor from Scratch #3 - Linear Data Structure Model based on Delta](./基于Delta的线性数据结构模型.md)
-- [Implementing a Rich Text Editor from Scratch #4 - Core Interaction Strategy of Browser Selection Model](./浏览器选区模型的核心交互策略.md)
+- [Feeling utterly unskilled, I'm planning to try building a rich text editor from scratch](./从零设计实现富文本编辑器.md)
+- [Implementing a Rich Text Editor from Scratch #2 - MVC Pattern-Based Editor Architecture Design](./基于MVC模式的编辑器架构设计.md)
+- [Implementing a Rich Text Editor from Scratch #3 - Delta-Based Linear Data Structure Model](./基于Delta的线性数据结构模型.md)
+- [Implementing a Rich Text Editor from Scratch #4 - Core Interaction Strategies for Browser Selection Model](./浏览器选区模型的核心交互策略.md)
 - [Implementing a Rich Text Editor from Scratch #5 - State Structure Representation of Editor Selection Model](./编辑器选区模型的状态结构表达.md)
-- [Implementing a Rich Text Editor from Scratch #6 - Synchronization between Browser Selection and Editor Selection Model](./浏览器选区与编辑器选区模型同步.md)
-- [Implementing a Rich Text Editor from Scratch #7 - Half-Controlled Input Mode based on Composite Events](./基于组合事件的半受控输入模式.md)
+- [Implementing a Rich Text Editor from Scratch #6 - Synchronization of Browser and Editor Selection Models](./浏览器选区与编辑器选区模型同步.md)
+- [Implementing a Rich Text Editor from Scratch #7 - Semi-Controlled Input Mode Based on Composite Events](./基于组合事件的半受控输入模式.md)
+- [Implementing a Rich Text Editor from Scratch #8 - Uncontrolled DOM Behavior in Browser Input Mode](./浏览器输入模式的非受控DOM行为.md)
+- [Implementing a Rich Text Editor from Scratch #9 - Controlled Handling of Editor Text Structure Changes](./编辑器文本结构变更的受控处理.md)
+- [Implementing a Rich Text Editor from Scratch #10 - Pattern Extension of React View Layer Adapter](./React视图层适配器的模式扩展.md)
+- [Implementing a Rich Text Editor from Scratch #11 - Immutable State Management and Incremental Rendering](./Immutable状态维护与增量渲染.md)
+
+</details>
 
 ## Delta
 As mentioned in the previous architectural design, we have implemented a flat data structure with independent modular design, making it more convenient to handle both editor operations and server-side data parsing. While nested data structures may align better with the `DOM` representation, they introduce complexity to data manipulation.

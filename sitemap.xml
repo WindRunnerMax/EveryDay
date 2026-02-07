@@ -3171,13 +3171,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-03T05:58:05.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:27.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/Plugin/基于NodeJs实现任务队列与优雅停机</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-03T05:58:05.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:27.000Z</lastmod>
 </url>
 
 <url>
@@ -3514,6 +3514,16 @@
   <loc>https://blog.touchczy.top/I18N/?p=/RichText/React视图层适配器的模式扩展</loc>
   <priority>1.0</priority>
   <lastmod>2026-01-17T03:37:07.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/?p=/RichText/Immutable状态维护与增量渲染</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
+  <loc>https://blog.touchczy.top/I18N/?p=/RichText/Immutable状态维护与增量渲染</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
@@ -6189,13 +6199,13 @@
 <url>
   <loc>https://blog.touchczy.top/?p=/MyLife/记一些日常的想法与思考</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-18T13:52:00.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:27.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog.touchczy.top/I18N/?p=/MyLife/记一些日常的想法与思考</loc>
   <priority>1.0</priority>
-  <lastmod>2026-01-18T13:52:00.000Z</lastmod>
+  <lastmod>2026-01-30T14:25:27.000Z</lastmod>
 </url>
 
 </urlset>
