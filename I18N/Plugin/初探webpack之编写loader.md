@@ -15,15 +15,15 @@ Using `Webpack` as a front-end build tool usually involves the following aspects
 
 For `Webpack`, everything is a module, and `Webpack` can only process `js` and `json` files. Therefore, if you want to use other types of files, they need to be converted into modules recognized by `Webpack`, namely `js` or `json` modules. This means that regardless of the file suffix, such as `png`, `txt`, `vue`, etc., they need to be used as `js`. However, directly treating them as `js` is not possible because these files do not adhere to the syntax structure of `js`. Therefore, we need `Webpack loaders` to help us transform non-`js` files into `js` files, such as `css-loader`, `ts-loader`, `file-loader`, and so on.
 
-Here, we will write a simple `Webpack loader`. Let's consider a simple scenario in which we focus on `vue2`. Typically, when building a `vue` project, we write `.vue` files as modules. Although this single-file component approach is clear, it can lead to large files if a component is complex. Of course, `vue` provides a way to reference `js` and `css` in `.vue` files, but it can still be somewhat cumbersome to use. Therefore, we can write a `Webpack loader` to separate the three parts, namely `html`, `js`, and `css` during code writing, and then merge them in the `loader`, which will then be processed by `vue-loader`. Focusing on separation does not necessarily mean separating file types; splitting a single file into multiple files is simply a matter of code readability in the writing process. Here, our main focus is on writing a simple `loader`, not on debating whether files should be separated. All the code mentioned in this article is available in [https://github.com/WindrunnerMax/webpack-simple-environment](https://github.com/WindrunnerMax/webpack-simple-environment).
+Here, we will write a simple `Webpack loader`. Let's consider a simple scenario in which we focus on `vue2`. Typically, when building a `vue` project, we write `.vue` files as modules. Although this single-file component approach is clear, it can lead to large files if a component is complex. Of course, `vue` provides a way to reference `js` and `css` in `.vue` files, but it can still be somewhat cumbersome to use. Therefore, we can write a `Webpack loader` to separate the three parts, namely `html`, `js`, and `css` during code writing, and then merge them in the `loader`, which will then be processed by `vue-loader`. Focusing on separation does not necessarily mean separating file types; splitting a single file into multiple files is simply a matter of code readability in the writing process. Here, our main focus is on writing a simple `loader`, not on debating whether files should be separated. All the code mentioned in this article is available in [https://github.com/WindrunnerMax/webpack-env](https://github.com/WindrunnerMax/webpack-env).
 
 ## Implementation
 
 ### Setting Up the Environment
-Here, we will directly use the simple `vue + ts` development environment set up in my previous article [Exploring Webpack: Building a Vue Development Environment from Scratch](https://github.com/WindrunnerMax/EveryDay/blob/master/Plugin/%E5%88%9D%E6%8E%A2webpack%E4%B9%8B%E6%90%AD%E5%BB%BAVue%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.md). The relevant code for the environment can be found in the `webpack--vue-cli` branch of [https://github.com/WindrunnerMax/webpack-simple-environment](https://github.com/WindrunnerMax/webpack-simple-environment), and we can simply clone and install it:
+Here, we will directly use the simple `vue + ts` development environment set up in my previous article [Exploring Webpack: Building a Vue Development Environment from Scratch](https://github.com/WindrunnerMax/EveryDay/blob/master/Plugin/%E5%88%9D%E6%8E%A2webpack%E4%B9%8B%E6%90%AD%E5%BB%BAVue%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83.md). The relevant code for the environment can be found in the `webpack--vue-cli` branch of [https://github.com/WindrunnerMax/webpack-env](https://github.com/WindrunnerMax/webpack-env), and we can simply clone and install it:
 
 ```
-git clone https://github.com/WindrunnerMax/webpack-simple-environment.git
+git clone https://github.com/WindrunnerMax/webpack-env.git
 git checkout webpack--vue-cli
 yarn install --registry https://registry.npm.taobao.org/
 ```
@@ -244,7 +244,7 @@ if (stylePath && !/<style[\s\S]*?>/.test(source)) {
 }
 ```
 
-After that, use `done(null, source)` to trigger the callback and complete the `loader` process. The relevant code is as shown below, and the complete code is in the `webpack--loader` branch of `https://github.com/WindrunnerMax/webpack-simple-environment`.
+After that, use `done(null, source)` to trigger the callback and complete the `loader` process. The relevant code is as shown below, and the complete code is in the `webpack--loader` branch of `https://github.com/WindrunnerMax/webpack-env`.
 
 ```javascript
 const fs = require("fs");

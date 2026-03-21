@@ -4,7 +4,7 @@
 Usually we can easily set up the development environment for Vue using `vue-cli`. `vue-cli` is indeed a great tool that allows us to focus on writing business code without worrying about complicated configurations such as `webpack`. However, this can lead to over-reliance on `vue-cli` and overlooking the importance of `webpack`. In some special scenarios, such as configuring multiple entry points for Vue and optimizing project build speed, we might find ourselves struggling. Of course, it might be a little late to start learning `vue2 + webpack` now, as everyone is considering transitioning to `vue3 + vite` haha.
 
 ## Description
-The relevant code in this article is located in the `webpack--vue-cli` branch of `https://github.com/WindrunnerMax/webpack-simple-environment`. By default, `webpack` only supports `js` and `json` file formats. Therefore, for `webpack` to recognize `css`, `img`, `html`, `vue`, and other files, they need to be converted to `js`. The main purpose of setting up the Vue development environment is actually to handle the `.vue` single file components, which mainly requires corresponding `loader` parsers. The rest is just routine issues.
+The relevant code in this article is located in the `webpack--vue-cli` branch of `https://github.com/WindrunnerMax/webpack-env`. By default, `webpack` only supports `js` and `json` file formats. Therefore, for `webpack` to recognize `css`, `img`, `html`, `vue`, and other files, they need to be converted to `js`. The main purpose of setting up the Vue development environment is actually to handle the `.vue` single file components, which mainly requires corresponding `loader` parsers. The rest is just routine issues.
 
 ## Implementation
 
@@ -233,7 +233,7 @@ module.exports = {
 Next, we will officially start dealing with `.vue` files. First, create an `App.vue` file in the root directory, and the directory structure will look as follows:
 
 ```
-webpack-simple-environment
+webpack-env
 ├── dist
 │   ├── index.html
 │   └── index.js

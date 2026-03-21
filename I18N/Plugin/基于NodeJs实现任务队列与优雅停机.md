@@ -25,7 +25,7 @@ Graceful shutdown refers to the process where, upon app termination, ongoing tas
 - Releasing allocated resources. After requests complete, all resources such as database connections must be freed.
 - Shutting down the service. Once all requests are finished and resources released, the service can shut down cleanly or force shutdown if needed.
 
-In this article, based on the `Nest` framework, we implement a simplified distributed task scheduling queue. Using `pm2` to manage NodeJs processes, we achieve graceful shutdown capabilities and explore how process signals behave on Linux systems. The code implementations can be found at <https://github.com/WindRunnerMax/webpack-simple-environment>.
+In this article, based on the `Nest` framework, we implement a simplified distributed task scheduling queue. Using `pm2` to manage NodeJs processes, we achieve graceful shutdown capabilities and explore how process signals behave on Linux systems. The code implementations can be found at <https://github.com/WindRunnerMax/webpack-env>.
 
 ## Task Queue
 Implementing a task queue is relatively straightforward. Our main goal here is traffic smoothing, especially when scheduling `LLMs`; requests need to queue for processing because cloud providers usually limit concurrency. These limits usually apply to RPM (requests per minute) and TPM (tokens per minute), so request queuing has to happen at the application layer.

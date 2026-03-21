@@ -13,7 +13,7 @@
 </details>
 
 ## 概述
-文中相关的代码都在`https://github.com/WindrunnerMax/webpack-simple-environment`中的`webpack--vue-cli`分支中。`webpack`默认情况下只支持`js`、`json`格式的文件，所以要把`css`、`img`、`html`、`vue`等等这些文件转换成`js`，这样`webpack`才能识别，而实际上搭建`Vue`的开发环境，我们的主要目的是处理`.vue`单文件组件，最主要的其实就是需要相对应的`loader`解析器，主要工作其实就在这里了，其他的都是常规问题了。
+文中相关的代码都在`https://github.com/WindrunnerMax/webpack-env`中的`webpack--vue-cli`分支中。`webpack`默认情况下只支持`js`、`json`格式的文件，所以要把`css`、`img`、`html`、`vue`等等这些文件转换成`js`，这样`webpack`才能识别，而实际上搭建`Vue`的开发环境，我们的主要目的是处理`.vue`单文件组件，最主要的其实就是需要相对应的`loader`解析器，主要工作其实就在这里了，其他的都是常规问题了。
 
 ## 实现
 
@@ -245,7 +245,7 @@ module.exports = {
 之后我们正式开始处理`.vue`文件，首先新建一个`App.vue`文件在根目录，此时的目录结构如下所示。
 
 ```
-webpack-simple-environment
+webpack-env
 ├── dist
 │   ├── index.html
 │   └── index.js

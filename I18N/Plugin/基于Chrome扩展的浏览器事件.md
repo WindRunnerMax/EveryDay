@@ -54,7 +54,7 @@ It can be seen that parsing HTML in this way is relatively costly, and if we fol
 </div>
 ```
 
-Continuing along this line of thought, we can parse the HTML content based on the copied content and then convert the content to other formats using existing solutions in the community. The related code mentioned in this article can be found at `https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/chrome-debugger`. For the sake of demonstration, all event triggers in this article are bound using DOM level 0 event binding.
+Continuing along this line of thought, we can parse the HTML content based on the copied content and then convert the content to other formats using existing solutions in the community. The related code mentioned in this article can be found at `https://github.com/WindrunnerMax/webpack-env/tree/master/packages/chrome-debugger`. For the sake of demonstration, all event triggers in this article are bound using DOM level 0 event binding.
 
 ## JavaScript Events
 Since our goal is to automate browser operations to perform copy actions, there are many options available such as Selenium and Puppeteer, which are viable solutions. In this case, we are considering a lightweight solution that does not require installing WebDriver dependencies and can be directly installed in the user's browser for immediate use. Based on these considerations, using a Chrome extension to achieve our goal is a good choice. Chrome extensions allow us to inject scripts directly into web pages, making it more convenient to implement related functionalities. For more information on injecting complex functionalities using extensions, you can refer to previous articles.

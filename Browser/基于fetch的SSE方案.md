@@ -17,7 +17,7 @@
 * 服务端数据直接转发，在不需要进行数据预处理的情况下，如果在服务端接收数据流式响应再将其转发到客户端则显得比较麻烦，因此我们可以直接将请求作为`HTTP`长连接代理到目标的请求地址，而不需要实际实现接收响应后再转发到客户端。
 * 基于`fetch`请求数据，`EventSource`对象只能发起`GET`请求，且无法定义请求头以及携带请求体，这在需要鉴权的情况下就需要将所有的内容编码到`URL`上，多数浏览器对`URL`长度上都限制在`2000`字符，因此基于`fetch`实现`SSE`数据请求则可以解决上述问题。
 
-在这里我们首先来通过`EventSource`对象来实现基本的`SSE`，由于`EventSource`对象是浏览器实现的`API`，是属于客户端的实现，因此我们在这里还需要先使用`Node.js`实现服务端的数据流式响应，文中涉及的`DEMO`都在`https://github.com/WindRunnerMax/webpack-simple-environment`中。
+在这里我们首先来通过`EventSource`对象来实现基本的`SSE`，由于`EventSource`对象是浏览器实现的`API`，是属于客户端的实现，因此我们在这里还需要先使用`Node.js`实现服务端的数据流式响应，文中涉及的`DEMO`都在`https://github.com/WindRunnerMax/webpack-env`中。
 
 在服务端中实现基本的流式数据响应比较方便，我们首先需要将响应头设置为`text/event-stream;`，注意响应头是需要在响应体之前设置的，否则在执行`res.writeHead`之前后执行`res.write`的话会导致响应`ERR_INVALID_CHUNKED_ENCODING`。
 
