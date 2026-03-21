@@ -38,7 +38,7 @@
 
 至于一些交互行为例如点赞等功能的速度问题我们也是可以接受的，文档站最的主要行为还是阅读文档。此外对于`md`文件我们同样可以如此处理，例如`docsify`就是通过动态请求，但是同样的对于搜索引擎来说这些需要执行`Js`来动态请求的内容并没有那么容易抓取，所以如果想比较好地实现这部分能力还是需要不断优化迭代。
 
-那么接下来我们就从基本原理开始，优化组件编译的方式，进而基于模板渲染生成`SSG`，文中相关`API`的调用基于`React`的`17.0.2`版本实现，内容相关的`DEMO`地址为`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/react-render-ssg`。
+那么接下来我们就从基本原理开始，优化组件编译的方式，进而基于模板渲染生成`SSG`，文中相关`API`的调用基于`React`的`17.0.2`版本实现，内容相关的`DEMO`地址为`https://github.com/WindrunnerMax/webpack-env/tree/master/packages/react-render-ssg`。
 
 ## 基本原理
 通常当我们使用`React`进行客户端渲染`CSR`时，只需要在入口的`index.html`文件中置入`<div id="root"></div>`的独立`DOM`节点，然后在引入的`xxx.js`文件中通过`ReactDOM.render`方法将`React`组件渲染到这个`DOM`节点上即可。将内容渲染完成之后，我们就会在某些生命周期或者`Hooks`中发起请求，用以动态请求数据并且渲染到页面上，此时便完成了组件的渲染流程。

@@ -27,7 +27,7 @@
 - 数据长尾分布的检索: 当数据分布呈现长尾形态时，通用`LLMs`可能因训练数据覆盖不足而无法给出满意答案。`RAG`能够通过检索覆盖到稀有或少见案例，提升模型在这些长尾数据上的表现，当然这本身也会比较依赖于`RAG`服务本身的检索能力。
 - 垂直搜索与智能问答: 针对特定领域或企业内容的智能搜索和问答机器人，`RAG`天然适合此类场景。用户问题触发对专属知识库的检索，检索到的相关内容被用于生成精准、简洁、符合上下文的答案，提供比传统关键词匹配更自然、信息量更大。
 
-本文实现了非常基础的`RAG`示例，`Embedding`使用轻量的`all-MiniLM-L6-v2`模型，向量检索的数据库使用轻量的`hnswlib-node`实现，以此可以在`node`中直接运行起来 <https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/hnsw-rag>。
+本文实现了非常基础的`RAG`示例，`Embedding`使用轻量的`all-MiniLM-L6-v2`模型，向量检索的数据库使用轻量的`hnswlib-node`实现，以此可以在`node`中直接运行起来 <https://github.com/WindRunnerMax/webpack-env/tree/master/packages/hnsw-rag>。
 
 实际上当前很多云服务商以及开源项目提供了开箱即用`RAG`服务的实现，而我们自然可以根据需求来决定是否可以接入开箱即用的服务。只是若是我们需要精细地调配很多功能，例如自定义分片策略等，就比较依赖服务是否暴露相关实现，因此我们不一定可以直接处理。
 

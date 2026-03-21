@@ -26,15 +26,15 @@
 
 对于`webpack`来说，一切皆模块，而`webpack`仅能处理出`js`以及`json`文件，因此如果要使用其他类型的文件，都需要转换成`webpack`可识别的模块，即`js`或`json`模块。也就是说无论什么后缀的文件例如`png`、`txt`、`vue`文件等等，都需要当作`js`来使用，但是直接当作`js`来使用肯定是不行的，因为这些文件并不符合`js`的语法结构，所以就需需要`webpack loader`来处理，帮助我们将一个非`js`文件转换为`js`文件，例如`css-loader`、`ts-loader`、`file-loader`等等。  
 
-在这里编写一个简单的`webpack loader`，设想一个简单的场景，在这里我们关注`vue2`，从实例出发，在平时我们构建`vue`项目时都是通过编写`.vue`文件来作为模块的，这种单文件组件的方式虽然比较清晰，但是如果一个组件比较复杂的话，就会导致整个文件相当大。当然`vue`中给我们提供了在`.vue`文件中引用`js`、`css`的方式，但是这样用起来毕竟还是稍显麻烦，所以我们可以通过编写一个`webpack loader`，在编写代码时将三部分即`html`、`js`、`css`进行分离，之后在`loader`中将其合并，再我们编写的`loader`完成处理之后再交与`vue-loader`去处理之后的事情。当然，关注点分离不等于文件类型分离，将一个单文件分成多个文件也只是对于代码编写过程中可读性的倾向问题，在这里我们重点关注的是编写一个简单的`loader`而不在于对于文件是否应该分离的探讨。文中涉及到的所有代码都在`https://github.com/WindRunnerMax/webpack-simple-environment`。
+在这里编写一个简单的`webpack loader`，设想一个简单的场景，在这里我们关注`vue2`，从实例出发，在平时我们构建`vue`项目时都是通过编写`.vue`文件来作为模块的，这种单文件组件的方式虽然比较清晰，但是如果一个组件比较复杂的话，就会导致整个文件相当大。当然`vue`中给我们提供了在`.vue`文件中引用`js`、`css`的方式，但是这样用起来毕竟还是稍显麻烦，所以我们可以通过编写一个`webpack loader`，在编写代码时将三部分即`html`、`js`、`css`进行分离，之后在`loader`中将其合并，再我们编写的`loader`完成处理之后再交与`vue-loader`去处理之后的事情。当然，关注点分离不等于文件类型分离，将一个单文件分成多个文件也只是对于代码编写过程中可读性的倾向问题，在这里我们重点关注的是编写一个简单的`loader`而不在于对于文件是否应该分离的探讨。文中涉及到的所有代码都在`https://github.com/WindRunnerMax/webpack-env`。
 
 ## 实现
 
 ### 搭建环境
-在这里直接使用我之前的 [初探webpack之从零搭建Vue开发环境](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/初探webpack之搭建Vue开发环境.md) 中搭建的简单`vue + ts`开发环境，环境的相关的代码都在`https://github.com/WindRunnerMax/webpack-simple-environment`中的`webpack--vue-cli`分支中，我们直接将其`clone`并安装。
+在这里直接使用我之前的 [初探webpack之从零搭建Vue开发环境](https://github.com/WindRunnerMax/EveryDay/blob/master/Plugin/初探webpack之搭建Vue开发环境.md) 中搭建的简单`vue + ts`开发环境，环境的相关的代码都在`https://github.com/WindRunnerMax/webpack-env`中的`webpack--vue-cli`分支中，我们直接将其`clone`并安装。
 
 ```
-git clone https://github.com/WindrunnerMax/webpack-simple-environment.git
+git clone https://github.com/WindrunnerMax/webpack-env.git
 git checkout webpack--vue-cli
 yarn install --registry https://registry.npm.taobao.org/
 ```
@@ -255,7 +255,7 @@ if (stylePath && !/<style[\s\S]*?>/.test(source)) {
 }
 ```
 
-在之后使用`done(null, source)`触发回调完成`loader`的流程，相关代码如下所示，完整代码在`https://github.com/WindrunnerMax/webpack-simple-environment`中的`webpack--loader`分支当中。
+在之后使用`done(null, source)`触发回调完成`loader`的流程，相关代码如下所示，完整代码在`https://github.com/WindrunnerMax/webpack-env`中的`webpack--loader`分支当中。
 
 ```javascript
 const fs = require("fs");

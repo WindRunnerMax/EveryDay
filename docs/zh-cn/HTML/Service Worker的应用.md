@@ -28,7 +28,7 @@
 * 进入地理围栏(`LBS`的一种应用)。
 
 ## 示例
-实现一个简单的`Service worker`应用示例，这个示例可以在断网的时候同样可以使用，相关的代码在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker`，在这里就是用原生的`Service Worker`写一个简单示例，直接写原生的`Service Worker`比较繁琐和复杂，所以可以借助一些库例如`Workbox`等，在使用`Service Worker`之前有一些注意事项：
+实现一个简单的`Service worker`应用示例，这个示例可以在断网的时候同样可以使用，相关的代码在`https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker`，在这里就是用原生的`Service Worker`写一个简单示例，直接写原生的`Service Worker`比较繁琐和复杂，所以可以借助一些库例如`Workbox`等，在使用`Service Worker`之前有一些注意事项：
 * `Service worker`运行在`worker`上，也就表明其不能访问`DOM`。
 * 其设计为完全异步，同步`API`(如`XHR`和`localStorage`)不能在`service worker`中使用。
 * 出于安全考量，`Service workers`只能由`HTTPS`承载，`localhost`本地调试可以使用`http`。
@@ -42,7 +42,7 @@ $ npm install -g anywhere
 $ anywhere 7890 # http://localhost:7890/
 ```
 
-编写一个`index.html`文件和`sw.js`文件，以及引入相关的资源文件，目录结构如下，可以参考`https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker`，当然直接`clone`下来运行一个静态文件服务器就可以直接使用了。
+编写一个`index.html`文件和`sw.js`文件，以及引入相关的资源文件，目录结构如下，可以参考`https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker`，当然直接`clone`下来运行一个静态文件服务器就可以直接使用了。
 
 ```
 simple--service-worker
@@ -182,7 +182,7 @@ fetch  http://localhost:7811/static/cache.js 有缓存，从缓存中取
 cache.js loaded
 ```
 
-至此我们就完成了一个简单的示例，在第二次打开页面的时候，我们可以将浏览器的网络连接断开，例如关闭文件服务器或者在控制台的`Network`中选择`Offline`，而我们也可以看到页面依旧正常加载，不需要网络服务，另外也可以在`Network`的相关的数据的`Size`列会出现`(ServiceWorker)`这个信息，说明资源是从`ServiceWorker`加载的缓存数据。可以在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker`中`clone`下来后运行这个示例。
+至此我们就完成了一个简单的示例，在第二次打开页面的时候，我们可以将浏览器的网络连接断开，例如关闭文件服务器或者在控制台的`Network`中选择`Offline`，而我们也可以看到页面依旧正常加载，不需要网络服务，另外也可以在`Network`的相关的数据的`Size`列会出现`(ServiceWorker)`这个信息，说明资源是从`ServiceWorker`加载的缓存数据。可以在`https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker`中`clone`下来后运行这个示例。
 
 ```html
 <!-- index.html -->
