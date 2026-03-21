@@ -2,7 +2,7 @@
 简单实现一个`Vue`首屏性能优化组件，现代化浏览器提供了很多新接口，在不考虑`IE`兼容性的情况下，这些接口可以很大程度上减少编写代码的工作量以及做一些性能优化方面的事情，当然为了考虑`IE`我们也可以在封装组件的时候为其兜底，本文的首屏性能优化组件主要是使用`IntersectionObserver`以及`requestIdleCallback`两个接口。
 
 ## 概述
-先考虑首屏场景，当做一个主要为展示用的首屏时，通常会加载较多的资源例如图片等，如果我们不想在用户打开时就加载所有资源，而是希望用户滚动到相关位置时再加载组件，此时就可以选择`IntersectionObserver`这个接口，当然也可以使用`onscroll`事件去做一个监听，只不过这样性能可能比较差一些。还有一些组件，我们希望他必须要加载，但是又不希望他在初始化页面时同步加载，这样我们可以使用异步的方式比如`Promise`和`setTimeout`等，但是如果想再降低这个组件加载的优先级，我们就可以考虑`requestIdleCallback`这个接口，相关代码在`https://github.com/WindrunnerMax/webpack-simple-environment`的`vue--first-screen-optimization`分支。
+先考虑首屏场景，当做一个主要为展示用的首屏时，通常会加载较多的资源例如图片等，如果我们不想在用户打开时就加载所有资源，而是希望用户滚动到相关位置时再加载组件，此时就可以选择`IntersectionObserver`这个接口，当然也可以使用`onscroll`事件去做一个监听，只不过这样性能可能比较差一些。还有一些组件，我们希望他必须要加载，但是又不希望他在初始化页面时同步加载，这样我们可以使用异步的方式比如`Promise`和`setTimeout`等，但是如果想再降低这个组件加载的优先级，我们就可以考虑`requestIdleCallback`这个接口，相关代码在`https://github.com/WindrunnerMax/webpack-env`的`vue--first-screen-optimization`分支。
 
 ### IntersectionObserver
 `IntersectionObserver`接口，从属于`Intersection Observer API`，提供了一种异步观察目标元素与其祖先元素或顶级文档视窗`viewport`交叉状态的方法，祖先元素与视窗`viewport`被称为根`root`，也就是说`IntersectionObserver API`，可以自动观察元素是否可见，由于可见`visible`的本质是，目标元素与视口产生一个交叉区，所以这个`API`叫做交叉观察器，兼容性`https://caniuse.com/?search=IntersectionObserver`。  
@@ -77,7 +77,7 @@ const handle = window.requestIdleCallback(callback[, options]);
 
 ## 实现
 实际上编写组件主要是搞清楚如何使用这两个主要的`API`就好，首先关注`IntersectionObserver`，因为考虑需要使用动态组件`<component />`，那么我们向其传值的时候就需要使用异步加载组件`() => import("component")`的形式。监听的时候，可以考虑加载完成之后即销毁监听器，或者离开视觉区域后就将其销毁等，这方面主要是策略问题。在页面销毁的时候就必须将`Intersection Observer`进行`disconnect`，防止内存泄漏。另外我们为了使用`IntersectionObserver`则必须需要一个可以观察的目标，如果什么不都渲染，我们就无从观察，所以我们需要引入一个骨架屏，我们可以为真实的组件做一个在尺寸上非常接近真实组件的组件，在这里为了演示只是简单的渲染了`<section />`作为骨架屏。使用`requestIdleCallback`就比较简单了，只需要将回调函数执行即可，同样也类似于`Promise.resolve().then`这种异步处理的情况。  
-这里是简单的实现逻辑，通常`observer`的使用方案是先使用一个`div`等先进行占位，然后在`observer`监控其占位的容器，当容器在视区时加载相关的组件，相关的代码在`https://github.com/WindrunnerMax/webpack-simple-environment`的`vue--first-screen-optimization`分支，请尽量使用`yarn`进行安装，可以使用`yarn.lock`文件锁住版本，避免依赖问题。使用`npm run dev`运行之后可以在`Console`中看到这四个懒加载组件`created`创建的顺序，其中`A`的`observer`懒加载是需要等其加载页面渲染完成之后，判断在可视区，才进行加载，首屏使能够直接看到的，而`D`的懒加载则是需要将滚动条滑动到`D`的外部容器出现在视图之后才会出现，也就是说只要不滚动到底部是不会加载`D`组件的，另外还可以通过`component-params`和`component-events`将`attrs`和`listeners`传递到懒加载的组件，类似于`$attrs`和`$listeners`，至此懒加载组件已简单实现。
+这里是简单的实现逻辑，通常`observer`的使用方案是先使用一个`div`等先进行占位，然后在`observer`监控其占位的容器，当容器在视区时加载相关的组件，相关的代码在`https://github.com/WindrunnerMax/webpack-env`的`vue--first-screen-optimization`分支，请尽量使用`yarn`进行安装，可以使用`yarn.lock`文件锁住版本，避免依赖问题。使用`npm run dev`运行之后可以在`Console`中看到这四个懒加载组件`created`创建的顺序，其中`A`的`observer`懒加载是需要等其加载页面渲染完成之后，判断在可视区，才进行加载，首屏使能够直接看到的，而`D`的懒加载则是需要将滚动条滑动到`D`的外部容器出现在视图之后才会出现，也就是说只要不滚动到底部是不会加载`D`组件的，另外还可以通过`component-params`和`component-events`将`attrs`和`listeners`传递到懒加载的组件，类似于`$attrs`和`$listeners`，至此懒加载组件已简单实现。
 
 ```html
 <!-- App.vue -->

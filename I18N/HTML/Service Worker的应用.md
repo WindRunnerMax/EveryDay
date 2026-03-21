@@ -30,7 +30,7 @@ The `Service Worker` has other use cases as well, and the standard of `Service W
 * Entering a geofence (an application of Location-Based Services).
 
 ## Example
-Here is an example of a simple `Service Worker` application that can still be used when there is no internet connection. The relevant code can be found at `https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker`. In this example, a simple native `Service Worker` is implemented without using any libraries like `Workbox`. However, it is worth noting that writing a native `Service Worker` can be cumbersome and complex, so using libraries like `Workbox` can simplify the process. Before using a `Service Worker`, there are some important considerations:
+Here is an example of a simple `Service Worker` application that can still be used when there is no internet connection. The relevant code can be found at `https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker`. In this example, a simple native `Service Worker` is implemented without using any libraries like `Workbox`. However, it is worth noting that writing a native `Service Worker` can be cumbersome and complex, so using libraries like `Workbox` can simplify the process. Before using a `Service Worker`, there are some important considerations:
 * `Service Worker` runs on a worker, which means it cannot access the DOM.
 * It is designed to be completely asynchronous, and synchronous APIs like XHR and localStorage cannot be used in a service worker.
 * For security reasons, `Service Workers` can only be hosted on HTTPS, although `http` can be used for local debugging on `localhost`.
@@ -44,7 +44,7 @@ $ npm install -g anywhere
 $ anywhere 7890 # http://localhost:7890/
 ```
 
-Create an `index.html` file and an `sw.js` file, and import the relevant resource files. The directory structure is as follows, and you can refer to `https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker`. Of course, you can directly clone and run a static file server to use it directly.
+Create an `index.html` file and an `sw.js` file, and import the relevant resource files. The directory structure is as follows, and you can refer to `https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker`. Of course, you can directly clone and run a static file server to use it directly.
 
 ```
 simple--service-worker
@@ -184,7 +184,7 @@ Registration successful
 cache.js loaded
 ```
 
-With this, we have completed a simple example. When the page is opened for the second time, we can disconnect the browser's network connection, such as by closing the file server or selecting `Offline` in the `Network` tab of the console. We can see that the page still loads normally without requiring a network service. Additionally, in the `Size` column of the relevant data in the `Network` tab, there will be a `(ServiceWorker)` indication, indicating that the resources are loaded from the cache data of the `ServiceWorker`. You can clone this example from `https://github.com/WindrunnerMax/webpack-simple-environment/tree/simple--service-worker` and run it.
+With this, we have completed a simple example. When the page is opened for the second time, we can disconnect the browser's network connection, such as by closing the file server or selecting `Offline` in the `Network` tab of the console. We can see that the page still loads normally without requiring a network service. Additionally, in the `Size` column of the relevant data in the `Network` tab, there will be a `(ServiceWorker)` indication, indicating that the resources are loaded from the cache data of the `ServiceWorker`. You can clone this example from `https://github.com/WindrunnerMax/webpack-env/tree/simple--service-worker` and run it.
 
 ```html
 <!-- index.html -->

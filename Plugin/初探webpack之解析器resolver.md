@@ -25,7 +25,7 @@
 * 组件样式覆盖问题: 经常用组件库的同学应该都知道，在公司内部统一样式规范之后，是不能够随意再引入原本的样式内容的，否则就会出现样式覆盖的问题。但是发布到`Npm`的包并不一定都遵守了这个规范，其还是有可能引用旧版本的样式文件，因此我们就需要避免由此造成的样式覆盖问题。
 * 依赖动态引入问题: 实际上在我们解决上述的问题之后，关于样式部分的问题已经结束了，而在这里也引申出了新的问题，我们在本质上是处理了`Webpack`的模块引用问题。那么在其他场景下，例如我们需要在海外部署的服务引入专用的依赖，或者幽灵依赖造成的编译问题，此时就需要解决动态引入依赖的问题。
 
-针对这三个问题分别使用`Webpack`实现了相关`DEMO`，相关的代码都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/webpack-resolver`中。
+针对这三个问题分别使用`Webpack`实现了相关`DEMO`，相关的代码都在`https://github.com/WindrunnerMax/webpack-env/tree/master/packages/webpack-resolver`中。
 
 ## LessLoader
 那么我们先来看看`less-loader`的问题，当我们打开`Npm`找到`less-loader@5.0.0`的`README`文档时，可以看到`webpack resolver`一节中明确了如果需要从`node_modules`中引用样式的话，是需要在引用路径前加入`~`符号的。这样才能让`less-loader`能够正确地从`node_modules`中引用样式文件，否则都会被认为是相对路径导入。
@@ -427,18 +427,18 @@ module.exports = {
 // index.less => @import "@arco-design/web-react/es/style/index.less"
  {
   context: {},
-  path: '/xxx/webpack-simple-environment/packages/webpack-resolver/src/less',
+  path: '/xxx/webpack-env/packages/webpack-resolver/src/less',
   request: './@arco-design/web-react/es/style/index.less'
 }
 
 // index.ts => import "./index.less"
 {
   context: {
-    issuer: '/xxx/webpack-simple-environment/packages/webpack-resolver/src/less/index.ts',
+    issuer: '/xxx/webpack-env/packages/webpack-resolver/src/less/index.ts',
     issuerLayer: null,
     compiler: undefined
   },
-  path: '/xxx/webpack-simple-environment/packages/webpack-resolver/src/less',
+  path: '/xxx/webpack-env/packages/webpack-resolver/src/less',
   request: './index.less'
 }
 ```

@@ -64,7 +64,7 @@
 </div>
 ```
 
-那么我们就可以继续沿着这个思路，以复制出的的内容为基准解析`HTML`格式解析内容，而实际上说了这么多我们最需要解决的问题是如何自动化提取内容，由此就引出了我们今天要聊的`Chrome`拓展与`Chrome DevTools Protocol`协议，当我们成功解决了内容问题之后，接下来将内容格式转换为其他格式社区就有很多成熟的方案了。文中涉及的相关代码都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/master/packages/chrome-debugger`中，在这里为了方便处理演示`DEMO`，我们的事件触发全部都是`DOM0`级的事件绑定形式。
+那么我们就可以继续沿着这个思路，以复制出的的内容为基准解析`HTML`格式解析内容，而实际上说了这么多我们最需要解决的问题是如何自动化提取内容，由此就引出了我们今天要聊的`Chrome`拓展与`Chrome DevTools Protocol`协议，当我们成功解决了内容问题之后，接下来将内容格式转换为其他格式社区就有很多成熟的方案了。文中涉及的相关代码都在`https://github.com/WindrunnerMax/webpack-env/tree/master/packages/chrome-debugger`中，在这里为了方便处理演示`DEMO`，我们的事件触发全部都是`DOM0`级的事件绑定形式。
 
 ## JavaScript事件 
 既然我们的目标是自动操作浏览器执行复制操作，那么可供自动化操作的选择有很多例如`Selenium`、`Puppeteer`，都是可以考虑的方案。在这里我们考虑比较轻量的解决方案，不需要安装`WebDriver`等依赖环境，并且可以直接安装在用户本身的浏览器中开箱即用，基于这些考虑则使用`Chrome`扩展来帮我们实现目标是比较好的选择。并且`Chrome`扩展程序可以帮我们在`Web`页面中直接注入脚本，实现相关功能也会更加方便，关于使用扩展程序实现复杂的功能注入可以参考之前的文章，在这里就不重复叙述了。

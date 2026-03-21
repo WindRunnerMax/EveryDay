@@ -35,7 +35,7 @@ markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> 
 
 不过在这里我们并不展开讨论这些自定义语法解析的内容，而是主要聚焦在基本的`Md`语法解析和增量渲染上，但是在解析的过程中我们还是会涉及到针对语法错误匹配的相关问题处理。
 
-文中的相关实现可以参考 [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) 以及 [StreamDelta](https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/stream-delta) 中，且有单元测试可以检查实现效果以及各种需要注意的边界情况。
+文中的相关实现可以参考 [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) 以及 [StreamDelta](https://github.com/WindRunnerMax/webpack-env/tree/master/packages/stream-delta) 中，且有单元测试可以检查实现效果以及各种需要注意的边界情况。
 
 ```mermaid
 %%{init: {"theme": "neutral" } }%%

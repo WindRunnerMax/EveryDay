@@ -27,7 +27,7 @@ markdown -> remark + mdast -> remark plugins + mdast -> remark-rehype + hast -> 
 
 However, here we are not delving into discussions on custom syntax parsing. Instead, the focus is mainly on basic `Md` syntax parsing and incremental rendering. Yet, during the parsing process, handling issues related to syntax error matching is inevitable.
 
-For related implementations, you can refer to [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) and [StreamDelta](https://github.com/WindRunnerMax/webpack-simple-environment/tree/master/packages/stream-delta). Additionally, unit tests are available to verify the implementation results and various important boundary cases.
+For related implementations, you can refer to [BlockKit](https://windrunnermax.github.io/BlockKit/streaming.html) and [StreamDelta](https://github.com/WindRunnerMax/webpack-env/tree/master/packages/stream-delta). Additionally, unit tests are available to verify the implementation results and various important boundary cases.
 
 ```mermaid
 %%{init: {"theme": "neutral" } }%%

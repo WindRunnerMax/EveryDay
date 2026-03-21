@@ -12,7 +12,7 @@
 
 外虚拟滚动还有更快的首屏渲染时间，特别是超大列表的全量渲染很容易导致首屏渲染时间过长，还能够减少`React`维护组件状态所带来的`Js`性能消耗，特别是在存在`Context`的情况下，不特别关注就可能会存在性能劣化问题。
 
-文中会提到`4`种虚拟滚动的实现方式，分别有固定高度的`OnScroll`实现和不定高度的`IntersectionObserver+OnScroll`实现，相关`DEMO`都在`https://github.com/WindrunnerMax/webpack-simple-environment/tree/react-virtual-list`中。
+文中会提到`4`种虚拟滚动的实现方式，分别有固定高度的`OnScroll`实现和不定高度的`IntersectionObserver+OnScroll`实现，相关`DEMO`都在`https://github.com/WindrunnerMax/webpack-env/tree/react-virtual-list`中。
 
 ## 固定高度
 实际上关于虚拟滚动的方案在社区有很多参考，特别是固定高度的虚拟滚动实际上可以做成非常通用的解决方案。那么在这里我们以`ArcoDesign`的`List`组件为例来研究一下通用的虚拟滚动实现。在`Arco`给予的示例中我们可以看到其传递了`height`属性，此时如果我们将这个属性删除的话虚拟滚动是无法正常启动的。
