@@ -294,6 +294,7 @@
   * [Controlled Handling of Editor Text Structure Changes](RichText/编辑器文本结构变更的受控处理.md)
   * [Extending the Pattern of React View Layer Adapters](RichText/React视图层适配器的模式扩展.md)
   * [Immutable State Management and Incremental Rendering](RichText/Immutable状态维护与增量渲染.md)
+  * [Component Presets for Editable Nodes in React](RichText/React可编辑节点的组件预设.md)
 
 * Patterns
   * [Simple Factory Pattern](Patterns/简单工厂模式.md)
