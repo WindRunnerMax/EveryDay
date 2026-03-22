@@ -1023,7 +1023,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Browser/基于fetch的SSE方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-11-11T13:46:27.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1224,13 +1224,13 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之搭建Vue开发环境.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T08:01:40.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Vue/Vue首屏性能优化组件.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T15:11:56.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1386,19 +1386,19 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/React/基于React的SSG渲染方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-06-04T01:06:21.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/React/基于React的虚拟滚动方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-03-15T03:27:35.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/React/低代码场景的状态管理方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-05-17T03:24:06.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1464,19 +1464,19 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之编写plugin.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T12:30:34.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之搭建Vue开发环境.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T08:01:40.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之编写loader.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T13:13:34.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1488,13 +1488,13 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/初探webpack之解析器resolver.html</loc>
   <priority>1.0</priority>
-  <lastmod>2024-08-06T14:38:23.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/从零实现的Chrome扩展.html</loc>
   <priority>1.0</priority>
-  <lastmod>2023-11-11T12:30:34.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1506,7 +1506,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/基于Chrome扩展的浏览器事件.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-03-01T02:59:39.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1578,13 +1578,13 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/基于向量检索实现基础RAG服务.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-08-17T16:08:34.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/流式Markdown增量富文本解析算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-07T03:29:58.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1596,7 +1596,7 @@
 <url>
   <loc>https://blog-ssg.touchczy.top/Plugin/基于NodeJs实现任务队列与优雅停机.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-11-22T03:38:26.000Z</lastmod>
+  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
@@ -1771,6 +1771,11 @@
   <loc>https://blog-ssg.touchczy.top/RichText/Immutable状态维护与增量渲染.html</loc>
   <priority>1.0</priority>
   <lastmod>2026-02-07T03:10:08.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/RichText/React可编辑节点的组件预设.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
