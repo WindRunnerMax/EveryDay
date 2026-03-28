@@ -555,7 +555,68 @@ if (!force && this.editor.state.get(EDITOR_STATE.MOUSE_DOWN)) {
 ```
 
 ### 选区行为
-`Embed`节点选区行为需要注意的点过多，在前边的实现中虽然基本是可以实现，但是在实际使用过程中会出现一些问题。例如在从左到右选择时，若是鼠标拖拽到`Embed`节点偏左时，浏览器选区并未覆盖节点，然而抬起鼠标时的计算会将其覆盖整个节点，这属于是选区不同步的问题。
+在`Slate`中的`inline`节点是在空节点内放置零宽字符，以此来实现节点本身的选中状态。而如果独占一行的时候，前后都会生成零宽字符来放置光标。我们本身的节点是不会存在零宽字符来选中本身节点的，内部自然不会存在零宽字符，外部的零宽字符则是用来放置光标，这都是符合各自的语义设计的。
+
+当拖拽选区的时候，此时如果没有拖过`Embed`节点，那么浏览器选区的放置则是`contenteditable="false"`的节点。那么从上述就能够看出来，在`Slate`中查找节点的时候，是应该正常向内部查找，而我们实际上应该查找平级的节点，因此这里的实现是有差异的。当然如果选区落点在`data-leaf`节点上的话，向内查找自然是没有问题的。
+
+```js
+// Slate
+<div data-leaf="true">
+  <div contenteditable="false">
+    <ZeroSpace></ZeroSpace>
+    <span>Mention</span>
+  </div>
+</div>
+
+// 平级节点
+<div data-leaf="true">
+  <ZeroSpace></ZeroSpace>
+  <div contenteditable="false"><span>Mention</span></div>
+</div>
+```
+
+从前边`Embed`节点的设计中，是将内置的零宽字符`0/1`两个位置作为光标的放置位置，而`offset 1`的位置会被实际移动到后一个节点的`offset 0`上，那么实际上如果此时我们仅使用该偏移方案而不校正`ModelPoint`的话，理论上而言是可行的。
+
+然而在实际的操作中，我们发现如果两个选区节点之间不连续的话，按左键会导致选区从`node2 offset 0`移动到`node1 offset 1`的位置，而如果连续的话则是会正常移动到`node1 offset len-1`的位置。
+
+```html
+<div contenteditable style="outline: none">
+  <div><span id="$1">123</span><span contenteditable="false">Embed</span><span id="$2">456</span></div>
+  <div><span id="$3">123</span><span id="$4">456</span></div>
+</div>
+<div>
+  <button id="$5">Embed</button>
+  <button id="$6">Span</button>
+</div>
+<script>
+  const sel = window.getSelection();
+  document.addEventListener("selectionchange", () => {
+    console.log("selection", sel?.anchorNode.parentElement, sel?.focusOffset);
+  });
+  $5.onclick = () => sel.setBaseAndExtent($2.firstChild, 0, $2.firstChild, 0); 
+  $6.onclick = () => sel.setBaseAndExtent($4.firstChild, 0, $4.firstChild, 0);
+</script>
+```
+
+在这个例子中按`Embed`按钮后再按左键选区变换的`offset`会得到`3`，而使用`Span`按钮后则会得到`2`。而如果直接将零宽字符节点放到`Embed`节点后的话虽然可以解决这个问题，但是这样就无法将光标放置于`Embed`节点前了。
+
+此时这就需要在最前边再放一个零宽字符，这样额外的交互处理更是麻烦，且在`Slate`还提过零宽字符打断中文`IME`的输入问题`PR`。其实这里的选区映射也有个有趣的问题，光标位于`data-zero-embed`节点后时, 需要将其修正为节点前。
+
+那么此时我们按右键选区会被这段`toModelPoint`中的逻辑重新映射回原本的位置，即`L => L`并没有变化，那么也就无法触发`Model Sel Change`，而`DOM`选区则会从`offset 1`重新被`force`校正为`0`。
+
+那么如果我们在按下右键主动调整选区的话，则会先出发`Model Sel Change`进而`UpdateDOM`，然后再由`DOM Sel Change`来校正选区，因为这时候选区不在`Embed`零宽字符上了，就不会命中校正逻辑，因而可以正常进行选区的移动。
+
+```js
+// CASE2: 当 Embed 元素前存在内容且光标位于节点末时, 需要校正到 Embed 节点上
+// <s>1|</s><e> </e> => <s>1</s><e>| </e>
+if (nodeOffset === len && nextLeaf && nextLeaf.hasAttribute(ZERO_EMBED_KEY)) {
+  return { node: nextLeaf, offset: 0 };
+}
+// [[cursor]embed]\n => right => [embed[cursor]]\n => [[cursor]embed]\n
+// SET(1) => [embed[cursor]]\n => [embed][[cursor]\n] => SET(1) => EQUAL
+```
+
+可以看出`Embed`选区行为需要注意的点过多，在前边的设计中虽然基本是可以实现，但是在实际使用过程中会出现一些问题。例如在从左到右选择时，若是鼠标拖拽到`Embed`节点偏左时，浏览器选区并未覆盖节点，然而抬起鼠标时的计算会将其覆盖整个节点，这属于是选区不同步的问题。
 
 造成这个问题的原因是，我们的选区模型设计是左侧的零宽节点设计，因为放置于右侧的话可能会导致输入法的问题，对于类似的问题在`slate#5685`以及`slate#5736`中都有提到过。因此在我们的编辑器实现中，会直接将其放置于嵌入节点的左侧。
 
@@ -618,67 +679,6 @@ protected onTripleClick(event: MouseEvent) {
   this.set(range, true);
   event.preventDefault();
 }
-```
-
-在`Slate`中的`inline`节点是在空节点内放置零宽字符，以此来实现节点本身的选中状态。而如果独占一行的时候，前后都会生成零宽字符来放置光标。我们本身的节点是不会存在零宽字符来选中本身节点的，内部自然不会存在零宽字符，外部的零宽字符则是用来放置光标，这都是符合各自的语义设计的。
-
-当拖拽选区的时候，此时如果没有拖过`Embed`节点，那么浏览器选区的放置则是`contenteditable="false"`的节点。那么从上述就能够看出来，在`slate`中查找节点的时候，是应该正常向内部查找，而我们实际上应该查找平级的节点，因此这里的实现是有差异的。当然如果选区落点在`data-leaf`节点上的话，向内查找自然是没有问题的。
-
-```js
-// Slate
-<div data-leaf="true">
-  <div contenteditable="false">
-    <ZeroSpace></ZeroSpace>
-    <span>Mention</span>
-  </div>
-</div>
-
-// 平级节点
-<div data-leaf="true">
-  <ZeroSpace></ZeroSpace>
-  <div contenteditable="false"><span>Mention</span></div>
-</div>
-```
-
-在实现`Embed`节点时，是将内置的零宽字符`0/1`两个位置作为光标的放置位置，而`offset 1`的位置会被实际移动到后一个节点的`offset 0`上，那么实际上如果此时我们仅使用该偏移方案而不校正`ModelPoint`的话，理论上而言是可行的。
-
-然而在实际的操作中，我们发现如果两个选区节点之间不连续的话，按左键会导致选区从`node2 offset 0`移动到`node1 offset 1`的位置，而如果连续的话则是会正常移动到`node1 offset len-1`的位置。
-
-```html
-<div contenteditable style="outline: none">
-  <div><span id="$1">123</span><span contenteditable="false">Embed</span><span id="$2">456</span></div>
-  <div><span id="$3">123</span><span id="$4">456</span></div>
-</div>
-<div>
-  <button id="$5">Embed</button>
-  <button id="$6">Span</button>
-</div>
-<script>
-  const sel = window.getSelection();
-  document.addEventListener("selectionchange", () => {
-    console.log("selection", sel?.anchorNode.parentElement, sel?.focusOffset);
-  });
-  $5.onclick = () => sel.setBaseAndExtent($2.firstChild, 0, $2.firstChild, 0); 
-  $6.onclick = () => sel.setBaseAndExtent($4.firstChild, 0, $4.firstChild, 0);
-</script>
-```
-
-在这个例子中按`Embed`按钮后再按左键选区变换的`offset`会得到`3`，而使用`Span`按钮后则会得到`2`。而如果直接将零宽字符节点放到`Embed`节点后的话虽然可以解决这个问题，但是这样就无法将光标放置于`Emebd`节点前了。
-
-此时这就需要在最前边再放一个零宽字符，这样额外的交互处理更是麻烦，且在`slate`我还提过零宽字符打断中文`IME`的输入问题`PR`。其实这里的选区映射也有个有趣的问题，光标位于`data-zero-embed`节点后时, 需要将其修正为节点前。
-
-那么此时我们按右键选区会被这段`toModelPoint`中的逻辑重新映射回原本的位置，即`L => L`并没有变化，那么也就无法触发`Model Sel Change`，而`DOM`选区则会从`offset 1`重新被`force`校正为`0`。
-
-那么如果我们在按下右键主动调整选区的话，则会先出发`Model Sel Change`进而`UpdateDOM`，然后再由`DOM Sel Change`来校正选区，因为这时候选区不在`Embed`零宽字符上了，就不会命中校正逻辑，因而可以正常进行选区的移动。
-
-```js
-// CASE2: 当 Embed 元素前存在内容且光标位于节点末时, 需要校正到 Embed 节点上
-// <s>1|</s><e> </e> => <s>1</s><e>| </e>
-if (nodeOffset === len && nextLeaf && nextLeaf.hasAttribute(ZERO_EMBED_KEY)) {
-  return { node: nextLeaf, offset: 0 };
-}
-// [[cursor]embed]\n => right => [embed[cursor]]\n => [[cursor]embed]\n
-// SET(1) => [embed[cursor]]\n => [embed][[cursor]\n] => SET(1) => EQUAL
 ```
 
 ### 输入法处理
