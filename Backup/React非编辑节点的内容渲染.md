@@ -105,9 +105,49 @@ export const Placeholder: FC<{
 ```
 
 ## Readonly 只读模式
+在我们的编辑器中，编辑模式主要是依赖于`ContentEditable`的属性值，那么在只读模式下，之需要将`ContentEditable`的属性值设置为`false`即可。理论上而言这完全是视图层的行为，之需要在`React`中实现`DOM`属性控制即可。
 
+```js
+<div
+  {...{ [EDITOR_KEY]: true }}
+  contentEditable={!readonly}
+>
+  <BlockModel></BlockModel>
+</div>
+```
+
+除此之外，在诸如工具栏、图片、`Mention`等模块中，通常需要额外的控制面板来编辑相关内容，那么在只读模式下，就需要感知到状态的变化。而在`React`中，我们可以直接通过`Context`来感知到状态的变化，从而可以实现状态变化的感知。
+
+```js
+<ReadonlyContext.Provider value={!!readonly}>
+  {children}
+</ReadonlyContext.Provider>
+```
+
+```js
+const ReadonlyContext = createContext<boolean>(false);
+ReadonlyContext.displayName = "Readonly";
+
+const useReadonly = () => {
+  const readonly = React.useContext(ReadonlyContext);
+  return { readonly };
+};
+
+const { readonly } = useReadonly();
+```
+
+理论上而言，编辑器的只读状态变更是需要被感知到的，否则会导致编辑器的状态不一致。不过在实际应用中，暂时还没有需要的场景，因此这里还没有实现，当前主要是在视图只读状态变化之后，设置编辑器的只读状态，而没有触发相关事件。
+
+```js
+export const BlockKit: React.FC<BlockKitProps> = props => {
+  if (editor.state.get(EDITOR_STATE.READONLY) !== readonly) {
+    editor.state.set(EDITOR_STATE.READONLY, readonly || false);
+  }
+}
+```
 
 ## Plugin 渲染插件模式
+在
 
 ## Portal 外部节点挂载
 在实现诸如`Mention`、划词改写等模块时，通常需要额外的辅助节点来渲染面板，例如`Mention`需要唤醒额外的面板来选择要`at`的对象，并且需要在此基础上实现诸如上下选择、回车等交互。
@@ -148,7 +188,7 @@ this.isMountSuggest = true;
 ReactDOM.render(<Suggest controller={this} top={top} left={left} text={text} />, dom);
 ```
 
-最近我在思考一个问题，在我们使用`ReactDOM.createPortal`来传送到目标节点时，更加类似于追加节点的方式来实现，而不是需要向上述的方式一样先创建容器再渲染节点，并且此时还可以使用`Context`来传递编辑器的状态。
+然后我们需要思考一个问题，在我们使用`ReactDOM.createPortal`来传送到目标节点时，更加类似于追加节点的方式来实现，而不是需要向上述的方式一样先创建容器再渲染节点，并且此时还可以使用`Context`来传递编辑器的状态。
 
 但是`createPortal`没有办法像`render`方法那样可以直接渲染节点，其只是创建了一个`Portal`节点，而不是实际进行了渲染行为。因此，最终还是无法避免需要一个实际渲染的行为，相互配合起来类似于下面的实现，这样就可以将元素实际创建到`body`上。
 
@@ -166,6 +206,7 @@ ReactDOM.render(portal, this.mountSuggestNode!);
 const PortalView: FC<{ editor: Editor }> = props => {
   const [portals, setPortals] = useState<O.Map<ReactPortal>>({});
   EDITOR_TO_PORTAL.set(props.editor, setPortals);
+
   return (
     <Fragment key="block-kit-portal-model">
       {Object.entries(portals).map(([key, node]) => (
@@ -175,6 +216,9 @@ const PortalView: FC<{ editor: Editor }> = props => {
   );
 };
 ```
+
+## 总结
+
 
 ## 每日一题
 
