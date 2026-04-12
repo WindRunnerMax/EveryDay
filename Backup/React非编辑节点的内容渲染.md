@@ -147,7 +147,108 @@ export const BlockKit: React.FC<BlockKitProps> = props => {
 ```
 
 ## Plugin 渲染插件模式
-在
+在`Core`核心服务中，我们已经实现了一套插件的渲染模式，这部分插件模式对于基本类型的样式是没什么问题的。然而，在实现诸如超链接、引用块这些需要组合类型的插件时，就需要特殊处理，这些类型的节点不需要持有状态，只需要在渲染时根据状态来渲染即可。
+
+举个例子，当实现超链接时，按照基本的拆离文本节点的方式来渲染，那么就会出现下面的情况。特别是，如果是加粗或者斜体等样式，那么就会出现拆离内容的情况，虽然并不会造成特别大的影响，但是体验上会稍显差一些，例如`hover`上去出现的下划线是一段段的而非整体。
+
+```html
+<b><a href="xx">part a</a></b>
+<i><a href="xx">part b</a></i>
+```
+
+因此理论上而言，超链接的渲染需要特殊处理，`a`标签整个需要被渲染到一个容器中，而不是拆离文本节点的方式来渲染。当然，在实际输入的过程中，`a`标签在`IME`输入的时候，本身会破坏`DOM`结构，这部分内容可以参考本系列`#8`的包装节点部分。
+
+```html
+<a href="xx">
+  <b>part a</b>
+  <i>part b</i>
+</a>
+```
+
+因此在`React`中，我们还需要实现一套渲染时的插件模式，也就是在渲染时根据状态来渲染插件。在这里之需要扩展`Core`核心服务中的插件模式，然后在`React`渲染组件中调度这部分模块。不过在此之前，还需要设计一个渲染包装模式的策略。
+
+如果仅仅是单个`key`来实现渲染时嵌套并不是什么复杂问题，而同时存在多个`key`则变成了令人费解的问题。如下面的例子中，如果将`34`单独合并`b`，外层再包裹`a`似乎是合理的，但是将`34`先包裹`a`后再合并`5`的`b`也是合理的，甚至有没有办法将`67`一并合并，因为其都存在`b`标签。
+
+```html
+1 2 3  4  5 6  7 8 9 0
+a a ab ab b bc b c c c
+```
+
+这个问题比较复杂，本着简单可扩展的原则，最终想到了个简单的实现，对于需要`wrapper`的元素，如果其合并`list`的`key`和`value`全部相同的话，那么就作为同一个值来合并。那么这种情况下就变的简单了很多，我们将其认为是一个组合值，而不是单独的值，在大部分场景下是足够的。
+
+```html
+1 2 3  4  5 6  7 8 9 0
+a a ab ab b bc b c c c
+12 34 5 6 7 890
+```
+
+那么接下来就需要按照这部分模式来处理渲染，首先这是一套纯渲染模式，那么我们就需要实现一个`Map`来映射渲染的`jsx`和`state`。而为什么不是`state`映射`jsx`，则是为了兼容现有的`elements - jsx`返回值。
+
+```js
+const elements = useMemo(() => {
+  const leaves = lineState.getLeaves();
+  // 首先渲染所有非 EOL 的叶子节点
+  const textLeaves = leaves.slice(0, -1);
+  const nodes = textLeaves.map(n => {
+    const node = <LeafModel key={n.key} editor={editor} leafState={n} />;
+    JSX_TO_STATE.set(node, n);
+    return node;
+  });
+  return nodes;
+}, [editor, lineState]);
+```
+
+接下来，就根据`elements`的顺序来组合包装节点了，在这里之需要一个`O(n)`的遍历即可。我们需要为状态设置一个`key`值，以便于判断当前节点和二级的遍历节点是否需要合并，如何需要合并则进入合并逻辑。
+
+```js
+export const getWrapSymbol = (keys: string[], el: JSX.Element | undefined): string | null => {
+  const attrs = state.op.attributes;
+  const suite: string[] = [];
+  for (const key of keys) {
+    attrs[key] && suite.push(`${key}${attrs[key]}`);
+  }
+  const symbol = suite.join("");
+  return symbol;
+};
+```
+
+紧接着就可以遍历`elements`来组合包装节点了，每个节点都需要判断下一个节点是否需要合并。顺序进行二次迭代，当出现连续的`symbol`相等时，说明是需要合并的，这里特别注意如果下一个节点不能合并，则需要回退`i`，以便于外层主循环时重新检查。
+
+```js
+// 执行到此处说明需要包装相关节点(即使仅单个节点)
+const nodes: JSX.Element[] = [element];
+for (let k = i + 1; k < len; ++k) {
+  const next = elements[k];
+  const nextSymbol = getWrapSymbol(keys, next);
+  if (!next || !nextSymbol || nextSymbol !== symbol) {
+    // 回退到上一个值, 以便下次循环时重新检查
+    i = k - 1;
+    break;
+  }
+  nodes.push(next);
+  i = k;
+}
+```
+
+最后，我们之需要调度插件来渲染具体的`React`节点就可以了，这部分就是完全依靠`React`的渲染机制来实现，而其中`key`值目前则是直接使用了起始和结束的索引值。不过后续这个`key`值可能需要根据`symbol`来生成，以确保在合并时能够正确处理。
+
+```js
+// 通过插件渲染包装节点
+let wrapper: React.ReactNode = nodes;
+const op = line.op;
+for (const plugin of plugins) {
+  // 这里的状态以首个节点为准
+  const context: ReactWrapLineContext = {
+    lineState: line,
+    children: wrapper,
+  };
+  if (plugin.match(line.op.attributes || {}, op) && plugin.wrapLine) {
+    wrapper = plugin.wrapLine(context);
+  }
+}
+const key = `${i - nodes.length + 1}-${i}`;
+wrapped.push(<React.Fragment key={key}>{wrapper}</React.Fragment>);
+```
 
 ## Portal 外部节点挂载
 在实现诸如`Mention`、划词改写等模块时，通常需要额外的辅助节点来渲染面板，例如`Mention`需要唤醒额外的面板来选择要`at`的对象，并且需要在此基础上实现诸如上下选择、回车等交互。
@@ -218,7 +319,9 @@ const PortalView: FC<{ editor: Editor }> = props => {
 ```
 
 ## 总结
+先前我们讨论了零宽字符、`Embed`节点、`Void`节点等，主要是可编辑节点的组件预设。在本文中则主要讨论的是非编辑节点内容渲染，也就是占位节点、只读模式、插件模式、外部节点挂载等，主要是实现编辑器的外部节点，例如占位符号、弹出层结构等。
 
+那么至此我们实现的编辑器的`React`视图层适配已经完成了，以此可以复用`React`的生态组件，降低了开发视图层的成本。接下来我们需要再处理`Core`服务的核心模块，其共同处理了编辑器的交互逻辑，例如剪贴板`Clipboard`、历史记录`History`、状态管理`State`等等。
 
 ## 每日一题
 
