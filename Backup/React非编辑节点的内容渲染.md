@@ -27,10 +27,11 @@
 ## Placeholder 占位节点
 在编辑器中，在内容为空的情况下，通常需要渲染一个占位节点来提示用户输入内容。在浏览器的`input`和`textarea`中，都存在原生的占位节点实现。而在编辑器中，这部分占位节点就需要自行实现，浏览器在`ContentEditable`模式并不存在原生的占位节点。
 
-在开源的编辑器中，`quill`和`slate`都提供了占位节点的实现，并且还是属于典型的实现。
+在开源的编辑器中，`quill`和`slate`都提供了占位节点的实现，并且还是属于典型的实现。`quill`的占位节点是使用`CSS`的伪元素来实现的，使用伪元素的好处是，完全不会影响到浏览器的`DOM`结构，这样也就不会影响到选区模型等设计，整体结构类似下面的内容。
 
-```js
+```html
 <div data-placeholder="请输入内容">
+  ::before
   <div data-node><span data-leaf>&ZeroWidthSpace;</span></div>
 </div>
 ```
@@ -43,6 +44,64 @@
   pointer-events: none;
   position: absolute;
 }
+```
+
+在这里，`content`是可以直接将`DOM`上的属性值渲染到占位节点上的，即`data-placeholder`属性值，这样就可以通过`Js`来控制属性值，进而处理占位节点的内容了。`absolute`主要是为了使其脱离`DOM`文档流，不影响选区的定位，`pointer-events`则是为了避免事件交互。
+
+其实用伪元素实现的最重要的点是，在`ContentEditable`模式下，浏览器不会让用户编辑`::before`或`::after`伪元素生成的内容。我们无法选中伪元素，其也不会参与光标、选区的计算。因为伪元素不属于`DOM`树，而`ContentEditable`只作用于真实的`DOM`节点及其文本内容。
+
+而类似`slate`的实现，则存在两部分特殊的设计。首先是将占位节点直接渲染到`Editable`编辑区域内，这样就可以复用`React`的渲染节点作为整个占位节点。再者是占位节点是渲染在`leaf`区域内，这也就意味着编辑器的文本样式也会应用到占位节点上。
+
+针对`React`占位节点的渲染，理论上而言之需要将其作为参数渲染到`Editable`编辑区域内即可。但是我们需要实现类似上述伪元素的实现，来确保占位节点的内容不会被用户编辑，那么这部分就需要用`CSS`来控制，即`position + user-select + pointer-events`。
+
+```js
+<div
+  {...{ [PLACEHOLDER_KEY]: true }}
+  style={{
+    position: "absolute",
+    opacity: "0.3",
+    userSelect: "none",
+    pointerEvents: "none",
+  }}
+>
+  {props.placeholder}
+</div>
+```
+
+接下来是设置的文本样式应用问题，这里的差异主要在于文本节点的放置位置。类似于上述的伪元素实现，如果直接放在容器直属元素下的话，设置的样式自然是不会应用到占位节点上的。而若是放在`leaf`区域内，自然就可以将样式应用到占位节点上。
+
+```html
+<div>
+  <span>请输入内容</span> <!-- 无法应用样式的占位节点内容 -->
+  <div data-node>
+    <span data-leaf>&ZeroWidthSpace;</span>
+    <span>请输入内容</span> <!-- 可以应用样式的占位节点内容 -->
+  </div>
+</div>
+```
+
+此外，还有个特别需要关注的点，在`IME`进行`Composing`的时候，理论上是不应该显示占位节点的。而此时如果直接在编辑区域监听`composing`事件，则会导致选区模型重新计算，此时输入内容则会出现选区模型异常的情况。因此在这里需要独立抽离组件，避免上层的`layout effect`。
+
+```js
+/**
+ * 占位符组件
+ * - 抽离组件的主要目标是避免父组件的 LayoutEffect 执行
+ */
+export const Placeholder: FC<{
+  editor: Editor;
+  lines: LineState[];
+  placeholder: React.ReactNode | undefined;
+}> = props => {
+  const { isComposing } = useComposing(props.editor);
+  return props.placeholder &&
+    !isComposing &&
+    props.lines.length === 1 &&
+    isEmptyLine(props.lines[0], true) ? (
+    <div {...{ [PLACEHOLDER_KEY]: true }}>
+      {props.placeholder}
+    </div>
+  ) : null;
+};
 ```
 
 ## Readonly 只读模式
