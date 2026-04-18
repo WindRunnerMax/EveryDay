@@ -1,7 +1,7 @@
 /**
  * Step By Step
  * 1. 完成文章后, 在此处添加目录对应索引
- * 2. 将文章在 SSG 项目下完成翻译, 复制到 I18N 对应目录下
+ * 2. 将文章使用 AI 完成翻译, 复制到 I18N 对应目录下
  * 3. 依次执行 npm run sync / npm run overview 命令
  * 4. 在相关项目中检查内容, 准确无误后分别执行 Commit.sh 提交
  */
@@ -316,6 +316,7 @@ export const docs: Record<string, string[]> = {
     "RichText/React视图层适配器的模式扩展",
     "RichText/Immutable状态维护与增量渲染",
     "RichText/React可编辑节点的组件预设",
+    "RichText/React非编辑节点的内容渲染",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
