@@ -284,6 +284,7 @@ export const docs: Record<string, string[]> = {
     "Plugin/流式Markdown增量富文本解析算法",
     "Plugin/仿照豆包实现Prompt变量模板输入框",
     "Plugin/基于NodeJs实现任务队列与优雅停机",
+    "Plugin/基于MdIt的无序列表折叠插件",
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",

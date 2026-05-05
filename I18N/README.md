@@ -18,7 +18,7 @@
 If you like it, give it a star 😁   
 
 <!-- Summary Start -->
-The repository contains `520` articles, totaling `101624` lines, `836989` words, and `5764706` characters.
+The repository contains `521` articles, totaling `101973` lines, `839461` words, and `5780848` characters.
 <!-- Summary End -->
 
 This is the learning journey of a front-end beginner. If I only study without documenting anything, it would almost be like learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to keep learning daily. The articles below are accumulated starting from `2020.02.25`, all written based on research and synthesis of numerous references. The topics include `HTML` basics, `CSS` fundamentals, `JavaScript` basics and advanced concepts, `Browser`-related knowledge, `Vue` usage and analysis, `React` usage and analysis, `Plugin`-related content, `RichText` editors, `Patterns` design patterns, `Linux` commands, `LeetCode` solutions, and other categories. The content is fairly basic—after all, I’m still a beginner. Additionally, almost every example is designed to be run immediately—just create a new `HTML` file, copy the code, and open it in a browser, or run it directly in the `console`.
@@ -293,6 +293,7 @@ If you’d like to read the notes in order, you can [check the table of contents
 * [Incremental Rich Text Parsing Algorithm in Streaming Markdown](Plugin/流式Markdown增量富文本解析算法.md)
 * [Implementing Prompt Variable Template Input Box Like Bean Pack](Plugin/仿照豆包实现Prompt变量模板输入框.md)
 * [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](Plugin/基于NodeJs实现任务队列与优雅停机.md)
+* [Collapsible Unordered List Plugin Based on Markdown-it](Plugin/基于MdIt的无序列表折叠插件.md)
 
 ## RichText
 * [First Look at Rich Text: Overview of Rich Text](RichText/初探富文本之富文本概述.md)
