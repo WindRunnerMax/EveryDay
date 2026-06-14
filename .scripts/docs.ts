@@ -318,6 +318,7 @@ export const docs: Record<string, string[]> = {
     "RichText/Immutable状态维护与增量渲染",
     "RichText/React可编辑节点的组件预设",
     "RichText/React非编辑节点的内容渲染",
+    "RichText/编辑器历史变更管理与状态回溯",
   ],
   Patterns: [
     "Patterns/简单工厂模式",
