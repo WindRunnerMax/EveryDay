@@ -297,6 +297,7 @@
   * [Immutable State Management and Incremental Rendering](RichText/Immutable状态维护与增量渲染.md)
   * [Component Presets for Editable Nodes in React](RichText/React可编辑节点的组件预设.md)
   * [React Non-Editable Node Content Rendering](RichText/React非编辑节点的内容渲染.md)
+  * [Editor History Change Management and State Backtracking](RichText/编辑器历史变更管理与状态回溯.md)
 
 * Patterns
   * [Simple Factory Pattern](Patterns/简单工厂模式.md)
