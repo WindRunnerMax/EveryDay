@@ -5,7 +5,7 @@
     "dev": "rspress dev",
     "build": "rspress build",
     "preview": "rspress preview",
-    "sitemap": "ts-node ./script/sitemap.ts"
+    "sitemap": "ts-node --transpile-only ./script/sitemap.ts"
   },
   "devDependencies": {
     "@types/node": "18.19.61",
