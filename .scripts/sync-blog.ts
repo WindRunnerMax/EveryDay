@@ -100,7 +100,7 @@ const getGitLastUpdatedTimeStamp = async (filePath: string) => {
     sitemap.push(`<url>`);
     sitemap.push(`  <loc>${domain}/?p=/${filePath}</loc>`);
     sitemap.push(`  <priority>1.0</priority>`);
-    const iso = new Date(time).toISOString();
+    const iso = new Date(time!).toISOString();
     time && sitemap.push(`  <lastmod>${iso}</lastmod>`);
     sitemap.push(`</url>\n`);
     sitemap.push(`<url>`);

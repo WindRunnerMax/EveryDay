@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "sync:blog": "ts-node ./.scripts/sync-blog.ts",
-    "sync:ssg": "ts-node ./.scripts/sync-ssg.ts",
+    "sync:blog": "ts-node --transpile-only ./.scripts/sync-blog.ts",
+    "sync:ssg": "ts-node --transpile-only ./.scripts/sync-ssg.ts",
     "sync": "npm run sync:blog && npm run sync:ssg",
-    "overview": "ts-node ./.scripts/overview.ts"
+    "overview": "ts-node --transpile-only ./.scripts/overview.ts"
   },
   "devDependencies": {
     "@types/node": "18.19.61",

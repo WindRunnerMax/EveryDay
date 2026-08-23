@@ -40,8 +40,8 @@ const removeSuffix = (fileName?: string) => {
   for (const file of files) {
     const group = file.split("/");
     const fileName = removeSuffix(group.pop());
-    const origin = withSuffix(fileName);
-    const target = withSuffix(MAP[fileName]);
+    const origin = withSuffix(fileName!);
+    const target = withSuffix(MAP[fileName!]);
     if (origin && target) {
       fs.rename([...group, origin].join("/"), [...group, target].join("/"));
     }
