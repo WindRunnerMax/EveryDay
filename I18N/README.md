@@ -18,7 +18,7 @@
 If you like it, give it a star 😁   
 
 <!-- Summary Start -->
-The repository contains `522` articles, totaling `102319` lines, `843607` words, and `5807484` characters.
+The repository contains `522` articles, totaling `102319` lines, `843607` words, and `5807466` characters.
 <!-- Summary End -->
 
 This is the learning journey of a front-end beginner. If I only study without documenting anything, it would almost be like learning in vain. The name of this repository, `EveryDay`, is meant to motivate me to keep learning daily. The articles below are accumulated starting from `2020.02.25`, all written based on research and synthesis of numerous references. The topics include `HTML` basics, `CSS` fundamentals, `JavaScript` basics and advanced concepts, `Browser`-related knowledge, `Vue` usage and analysis, `React` usage and analysis, `Plugin`-related content, `RichText` editors, `Patterns` design patterns, `Linux` commands, `LeetCode` solutions, and other categories. The content is fairly basic—after all, I’m still a beginner. Additionally, almost every example is designed to be run immediately—just create a new `HTML` file, copy the code, and open it in a browser, or run it directly in the `console`.
