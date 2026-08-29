@@ -12,6 +12,7 @@
 /build
 /dist
 /site-dev
+.temp
 
 # misc
 .DS_Store
