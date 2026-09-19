@@ -4,12 +4,13 @@
 虽然看起来这仅仅是一个文本内容的输入框，但是实现起来并不是那么容易，细节的交互也非常重要。例如技能提示节点直接作为输入框本身模块，多行文本就可以在提示下方排版，而不是类似网格布局需要在左侧留空白内容。那么在这里我们就以豆包的交互为例，来实现`Prompt`的变量模板输入框。
 
 <details>
-<summary><strong>AI Infra 系列相关文章</strong></summary>
+<summary><strong>LLM Engineering 系列相关文章</strong></summary>
 
-- [基于 fetch 的 SSE 方案](../Browser/基于fetch的SSE方案.md)
+- [基于 fetch 的 SSE 方案](./基于fetch的SSE方案.md)
 - [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
 - [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
-- [仿照豆包实现 Prompt 变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
+- [基于 NodeJs 实现任务队列与优雅停机](./基于NodeJs实现任务队列与优雅停机.md)
+- [仿照豆包实现Prompt变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
 
 </details>
 

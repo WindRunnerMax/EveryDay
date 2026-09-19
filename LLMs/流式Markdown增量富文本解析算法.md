@@ -2,11 +2,13 @@
 在先前我们实现了`SSE`流式输出的实现，以及基于向量检索的`RAG`服务，这些实现都可以算作是`AI Infra`的范畴。这里我们再来聊一下在`SSE`流式输出的基础上，将`Markdown`解析和富文本编辑器的渲染结合起来，实现编辑器的增量解析算法，同样属于文档场景下的`Infra`建设。
 
 <details>
-<summary><strong>AI Infra 系列相关文章</strong></summary>
+<summary><strong>LLM Engineering 系列相关文章</strong></summary>
 
-- [基于 fetch 的 SSE 方案](../Browser/基于fetch的SSE方案.md)
+- [基于 fetch 的 SSE 方案](./基于fetch的SSE方案.md)
 - [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
 - [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
+- [基于 NodeJs 实现任务队列与优雅停机](./基于NodeJs实现任务队列与优雅停机.md)
+- [仿照豆包实现Prompt变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
 
 </details>
 

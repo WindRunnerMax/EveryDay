@@ -6,7 +6,7 @@ Although this may seem like just a text content input box, implementing it is no
 <details>
 <summary><strong>AI Infra Series Related Articles</strong></summary>
 
-- [Fetch-Based SSE Solution](../Browser/基于fetch的SSE方案.md)
+- [Fetch-Based SSE Solution](../LLMs/基于fetch的SSE方案.md)
 - [Basic RAG Service Implementation Based on Vector Retrieval](./基于向量检索实现基础RAG服务.md)
 - [Incremental Rich Text Parsing Algorithm for Streaming Markdown](./流式Markdown增量富文本解析算法.md)
 - [Implementing Prompt Variable Template Input Box Like Bean Pack](./仿照豆包实现Prompt变量模板输入框.md)

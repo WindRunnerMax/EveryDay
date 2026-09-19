@@ -107,7 +107,7 @@ const root = path.resolve(__dirname, `..`);
     const summary = [
       `The repository contains \`${count}\` articles, totaling \`${lineCount}\` lines, \`${wordCount}\` words, and \`${characters}\` characters.`,
     ];
-    // 生成 README.md
+    // 生成 I18N README.md
     const origin = await fs.readFile(
       path.join(root, "I18N", "README.md"),
       "utf-8"
@@ -153,6 +153,7 @@ const root = path.resolve(__dirname, `..`);
       "React",
       "Plugin",
       "RichText",
+      "LLMs",
       "Patterns",
       "Linux",
       "LeetCode",

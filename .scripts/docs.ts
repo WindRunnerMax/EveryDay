@@ -181,7 +181,6 @@ export const docs: Record<string, string[]> = {
     "Browser/Event对象",
     "Browser/IntersectionObserver对象",
     "Browser/MutationObserver对象",
-    "Browser/基于fetch的SSE方案",
   ],
   Vue: [
     "Vue/Vue学习笔记",
@@ -280,11 +279,14 @@ export const docs: Record<string, string[]> = {
     "Plugin/Canvas编辑器之Rspack工程实践",
     "Plugin/Canvas编辑器之层级渲染事件管理",
     "Plugin/Canvas编辑器之选中绘制交互方案",
-    "Plugin/基于向量检索实现基础RAG服务",
-    "Plugin/流式Markdown增量富文本解析算法",
-    "Plugin/仿照豆包实现Prompt变量模板输入框",
-    "Plugin/基于NodeJs实现任务队列与优雅停机",
-    "Plugin/基于MdIt的无序列表折叠插件",
+  ],
+  LLMs: [
+    "LLMs/基于fetch的SSE方案",
+    "LLMs/基于向量检索实现基础RAG服务",
+    "LLMs/流式Markdown增量富文本解析算法",
+    "LLMs/仿照豆包实现Prompt变量模板输入框",
+    "LLMs/基于NodeJs实现任务队列与优雅停机",
+    "LLMs/基于MdIt的无序列表折叠插件",
   ],
   RichText: [
     "RichText/初探富文本之富文本概述",

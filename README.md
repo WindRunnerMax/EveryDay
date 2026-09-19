@@ -18,7 +18,7 @@
 如果觉得还不错，点个`star`吧 😁   
 
 <!-- Summary Start -->
-版本库中共有`512`篇文章，总计`103589`行，`1266986`字，`3427734`字符。
+版本库中共有`512`篇文章，总计`103598`行，`1267202`字，`3428039`字符。
 <!-- Summary End -->
 
 这是一个前端小白的学习历程，如果只学习而不记录点什么那基本就等于白学了。这个版本库的名字`EveryDay`就是希望激励我能够每天学习，下面的文章就是从`2020.02.25`开始积累的文章，都是参考众多文章归纳整理学习而写的。文章包括了`HTML`基础、`CSS`基础、`JavaScript`基础与拓展、`Browser`浏览器相关、`Vue`使用与分析、`React`使用与分析、`Plugin`插件相关、`RichText`富文本、`Patterns`设计模式、`Linux`命令、`LeetCode`题解等类别，内容都是比较基础的，毕竟我也还是个小白。此外基本上每个示例都是本着能够即时运行为目标的，新建一个`HTML`文件复制之后即可在浏览器运行或者直接可以在`console`中运行。
@@ -201,7 +201,6 @@
 * [Event对象](Browser/Event对象.md)
 * [IntersectionObserver对象](Browser/IntersectionObserver对象.md)
 * [MutationObserver对象](Browser/MutationObserver对象.md)
-* [基于fetch的SSE方案](Browser/基于fetch的SSE方案.md)
 
 ## Vue
 * [Vue学习笔记](Vue/Vue学习笔记.md)
@@ -300,11 +299,14 @@
 * [Canvas编辑器之Rspack工程实践](Plugin/Canvas编辑器之Rspack工程实践.md)
 * [Canvas编辑器之层级渲染事件管理](Plugin/Canvas编辑器之层级渲染事件管理.md)
 * [Canvas编辑器之选中绘制交互方案](Plugin/Canvas编辑器之选中绘制交互方案.md)
-* [基于向量检索实现基础RAG服务](Plugin/基于向量检索实现基础RAG服务.md)
-* [流式Markdown增量富文本解析算法](Plugin/流式Markdown增量富文本解析算法.md)
-* [仿照豆包实现Prompt变量模板输入框](Plugin/仿照豆包实现Prompt变量模板输入框.md)
-* [基于NodeJs实现任务队列与优雅停机](Plugin/基于NodeJs实现任务队列与优雅停机.md)
-* [基于MdIt的无序列表折叠插件](Plugin/基于MdIt的无序列表折叠插件.md)
+
+## LLMs
+* [基于fetch的SSE方案](LLMs/基于fetch的SSE方案.md)
+* [基于向量检索实现基础RAG服务](LLMs/基于向量检索实现基础RAG服务.md)
+* [流式Markdown增量富文本解析算法](LLMs/流式Markdown增量富文本解析算法.md)
+* [仿照豆包实现Prompt变量模板输入框](LLMs/仿照豆包实现Prompt变量模板输入框.md)
+* [基于NodeJs实现任务队列与优雅停机](LLMs/基于NodeJs实现任务队列与优雅停机.md)
+* [基于MdIt的无序列表折叠插件](LLMs/基于MdIt的无序列表折叠插件.md)
 
 ## RichText
 * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)

@@ -1,4 +1,3 @@
-
 # SSE Solution Based on Fetch
 `Server-Sent Events (SSE)` is a server-to-client communication solution where real-time updates are pushed from the server to the client unidirectionally. The basic principle involves the client opening a persistent connection to the server via an `HTTP` request, allowing the server to continuously send event data through this connection. `SSE` is suitable for applications that require ongoing data updates, such as real-time notifications, message push, and dynamic content updates. Compared to the data communication solution provided by `WebSocket`, `SSE` is lighter, easier to implement, and more suitable for simple one-way data flow scenarios.
 
