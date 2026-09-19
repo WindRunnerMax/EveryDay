@@ -193,8 +193,7 @@ export const sidebar: Sidebar = {
         "Browser/HTMLElement对象",
         "Browser/Event对象",
         "Browser/IntersectionObserver对象",
-        "Browser/MutationObserver对象",
-        "Browser/基于fetch的SSE方案"
+        "Browser/MutationObserver对象"
       ]
     },
     {
@@ -304,12 +303,19 @@ export const sidebar: Sidebar = {
         "Plugin/Canvas编辑器之图形状态管理",
         "Plugin/Canvas编辑器之Rspack工程实践",
         "Plugin/Canvas编辑器之层级渲染事件管理",
-        "Plugin/Canvas编辑器之选中绘制交互方案",
-        "Plugin/基于向量检索实现基础RAG服务",
-        "Plugin/流式Markdown增量富文本解析算法",
-        "Plugin/仿照豆包实现Prompt变量模板输入框",
-        "Plugin/基于NodeJs实现任务队列与优雅停机",
-        "Plugin/基于MdIt的无序列表折叠插件"
+        "Plugin/Canvas编辑器之选中绘制交互方案"
+      ]
+    },
+    {
+      "text": "LLMs",
+      "collapsed": true,
+      "items": [
+        "LLMs/基于fetch的SSE方案",
+        "LLMs/基于向量检索实现基础RAG服务",
+        "LLMs/流式Markdown增量富文本解析算法",
+        "LLMs/仿照豆包实现Prompt变量模板输入框",
+        "LLMs/基于NodeJs实现任务队列与优雅停机",
+        "LLMs/基于MdIt的无序列表折叠插件"
       ]
     },
     {

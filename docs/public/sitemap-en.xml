@@ -1021,12 +1021,6 @@
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Browser/基于fetch的SSE方案.html</loc>
-  <priority>1.0</priority>
-  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
-</url>
-
-<url>
   <loc>https://blog-ssg.touchczy.top/Vue/Vue学习笔记.html</loc>
   <priority>1.0</priority>
   <lastmod>2024-12-19T13:58:14.000Z</lastmod>
@@ -1576,33 +1570,33 @@
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Plugin/基于向量检索实现基础RAG服务.html</loc>
+  <loc>https://blog-ssg.touchczy.top/LLMs/基于fetch的SSE方案.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Plugin/流式Markdown增量富文本解析算法.html</loc>
+  <loc>https://blog-ssg.touchczy.top/LLMs/基于向量检索实现基础RAG服务.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Plugin/仿照豆包实现Prompt变量模板输入框.html</loc>
+  <loc>https://blog-ssg.touchczy.top/LLMs/流式Markdown增量富文本解析算法.html</loc>
   <priority>1.0</priority>
-  <lastmod>2025-09-21T03:17:49.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Plugin/基于NodeJs实现任务队列与优雅停机.html</loc>
+  <loc>https://blog-ssg.touchczy.top/LLMs/仿照豆包实现Prompt变量模板输入框.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-03-21T11:31:24.000Z</lastmod>
 </url>
 
 <url>
-  <loc>https://blog-ssg.touchczy.top/Plugin/基于MdIt的无序列表折叠插件.html</loc>
+  <loc>https://blog-ssg.touchczy.top/LLMs/基于NodeJs实现任务队列与优雅停机.html</loc>
   <priority>1.0</priority>
-  <lastmod>2026-05-05T13:15:06.000Z</lastmod>
+</url>
+
+<url>
+  <loc>https://blog-ssg.touchczy.top/LLMs/基于MdIt的无序列表折叠插件.html</loc>
+  <priority>1.0</priority>
 </url>
 
 <url>
