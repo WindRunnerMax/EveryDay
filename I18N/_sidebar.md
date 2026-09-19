@@ -261,14 +261,6 @@
   * [Canvas Resume Editor - Layered Rendering and Event Management Capability](Plugin/Canvas编辑器之层级渲染事件管理.md)
   * [Canvas Editor: Selected Drawing Interaction Scheme](Plugin/Canvas编辑器之选中绘制交互方案.md)
 
-* LLMs
-  * [SSE Solution Based on Fetch](LLMs/基于fetch的SSE方案.md)
-  * [Implementing Basic RAG Service Based on Vector Retrieval](LLMs/基于向量检索实现基础RAG服务.md)
-  * [Incremental Rich Text Parsing Algorithm in Streaming Markdown](LLMs/流式Markdown增量富文本解析算法.md)
-  * [Implementing Prompt Variable Template Input Box Like Bean Pack](LLMs/仿照豆包实现Prompt变量模板输入框.md)
-  * [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](LLMs/基于NodeJs实现任务队列与优雅停机.md)
-  * [Collapsible Unordered List Plugin Based on Markdown-it](LLMs/基于MdIt的无序列表折叠插件.md)
-
 * RichText
   * [First Look at Rich Text: Overview of Rich Text](RichText/初探富文本之富文本概述.md)
   * [Exploring Rich Text Editor Engines](RichText/初探富文本之编辑器引擎.md)
@@ -301,6 +293,14 @@
   * [Component Presets for Editable Nodes in React](RichText/React可编辑节点的组件预设.md)
   * [React Non-Editable Node Content Rendering](RichText/React非编辑节点的内容渲染.md)
   * [Editor History Change Management and State Backtracking](RichText/编辑器历史变更管理与状态回溯.md)
+
+* LLMs
+  * [SSE Solution Based on Fetch](LLMs/基于fetch的SSE方案.md)
+  * [Implementing Basic RAG Service Based on Vector Retrieval](LLMs/基于向量检索实现基础RAG服务.md)
+  * [Incremental Rich Text Parsing Algorithm in Streaming Markdown](LLMs/流式Markdown增量富文本解析算法.md)
+  * [Implementing Prompt Variable Template Input Box Like Bean Pack](LLMs/仿照豆包实现Prompt变量模板输入框.md)
+  * [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](LLMs/基于NodeJs实现任务队列与优雅停机.md)
+  * [Collapsible Unordered List Plugin Based on Markdown-it](LLMs/基于MdIt的无序列表折叠插件.md)
 
 * Patterns
   * [Simple Factory Pattern](Patterns/简单工厂模式.md)
