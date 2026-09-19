@@ -4,7 +4,7 @@ When executing complex tasks on the backend, instant responses aren’t usually 
 <details>
 <summary><strong>Related Articles from the AI Infra Series</strong></summary>
 
-- [SSE Solution Based on fetch](../Browser/基于fetch的SSE方案.md)
+- [SSE Solution Based on fetch](../LLMs/基于fetch的SSE方案.md)
 - [Implementing Basic RAG Services Based on Vector Retrieval](./基于向量检索实现基础RAG服务.md)
 - [Streaming Markdown Incremental Rich Text Parsing Algorithm](./流式Markdown增量富文本解析算法.md)
 - [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](./基于NodeJs实现任务队列与优雅停机.md)

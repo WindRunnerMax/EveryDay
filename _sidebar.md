@@ -173,7 +173,6 @@
   * [Event对象](Browser/Event对象.md)
   * [IntersectionObserver对象](Browser/IntersectionObserver对象.md)
   * [MutationObserver对象](Browser/MutationObserver对象.md)
-  * [基于fetch的SSE方案](Browser/基于fetch的SSE方案.md)
 
 * Vue
   * [Vue学习笔记](Vue/Vue学习笔记.md)
@@ -272,11 +271,14 @@
   * [Canvas编辑器之Rspack工程实践](Plugin/Canvas编辑器之Rspack工程实践.md)
   * [Canvas编辑器之层级渲染事件管理](Plugin/Canvas编辑器之层级渲染事件管理.md)
   * [Canvas编辑器之选中绘制交互方案](Plugin/Canvas编辑器之选中绘制交互方案.md)
-  * [基于向量检索实现基础RAG服务](Plugin/基于向量检索实现基础RAG服务.md)
-  * [流式Markdown增量富文本解析算法](Plugin/流式Markdown增量富文本解析算法.md)
-  * [仿照豆包实现Prompt变量模板输入框](Plugin/仿照豆包实现Prompt变量模板输入框.md)
-  * [基于NodeJs实现任务队列与优雅停机](Plugin/基于NodeJs实现任务队列与优雅停机.md)
-  * [基于MdIt的无序列表折叠插件](Plugin/基于MdIt的无序列表折叠插件.md)
+
+* LLMs
+  * [基于fetch的SSE方案](LLMs/基于fetch的SSE方案.md)
+  * [基于向量检索实现基础RAG服务](LLMs/基于向量检索实现基础RAG服务.md)
+  * [流式Markdown增量富文本解析算法](LLMs/流式Markdown增量富文本解析算法.md)
+  * [仿照豆包实现Prompt变量模板输入框](LLMs/仿照豆包实现Prompt变量模板输入框.md)
+  * [基于NodeJs实现任务队列与优雅停机](LLMs/基于NodeJs实现任务队列与优雅停机.md)
+  * [基于MdIt的无序列表折叠插件](LLMs/基于MdIt的无序列表折叠插件.md)
 
 * RichText
   * [初探富文本之富文本概述](RichText/初探富文本之富文本概述.md)

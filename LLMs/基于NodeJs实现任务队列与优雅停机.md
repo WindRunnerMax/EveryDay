@@ -2,12 +2,13 @@
 当在后端执行复杂的任务时，通常不能够在短时间内即时响应，例如文档导入、导出任务等。再加上当前的`LLMs`发展，我们可以实现文档的写作、质检、翻译等复杂任务，这些任务通常都比较耗时，这样就需要任务队列来管理这些异步任务的执行顺序和资源分配，而优雅停机则用以保证任务的完整处理。
 
 <details>
-<summary><strong>AI Infra 系列相关文章</strong></summary>
+<summary><strong>LLM Engineering 系列相关文章</strong></summary>
 
-- [基于 fetch 的 SSE 方案](../Browser/基于fetch的SSE方案.md)
+- [基于 fetch 的 SSE 方案](./基于fetch的SSE方案.md)
 - [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
 - [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
 - [基于 NodeJs 实现任务队列与优雅停机](./基于NodeJs实现任务队列与优雅停机.md)
+- [仿照豆包实现Prompt变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
 
 </details>
 

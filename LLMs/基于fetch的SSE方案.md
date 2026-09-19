@@ -2,11 +2,13 @@
 `Server-Sent Events(SSE)`是一种由服务器单向推送实时更新到客户端的方案，基本原理是客户端通过`HTTP`请求打开与服务端的持久连接，服务端可以通过该连接连续发送事件数据。`SSE`适用于需要持续更新数据的应用，如实时通知、消息推送和动态内容更新，相比于`WebSocket`的数据通信方案更加轻量，`SSE`更易于实现且更适合简单的单向数据流场景。
 
 <details>
-<summary><strong>AI Infra 系列相关文章</strong></summary>
+<summary><strong>LLM Engineering 系列相关文章</strong></summary>
 
 - [基于 fetch 的 SSE 方案](./基于fetch的SSE方案.md)
-- [基于向量检索实现基础 RAG 服务](../Plugin/基于向量检索实现基础RAG服务.md)
-- [流式 Markdown 增量富文本解析算法](../Plugin/流式Markdown增量富文本解析算法.md)
+- [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
+- [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
+- [基于 NodeJs 实现任务队列与优雅停机](./基于NodeJs实现任务队列与优雅停机.md)
+- [仿照豆包实现Prompt变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
 
 </details>
 

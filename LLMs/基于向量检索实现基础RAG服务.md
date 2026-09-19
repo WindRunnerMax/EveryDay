@@ -4,11 +4,13 @@
 实际上，当前`RAG`相关建设已经比较成熟，目前看起来其实并不太赶得上潮流，但学习`RAG`最好的时间是`22`年底，其次是现在。`RAG`服务和当前的`AI Infra`建设有着密切的关系，作为基础建设的`RAG`是一个以搜索为核心，围绕各种数据、知识、`LLMs`等服务协作运行的复杂系统。
 
 <details>
-<summary><strong>AI Infra 系列相关文章</strong></summary>
+<summary><strong>LLM Engineering 系列相关文章</strong></summary>
 
-- [基于 fetch 的 SSE 方案](../Browser/基于fetch的SSE方案.md)
+- [基于 fetch 的 SSE 方案](./基于fetch的SSE方案.md)
 - [基于向量检索实现基础 RAG 服务](./基于向量检索实现基础RAG服务.md)
 - [流式 Markdown 增量富文本解析算法](./流式Markdown增量富文本解析算法.md)
+- [基于 NodeJs 实现任务队列与优雅停机](./基于NodeJs实现任务队列与优雅停机.md)
+- [仿照豆包实现Prompt变量模板输入框](./仿照豆包实现Prompt变量模板输入框.md)
 
 </details>
 
