@@ -36,7 +36,9 @@ Tools MCP
 
 followup/steer   服务端用户粘性
 
-流畅的交互模式：思考-toolcall-答案 low/medium 思考
+没那么流畅 由于先内容后tool的先后顺序  先平铺再收起 / 任务结束总结 tool
+
+流畅的交互模式：思考-tool-思考-tool-答案 low/medium 思考
 
 ## 二级索引
 llms.txt 目录 + 标题 + summary
@@ -48,6 +50,9 @@ skill渐进氏披露
 ## 检索模式
 
 搜索ES配置 / 向量检索
+
+code embedding
+
 
 大力出奇迹/RG/GREP OnCall场景
 
