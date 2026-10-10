@@ -25,18 +25,60 @@
 
 那么本文标题重点表达是文档检索的`Agent`实现，实际上这里的主要思路是，文档站对读者而言可能主要就是个文档集。而借助`Agent`使其自主检索用户所需的知识，类似于`DeepResearch`，那么文档站就变成了一个知识库。
 
-因此在这里我们借助`PI`实现轻量级文档检索`Agent`，不过在当前`AI Coding`几乎接管了具体代码实现的状态下，我们主要还是简单讨论一些实现思路以及需要考虑的问题点，不再详细展开代码实现细节了。
+因此在这里我们借助`PI`实现轻量级文档检索`Agent`，不过在当前`AI Coding`几乎接管了具体代码实现的状态下，这里主要还是简单讨论一些实现思路以及需要考虑的问题点，不再详细展开代码实现细节了。
 
 ## Loop Agent
-RAG/LoopAgent 上下文工程的发展模式 得益于模型发展，Loop可以最终得到一个收敛的结果 而不必非得要workflow 
+前边提到，最开始的文档检索主要是`RAG`的模式，而得益于模型以及上下文工程的发展，通过`Loop`的方式，模型可以最终得到一个收敛的结果，而不必非得要通过预设`workflow`的方式得到目标结果。
+
+所谓`Loop`，就是模型在执行任务的过程中，根据上下文和工具的反馈，不断调整自己的行为，直到最终得到一个收敛的结果。其实这也挺依赖于模型能力，否则也会出现无法收敛即无限循环的情况，通过这种方式实现的`Agent`，我们简称为`Loop Agent`。
+
+```mermaid
+%%{init: {"theme": "neutral" } }%%
+flowchart LR
+    A[任务] --> B[Agent]
+    B --> C{达成目标}
+    C -- 否 --> D[调用工具]
+    D --> E[Tool1 / Tool2 / ...]
+    E --> F[工具调用结果]
+    F --> B
+    C -- 是 --> G[输出结果]
+```
+
+接下来，可以直接借助`PI`来实现`Loop Agent`。在这里没有太大必要自己实现一套`Loop`机制，在`PI`中将核心包拆了出来，在这里主要是用的是`@earendil-works/pi-agent-core`核心包以及`@earendil-works/pi-ai`适配器。
+
+在使用`PI`的`Loop`时，还是有必要读一下 <https://zhanghandong.github.io/pi-book/ch08-agent-loop.html> 。这里主要介绍了`PI`的两层循环，分别对应了`steer/followup`两种类型的消息任务模式。
+
+
+- Steering: 转舵，用户在 agent 工作过程中插入一条新指令，比如"别改那个文件，换一种方式"。它在当前 turn 的工具执行完成后注入，影响下一次 LLM 调用。
+- Follow-up: 追加，用户在 agent 完成后追加一条新任务，比如"好的，现在写测试"。它只在 agent 本来要退出时才被消费。
+
+
+```mermaid
+flowchart LR
+    Start([启动]) --> Steer{存在 steering}
+    Steer -->|是| Inject[注入上下文] --> LLM
+    Steer -->|无| LLM[调用 LLM]
+
+    LLM --> Tool{存在 tool calls}
+    Tool -->|是| Exec[执行工具] --> Inner
+    Tool -->|无| Inner{ tool / steering }
+
+    %% 内层循环
+    Inner -->|是| Inject
+    Inner -->|否| FollowUp{存在 follow-up}
+
+    %% 外层循环
+    FollowUp -->|是| Pending[重新进入内层] --> Steer
+    FollowUp -->|无| End([结束])
+```
 
 Tools MCP
 
 甚至工程做的越轻越好 LLM是纯语言的，缺乏环境感知能力，所以harness的核心目标应该围绕着“增强”环境感知能力
 
-followup/steer   服务端用户粘性
+   服务端用户粘性
 
-没那么流畅 由于先内容后tool的先后顺序  先平铺再收起 / 任务结束总结 tool
+没那么流畅 由于先内容后tool的先后顺序  先平铺再收起 / 任务结束总结 tool[terminate: true 主动跳出内层循环的模式]
 
 流畅的交互模式：思考-tool-思考-tool-答案 low/medium 思考
 
@@ -45,7 +87,7 @@ llms.txt 目录 + 标题 + summary
 
 内容上的二级索引
 
-skill渐进氏披露
+skill渐进氏披露 SKILL其实也是文档，特别是在系统中存在大量SKILL的时候
 
 ## 检索模式
 
@@ -60,6 +102,7 @@ code embedding
 
 正反馈系统    完全不需要人介入？
 
+维护文档的作用越来越重 无论是什么角色 给AI提供上下文都可以作为文档看待
 
 额外的话题，云端 Agent -> 本地 Agent -> 本地 Agent和云端 Agent 结合
 
@@ -70,6 +113,7 @@ code embedding
 
 ## 参考
 
+- <https://github.com/earendil-works/pi>
 - <https://zhanghandong.github.io/pi-book/>
 - <https://manus.im/zh-cn/blog/Context-Engineering-for-AI-Agents-Lessons-from-Building-Manus>
 - <https://github.com/claude-code-best/claude-code/blob/79742411/docs/tools/search-and-navigation.mdx>
