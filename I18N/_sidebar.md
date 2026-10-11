@@ -301,6 +301,7 @@
   * [Implementing Prompt Variable Template Input Box Like Bean Pack](LLMs/仿照豆包实现Prompt变量模板输入框.md)
   * [Implementing a Task Queue and Graceful Shutdown Based on NodeJs](LLMs/基于NodeJs实现任务队列与优雅停机.md)
   * [Collapsible Unordered List Plugin Based on Markdown-it](LLMs/基于MdIt的无序列表折叠插件.md)
+  * [Implementing a Lightweight Document Retrieval Agent Based on PI](LLMs/基于PI实现轻量级文档检索Agent.md)
 
 * Patterns
   * [Simple Factory Pattern](Patterns/简单工厂模式.md)

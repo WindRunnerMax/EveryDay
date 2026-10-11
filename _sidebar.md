@@ -313,6 +313,7 @@
   * [仿照豆包实现Prompt变量模板输入框](LLMs/仿照豆包实现Prompt变量模板输入框.md)
   * [基于NodeJs实现任务队列与优雅停机](LLMs/基于NodeJs实现任务队列与优雅停机.md)
   * [基于MdIt的无序列表折叠插件](LLMs/基于MdIt的无序列表折叠插件.md)
+  * [基于PI实现轻量级文档检索Agent](LLMs/基于PI实现轻量级文档检索Agent.md)
 
 * Patterns
   * [简单工厂模式](Patterns/简单工厂模式.md)
