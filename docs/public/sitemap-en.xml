@@ -1798,6 +1798,11 @@
 </url>
 
 <url>
+  <loc>https://blog-ssg.touchczy.top/LLMs/基于PI实现轻量级文档检索Agent.html</loc>
+  <priority>1.0</priority>
+</url>
+
+<url>
   <loc>https://blog-ssg.touchczy.top/Patterns/简单工厂模式.html</loc>
   <priority>1.0</priority>
   <lastmod>2023-11-11T04:12:26.000Z</lastmod>

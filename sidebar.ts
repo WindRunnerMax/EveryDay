@@ -353,7 +353,8 @@ export const sidebar: Sidebar = {
         "LLMs/流式Markdown增量富文本解析算法",
         "LLMs/仿照豆包实现Prompt变量模板输入框",
         "LLMs/基于NodeJs实现任务队列与优雅停机",
-        "LLMs/基于MdIt的无序列表折叠插件"
+        "LLMs/基于MdIt的无序列表折叠插件",
+        "LLMs/基于PI实现轻量级文档检索Agent"
       ]
     },
     {
