@@ -228,7 +228,7 @@ const agent = new Agent({
     {
       "multi_match": {
         "query": "Query Text",
-        "fields": ["title^4",  "keywords^3", "summary^3", "content^1"],
+        "fields": ["title^3",  "keywords^2", "summary^2", "content"],
         "type": "best_fields",
         "minimum_should_match": "1<1 3<30%"
       }
@@ -238,7 +238,7 @@ const agent = new Agent({
     {
       "multi_match": {
         "query": "Query Text",
-        "fields": ["title^4", "keywords^3", "summary^3", "content^1"],
+        "fields": ["title^2", "keywords^2", "summary^2", "content"],
         "type": "phrase",
         "boost": 2
       }

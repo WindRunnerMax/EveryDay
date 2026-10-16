@@ -181,7 +181,7 @@ const root = path.resolve(__dirname, `..`);
         preLineDate = date[1];
         continue;
       }
-      const data = /第(.+?)题：\[(.+?)\]\((.+?)\)/.exec(line);
+      const data = /第(.+?)篇：\[(.+?)\]\((.+?)\)/.exec(line);
       if (data && data[1] && data[2] && data[3] && preLineDate) {
         const serial = Number(data[1].trim());
         const name = data[2];
@@ -225,8 +225,9 @@ const root = path.resolve(__dirname, `..`);
     record.forEach((item, index) => {
       target.push(`### ${item.date}`);
       const path = item.path.replace(/ /g, "%20");
+      const linkName = item.path.replace(/\.md$/, "").replace(/\//g, " / ");
       target.push(
-        `第 ${count - index} 题：[${item.name.replace(/\.md$/, "")}](${path})`
+        `第 ${count - index} 篇：[${linkName}](${path})`
       );
       target.push("");
     });
