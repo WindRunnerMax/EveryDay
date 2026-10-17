@@ -2,7 +2,7 @@
  * Step By Step
  * 1. 完成文章后, 在此处添加目录对应索引
  * 2. 将文章使用 AI 完成翻译, 复制到 I18N 对应目录下
- * 3. 依次执行 npm run sync / npm run overview 命令
+ * 3. 依次执行 npm run overview / npm run sync 命令
  * 4. 在相关项目中检查内容, 准确无误后分别执行 Commit.sh 提交
  */
 export const docs: Record<string, string[]> = {
