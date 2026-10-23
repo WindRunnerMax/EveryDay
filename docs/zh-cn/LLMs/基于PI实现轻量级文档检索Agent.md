@@ -154,8 +154,41 @@ const agent = new Agent({
     { "role": "assistant", "tool_calls": [ /* call_abc123... */ ] },
     { "role": "tool", "tool_call_id": "call_abc123", "content": "search result ..." }
   ],
-  "tools": [ /* ... */]
+  "tools": [ /* ... */ ]
 }
+```
+
+在这一层上，`Agent`可以做的还是挺多的，例如定义一套插件系统，这套插件系统可以支持`SKILL`、`MCP`、`Hooks`、`Sub Agents`等定义。高频常用的`Tool`可以直接将`schema`定义给模型，而比较复杂的低频的`Tool`则可以延迟加载，即以`tool`调用的形式按需加载`schema`。
+
+```md
+plugin
+  ├── .mcp.json
+  ├── skills/
+  │   └── pdf-processor/
+  │       └── SKILL.md
+  ├── hooks/
+  │   └── hooks.json 
+  └── agents/
+      └── code-reviewer.md    
+```
+
+通常来说，`Agent`启动的时候，会扫描基础目录以及`Agent`定义好的目录安装的插件，以此来组装所有可用的`SKILL`、`MCP`等。之后这些内容会被`Agent`加工之后，再传递给模型。特别的`MCP`本质上是`Tool`，如果传给模型的`Tool`定义长且复杂，考虑`Token`成本就有必要做按需加载。
+
+```md
+<available_skills>
+<!-- SKILL 定义+简述, 例如 agent-browser -->
+</available_skills>
+<available_deferred_tools>
+<!-- 延迟加载的 Tool 定义+简述, 例如 ppt_generate / mcp__search_docs -->
+</available_deferred_tools>
+<!-- 直接传给模型 -->
+<!--  
+  "tools": [
+    { "type": "function", "function": { "name": "bash", } },
+    { "type": "function", "function": { "name": "web_search", } },
+    { "type": "function", "function": { "name": "get_deferred_tool_schema", } },
+  ]
+-->
 ```
 
 其实，在模型发展迅速的情况下，越重的工程反而更容易积重难返，例如最开始常见的`Workflow`调用模型的方式。就当前而言，可以说工程并不是越重越好，而由于`LLM`是纯语言的，缺乏环境感知能力，所以发力的核心目标应该围绕着增强环境感知能力。
