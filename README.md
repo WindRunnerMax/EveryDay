@@ -18,7 +18,7 @@
 
 如果想按照笔记顺序进行阅读的话可以 [查看目录](https://github.com/WindrunnerMax/EveryDay/blob/master/Timeline.md) ，另外如果想更条理地查看的话可以访问 [我的博客](https://blog.touchczy.top/)。博客同时也是本版本库的`gh-pages`分支，是作为纯静态页面搭建在`Git Pages`上的，使用`jsdelivr`以及`cloudflare`作为缓存缓解国内访问速度问题。后期还在`gh-pages-ssg`分支上部署了`SSG`版本的 [新版博客](https://blog-ssg.touchczy.top/)，并且借助`ChatGPT`提供了英文翻译版本，分支是部署在`Vercel`上来缓解国内访问速度问题。在博客中的内容就相对比较多了，除了学习笔记之外还有一些做项目时的记录以及遇到的坑等。`HXDM`如果觉得还不错，点个`star`吧，这个对我真的很重要。
 
-## Recently Articles
+## Recently Published
 
 <!-- Timeline Start -->
 
