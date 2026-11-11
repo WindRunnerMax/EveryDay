@@ -158,7 +158,7 @@ const agent = new Agent({
 }
 ```
 
-在这一层上，`Agent`可以做的还是挺多的，例如定义一套插件系统，这套插件系统可以支持`SKILL`、`MCP`、`Hooks`、`Sub Agents`等定义。高频常用的`Tool`可以直接将`schema`定义给模型，而比较复杂的低频的`Tool`则可以延迟加载，即以`tool`调用的形式按需加载`schema`。
+在这一层上，`Agent`可以做的还是挺多的，例如定义一套插件系统，这套插件系统可以支持`SKILL`、`MCP`、`Hooks`、`Sub Agents`等模式封装。高频常用的`Tool`可以直接将`schema`定义给模型，而比较复杂的低频的`Tool`则可以延迟加载，即以`tool`调用的形式按需加载`schema`。
 
 ```md
 plugin
@@ -375,6 +375,7 @@ flowchart LR
 
 ## 参考
 
+- <https://arxiv.org/pdf/2605.05242>
 - <https://github.com/earendil-works/pi>
 - <https://zhanghandong.github.io/pi-book/>
 - <https://zhanghandong.github.io/pi-book/ch16-skills.html>
