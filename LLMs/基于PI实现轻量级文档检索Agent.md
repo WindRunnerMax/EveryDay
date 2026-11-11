@@ -375,6 +375,7 @@ flowchart LR
 
 ## 参考
 
+- <https://arxiv.org/pdf/2605.05242>
 - <https://github.com/earendil-works/pi>
 - <https://zhanghandong.github.io/pi-book/>
 - <https://zhanghandong.github.io/pi-book/ch16-skills.html>
